@@ -60,6 +60,15 @@ exports['response'] = {
     test.done();
   },
 
+  'response rejected flatmap to accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(response.reject().flatmap(function() { return response.accept(); }).isAccepted(), 
+               false,
+               'should be rejected.');
+    test.done();
+  },
+
   'response accepted fold': function(test) {
     test.expect(1);
     // tests here  

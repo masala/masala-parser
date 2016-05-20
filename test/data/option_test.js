@@ -83,6 +83,20 @@ exports['option'] = {
     test.done();
   },
     
+  'option empty or lazy else': function(test) {
+    test.expect(1);
+    // tests here      
+    test.equal(option.none().orLazyElse(function() { return 12; }), 12, 'should be empty option.');
+    test.done();
+  },
+    
+  'option not empty or lazy else': function(test) {
+    test.expect(1);
+    // tests here      
+    test.equal(option.some(12).orLazyElse(function() { return 14; }), 12, 'should be not empty option.');
+    test.done();
+  },
+    
   'option empty filter': function(test) {
     test.expect(1);
     // tests here      
