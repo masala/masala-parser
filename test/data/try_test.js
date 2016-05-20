@@ -145,5 +145,41 @@ exports['atry'] = {
     test.equal(atry.failure(1).filter(function (v) { return v === 1; }).isFailure(), true, 'should be failure.');
     test.done();
   },
+         
+  'atry success onSuccess': function(test) {
+    test.expect(1);
+    // tests here  
+    var success = false;
+    atry.success(1).onSuccess(function () { success=true; });
+    test.equal(success, true, 'should be true.');
+    test.done();
+  },
+         
+  'atry failure onSuccess': function(test) {
+    test.expect(1);
+    // tests here  
+    var success = false;
+    atry.failure().onSuccess(function () { success=true; });
+    test.equal(success, false, 'should be false.');
+    test.done();
+  },
+         
+  'atry success onFailure': function(test) {
+    test.expect(1);
+    // tests here  
+    var failure = false;
+    atry.success(1).onFailure(function () { failure=true; });
+    test.equal(failure, false, 'should be false.');
+    test.done();
+  },
+         
+  'atry failure onFailure': function(test) {
+    test.expect(1);
+    // tests here  
+    var failure = false;
+    atry.failure().onFailure(function () { failure=true; });
+    test.equal(failure, true, 'should be true.');
+    test.done();
+  },
 
 };

@@ -56,7 +56,7 @@ exports['stream'] = {
     test.expect(1);
     // tests here  
     test.equal(stream.ofCharacters('1').get(0).isSuccess(), 
-               false,
+               true,
                'should be a success.');
     test.done();
   },
@@ -64,7 +64,7 @@ exports['stream'] = {
   'do not get from empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('1').get(0).isSuccess(), 
+    test.equal(stream.ofCharacters('1').get(1).isSuccess(), 
                false,
                'should be a failure.');
     test.done();
