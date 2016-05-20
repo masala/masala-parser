@@ -1,0 +1,5 @@
+lib-cov
+node_modules
+build
+site
+.brackets.json
