@@ -1,0 +1,7 @@
+sudo: false
+language: node_js
+node_js:
+  - 0.10.41
+before_script:
+  - npm install -g grunt-cli
+  - ./node_modules/jscoverage/bin/jscoverage lib --exclude lib-cov
