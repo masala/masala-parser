@@ -69,4 +69,13 @@ exports['stream'] = {
                'should be a failure.');
     test.done();
   },
+    
+  'do not get from erroneous stream': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(stream.ofCharacters({length:1,charAt:function() { throw new Error(); }}).get(0).isSuccess(), 
+               false,
+               'should be a failure.');
+    test.done();
+  },
 };
