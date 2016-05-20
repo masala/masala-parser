@@ -60,7 +60,16 @@ exports['response'] = {
     test.done();
   },
 
-  'response rejected flatmap to accepted': function(test) {
+  'response rejected map to rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(response.reject().map(function(t) { return t; }).isAccepted(), 
+               false,
+               'should be rejected.');
+    test.done();
+  },
+
+  'response rejected flatmap to rejected': function(test) {
     test.expect(1);
     // tests here  
     test.equal(response.reject().flatmap(function() { return response.accept(); }).isAccepted(), 

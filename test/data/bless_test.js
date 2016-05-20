@@ -83,4 +83,17 @@ exports['bless'] = {
     test.equal(new B(2).getA(), 2, 'inheritance polymophism applied.');
     test.done();
   },
+
+  'inheritance polymorphism applied and hidden method': function(test) {
+    test.expect(1);
+      
+    function A() { }
+    A.prototype.getA = function () { return 1; };
+    function B() { bless(this, new A()); }
+    B.prototype.getA = function () { return 2; };
+      
+    // tests here  
+    test.equal(new B().getA(), 2, 'inheritance polymophism applied.');
+    test.done();
+  },
 };
