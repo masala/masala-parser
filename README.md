@@ -26,9 +26,9 @@ Javascript parser combinator implementation inspired by the paper titled:
 - *notChar* : char &rarr; Parser char char
 - *char* : char &rarr; Parser char char
 - *charLitteral* : unit &rarr; Parser char char
-- *stringLitteral* : unit &rarr; Parser char char
-- *numberLitteral* : unit &rarr; Parser char char
-- *string* : string &rarr; Parser char char
+- *stringLitteral* : unit &rarr; Parser string char
+- *numberLitteral* : unit &rarr; Parser number char
+- *aString* : string &rarr; Parser string char
 
 ## License
 
