@@ -11,24 +11,24 @@ Javascript parser combinator implementation inspired by the paper titled:
 
 ### Parsers for generic stream 
 
-- *returns* : &forall; a . a &rarr; Parser a
-- *error* : &forall; a . unit &rarr; Parser a
-- *eos* : unit &rarr; Parser unit
-- *satisfy* : &forall; a . (a &rarr; bool) &rarr; Parser a
-- *try* : &forall; a . unit &rarr; Parser a
+- *returns* : &forall; a . a &rarr; Parser a c
+- *error* : &forall; a c . unit &rarr; Parser a c
+- *eos* : &forall; c . unit &rarr; Parser unit c
+- *satisfy* : &forall; a . (a &rarr; bool) &rarr; Parser a a
+- *try* : &forall; a c . Parser a c &rarr; Parser a c
 
 ### Parsers for char stream 
 
-- *digit* : unit &rarr; Parser char
-- *lowerCase* : unit &rarr; Parser char
-- *upperCase* : unit &rarr; Parser char
-- *letter* : unit &rarr; Parser char
-- *notChar* : char &rarr; Parser char
-- *char* : char &rarr; Parser char
-- *charLitteral* : unit &rarr; Parser char
-- *stringLitteral* : unit &rarr; Parser char
-- *numberLitteral* : unit &rarr; Parser char
-- *string* : string &rarr; Parser char
+- *digit* : unit &rarr; Parser char char
+- *lowerCase* : unit &rarr; Parser char char
+- *upperCase* : unit &rarr; Parser char char
+- *letter* : unit &rarr; Parser char char
+- *notChar* : char &rarr; Parser char char
+- *char* : char &rarr; Parser char char
+- *charLitteral* : unit &rarr; Parser char char
+- *stringLitteral* : unit &rarr; Parser char char
+- *numberLitteral* : unit &rarr; Parser char char
+- *string* : string &rarr; Parser char char
 
 ## License
 
