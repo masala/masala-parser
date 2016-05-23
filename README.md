@@ -46,6 +46,30 @@ Javascript parser combinator implementation inspired by the paper titled:
 #### Parser Main Function:
 - *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
 
+### Examples
+
+```Javascript
+// Parser number char
+parser.char('(').thenRight(parser.number).thenLeft(parser.char(')'))
+      .parse(stream.ofCharacters("(12)")) === 12 
+```
+
+## Token specification
+
+#### Token builder:
+- *keyword* : string &rarr; Token 
+- *ident* : string &rarr; Token 
+- *number* : string &rarr; Token 
+- *string* : string &rarr; Token 
+- *char* : string &rarr; Token 
+
+#### Token parser:
+- *keyword* : Parser Token Token
+- *ident* : Parser Token Token
+- *number* : Parser Token Token 
+- *string* : Parser Token Token 
+- *char* : Parser Token Token
+
 ## License
 
 Copyright (C)2016 D. Plaindoux.
