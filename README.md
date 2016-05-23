@@ -49,9 +49,14 @@ Javascript parser combinator implementation inspired by the paper titled:
 ### Examples
 
 ```Javascript
+// Mount parser module
+var P = require('Parsec').parser;
+
 // Parser number char
-parser.char('(').thenRight(parser.number).thenLeft(parser.char(')'))
-      .parse(stream.ofCharacters("(12)")) === 12 
+var e = P.char('(').thenRight(P.number).thenLeft(P.char(')'));
+
+// Perform parse operation
+e.parse(stream.ofCharacters("(12)")) === 12 
 ```
 
 ## Token specification
