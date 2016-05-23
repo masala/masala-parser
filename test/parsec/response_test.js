@@ -51,10 +51,28 @@ exports['response'] = {
     test.done();
   },
 
+  'response accepted map to return the value': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(response.accept('a').map(function(a) { return a; }).value, 
+            'a',
+            'should be accepted.');
+    test.done();
+  },
+    
   'response accepted flatmap to accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(response.accept().flatmap(function() { return response.accept(); }).isAccepted(), 
+    test.ok(response.accept('a').flatmap(function(a) { return response.accept(a); }).isAccepted(), 
+            'should be accepted.');
+    test.done();
+  },
+
+  'response accepted flatmap to return the value': function(test) {
+    test.expect(1);
+    // tests here  
+    test.ok(response.accept('a').flatmap(function(a) { return response.accept(a); }).isAccepted(), 
+            'a',
             'should be accepted.');
     test.done();
   },
@@ -98,7 +116,7 @@ exports['response'] = {
   'response filter accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(response.accept().filter(function() { return true; }).isAccepted(), 
+    test.ok(response.accept('a').filter(function(a) { return a === 'a'; }).isAccepted(), 
            'should filter the response.');
     test.done();
   },
@@ -106,7 +124,7 @@ exports['response'] = {
   'response not filter accepted ': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(response.accept().filter(function() { return false; }).isAccepted(),
+    test.equal(response.accept('a').filter(function(a) { return a !== 'a'; }).isAccepted(),
                false,
                'should not filter the response.');
     test.done();

@@ -99,6 +99,15 @@ exports['parser'] = {
     test.done();
   },
     
+  'expect (satisfy) to be return the right offset': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofCharacters("a"),0).offset,
+               1,
+               'should be the right offset.');
+    test.done();
+  },
+    
   'expect (satisfy) to be rejected': function(test) {
     test.expect(1);
     // tests here  
@@ -242,5 +251,85 @@ exports['parser'] = {
                'should be rejected.');
     test.done();
   },
+        
+  'expect (number) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.numberLiteral().parse(stream.ofCharacters("123"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect (number) to return 123': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.numberLiteral().parse(stream.ofCharacters("123"),0).value,
+               123,
+               'should be accepted.');
+    test.done();
+  },
     
+  'expect (charLiteral) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.charLiteral().parse(stream.ofCharacters("'a'"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+    
+  'expect (charLiteral) to return a': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.charLiteral().parse(stream.ofCharacters("'a'"),0).value,
+               'a',
+               'should be accepted.');
+    test.done();
+  },
+    
+  'expect (charLiteral) quote to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.charLiteral().parse(stream.ofCharacters("'\\''"),0).isAccepted(), 
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect (charLiteral) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.charLiteral().parse(stream.ofCharacters("''"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
+   
+  'expect (stringLiteral) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.stringLiteral().parse(stream.ofCharacters('"a"'),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+    
+  'expect (stringLiteral) to return abc': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.stringLiteral().parse(stream.ofCharacters('"abc"'),0).value,
+               "abc",
+               'should be accepted.');
+    test.done();
+  },
+  
+  'expect (stringLiteral) empty to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.stringLiteral().parse(stream.ofCharacters('""'),0).isAccepted(), 
+               true,
+               'should be accepted.');
+    test.done();
+  },  
 };

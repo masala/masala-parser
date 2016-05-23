@@ -7,21 +7,16 @@
 Javascript parser combinator implementation inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf).
 
-## Parsers description
+## Parser specification
 
-### Parsers for generic stream 
-
+#### Basic constructors:
 - *returns* : &forall; a c . a &rarr; Parser a c
 - *error* : &forall; a c . unit &rarr; Parser a c
 - *eos* : &forall; c . unit &rarr; Parser unit c
 - *satisfy* : &forall; a . (a &rarr; bool) &rarr; Parser a a
 - *try* : &forall; a c . Parser a c &rarr; Parser a c
 
-#### Examples
-
-
-### Parsers for char stream 
-
+#### Char sequence constructors:
 - *digit* : unit &rarr; Parser char char
 - *lowerCase* : unit &rarr; Parser char char
 - *upperCase* : unit &rarr; Parser char char
@@ -33,21 +28,23 @@ Javascript parser combinator implementation inspired by the paper titled:
 - *numberLitteral* : unit &rarr; Parser number char
 - *aString* : string &rarr; Parser string char
 
-#### Examples
-
-
-### Combinators
-
+#### Parser Combinators:
 - *and* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
-- *andRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
-- *andLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
+- *andLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
+- *andRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
 - *or* : &forall; a c . **Parser a c** &rArr; Parser a c &rarr; Parser a c
-- *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Optional a) c
+- *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Option a) c
 - *rep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
-- *optrep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Optional (List a)) c
+- *optrep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
+- *match* : &forall; a c . **Parser a c** &rArr; Comparable a &rarr; Parser a c
 
-#### Examples
+#### Parser manipulation:
+- *map* : &forall; a b c . **Parser a c** &rArr; (a &rarr; b) &rarr; Parser b c
+- *flatmap* : &forall; a b c . **Parser a c** &rArr; (a &rarr; Parser b c) &rarr; Parser b c
+- *filter* : &forall; a b c . **Parser a c** &rArr; (a &rarr; bool) &rarr; Parser a c
 
+#### Parser Main Function:
+- *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
 
 ## License
 
