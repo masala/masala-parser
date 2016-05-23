@@ -11,11 +11,14 @@ Javascript parser combinator implementation inspired by the paper titled:
 
 ### Parsers for generic stream 
 
-- *returns* : &forall; a . a &rarr; Parser a c
+- *returns* : &forall; a c . a &rarr; Parser a c
 - *error* : &forall; a c . unit &rarr; Parser a c
 - *eos* : &forall; c . unit &rarr; Parser unit c
 - *satisfy* : &forall; a . (a &rarr; bool) &rarr; Parser a a
 - *try* : &forall; a c . Parser a c &rarr; Parser a c
+
+#### Examples
+
 
 ### Parsers for char stream 
 
@@ -24,11 +27,27 @@ Javascript parser combinator implementation inspired by the paper titled:
 - *upperCase* : unit &rarr; Parser char char
 - *letter* : unit &rarr; Parser char char
 - *notChar* : char &rarr; Parser char char
-- *char* : char &rarr; Parser char char
+- *aChar* : char &rarr; Parser char char
 - *charLitteral* : unit &rarr; Parser char char
 - *stringLitteral* : unit &rarr; Parser string char
 - *numberLitteral* : unit &rarr; Parser number char
 - *aString* : string &rarr; Parser string char
+
+#### Examples
+
+
+### Combinators
+
+- *and* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
+- *andRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
+- *andLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
+- *or* : &forall; a c . **Parser a c** &rArr; Parser a c &rarr; Parser a c
+- *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Optional a) c
+- *rep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
+- *optrep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Optional (List a)) c
+
+#### Examples
+
 
 ## License
 

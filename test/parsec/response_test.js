@@ -34,6 +34,14 @@ exports['response'] = {
             'should be accepted.');
     test.done();
   },
+    
+  'response as a success': function(test) {
+    test.expect(1);
+    // tests here  
+    test.ok(response.accept().toTry().isSuccess(), 
+            'should be success.');
+    test.done();
+  },
 
   'response accepted map to accepted': function(test) {
     test.expect(1);
@@ -109,6 +117,15 @@ exports['response'] = {
     // tests here  
     test.equal(response.reject().isAccepted(), false, 
                'should be rejected.');
+    test.done();
+  },
+    
+  'response as a failure': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(response.reject().toTry().isSuccess(), 
+               false,
+                'should be failure.');
     test.done();
   },
     

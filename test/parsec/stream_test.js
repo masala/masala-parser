@@ -27,28 +27,28 @@ exports['stream'] = {
     done();
   },
     
-  'EOS for empty stream': function(test) {
+  'endOfStream for empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(stream.ofCharacters('').EOS(0), 
-            'should be EOS.');
+    test.ok(stream.ofCharacters('').endOfStream(0), 
+            'should be endOfStream.');
     test.done();
   },
 
-  'EOS for non empty stream': function(test) {
+  'endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(stream.ofCharacters('1').EOS(1), 
-            'should be EOS.');
+    test.ok(stream.ofCharacters('1').endOfStream(1), 
+            'should be endOfStream.');
     test.done();
   },
 
-  'no EOS for non empty stream': function(test) {
+  'no endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('1').EOS(0), 
+    test.equal(stream.ofCharacters('1').endOfStream(0), 
                false,
-               'should be EOS.');
+               'should be endOfStream.');
     test.done();
   },
 
