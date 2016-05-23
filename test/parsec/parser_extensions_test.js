@@ -23,7 +23,7 @@ var parser = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/parse
     test.ifError(value)
 */
 
-exports['parser'] = {
+exports['parser_extension'] = {
   setUp: function(done) {
     done();
   },
