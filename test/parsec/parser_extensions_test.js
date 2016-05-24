@@ -251,6 +251,24 @@ exports['parser_extension'] = {
                'should be rejected.');
     test.done();
   },
+      
+  'expect (string) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.string('hello').parse(stream.ofCharacters("hello"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect (string) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char('hello').parse(stream.ofCharacters("hell"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
         
   'expect (number) to be accepted': function(test) {
     test.expect(1);

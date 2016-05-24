@@ -46,19 +46,6 @@ Javascript parser combinator implementation inspired by the paper titled:
 #### Parser Main Function:
 - *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
 
-### Examples
-
-```Javascript
-// Mount parser module
-var P = require('Parsec').parser;
-
-// Parser number char
-var e = P.char('(').thenRight(P.number).thenLeft(P.char(')'));
-
-// Perform parse operation
-e.parse(stream.ofCharacters("(12)")) === 12 
-```
-
 ## Token specification
 
 #### Token builder:
@@ -74,6 +61,24 @@ e.parse(stream.ofCharacters("(12)")) === 12
 - *number* : Parser Token Token 
 - *string* : Parser Token Token 
 - *char* : Parser Token Token
+
+## Generic Lexer
+
+#### Genlex factory:
+- *keyword* : string &rarr; a
+- *ident* : string &rarr; a
+- *number* : number &rarr; a
+- *string* : string &rarr; a
+- *char* : char &rarr; a
+
+#### Genlex generator:
+- *keyword* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
+- *ident* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
+- *number* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
+- *string* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
+- *char* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
+- *token* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
+- *tokens* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser [a] char
 
 ## License
 

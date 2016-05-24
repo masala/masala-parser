@@ -78,4 +78,31 @@ exports['stream'] = {
                'should be a failure.');
     test.done();
   },
+
+  'subStreamAt empty from stream': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(stream.ofCharacters('123').subStreamAt('',0), 
+               true,
+               'should be a success.');
+    test.done();
+  },
+
+  'subStreamAt first element from stream': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(stream.ofCharacters('123').subStreamAt('1',0), 
+               true,
+               'should be a success.');
+    test.done();
+  },
+    
+  'subStreamAt second element and more from stream': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(stream.ofCharacters('123').subStreamAt('23',1), 
+               true,
+               'should be a success.');
+    test.done();
+  },   
 };
