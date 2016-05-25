@@ -80,7 +80,7 @@ exports['parser_stream'] = {
     test.expect(1);
     // tests here  
     var p = parser.char(' ').optrep().thenRight(parser.numberLiteral());
-    test.equal(stream.ofParser(p, stream.ofCharacters("123")).get(0).success().value, 
+    test.equal(stream.ofParser(p, stream.ofCharacters("123")).get(0).success(), 
                123,
                'should be a 123.');
     test.done();
