@@ -13,10 +13,13 @@ TODO
 
 ## Specifications
 
-### Stream
+### Stream constructors
 - *ofCharacters* : string -> Stream char
 - *ofArray* : [a] -> Stream a
-- *ofParser* : Parse a c -> Stream c -> Stream a
+- *ofParser* : (Parse a c, Stream c) -> Stream a
+
+##### Methods
+-
 
 ### Parser
 
