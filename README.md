@@ -7,7 +7,18 @@
 Javascript parser combinator implementation inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf).
 
-## Parser specification
+## Tutorial
+
+TODO
+
+## Specifications
+
+### Stream
+- *ofCharacters* : string -> Stream char
+- *ofArray* : [a] -> Stream a
+- *ofParser* : Parse a c -> Stream c -> Stream a
+
+### Parser
 
 #### Basic constructors:
 - *returns* : &forall; a c . a &rarr; Parser a c
@@ -46,7 +57,7 @@ Javascript parser combinator implementation inspired by the paper titled:
 #### Parser Main Function:
 - *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
 
-## Token specification
+### Token
 
 #### Token builder:
 - *keyword* : string &rarr; Token 
@@ -62,7 +73,7 @@ Javascript parser combinator implementation inspired by the paper titled:
 - *string* : Parser Token Token 
 - *char* : Parser Token Token
 
-## Generic Lexer
+### Generic Lexer
 
 #### Genlex factory:
 - *keyword* : string &rarr; a
@@ -80,18 +91,10 @@ Javascript parser combinator implementation inspired by the paper titled:
 - *token* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
 - *tokens* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser [a] char
 
-## Tokenizer
+### Tokenizer
 
 #### Tokenizer [String]
 - *tokenize* : Tokenizer [String] &rArr; Stream char &rarr; Try [Token]
-
-#### Example
-
-````
-var tk = tokenizer(["let","in","="]);
-tk.tokenize(stream.ofCharacters("let f = 'a' in \"aa\""));
-````
-Produces the following value of type `Try [Token]`: `Success([Keyword("let"),Ident("f"),Keyword("="),Char("a"),Keyword("in"),String("aa")])`
 
 ## License
 
