@@ -29,13 +29,13 @@ p.parse(S.ofString("Hello World")).value.join() === "World"
 
 ```
 // let P be the parser library
-P.digit             <1>
-P.lowerCase         <2>
-P.upperCase
+P.digit             (1)
+P.lowerCase         (2)
+P.upperCase         (3)
 ```
-<1> Recognize a digit i.e. '0' ... '9'.
-<2> Recognize a lower case letter i.e. 'a' ... 'z'
-<3> Recognize a upper case letter i.e. 'A' ... 'A'
+1. Recognize a digit i.e. '0' ... '9'.
+2. Recognize a lower case letter i.e. 'a' ... 'z'
+3. Recognize a upper case letter i.e. 'A' ... 'A'
 
 ## Specifications
 
@@ -43,9 +43,7 @@ P.upperCase
 - *ofString* : string -> Stream char
 - *ofArray* : [a] -> Stream a
 - *ofParser* : (Parse a c, Stream c) -> Stream a
-
-##### Methods
--
+- *buffered* : Stream a -> Stream a
 
 ### Parser
 
