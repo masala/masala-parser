@@ -92,25 +92,25 @@ P.lowerCase.then(P.letter.optrep()) (4)
 - *aString* : string &rarr; Parser string char
 
 #### Parser Combinators:
-- *and* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
-- *andLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
-- *andRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
-- *or* : &forall; a c . **Parser a c** &rArr; Parser a c &rarr; Parser a c
-- *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Option a) c
-- *rep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
-- *optrep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
-- *match* : &forall; a c . **Parser a c** &rArr; Comparable a &rarr; Parser a c
+- *and* : &forall; a b c . **Parser a c** &sdot; Parser b c &rarr; Parser [a,b] c
+- *andLeft* : &forall; a b c . **Parser a c** &sdot; Parser b c &rarr; Parser a c
+- *andRight* : &forall; a b c . **Parser a c** &sdot; Parser b c &rarr; Parser b c
+- *or* : &forall; a c . **Parser a c** &sdot; Parser a c &rarr; Parser a c
+- *opt* : &forall; a c . **Parser a c** &sdot; unit &rarr; Parser (Option a) c
+- *rep* : &forall; a c . **Parser a c** &sdot; unit &rarr; Parser (List a) c
+- *optrep* : &forall; a c . **Parser a c** &sdot; unit &rarr; Parser (List a) c
+- *match* : &forall; a c . **Parser a c** &sdot; Comparable a &rarr; Parser a c
 
 #### Parser manipulation:
-- *map* : &forall; a b c . **Parser a c** &rArr; (a &rarr; b) &rarr; Parser b c
-- *flatmap* : &forall; a b c . **Parser a c** &rArr; (a &rarr; Parser b c) &rarr; Parser b c
-- *filter* : &forall; a b c . **Parser a c** &rArr; (a &rarr; bool) &rarr; Parser a c
+- *map* : &forall; a b c . **Parser a c** &sdot; (a &rarr; b) &rarr; Parser b c
+- *flatmap* : &forall; a b c . **Parser a c** &sdot; (a &rarr; Parser b c) &rarr; Parser b c
+- *filter* : &forall; a b c . **Parser a c** &sdot; (a &rarr; bool) &rarr; Parser a c
 
 #### Chaining parsers by composition:
-- *chain* : Parser a b &rarr; Parser c a &rarr; Parser c b
+- *chain* : &forall; a b c . **Parser a c** &sdot; Parser c a &rarr; Parser c b
 
 #### Parser Main Function:
-- *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
+- *parse* : &forall; a c . **Parser a c** &sdot; Stream 'c &rarr; number &rarr; Response 'a
 
 ### Token
 
@@ -138,18 +138,18 @@ P.lowerCase.then(P.letter.optrep()) (4)
 - *char* : char &rarr; a
 
 #### Genlex generator:
-- *keyword* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
-- *ident* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
-- *number* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
-- *string* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
-- *char* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
-- *token* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser a char
-- *tokens* : Genlex [String] &rArr; GenlexFactory a &rarr; Parser [a] char
+- *keyword* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
+- *ident* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
+- *number* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
+- *string* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
+- *char* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
+- *token* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
+- *tokens* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser [a] char
 
 ### Tokenizer
 
 #### Tokenizer [String]
-- *tokenize* : Tokenizer [String] &rArr; Stream char &rarr; Try [Token]
+- *tokenize* : Tokenizer [String] &sdot; Stream char &rarr; Try [Token]
 
 ## License
 
