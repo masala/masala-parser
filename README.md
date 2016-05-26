@@ -91,8 +91,7 @@ P.string("hello")   (6)
 - *flatmap* : &forall; a b c . **Parser a c** &rArr; (a &rarr; Parser b c) &rarr; Parser b c
 - *filter* : &forall; a b c . **Parser a c** &rArr; (a &rarr; bool) &rarr; Parser a c
 
-#### Chaining parsers by composition
-
+#### Chaining parsers by composition:
 - *chain* : Parser a b &rarr; Parser c a &rarr; Parser c b
 
 #### Parser Main Function:
