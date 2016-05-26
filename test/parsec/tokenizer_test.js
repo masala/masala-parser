@@ -32,7 +32,7 @@ exports['tokenizer'] = {
   'tokeniser is a success': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(tokenizer([":","->"]).tokenize(stream.ofCharacters("type f : a -> b")).isSuccess(), 
+    test.ok(tokenizer([":","->"]).tokenize(stream.ofString("type f : a -> b")).isSuccess(), 
             'should be a success.');
     test.done();
   },
@@ -40,7 +40,7 @@ exports['tokenizer'] = {
   'tokeniser return a list of tokens': function(test) {
     test.expect(1);
     // tests here  
-    test.deepEqual(tokenizer(["let","in","=","->"]).tokenize(stream.ofCharacters("let f = 'a' in \"aa\"")).success(), 
+    test.deepEqual(tokenizer(["let","in","=","->"]).tokenize(stream.ofString("let f = 'a' in \"aa\"")).success(), 
                    [tkBuilder.keyword("let"),
                     tkBuilder.ident("f"),
                     tkBuilder.keyword("="),

@@ -31,7 +31,7 @@ exports['parser_extension'] = {
   'expect (returns) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(parser.returns().parse(stream.ofCharacters(""),0).isAccepted(),
+    test.ok(parser.returns().parse(stream.ofString(""),0).isAccepted(),
             'should be accepted.');
     test.done();
   },
@@ -39,7 +39,7 @@ exports['parser_extension'] = {
   'expect (returns) to return a given value': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.returns(123).parse(stream.ofCharacters(""),0).value,
+    test.equal(parser.returns(123).parse(stream.ofString(""),0).value,
                123,
                'should be accepted.');
     test.done();
@@ -48,7 +48,7 @@ exports['parser_extension'] = {
   'expect (returns) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.error().parse(stream.ofCharacters(""),0).isAccepted(),
+    test.equal(parser.error.parse(stream.ofString(""),0).isAccepted(),
                false,
                'should be accepted.');
     test.done();
@@ -57,7 +57,7 @@ exports['parser_extension'] = {
   'expect (error) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.error().parse(stream.ofCharacters(""),0).isAccepted(),
+    test.equal(parser.error.parse(stream.ofString(""),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -66,7 +66,7 @@ exports['parser_extension'] = {
   'expect (eos) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.eos().parse(stream.ofCharacters(""),0).isAccepted(),
+    test.equal(parser.eos.parse(stream.ofString(""),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -75,7 +75,7 @@ exports['parser_extension'] = {
   'expect (eos) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.eos().parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.eos.parse(stream.ofString("a"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -84,7 +84,7 @@ exports['parser_extension'] = {
   'expect (satisfy) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofString("a"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -93,7 +93,7 @@ exports['parser_extension'] = {
   'expect (satisfy) to be return the right value': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofCharacters("a"),0).value,
+    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofString("a"),0).value,
                'a',
                'should be the right value.');
     test.done();
@@ -102,7 +102,7 @@ exports['parser_extension'] = {
   'expect (satisfy) to be return the right offset': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofCharacters("a"),0).offset,
+    test.equal(parser.satisfy(function(v) { return v === 'a';}).parse(stream.ofString("a"),0).offset,
                1,
                'should be the right offset.');
     test.done();
@@ -111,7 +111,7 @@ exports['parser_extension'] = {
   'expect (satisfy) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.satisfy(function(v) { return v === 'b';}).parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.satisfy(function(v) { return v === 'b';}).parse(stream.ofString("a"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -120,7 +120,7 @@ exports['parser_extension'] = {
   'expect (doTry satisfy) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.try(parser.satisfy(function(v) { return v === 'a';})).parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.try(parser.satisfy(function(v) { return v === 'a';})).parse(stream.ofString("a"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -129,7 +129,7 @@ exports['parser_extension'] = {
   'expect (doTry satisfy) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.try(parser.satisfy(function(v) { return v === 'b';})).parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.try(parser.satisfy(function(v) { return v === 'b';})).parse(stream.ofString("a"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -138,7 +138,7 @@ exports['parser_extension'] = {
   'expect (digit) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.digit().parse(stream.ofCharacters("1"),0).isAccepted(),
+    test.equal(parser.digit.parse(stream.ofString("1"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -147,7 +147,7 @@ exports['parser_extension'] = {
   'expect (digit) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.digit().parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.digit.parse(stream.ofString("a"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -156,7 +156,7 @@ exports['parser_extension'] = {
   'expect (lowerCase) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.lowerCase().parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.lowerCase.parse(stream.ofString("a"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -165,7 +165,7 @@ exports['parser_extension'] = {
   'expect (lowerCase) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.lowerCase().parse(stream.ofCharacters("A"),0).isAccepted(),
+    test.equal(parser.lowerCase.parse(stream.ofString("A"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -174,7 +174,7 @@ exports['parser_extension'] = {
   'expect (upperCase) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.upperCase().parse(stream.ofCharacters("A"),0).isAccepted(),
+    test.equal(parser.upperCase.parse(stream.ofString("A"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -183,7 +183,7 @@ exports['parser_extension'] = {
   'expect (upperCase) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.upperCase().parse(stream.ofCharacters("z"),0).isAccepted(),
+    test.equal(parser.upperCase.parse(stream.ofString("z"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -192,7 +192,7 @@ exports['parser_extension'] = {
   'expect upper (letter) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.letter().parse(stream.ofCharacters("A"),0).isAccepted(),
+    test.equal(parser.letter.parse(stream.ofString("A"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -201,7 +201,7 @@ exports['parser_extension'] = {
   'expect lower (letter) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.letter().parse(stream.ofCharacters("z"),0).isAccepted(),
+    test.equal(parser.letter.parse(stream.ofString("z"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -210,7 +210,7 @@ exports['parser_extension'] = {
   'expect non (letter) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.letter().parse(stream.ofCharacters("0"),0).isAccepted(),
+    test.equal(parser.letter.parse(stream.ofString("0"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -219,7 +219,7 @@ exports['parser_extension'] = {
   'expect (notChar) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.notChar('a').parse(stream.ofCharacters("b"),0).isAccepted(),
+    test.equal(parser.notChar('a').parse(stream.ofString("b"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -228,7 +228,7 @@ exports['parser_extension'] = {
   'expect (notChar) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.notChar('a').parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.notChar('a').parse(stream.ofString("a"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -237,7 +237,7 @@ exports['parser_extension'] = {
   'expect (char) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char('a').parse(stream.ofCharacters("a"),0).isAccepted(),
+    test.equal(parser.char('a').parse(stream.ofString("a"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -246,7 +246,7 @@ exports['parser_extension'] = {
   'expect (char) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char('a').parse(stream.ofCharacters("b"),0).isAccepted(),
+    test.equal(parser.char('a').parse(stream.ofString("b"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -255,7 +255,7 @@ exports['parser_extension'] = {
   'expect (string) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.string('hello').parse(stream.ofCharacters("hello"),0).isAccepted(),
+    test.equal(parser.string('hello').parse(stream.ofString("hello"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -264,7 +264,7 @@ exports['parser_extension'] = {
   'expect (string) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char('hello').parse(stream.ofCharacters("hell"),0).isAccepted(),
+    test.equal(parser.char('hello').parse(stream.ofString("hell"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -273,7 +273,7 @@ exports['parser_extension'] = {
   'expect (number) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.numberLiteral().parse(stream.ofCharacters("123"),0).isAccepted(),
+    test.equal(parser.numberLiteral.parse(stream.ofString("123"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -282,7 +282,7 @@ exports['parser_extension'] = {
   'expect (number) to return 123': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.numberLiteral().parse(stream.ofCharacters("123"),0).value,
+    test.equal(parser.numberLiteral.parse(stream.ofString("123"),0).value,
                123,
                'should be accepted.');
     test.done();
@@ -291,7 +291,7 @@ exports['parser_extension'] = {
   'expect (charLiteral) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.charLiteral().parse(stream.ofCharacters("'a'"),0).isAccepted(),
+    test.equal(parser.charLiteral.parse(stream.ofString("'a'"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -300,7 +300,7 @@ exports['parser_extension'] = {
   'expect (charLiteral) to return a': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.charLiteral().parse(stream.ofCharacters("'a'"),0).value,
+    test.equal(parser.charLiteral.parse(stream.ofString("'a'"),0).value,
                'a',
                'should be accepted.');
     test.done();
@@ -309,7 +309,7 @@ exports['parser_extension'] = {
   'expect (charLiteral) quote to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.charLiteral().parse(stream.ofCharacters("'\\''"),0).isAccepted(), 
+    test.equal(parser.charLiteral.parse(stream.ofString("'\\''"),0).isAccepted(), 
                true,
                'should be accepted.');
     test.done();
@@ -318,7 +318,7 @@ exports['parser_extension'] = {
   'expect (charLiteral) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.charLiteral().parse(stream.ofCharacters("''"),0).isAccepted(),
+    test.equal(parser.charLiteral.parse(stream.ofString("''"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -327,7 +327,7 @@ exports['parser_extension'] = {
   'expect (stringLiteral) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.stringLiteral().parse(stream.ofCharacters('"a"'),0).isAccepted(),
+    test.equal(parser.stringLiteral.parse(stream.ofString('"a"'),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -336,7 +336,7 @@ exports['parser_extension'] = {
   'expect (stringLiteral) to return abc': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.stringLiteral().parse(stream.ofCharacters('"abc"'),0).value,
+    test.equal(parser.stringLiteral.parse(stream.ofString('"abc"'),0).value,
                "abc",
                'should be accepted.');
     test.done();
@@ -345,7 +345,7 @@ exports['parser_extension'] = {
   'expect (stringLiteral) empty to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.stringLiteral().parse(stream.ofCharacters('""'),0).isAccepted(), 
+    test.equal(parser.stringLiteral.parse(stream.ofString('""'),0).isAccepted(), 
                true,
                'should be accepted.');
     test.done();

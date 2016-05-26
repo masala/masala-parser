@@ -1,7 +1,6 @@
 'use strict';
 
-var parser = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/parser.js'),
-    stream = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/stream.js');
+var stream = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/stream.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -31,8 +30,7 @@ exports['parser_stream'] = {
   'endOfStream for empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
-    test.ok(stream.ofParser(p, stream.ofString("")).endOfStream(0), 
+    test.ok(stream.buffered(stream.ofString("")).endOfStream(0), 
             'should be endOfStream.');
     test.done();
   },
@@ -40,8 +38,7 @@ exports['parser_stream'] = {
   'endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
-    test.ok(stream.ofParser(p, stream.ofString("1")).endOfStream(1), 
+    test.ok(stream.buffered(stream.ofString("1")).endOfStream(1), 
             'should be endOfStream.');
     test.done();
   },
@@ -49,8 +46,7 @@ exports['parser_stream'] = {
   'no endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
-    test.equal(stream.ofParser(p, stream.ofString("1")).endOfStream(0),
+    test.equal(stream.buffered(stream.ofString("1")).endOfStream(0),
                false,
                'should be endOfStream.');
     test.done();
@@ -59,8 +55,7 @@ exports['parser_stream'] = {
   'get from stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
-    test.equal(stream.ofParser(p, stream.ofString("1")).get(0).isSuccess(), 
+    test.equal(stream.buffered(stream.ofString("1")).get(0).isSuccess(), 
                true,
                'should be a success.');
     test.done();
@@ -69,20 +64,31 @@ exports['parser_stream'] = {
   'do not get from empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
-    test.equal(stream.ofParser(p, stream.ofString("1")).get(1).isSuccess(), 
+    test.equal(stream.buffered(stream.ofString("1")).get(1).isSuccess(), 
                false,
                'should be a failure.');
     test.done();
   },
 
-  'get from stream numberLiteral 123': function(test) {
+  'get from stream numberLiteral 1': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
-    test.equal(stream.ofParser(p, stream.ofString("123")).get(0).success(), 
-               123,
-               'should be a 123.');
+    test.equal(stream.buffered(stream.ofString("123")).get(0).success(), 
+               '1',
+               'should be a 1.');
     test.done();
-  }
+  },
+
+  'get from stream numberLiteral is cached': function(test) {
+    test.expect(1);
+    // tests here  
+    var s = stream.buffered(stream.ofString("123")),
+        v = s.get(0);
+      
+    test.strictEqual(s.get(0), 
+                     v,
+                     'should be a the same object.');
+    test.done();
+  }    
+    
 };

@@ -30,7 +30,7 @@ exports['stream'] = {
   'endOfStream for empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(stream.ofCharacters('').endOfStream(0), 
+    test.ok(stream.ofString('').endOfStream(0), 
             'should be endOfStream.');
     test.done();
   },
@@ -38,7 +38,7 @@ exports['stream'] = {
   'endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.ok(stream.ofCharacters('1').endOfStream(1), 
+    test.ok(stream.ofString('1').endOfStream(1), 
             'should be endOfStream.');
     test.done();
   },
@@ -46,7 +46,7 @@ exports['stream'] = {
   'no endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('1').endOfStream(0), 
+    test.equal(stream.ofString('1').endOfStream(0), 
                false,
                'should be endOfStream.');
     test.done();
@@ -55,7 +55,7 @@ exports['stream'] = {
   'get from stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('1').get(0).isSuccess(), 
+    test.equal(stream.ofString('1').get(0).isSuccess(), 
                true,
                'should be a success.');
     test.done();
@@ -64,7 +64,7 @@ exports['stream'] = {
   'do not get from empty stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('1').get(1).isSuccess(), 
+    test.equal(stream.ofString('1').get(1).isSuccess(), 
                false,
                'should be a failure.');
     test.done();
@@ -73,7 +73,7 @@ exports['stream'] = {
   'do not get from erroneous stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters({length:1,charAt:function() { throw new Error(); }}).get(0).isSuccess(), 
+    test.equal(stream.ofString({length:1,charAt:function() { throw new Error(); }}).get(0).isSuccess(), 
                false,
                'should be a failure.');
     test.done();
@@ -82,7 +82,7 @@ exports['stream'] = {
   'subStreamAt empty from stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('123').subStreamAt('',0), 
+    test.equal(stream.ofString('123').subStreamAt('',0), 
                true,
                'should be a success.');
     test.done();
@@ -91,7 +91,7 @@ exports['stream'] = {
   'subStreamAt first element from stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('123').subStreamAt('1',0), 
+    test.equal(stream.ofString('123').subStreamAt('1',0), 
                true,
                'should be a success.');
     test.done();
@@ -100,7 +100,7 @@ exports['stream'] = {
   'subStreamAt second element and more from stream': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(stream.ofCharacters('123').subStreamAt('23',1), 
+    test.equal(stream.ofString('123').subStreamAt('23',1), 
                true,
                'should be a success.');
     test.done();

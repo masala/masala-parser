@@ -32,7 +32,7 @@ exports['genlex'] = {
   'expect (space) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).space().parse(stream.ofCharacters(" "),0).isAccepted(),
+    test.equal(genlex.generator([]).space().parse(stream.ofString(" "),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -41,7 +41,7 @@ exports['genlex'] = {
   'expect (meta space) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).space().parse(stream.ofCharacters("\t"),0).isAccepted(),
+    test.equal(genlex.generator([]).space().parse(stream.ofString("\t"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -50,7 +50,7 @@ exports['genlex'] = {
   'expect (spaces) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).spaces().parse(stream.ofCharacters(" \n  "),0).isAccepted(),
+    test.equal(genlex.generator([]).spaces().parse(stream.ofString(" \n  "),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -59,7 +59,7 @@ exports['genlex'] = {
   'expect (spaces) to be skipped': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).spaces().parse(stream.ofCharacters(" \n "),0).offset,
+    test.equal(genlex.generator([]).spaces().parse(stream.ofString(" \n "),0).offset,
                3,
                'should be skipped.');
     test.done();
@@ -76,7 +76,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator(['<-', '->']).keyword(factory).parse(stream.ofCharacters("a->b"),1).isAccepted(),
+    test.equal(genlex.generator(['<-', '->']).keyword(factory).parse(stream.ofString("a->b"),1).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -93,7 +93,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator(['<-', '->']).keyword(factory).parse(stream.ofCharacters("a->b"),1).value,
+    test.equal(genlex.generator(['<-', '->']).keyword(factory).parse(stream.ofString("a->b"),1).value,
                '->',
                'should be accepted.');
     test.done();
@@ -110,7 +110,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator([]).ident(factory).parse(stream.ofCharacters("smith "),0).isAccepted(),
+    test.equal(genlex.generator([]).ident(factory).parse(stream.ofString("smith "),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -127,7 +127,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator([]).ident(factory).parse(stream.ofCharacters("smith "),0).value,
+    test.equal(genlex.generator([]).ident(factory).parse(stream.ofString("smith "),0).value,
                'smith',
                'should be smith.');
     test.done();
@@ -144,7 +144,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator([]).number(factory).parse(stream.ofCharacters('42'),0).isAccepted(),
+    test.equal(genlex.generator([]).number(factory).parse(stream.ofString('42'),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -161,7 +161,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator([]).number(factory).parse(stream.ofCharacters('42'),0).value,
+    test.equal(genlex.generator([]).number(factory).parse(stream.ofString('42'),0).value,
                42,
                'should be 42.');
     test.done();
@@ -178,7 +178,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator([]).string(factory).parse(stream.ofCharacters('"smith"'),0).isAccepted(),
+    test.equal(genlex.generator([]).string(factory).parse(stream.ofString('"smith"'),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -195,7 +195,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator([]).string(factory).parse(stream.ofCharacters('"smith"'),0).value,
+    test.equal(genlex.generator([]).string(factory).parse(stream.ofString('"smith"'),0).value,
                'smith',
                'should be smith.');
     test.done();
@@ -212,7 +212,7 @@ exports['genlex'] = {
         function (s) { return s; }
     );
     
-    test.equal(genlex.generator([]).char(factory).parse(stream.ofCharacters("'s'"),0).isAccepted(),
+    test.equal(genlex.generator([]).char(factory).parse(stream.ofString("'s'"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -229,7 +229,7 @@ exports['genlex'] = {
         function (s) { return s; }
      );
     
-    test.equal(genlex.generator([]).char(factory).parse(stream.ofCharacters("'s'"),0).value,
+    test.equal(genlex.generator([]).char(factory).parse(stream.ofString("'s'"),0).value,
                's',
                'should be s.');
     test.done();
@@ -246,7 +246,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofCharacters("a<-b"),1).value,
+    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofString("a<-b"),1).value,
                '<-',
                'should be <-.');
     test.done();
@@ -263,7 +263,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofCharacters("hello"),0).value,
+    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofString("hello"),0).value,
                'hello',
                'should be hello.');
     test.done();
@@ -280,7 +280,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofCharacters("123"),0).value,
+    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofString("123"),0).value,
                123,
                'should be 123.');
     test.done();
@@ -297,7 +297,7 @@ exports['genlex'] = {
         null
     );
     
-    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofCharacters('"123"'),0).value,
+    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofString('"123"'),0).value,
                "123",
                'should be 123.');
     test.done();
@@ -314,7 +314,7 @@ exports['genlex'] = {
         function (s) { return s; }
     );
     
-    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofCharacters("'a'"),0).value,
+    test.equal(genlex.generator(['<-']).token(factory).parse(stream.ofString("'a'"),0).value,
                "a",
                'should be a.');
     test.done();
@@ -331,7 +331,7 @@ exports['genlex'] = {
         function (s) { return s; }
     );
     
-    test.deepEqual(genlex.generator(['->']).tokens(factory).parse(stream.ofCharacters("a -> b"),0).value,
+    test.deepEqual(genlex.generator(['->']).tokens(factory).parse(stream.ofString("a -> b"),0).value,
                    ["a","->","b"],
                    'should be [a,->,b].');
     test.done();
