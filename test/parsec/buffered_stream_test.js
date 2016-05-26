@@ -22,7 +22,7 @@ var stream = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/strea
     test.ifError(value)
 */
 
-exports['parser_stream'] = {
+exports['buffered_stream'] = {
   setUp: function(done) {
     done();
   },

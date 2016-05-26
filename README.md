@@ -27,15 +27,25 @@ p.parse(S.ofString("Hello World")).value.join() === "World"
 
 ### Character based parsers
 
+Let `P` be the parser library.
+
 ```
-// let P be the parser library
 P.digit             (1)
 P.lowerCase         (2)
 P.upperCase         (3)
+P.char('h')         (4)
+P.notChar('h')      (5)
+P.string("hello")   (6)
 ```
+
 1. Recognize a digit i.e. '0' ... '9'.
 2. Recognize a lower case letter i.e. 'a' ... 'z'
 3. Recognize a upper case letter i.e. 'A' ... 'A'
+4. Recognize the character 'h'
+5. Recognize any character except 'h'
+6. Recognize the string "hello"
+
+### 
 
 ## Specifications
 
@@ -55,15 +65,15 @@ P.upperCase         (3)
 - *try* : &forall; a c . Parser a c &rarr; Parser a c
 
 #### Char sequence constructors:
-- *digit* : unit &rarr; Parser char char
-- *lowerCase* : unit &rarr; Parser char char
-- *upperCase* : unit &rarr; Parser char char
-- *letter* : unit &rarr; Parser char char
+- *digit* : Parser char char
+- *lowerCase* : Parser char char
+- *upperCase* : Parser char char
+- *letter* : Parser char char
 - *notChar* : char &rarr; Parser char char
 - *aChar* : char &rarr; Parser char char
-- *charLitteral* : unit &rarr; Parser char char
-- *stringLitteral* : unit &rarr; Parser string char
-- *numberLitteral* : unit &rarr; Parser number char
+- *charLitteral* : Parser char char
+- *stringLitteral* : Parser string char
+- *numberLitteral* : Parser number char
 - *aString* : string &rarr; Parser string char
 
 #### Parser Combinators:
@@ -80,6 +90,10 @@ P.upperCase         (3)
 - *map* : &forall; a b c . **Parser a c** &rArr; (a &rarr; b) &rarr; Parser b c
 - *flatmap* : &forall; a b c . **Parser a c** &rArr; (a &rarr; Parser b c) &rarr; Parser b c
 - *filter* : &forall; a b c . **Parser a c** &rArr; (a &rarr; bool) &rarr; Parser a c
+
+#### Chaining parsers by composition
+
+- *chain* : Parser a b &rarr; Parser c a &rarr; Parser c b
 
 #### Parser Main Function:
 - *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
