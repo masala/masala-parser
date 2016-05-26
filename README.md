@@ -9,8 +9,9 @@ Javascript parser combinator implementation inspired by the paper titled:
 
 ## Tutorial
 
-According to Wikipedia, 
-*"In functional programming, a parser combinator is a higher-order function that accepts several parsers as input and returns a new parser as its output."* 
+According to Wikipedia *"in functional programming, a parser combinator is a 
+higher-order function that accepts several parsers as input and returns a new 
+parser as its output."* 
 
 ### Hello World
 
@@ -18,9 +19,7 @@ According to Wikipedia,
 var P = require('parser'),
     S = require('stream');
 
-var p = P.string("Hello").
-            then(P.char(' ').rep()).
-            thenRight(P.letter.rep());
+var p = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
             
 p.parse(S.ofString("Hello World")).value.join() === "World"
 ```
@@ -30,22 +29,38 @@ p.parse(S.ofString("Hello World")).value.join() === "World"
 Let `P` be the parser library.
 
 ```
-P.digit             (1)
-P.lowerCase         (2)
-P.upperCase         (3)
-P.char('h')         (4)
-P.notChar('h')      (5)
-P.string("hello")   (6)
+P.digit                             (1)
+P.lowerCase                         (2)
+P.upperCase                         (3)
+P.char('h')                         (4)
+P.notChar('h')                      (5)
+P.string("hello")                   (6)
 ```
 
-1. Recognize a digit i.e. '0' ... '9'.
-2. Recognize a lower case letter i.e. 'a' ... 'z'
-3. Recognize a upper case letter i.e. 'A' ... 'A'
+1. Recognize a digit i.e. `'0'` ... `'9'`.
+2. Recognize a lower case letter i.e. `'a'` ... `'z'`
+3. Recognize a upper case letter i.e. `'A'` ... `'Z'`
 4. Recognize the character 'h'
 5. Recognize any character except 'h'
-6. Recognize the string "hello"
+6. Recognize the string `"hello"`
 
-### 
+### Combinators
+
+Let `P` be the parser library.
+
+```
+P.lowerCase.or(P.upperCase)         (1)
+P.digit.rep()                       (2)
+P.char('-').opt()                   (3)
+P.char(' ').optrep()                (4)
+P.lowerCase.then(P.letter.optrep()) (4)
+```
+
+1. Recognize a letter i.e. `'0'` ... `'9'` **or** `'A'` ... `'Z'`
+4. Recognize a number with at least one digit 
+3. Recognize the character `'-'` or nothing
+4. Recognize a least zero white space
+5. Recognize a lowercase then may be letters like `aAaA`
 
 ## Specifications
 

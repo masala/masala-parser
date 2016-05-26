@@ -31,12 +31,12 @@ exports['parser_chain'] = {
   'expect (chain) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    var p1  = parser.numberLiteral.thenLeft(parser.char(' ')),
-        p2  = parser.any.then(parser.any).map(function (r) {
+    var p1  = parser.numberLiteral.thenLeft(parser.char(' ').opt()),
+        p2  = parser.any.then(parser.any).thenLeft(parser.eos).map(function (r) {
             return r[0] + r[1];
         });
 
-      test.equal(p1.chain(p2).parse(stream.ofString("12 34 "),0).isAccepted(),
+      test.equal(p1.chain(p2).parse(stream.ofString("12 34"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -45,12 +45,12 @@ exports['parser_chain'] = {
   'expect (chain) to return 46': function(test) {
     test.expect(1);
     // tests here  
-    var p1  = parser.numberLiteral.thenLeft(parser.char(' ')),
-        p2  = parser.any.then(parser.any).map(function (r) {
+    var p1  = parser.numberLiteral.thenLeft(parser.char(' ').opt()),
+        p2  = parser.any.then(parser.any).thenLeft(parser.eos).map(function (r) {
             return r[0] + r[1];
         });
       
-    test.equal(p1.chain(p2).parse(stream.ofString("12 34 "),0).value,
+    test.equal(p1.chain(p2).parse(stream.ofString("12 34"),0).value,
                46,
                'should be 46.');
     test.done();
