@@ -150,7 +150,7 @@ P.lowerCase.then(P.letter.optrep()) (4)
 ### Tokenizer
 
 #### Tokenizer [String]
-- *tokenize* : Tokenizer [String] &sdot; Stream char &rarr; Try [Token]
+- *tokenize* : **Tokenizer [String]** &sdot; Stream char &rarr; Try [Token]
 
 ## License
 
