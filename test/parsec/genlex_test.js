@@ -1,7 +1,7 @@
 'use strict';
 
-var stream = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/stream.js'),
-    genlex = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/genlex.js');
+var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/stream.js'),
+    genlex = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/genlex.js');
     
 
 /*

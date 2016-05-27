@@ -1,8 +1,8 @@
 'use strict';
 
-var tokenizer = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/tokenizer.js'),
-    stream = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/stream.js'),
-    tkBuilder = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/token.js').builder;
+var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/stream.js'),
+    tokenizer = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/tokenizer.js'),
+    tkBuilder = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/token.js').builder;
 
 /*
   ======== A Handy Little Nodeunit Reference ========

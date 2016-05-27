@@ -1,7 +1,7 @@
 'use strict';
 
-var stream = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/stream.js'),
-    token = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/token.js');
+var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/stream.js'),
+    token = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/token.js');
     
 
 /*
