@@ -1,6 +1,6 @@
 'use strict';
 
-var json = require('../../lib' + (process.env.COVERAGE || '') + '/standard/json.js'),
+var jsonparser = require('../../lib' + (process.env.COVERAGE || '') + '/standard/jsonparser.js'),
     stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js');
     
 /*
@@ -31,7 +31,7 @@ exports['json'] = {
   'number accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('123'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('123'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -39,7 +39,7 @@ exports['json'] = {
   'string accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('"123"'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('"123"'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -47,7 +47,7 @@ exports['json'] = {
   'null accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('null'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('null'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -55,7 +55,7 @@ exports['json'] = {
   'true accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('true'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('true'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -63,7 +63,7 @@ exports['json'] = {
   'false accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('false'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('false'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -71,7 +71,7 @@ exports['json'] = {
   'empty array accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('[ ]'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('[ ]'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -79,7 +79,7 @@ exports['json'] = {
   'singleton array accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('[ 123 ]'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('[ 123 ]'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -87,7 +87,7 @@ exports['json'] = {
   'multi element array accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('[ 123 , 234 ]'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('[ 123 , 234 ]'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -95,7 +95,7 @@ exports['json'] = {
   'empty object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('{ }'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('{ }'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -103,7 +103,7 @@ exports['json'] = {
   'singleton object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('{ "a" : "v" }'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('{ "a" : "v" }'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -111,7 +111,7 @@ exports['json'] = {
   'multi element object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(json.parse(stream.ofString('{ "a" : "v", "a" : [] }'), 0).isAccepted(), 
+    test.ok(jsonparser.parse(stream.ofString('{ "a" : "v", "a" : [] }'), 0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
