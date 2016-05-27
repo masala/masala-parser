@@ -139,13 +139,13 @@ P.lowerCase.then(P.letter.optrep()) (4)
 - *char* : char &rarr; a
 
 #### Genlex generator:
-- *keyword* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
-- *ident* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
-- *number* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
-- *string* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
-- *char* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
-- *token* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser a char
-- *tokens* : Genlex [String] &sdot; GenlexFactory a &rarr; Parser [a] char
+- *keyword* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *ident* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *number* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *string* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *char* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *token* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *tokens* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser [a] char
 
 ### Tokenizer
 
