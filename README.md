@@ -73,6 +73,7 @@ P.lowerCase.then(P.letter.optrep()) (4)
 ### Parser
 
 #### Basic constructors:
+- *lazy* : &forall; a c . (unit &rarr; Parser a c) &rarr; Parser a c
 - *returns* : &forall; a c . a &rarr; Parser a c
 - *error* : &forall; a c . unit &rarr; Parser a c
 - *eos* : &forall; c . unit &rarr; Parser unit c

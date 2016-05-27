@@ -54,6 +54,32 @@ exports['parser_extension'] = {
     test.done();
   },
     
+  'expect (lazy) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.ok(parser.lazy(function(){ return parser.returns(); }).parse(stream.ofString(""),0).isAccepted(),
+            'should be accepted.');
+    test.done();
+  },
+    
+  'expect (lazy) to return a given value': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.lazy(function(){ return parser.returns(123); }).parse(stream.ofString(""),0).value,
+               123,
+               'should be accepted.');
+    test.done();
+  },
+    
+  'expect (lazy) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.lazy(function(){ return parser.error; }).parse(stream.ofString(""),0).isAccepted(),
+               false,
+               'should be accepted.');
+    test.done();
+  },
+    
   'expect (error) to be rejected': function(test) {
     test.expect(1);
     // tests here  
