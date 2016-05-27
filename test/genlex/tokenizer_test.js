@@ -1,6 +1,6 @@
 'use strict';
 
-var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/stream.js'),
+var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js'),
     tokenizer = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/tokenizer.js'),
     tkBuilder = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/token.js').builder;
 
