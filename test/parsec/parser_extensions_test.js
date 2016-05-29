@@ -313,6 +313,43 @@ exports['parser_extension'] = {
                'should be accepted.');
     test.done();
   },
+        
+  'expect negative (number) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.numberLiteral.parse(stream.ofString("-123"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect negative (number) to return -123': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.numberLiteral.parse(stream.ofString("-123"),0).value,
+               -123,
+               'should be accepted.');
+    test.done();
+  },
+      
+  'expect float (number) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.numberLiteral.parse(stream.ofString("123.34e-34"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect float (number) to return 123.34e-34': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.numberLiteral.parse(stream.ofString("123.34e-34"),0).value,
+               123.34e-34,
+               'should be accepted.');
+    test.done();
+  },
+    
     
   'expect (charLiteral) to be accepted': function(test) {
     test.expect(1);
