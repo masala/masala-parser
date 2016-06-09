@@ -172,7 +172,16 @@ exports['parser_core'] = {
     test.done();
   },
         
-  'expect (thenRight) to be accepted': function(test) {
+  'expect (thenLeft) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a").thenLeft(parser.char("b")).parse(stream.ofString("b"),0).isAccepted(),
+               false,
+               'should be accepted.');
+    test.done();
+  },
+
+    'expect (thenRight) to be accepted': function(test) {
     test.expect(1);
     // tests here  
     test.equal(parser.char("a").thenRight(parser.char("b")).parse(stream.ofString("ab"),0).isAccepted(),
@@ -190,6 +199,42 @@ exports['parser_core'] = {
     test.done();
   },
         
+  'expect (thenRight) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a").thenRight(parser.char("b")).parse(stream.ofString("b"),0).isAccepted(),
+               false,
+               'should be accepted.');
+    test.done();
+  },
+            
+  'expect (thenReturns) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a").thenReturns("b").parse(stream.ofString("ab"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect (thenRight) to return b': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a").thenReturns("b").parse(stream.ofString("ab"),0).value,
+               'b',
+               'should be accepted.');
+    test.done();
+  },
+            
+  'expect (thenReturns) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a").thenReturns("b").parse(stream.ofString("b"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
+
   'expect (or) to be accepted': function(test) {
     test.expect(1);
     // tests here  
