@@ -28,7 +28,7 @@ exports['genlex'] = {
   setUp: function(done) {
     done();
   },
-    
+         
   'expect (space) to be accepted': function(test) {
     test.expect(1);
     // tests here  

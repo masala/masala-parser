@@ -29,6 +29,15 @@ exports['token'] = {
     done();
   },
     
+  'expect (literal) to be rejected when empty stream': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(token.parser.keyword.parse(stream.ofArray([]),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },  
+    
   'expect (keyword) to be accepted': function(test) {
     test.expect(1);
     // tests here  
