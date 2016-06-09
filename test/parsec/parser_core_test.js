@@ -252,6 +252,15 @@ exports['parser_core'] = {
                'should be rejected.');
     test.done();
   },
+            
+  'expect (or) LL(1) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a").then(parser.char("b")).or(parser.char("a")).parse(stream.ofString("ac"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
 
   'expect (or) to return a': function(test) {
     test.expect(1);
