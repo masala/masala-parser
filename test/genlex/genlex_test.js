@@ -98,6 +98,23 @@ exports['genlex'] = {
                'should be accepted.');
     test.done();
   },  
+
+  'expect (keyword) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    var factory = genlex.factory(
+        function (s) { return s; },
+        null,
+        null,
+        null,
+        null
+    );
+    
+    test.equal(genlex.generator([]).keyword(factory).parse(stream.ofString("->"),1).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },  
     
   'expect (ident) to be accepted': function(test) {
     test.expect(1);
