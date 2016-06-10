@@ -53,7 +53,7 @@ P.lowerCase.or(P.upperCase)         (1)
 P.digit.rep()                       (2)
 P.char('-').opt()                   (3)
 P.char(' ').optrep()                (4)
-P.lowerCase.then(P.letter.optrep()) (4)
+P.lowerCase.then(P.letter.optrep()) (5)
 ```
 
 1. Recognize a letter i.e. `'0'` ... `'9'` **or** `'A'` ... `'Z'`
@@ -61,6 +61,23 @@ P.lowerCase.then(P.letter.optrep()) (4)
 3. Recognize the character `'-'` or nothing
 4. Recognize a least zero white space
 5. Recognize a lowercase then may be letters like `aAaA`
+
+### Transformations
+
+During a parsing process each parsed and captured data can be transformed 
+an aggregated with other transformed data. For this purpose the `map` 
+function is available.
+
+```
+// [ char in {'0'..'9'} ] -> number
+function toInteger(digits) {
+    return parseInt(digits.join(''));
+}
+
+P.digit.rep().map(toInteger)        (1)
+```
+
+1. Recognize a sequence of digits and transform it to a number.
 
 ## Specifications
 
