@@ -125,7 +125,7 @@ P.digit.rep().map(toInteger)        (1)
 - *filter* : &forall; a b c . **Parser a c** &sdot; (a &rarr; bool) &rarr; Parser a c
 
 #### Chaining parsers by composition:
-- *chain* : &forall; a b c . **Parser a c** &sdot; Parser c a &rarr; Parser c b
+- *chain* : &forall; a b c . **Parser a c** &sdot; Parser b a &rarr; Parser b c
 
 #### Parser Main Function:
 - *parse* : &forall; a c . **Parser a c** &sdot; Stream 'c &rarr; number &rarr; Response 'a
@@ -148,7 +148,7 @@ P.digit.rep().map(toInteger)        (1)
 
 ### Generic Lexer
 
-#### Genlex factory:
+#### GenlexFactory data type:
 - *keyword* : string &rarr; a
 - *ident* : string &rarr; a
 - *number* : number &rarr; a
