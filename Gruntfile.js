@@ -5,7 +5,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     nodeunit: {
-      files: ['test/**/*_test.js'],
+      files: ['test/**/*_test.js']
     },
     jshint: {
       options: {
@@ -21,8 +21,34 @@ module.exports = function(grunt) {
         src: ['test/**/*.js']
       },
     },
+    env: {
+      coverage: {
+        APP_DIR_FOR_CODE_COVERAGE: '../test/coverage/instrument/lib/'
+      }
+    },
+    instrument: {
+      files: 'lib/**/*.js',
+      options: {
+        lazy: true,
+        basePath: 'test/coverage/instrument/'
+      }
+    },
+    storeCoverage: {
+      options: {
+        dir: 'test/coverage/reports'
+      }
+    },
+    makeReport: {
+      src: 'test/coverage/reports/**/*.json',
+      options: {
+        type: 'lcov',
+        dir: 'test/coverage/reports'
+      }
+    }  
   });
 
+  grunt.loadNpmTasks('grunt-istanbul');
+  grunt.loadNpmTasks('grunt-env');        
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');  
   grunt.loadNpmTasks('grunt-exec');    
@@ -30,5 +56,12 @@ module.exports = function(grunt) {
   grunt.registerTask('default', 
                      ['jshint', 
                       'nodeunit']);
+    
+  grunt.registerTask('coverage', 
+                     ['env:coverage', 
+                      'instrument', 
+                      'nodeunit',
+                      'storeCoverage', 
+                      'makeReport']);
 };
 

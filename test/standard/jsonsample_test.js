@@ -58,8 +58,9 @@ exports['language_analyse'] = {
   'test 1k': function(test) {
     sampleTest("1k.json", test);    
   },
-    
+/*    
   'test 100k': function(test) {
     sampleTest("100k.json", test);    
   },
+*/  
 };
