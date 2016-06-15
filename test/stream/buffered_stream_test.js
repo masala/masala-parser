@@ -1,6 +1,7 @@
 'use strict';
 
-var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js');
+var requireHelper = require('../require_helper.js'),
+    stream = requireHelper('/stream/streams.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========

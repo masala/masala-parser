@@ -1,7 +1,8 @@
 'use strict';
 
-var jsonparser = require('../../lib' + (process.env.COVERAGE || '') + '/standard/jsonparser.js'),
-    stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js');
+var requireHelper = require('../require_helper.js'),
+    jsonparser = requireHelper('/standard/jsonparser.js'),
+    stream = requireHelper('/stream/streams.js');
     
 /*
   ======== A Handy Little Nodeunit Reference ========

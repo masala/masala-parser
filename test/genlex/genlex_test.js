@@ -1,7 +1,8 @@
 'use strict';
 
-var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js'),
-    genlex = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/genlex.js');
+var requireHelper = require('../require_helper.js'),
+    stream = requireHelper('/stream/streams.js'),
+    genlex = requireHelper('/genlex/genlex.js');
     
 
 /*

@@ -1,7 +1,8 @@
 'use strict';
 
-var parser = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/parser.js'),
-    stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js');
+var requireHelper = require('../require_helper.js'),
+    parser = requireHelper('/parsec/parser.js'),
+    stream = requireHelper('/stream/streams.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========

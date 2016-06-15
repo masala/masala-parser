@@ -1,8 +1,9 @@
 'use strict';
 
-var stream = require('../../lib' + (process.env.COVERAGE || '') + '/stream/streams.js'),
-    tokenizer = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/tokenizer.js'),
-    tkBuilder = require('../../lib' + (process.env.COVERAGE || '') + '/genlex/token.js').builder;
+var requireHelper = require('../require_helper.js'),
+    stream = requireHelper('/stream/streams.js'),
+    tokenizer = requireHelper('/genlex/tokenizer.js'),
+    tkBuilder = requireHelper('/genlex/token.js').builder;
 
 /*
   ======== A Handy Little Nodeunit Reference ========

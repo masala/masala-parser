@@ -1,6 +1,7 @@
 'use strict';
 
-var bless = require('../../lib' + (process.env.COVERAGE || '') + '/data/bless.js');
+var requireHelper = require('../require_helper.js'),
+    bless = requireHelper('/data/bless.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========

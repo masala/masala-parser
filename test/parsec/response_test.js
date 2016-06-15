@@ -1,6 +1,7 @@
 'use strict';
 
-var response = require('../../lib' + (process.env.COVERAGE || '') + '/parsec/response.js');
+var requireHelper = require('../require_helper.js'),
+    response = requireHelper('/parsec/response.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========

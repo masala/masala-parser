@@ -1,6 +1,7 @@
 'use strict';
 
-var option = require('../../lib' + (process.env.COVERAGE || '') + '/data/option.js');
+var requireHelper = require('../require_helper.js'),
+    option = requireHelper('/data/option.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========

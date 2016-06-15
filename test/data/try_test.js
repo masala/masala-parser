@@ -1,6 +1,7 @@
 'use strict';
 
-var atry = require('../../lib' + (process.env.COVERAGE || '') + '/data/try.js');
+var requireHelper = require('../require_helper.js'),
+    atry = requireHelper('/data/try.js');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
