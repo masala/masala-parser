@@ -45,6 +45,15 @@ exports['json'] = {
     test.done();
   },
     
+  'string and RACC rejected': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(jsonparser.parse(stream.ofString('"123"}')).isAccepted(), 
+               false,
+               'should be rejected.');
+    test.done();
+  },
+    
   'null accepted': function(test) {
     test.expect(1);
     // tests here

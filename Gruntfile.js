@@ -4,6 +4,9 @@ module.exports = function(grunt) {
     
   // Project configuration.
   grunt.initConfig({
+    clean: [
+        'test/coverage/'
+    ],
     nodeunit: {
       files: ['test/**/*_test.js']
     },
@@ -49,12 +52,14 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-istanbul');
   grunt.loadNpmTasks('grunt-env');        
+  grunt.loadNpmTasks('grunt-contrib-clean');        
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');  
   grunt.loadNpmTasks('grunt-exec');    
     
   grunt.registerTask('default', 
-                     ['jshint', 
+                     ['clean',
+                      'jshint', 
                       'nodeunit']);
     
   grunt.registerTask('coverage', 
