@@ -45,12 +45,22 @@ exports['json'] = {
     test.done();
   },
     
-  'string and RACC rejected': function(test) {
+  'string and unrecognized item rejected': function(test) {
     test.expect(1);
     // tests here
-    test.equal(jsonparser.parse(stream.ofString('"123"}')).isAccepted(), 
+    test.equal(jsonparser.parse(stream.ofString('"123" -')).isAccepted(), 
                false,
                'should be rejected.');
+    test.done();
+  },
+    
+  'string and unrecognized item rejected with correct offset': function(test) {
+    test.expect(1);
+    // tests here
+    var result = jsonparser.parse(stream.ofString('["123", -]'));
+    test.equal(result.offset,
+               7,
+               'should be 7.');
     test.done();
   },
     
