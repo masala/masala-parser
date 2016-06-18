@@ -407,7 +407,7 @@ exports['parser_core'] = {
     test.done();
   },
     
-  'expect (optrep) non to return none': function(test) {
+  'expect (optrep) to return none': function(test) {
     test.expect(1);
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("bbb"),0).value,
@@ -415,5 +415,13 @@ exports['parser_core'] = {
                    'should be accepted.');
     test.done();
   },
-
+    
+  'expect (optrep) to return [b,b,b]': function(test) {
+    test.expect(1);
+    // tests here  
+    test.deepEqual(parser.notChar("a").optrep().parse(stream.ofString("bbba"),0).value,
+                   ['b','b','b'],
+                   'should be accepted.');
+    test.done();
+  },
 };

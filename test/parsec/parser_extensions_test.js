@@ -261,19 +261,37 @@ exports['parser_extension'] = {
     test.done();
   },
       
-  'expect (char) to be accepted': function(test) {
+  'expect (charNotIn) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char('a').parse(stream.ofString("a"),0).isAccepted(),
+    test.equal(parser.charNotIn('a').parse(stream.ofString("b"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
   },
         
-  'expect (char) to be rejected': function(test) {
+  'expect (charNotIn) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char('a').parse(stream.ofString("b"),0).isAccepted(),
+    test.equal(parser.charNotIn('a').parse(stream.ofString("a"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
+      
+  'expect (charIn) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.charIn('a').parse(stream.ofString("a"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+        
+  'expect (charIn) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.charIn('a').parse(stream.ofString("b"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -412,6 +430,60 @@ exports['parser_extension'] = {
     test.equal(parser.stringLiteral.parse(stream.ofString('""'),0).isAccepted(), 
                true,
                'should be accepted.');
+    test.done();
+  },  
+    
+  'expect (occurence 1) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.any.occ(1).parse(stream.ofString('a'),0).isAccepted(), 
+               true,
+               'should be accepted.');
+    test.done();
+  },  
+    
+  'expect (occurence 1) to return [a]': function(test) {
+    test.expect(1);
+    // tests here  
+    test.deepEqual(parser.any.occ(1).parse(stream.ofString('a'),0).value, 
+                   ['a'],
+                   'should be accepted.');
+    test.done();
+  },  
+    
+  'expect (occurence 2) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.any.occ(1).parse(stream.ofString('aa'),0).isAccepted(), 
+               true,
+               'should be accepted.');
+    test.done();
+  },  
+    
+  'expect (occurence 2) to return [a,a]': function(test) {
+    test.expect(1);
+    // tests here  
+    test.deepEqual(parser.any.occ(2).parse(stream.ofString('aa'),0).value, 
+                   ['a','a'],
+                   'should be accepted.');
+    test.done();
+  },  
+    
+  'expect (occurence 2) to return [a,a,a]': function(test) {
+    test.expect(1);
+    // tests here  
+    test.deepEqual(parser.any.occ(3).parse(stream.ofString('aaa'),0).value, 
+                   ['a','a','a'],
+                   'should be accepted.');
+    test.done();
+  },  
+
+  'expect (occurence 0) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.any.occ(0).parse(stream.ofString('aa'),0).isAccepted(), 
+               false,
+               'should be rejected.');
     test.done();
   },  
 };
