@@ -42,7 +42,7 @@ exports['markdown'] = {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('# Title \n'),0).value, 
-                   { title : [" Title "], level : 1 },
+                   [ { title : [ { text: " Title " } ], level : 1 } ],
                    'should be a title1.');
     test.done();
   },
@@ -59,7 +59,7 @@ exports['markdown'] = {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('## Title \n'),0).value, 
-                   { title : [" Title "], level : 2 },
+                   [ { title : [ { text: " Title " } ], level : 2 } ],
                    'should be a title2.');
     test.done();
   },
@@ -76,7 +76,7 @@ exports['markdown'] = {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('### Title \n'),0).value, 
-                   { title : [" Title "] , level : 3},
+                   [ { title : [ { text: " Title " } ] , level : 3} ],
                    'should be a title3.');
     test.done();
   },
@@ -93,7 +93,7 @@ exports['markdown'] = {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('Title\n====='),0).value, 
-                   { title : ["Title"], level : 1 },
+                   [ { title : [ { text: "Title" } ], level : 1 } ],
                    'should be a title1.');
     test.done();
   },
@@ -110,7 +110,7 @@ exports['markdown'] = {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('Title\n-----'),0).value, 
-                   { title : ["Title"], level : 2 },
+                   [ { title : [ { text: "Title" } ], level : 2 } ],
                    'should be a title2.');
     test.done();
   },
@@ -118,7 +118,7 @@ exports['markdown'] = {
   'line should be accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(markdown.parse(stream.ofString('Title\n====='),0).isAccepted(), 
+    test.ok(markdown.parse(stream.ofString('a simple test\n'),0).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -127,8 +127,24 @@ exports['markdown'] = {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('a simple test\n'),0).value, 
-                   [ "a simple test" ],
+                   [ { text: "a simple test" } ],
                    'should be a simple test line.');
     test.done();
   },
-};
+
+  'bold line should be accepted': function(test) {
+    test.expect(1);
+    // tests here
+    test.ok(markdown.parse(stream.ofString('**a simple test**\n'),0).isAccepted(), 
+            'should be accepted.');
+    test.done();
+  },
+    
+  'bold line should be a simple test': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(markdown.parse(stream.ofString('**a simple test**\n'),0).value, 
+                   [ { bold : { text: "a simple test" } } ],
+                   'should be a simple test line.');
+    test.done();
+  },};
