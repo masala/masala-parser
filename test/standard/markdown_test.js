@@ -140,11 +140,48 @@ exports['markdown'] = {
     test.done();
   },
     
-  'bold line should be a simple test': function(test) {
+  'bold (1) line should be a simple test': function(test) {
     test.expect(1);
     // tests here
     test.deepEqual(markdown.parse(stream.ofString('**a simple test**\n'),0).value, 
                    [ { bold : { text: "a simple test" } } ],
                    'should be a simple test line.');
     test.done();
-  },};
+  },
+    
+  'bold (2) line should be a simple test': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(markdown.parse(stream.ofString('__a simple test__\n'),0).value, 
+                   [ { bold : { text: "a simple test" } } ],
+                   'should be a simple test line.');
+    test.done();
+  },
+    
+  'italic (1) line should be a simple test': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(markdown.parse(stream.ofString('*a simple test*\n'),0).value, 
+                   [ { italic : { text: "a simple test" } } ],
+                   'should be a simple test line.');
+    test.done();
+  },
+    
+  'italic (2) line should be a simple test': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(markdown.parse(stream.ofString('_a simple test_\n'),0).value, 
+                   [ { italic : { text: "a simple test" } } ],
+                   'should be a simple test line.');
+    test.done();
+  },
+    
+  'strike line should be a simple test': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(markdown.parse(stream.ofString('~~a simple test~~\n'),0).value, 
+                   [ { strike : { text: "a simple test" } } ],
+                   'should be a simple test line.');
+    test.done();
+  },
+};
