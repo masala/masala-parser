@@ -128,7 +128,7 @@ P.digit.rep().map(toInteger)        (1)
 - *chain* : &forall; a b c . **Parser a c** &rArr; Parser b a &rarr; Parser b c
 
 #### Parser Main Function:
-- *parse* : &forall; a c . **Parser a c** &rArr; Stream 'c &rarr; number &rarr; Response 'a
+- *parse* : &forall; a c . **Parser a c** &rArr; Stream c &rarr; number &rarr; Response a
 
 ### Token
 
