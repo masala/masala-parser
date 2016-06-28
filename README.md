@@ -83,9 +83,9 @@ P.digit.rep().map(toInteger)        (1)
 
 ### Stream constructors
 - *ofString* : string -> Stream char
-- *ofArray* : [a] -> Stream a
-- *ofParser* : (Parse a c, Stream c) -> Stream a
-- *buffered* : Stream a -> Stream a
+- *ofArray* : &forall; a . [a] -> Stream a
+- *ofParser* : &forall; a c .(Parse a c, Stream c) -> Stream a
+- *buffered* : &forall; a .Stream a -> Stream a
 
 ### Parser
 
@@ -149,20 +149,20 @@ P.digit.rep().map(toInteger)        (1)
 ### Generic Lexer
 
 #### GenlexFactory data type:
-- *keyword* : string &rarr; a
-- *ident* : string &rarr; a
-- *number* : number &rarr; a
-- *string* : string &rarr; a
-- *char* : char &rarr; a
+- *keyword* : &forall; a . string &rarr; a
+- *ident* : &forall; a .string &rarr; a
+- *number* : &forall; a .number &rarr; a
+- *string* : &forall; a .string &rarr; a
+- *char* : &forall; a .char &rarr; a
 
 #### Genlex generator:
-- *keyword* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
-- *ident* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
-- *number* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
-- *string* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
-- *char* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
-- *token* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
-- *tokens* : **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser [a] char
+- *keyword* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *ident* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *number* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *string* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *char* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *token* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser a char
+- *tokens* : &forall; a . **Genlex [String]** &sdot; GenlexFactory a &rarr; Parser [a] char
 
 ### Tokenizer
 
