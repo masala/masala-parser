@@ -1,9 +1,9 @@
 'use strict';
 
-var requireHelper = require('../require_helper.js'),
-    stream = requireHelper('/stream/streams.js'),
-    tokenizer = requireHelper('/genlex/tokenizer.js'),
-    tkBuilder = requireHelper('/genlex/token.js').builder;
+var ParSec = require('../parsec_helper.js'),
+    stream = ParSec.stream,
+    tokenizer = ParSec.genlex.tokenizer,
+    tkBuilder = ParSec.genlex.token.builder;
 
 /*
   ======== A Handy Little Nodeunit Reference ========

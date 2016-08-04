@@ -22,7 +22,7 @@
       "url": "https://github.com/d-plaindoux/parsec/blob/master/LICENSE-LGPL2"
     }
   ],
-  "main": "src",
+  "main": "index.js",
   "engines": {
     "node": ">= 5.7.0"    
   },

@@ -1,7 +1,7 @@
 'use strict';
 
-var requireHelper = require('../require_helper.js'),
-    atry = requireHelper('/data/try.js');
+var ParSec = require('../parsec_helper.js'),
+    atry = ParSec.data.try;
 
 /*
   ======== A Handy Little Nodeunit Reference ========

@@ -6,7 +6,7 @@ function main(process) {
             throw err;
         }
 
-        var stream = require('../../lib/stream/streams.js'),
+        var stream = require('../../lib/stream/index.js'),
             jsonparser = require('../../lib/standard/jsonparser.js'),
             result = jsonparser.parse(stream.ofString(data.toString()));
         

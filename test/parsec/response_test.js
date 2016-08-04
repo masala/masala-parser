@@ -1,7 +1,7 @@
 'use strict';
 
-var requireHelper = require('../require_helper.js'),
-    response = requireHelper('/parsec/response.js');
+var ParSec = require('../parsec_helper.js'),
+    response = ParSec.parsec.response;
 
 /*
   ======== A Handy Little Nodeunit Reference ========

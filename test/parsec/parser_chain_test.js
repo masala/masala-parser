@@ -1,8 +1,8 @@
 'use strict';
 
-var requireHelper = require('../require_helper.js'),
-    parser = requireHelper('/parsec/parser.js'),
-    stream = requireHelper('/stream/streams.js');
+var ParSec = require('../parsec_helper.js'),
+    parser = ParSec.parsec.parser,
+    stream = ParSec.stream;
 
 /*
   ======== A Handy Little Nodeunit Reference ========

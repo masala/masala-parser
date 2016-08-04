@@ -1,8 +1,8 @@
 'use strict';
 
-var requireHelper = require('../require_helper.js'),
-    parser = requireHelper('/parsec/parser.js'),
-    stream = requireHelper('/stream/streams.js');
+var ParSec = require('../parsec_helper.js'),
+    parser = ParSec.parsec.parser,
+    stream = ParSec.stream;
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -318,7 +318,7 @@ exports['parser_extension'] = {
   'expect (string) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char('hello').parse(stream.ofString("hell"),0).isAccepted(),
+    test.equal(parser.string('hello').parse(stream.ofString("hell"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();

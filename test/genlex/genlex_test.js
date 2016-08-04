@@ -1,8 +1,8 @@
 'use strict';
 
-var requireHelper = require('../require_helper.js'),
-    stream = requireHelper('/stream/streams.js'),
-    genlex = requireHelper('/genlex/genlex.js');
+var ParSec = require('../parsec_helper.js'),
+    stream = ParSec.stream,
+    genlex = ParSec.genlex.genlex;
     
 
 /*
