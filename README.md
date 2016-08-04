@@ -16,8 +16,8 @@ parser as its output."*
 ### Hello World
 
 ```
-var P = require('parser'),
-    S = require('stream');
+var P = require('parser-combinator').parsec.parser,
+    S = require('parser-combinator').stream;
 
 var p = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
             
