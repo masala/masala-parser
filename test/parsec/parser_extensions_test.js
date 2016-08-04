@@ -81,6 +81,15 @@ exports['parser_extension'] = {
     test.done();
   },
     
+  'expect (lazy) with a parameter to return a given value': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.lazy(function(v){ return parser.returns(v); }, [123]).parse(stream.ofString(""),0).value,
+               123,
+               'should be accepted.');
+    test.done();
+  },
+    
   'expect (error) to be rejected': function(test) {
     test.expect(1);
     // tests here  
@@ -310,6 +319,33 @@ exports['parser_extension'] = {
     test.expect(1);
     // tests here  
     test.equal(parser.char('hello').parse(stream.ofString("hell"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
+      
+  'expect (notString) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.notString('**').parse(stream.ofString("hello"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+      
+  'expect (notString) to be h': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.notString('**').parse(stream.ofString("hello"),0).value,
+               'h',
+               'should be h.');
+    test.done();
+  },
+      
+  'expect (notString) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.notString('**').parse(stream.ofString("**hello"),0).isAccepted(),
                false,
                'should be rejected.');
     test.done();

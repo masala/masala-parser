@@ -92,7 +92,7 @@ exports['markdown'] = {
   'title alternate 1 should be title1': function(test) {
     test.expect(1);
     // tests here
-    test.deepEqual(markdown.parse(stream.ofString('Title\n====='),0).value, 
+    test.deepEqual(markdown.parse(stream.ofString('Title\n=====\n'),0).value, 
                    [ { title : [ { text: "Title" } ], level : 1 } ],
                    'should be a title1.');
     test.done();

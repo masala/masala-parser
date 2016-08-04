@@ -3,7 +3,7 @@
   "description": "Parser combinators",
   "license": "LGPL-2.1",
   "version": "0.1.0",
-  "homepage": "https://github.com/d-plaindoux/parser-combinator",
+  "homepage": "https://github.com/d-plaindoux/parsec",
   "author": {
     "name": "Didier Plaindoux",
     "email": "d.plaindoux@free.fr",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/d-plaindoux/parser-combinator"
+    "url": "https://github.com/d-plaindoux/parsec"
   },
   "bugs": {
-    "url": "https://github.com/d-plaindoux/parser-combinator/issues"
+    "url": "https://github.com/d-plaindoux/parsec/issues"
   },
   "licenses": [
     {
       "type": "LGPL2",
-      "url": "https://github.com/d-plaindoux/parser-combinator/blob/master/LICENSE-LGPL2"
+      "url": "https://github.com/d-plaindoux/parsec/blob/master/LICENSE-LGPL2"
     }
   ],
   "main": "src",
