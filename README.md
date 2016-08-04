@@ -96,6 +96,7 @@ P.digit.rep().map(toInteger)        (1)
 - *eos* : &forall; c . unit &rarr; Parser unit c
 - *satisfy* : &forall; a . (a &rarr; bool) &rarr; Parser a a
 - *try* : &forall; a c . Parser a c &rarr; Parser a c
+- *not* : &forall; a c . Parser a c &rarr; Parser a c
 
 #### Char sequence constructors:
 - *digit* : Parser char char

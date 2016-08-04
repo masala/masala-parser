@@ -514,12 +514,22 @@ exports['parser_extension'] = {
     test.done();
   },  
 
-  'expect (occurence 0) to be rejected': function(test) {
+  'expect (occurence 0) to be accepted': function(test) {
     test.expect(1);
     // tests here  
     test.equal(parser.any.occ(0).parse(stream.ofString('aa'),0).isAccepted(), 
-               false,
-               'should be rejected.');
+               true,
+               'should be accepter.');
+    test.done();
+  },  
+
+
+  'expect (occurence 0) to return []': function(test) {
+    test.expect(1);
+    // tests here  
+    test.deepEqual(parser.any.occ(0).parse(stream.ofString('aa'),0).value, 
+                   [],
+                   'should be accepter.');
     test.done();
   },  
 };
