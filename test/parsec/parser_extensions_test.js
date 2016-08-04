@@ -251,6 +251,33 @@ exports['parser_extension'] = {
                'should be rejected.');
     test.done();
   },
+       
+  'expect (char) to be accepted': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char('a').parse(stream.ofString("a"),0).isAccepted(),
+               true,
+               'should be accepted.');
+    test.done();
+  },
+      
+  'expect (char) to be rejected': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char('a').parse(stream.ofString("b"),0).isAccepted(),
+               false,
+               'should be rejected.');
+    test.done();
+  },
+       
+  'expect (char) to be refused': function(test) {
+    test.expect(1);
+    // tests here  
+    test.throws(function() {
+        parser.char('aa');
+    });
+    test.done();
+  },
       
   'expect (notChar) to be accepted': function(test) {
     test.expect(1);
@@ -269,6 +296,16 @@ exports['parser_extension'] = {
                'should be rejected.');
     test.done();
   },
+            
+  'expect (notChar) to be refused': function(test) {
+    test.expect(1);
+    // tests here  
+    test.throws(function() {
+        parser.notChar('aa');
+    });
+    test.done();
+  },
+
       
   'expect (charNotIn) to be accepted': function(test) {
     test.expect(1);
@@ -404,8 +441,7 @@ exports['parser_extension'] = {
                'should be accepted.');
     test.done();
   },
-    
-    
+        
   'expect (charLiteral) to be accepted': function(test) {
     test.expect(1);
     // tests here  
