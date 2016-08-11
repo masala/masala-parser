@@ -56,7 +56,7 @@ P.char(' ').optrep()                (4)
 P.lowerCase.then(P.letter.optrep()) (5)
 ```
 
-1. Recognize a letter i.e. `'0'` ... `'9'` **or** `'A'` ... `'Z'`
+1. Recognize a letter i.e. `'a'` ... `'z'` **or** `'A'` ... `'Z'`
 4. Recognize a number with at least one digit 
 3. Recognize the character `'-'` or nothing
 4. Recognize a least zero white space
