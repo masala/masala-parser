@@ -6,48 +6,52 @@
  * Licensed under the LGPL2 license.
  */
 
-module.exports = (function () {
 
-    'use strict';
+export default{
+    success, failure
+}
 
-    function Try(value,error) {
+function success(value) {
+    return new Try(value, null);
+}
+
+function failure(error) {
+    return new Try(null, error);
+}
+
+
+class Try{
+
+    constructor (value,error){
         this.value = value;
         this.error = error;
     }
 
-    function success(value) {
-        return new Try(value, null);
-    }
-
-    function failure(error) {
-        return new Try(null, error);
-    }
-
-    Try.prototype.isSuccess = function () {
+    isSuccess(value){
         return this.error === null;
-    };
+    }
 
-    Try.prototype.isFailure = function () {
+    isFailure(error){
         return !this.isSuccess();
-    };
-    
-    Try.prototype.onSuccess = function (bindCall) {
+    }
+
+    onSuccess(bindCall){
         if (this.isSuccess()) {
             bindCall(this.value);
         }
-         
-        return this;
-    };
 
-    Try.prototype.onFailure = function (bindCall) {
+        return this;
+    }
+
+    onFailure(bindCall){
         if (this.isFailure()) {
             bindCall(this.error);
         }
-         
-        return this;
-    };
 
-    Try.prototype.map = function (bindCall) {
+        return this;
+    }
+
+    map(bindCall){
         if (this.isSuccess()) {
             try {
                 return success(bindCall(this.value));
@@ -57,9 +61,9 @@ module.exports = (function () {
         } else {
             return this;
         }
-    };
+    }
 
-    Try.prototype.flatmap = function (bindCall) {
+    flatmap(bindCall){
         if (this.isSuccess()) {
             try {
                 return bindCall(this.value);
@@ -69,46 +73,41 @@ module.exports = (function () {
         } else {
             return this;
         }
-    };
+    }
 
-    Try.prototype.success = function () {
+    success(){
         return this.value;
-    };
+    }
 
-    Try.prototype.failure = function () {
+    failure(){
         return this.error;
-    };
+    }
 
-    Try.prototype.recoverWith = function (value) {
+    recoverWith(value){
         if (this.isSuccess()) {
             return this.value;
         } else {
             return value;
         }
-    };
+    }
 
-    Try.prototype.lazyRecoverWith = function (value) {
+    lazyRecoverWith(value){
         if (this.isSuccess()) {
             return this.value;
         } else {
             return value(this.error);
         }
-    };
-
-    Try.prototype.filter = function (f) {
+    }
+    filter(f){
         if (this.isSuccess()) {
             if (f(this.value)) {
                 return this;
             } else {
-                return failure(new Error("invalid filter"));                
+                return failure(new Error('invalid filter'));
             }
         }
-        
-        return this;
-    };
 
-    return {
-        success : success,
-        failure : failure
-    };
-}());
+        return this;
+    }
+}
+

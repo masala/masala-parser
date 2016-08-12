@@ -1,7 +1,6 @@
 'use strict';
 
-var ParSec = require('../parsec_helper.js'),
-    option = ParSec.data.option;
+import option from '../../lib/data/option';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -23,7 +22,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['option'] = {
+export default  {
   setUp: function(done) {
     done();
   },
@@ -117,5 +116,5 @@ exports['option'] = {
     // tests here      
     test.equal(option.some(12).filter(function (v) { return v === 13; }).isPresent(), false, 'should be empty option.');
     test.done();
-  },
-};
+  }
+}

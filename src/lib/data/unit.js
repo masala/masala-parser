@@ -6,13 +6,9 @@
  * Licensed under the LGPL2 license.
  */
 
-module.exports = (function () {
-    
-    'use strict';
+class Unit{
 
-    function Unit() {
-        // Nothing
-    }    
-    
-    return new Unit();
-}());
+}
+
+export default new Unit();
+

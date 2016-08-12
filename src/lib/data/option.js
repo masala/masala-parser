@@ -6,72 +6,76 @@
  * Licensed under the LGPL2 license.
  */
 
-module.exports = (function () {
-    
-    'use strict';
 
-    function Option(value) {
+function someOrNone(value) {
+    return new Option(value);
+}
+
+function none() {
+    return new Option();
+}
+
+
+export default{
+    some :someOrNone,
+    none
+}
+
+/**
+ * Private class Option, accessible from someOrNone() or none()
+ */
+class Option {
+
+    constructor(value) {
         this.value = value;
-    }    
-    
-    function someOrNone(value) {
-        return new Option(value);
     }
-    
-    function none() {
-        return new Option();
-    }
-    
-    Option.prototype.isPresent = function () {
+
+    isPresent() {
         return (this.value !== null && this.value !== undefined);
-    };
-    
-    Option.prototype.map = function (bindCall) {
+    }
+
+    map(bindCall) {
         if (this.isPresent()) {
             return someOrNone(bindCall(this.value));
         } else {
             return this;
         }
-    };
+    }
 
-    Option.prototype.flatmap = function (bindCall) {
+    flatmap(bindCall) {
         if (this.isPresent()) {
             return bindCall(this.value);
         } else {
             return this;
         }
-    };
+    }
 
-    Option.prototype.filter = function (f) {
+    filter(f) {
         if (this.isPresent() && f(this.value)) {
             return this;
         }
-        
+
         return none();
-    };
-    
-    Option.prototype.get = function () {
+    }
+
+    get() {
         return this.value;
-    };
-    
-    Option.prototype.orElse = function (value) {
+    }
+
+    orElse(value) {
         if (this.isPresent()) {
             return this.value;
         } else {
             return value;
         }
-    };
-    
-    Option.prototype.orLazyElse = function (value) {
+    }
+
+    orLazyElse(value) {
         if (this.isPresent()) {
             return this.value;
         } else {
             return value();
         }
-    };
-    
-    return {
-        some  : someOrNone,
-        none  : none
-    };
-}());
+    }
+
+}
