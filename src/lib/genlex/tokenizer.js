@@ -6,25 +6,24 @@
  * Licensed under the LGPL2 license.
  */
 
-module.exports = (function () {
-    
-    'use strict';
-    
-    var genlex = require('./genlex.js'),
-        token = require('./token.js');
-    
+import genlex from './genlex';
+import token from './token';
+
+
+class Tokenizer {
+
     // [String] -> Tokenizer
-    function Tokenizer(keywords) {
+    constructor(keywords) {
         this.parser = genlex.generator(keywords).tokens(token.builder);
     }
-    
+
     // Stream char -> Try [Token]
-    Tokenizer.prototype.tokenize = function (charstream) {
-        return this.parser.parse(charstream,0).toTry();
-    };
-    
-    return function (keywords) {
-        return new Tokenizer(keywords);
-    };
-    
-}());
+    tokenize(charstream) {
+        return this.parser.parse(charstream, 0).toTry();
+    }
+}
+
+
+export default function (keywords) {
+    return new Tokenizer(keywords);
+}

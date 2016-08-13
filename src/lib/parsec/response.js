@@ -6,115 +6,127 @@
  * Licensed under the LGPL2 license.
  */
 
-module.exports = (function () {
-    
-    'use strict';
-    
-    var atry = require('../data/try.js');
-    
-    /**
-     * Response basic type
-     */
-    function Response() {
-    }
-        
+import atry from '../data/try.js';
+
+
+/**
+ * Response basic type
+ * fold() is an abstract method implemented in Accept and Reject
+ */
+class Response {
+
     // Response 'a 'c => unit -> bool
-    Response.prototype.isAccepted = function () {
+    isAccepted() {
         return this.fold(
-            function() { return true;  }, 
-            function() { return false; }
-        );
-    };
-    
-    // Response 'a 'c => unit -> bool
-    Response.prototype.toTry = function () {
-        return this.fold(
-            function(accept) { 
-                return atry.success(accept.value); 
-            }, 
-            function(reject) { 
-                return atry.failure(new Error("parser error at " + reject.offset)) ; 
+            function () {
+                return true;
+            },
+            function () {
+                return false;
             }
-        );
-    };
-            
-    /**
-     * Accept response class
-     */
-    function Accept(value, input, offset, consumed) {
+        )
+    }
+
+    // Response 'a 'c => unit -> bool
+    toTry() {
+        return this.fold(
+            function (accept) {
+                return atry.success(accept.value);
+            },
+            function (reject) {
+                return atry.failure(new Error("parser error at " + reject.offset));
+            }
+        )
+    }
+}
+
+
+/**
+ * Accept response class
+ */
+class Accept extends Response {
+
+    constructor(value, input, offset, consumed) {
+        super();
         this.offset = offset;
         this.consumed = consumed;
-
-        this.value = value; 
+        this.value = value;
         this.input = input;
     }
 
-    Accept.prototype = new Response();
-    
-    // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a        
-    Accept.prototype.fold = function (accept) {
-        return accept(this);  
-    };
-        
+
+    // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
+    fold(accept) {
+        return accept(this);
+    }
+
     // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
-    Accept.prototype.map = function (callback) {
-        return new Accept(callback(this.value), this.input, this.offset, this.consumed);  
-    };
-       
+    map(callback) {
+        return new Accept(callback(this.value), this.input, this.offset, this.consumed);
+    }
+
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
-    Accept.prototype.flatmap = function (callback) {
-        return callback(this.value);  
-    };
-       
-    // Response 'a 'c => ('a -> bool) -> Response 'b 'c
-    Accept.prototype.filter = function (predicate) {
+    flatmap(callback) {
+        return callback(this.value);
+    }
+
+// Response 'a 'c => ('a -> bool) -> Response 'b 'c
+    filter(predicate) {
         if (predicate(this.value)) {
             return this;
         } else {
             return new Reject(this.offset, false);
         }
-    };
-       
-    /**
-     * Reject response class
-     */
-    function Reject(offset, consumed) {
+    }
+}
+
+/**
+ * Reject response class
+ */
+class Reject extends Response {
+    constructor(offset, consumed) {
+        super();
         this.offset = offset;
         this.consumed = consumed;
     }
 
-    Reject.prototype = new Response();
-    
-    // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a        
-    Reject.prototype.fold = function (_,reject) {
-        return reject(this);  
-    };
+
+    // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
+    fold(_, reject) {
+        return reject(this);
+    }
 
     // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
-    Reject.prototype.map = function () {
+    map() {
         return this;
-    };
-    
+    }
+
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
-    Reject.prototype.flatmap = function () {
+    flatmap() {
         return this;
-    };
-        
+    }
+
     // Response 'a 'c => ('a -> bool) -> Response 'b 'c
-    Reject.prototype.filter = function () {
+    filter() {
         return new Reject(this.offset, false);
-    };
+    }
+}
+
+
+/**
+ * Constructors
+ */
+const accept = function (value, sequence, offset, consumed) {
+    return new Accept(value, sequence, offset, consumed);
+};
+
+const reject = function (offset, consumed) {
+    return new Reject(offset, consumed);
+};
+
+const response = {accept, reject};
+
+export default response;
+
+
     
-     /** 
-      * Constructors
-      */    
-    return {
-        accept: function(value,sequence,offset,consumed) {
-            return new Accept(value,sequence,offset,consumed);
-        },
-        reject: function(offset,consumed) {
-            return new Reject(offset,consumed);
-        }
-    };
-    
-}());

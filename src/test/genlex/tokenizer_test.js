@@ -1,9 +1,8 @@
-'use strict';
+import stream from '../../lib/stream/index';
+import tokenizer from '../../lib/genlex/tokenizer';
+import token from '../../lib/genlex/token'
 
-var ParSec = require('../parsec_helper.js'),
-    stream = ParSec.stream,
-    tokenizer = ParSec.genlex.tokenizer,
-    tkBuilder = ParSec.genlex.token.builder;
+const tkBuilder = token.builder;
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -25,7 +24,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['tokenizer'] = {
+export default {
   setUp: function(done) {
     done();
   },
@@ -51,6 +50,6 @@ exports['tokenizer'] = {
                    ],
                    'should be a a list of tokens.');
     test.done();
-  },
+  }
 
 };

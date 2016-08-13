@@ -1,9 +1,6 @@
-'use strict';
-
-var ParSec = require('../parsec_helper.js'),
-    fs = require('fs'),
-    jsonparser = ParSec.standard.json,
-    stream = ParSec.stream;
+import  fs from 'fs';
+import jsonparser from '../../lib/standard/jsonparser'
+import stream from '../../lib/stream/index';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -28,7 +25,7 @@ function sampleTest(sample, test) {
     test.expect(1);
     
     // tests here  
-    fs.readFile('./test/standard/samples/' + sample, function (err,data) {
+    fs.readFile('./src/test/standard/samples/' + sample, function (err,data) {
         if (err) {
             throw err;
         }
@@ -50,7 +47,7 @@ function sampleTest(sample, test) {
     });    
 }
 
-exports['language_analyse'] = {
+export default  {
   setUp: function(done) {
     done();
   },
@@ -61,6 +58,6 @@ exports['language_analyse'] = {
     
   'test 100k': function(test) {
     sampleTest("100k.json", test);    
-  },
+  }
   
 };

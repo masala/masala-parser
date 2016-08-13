@@ -1,5 +1,3 @@
-'use strict';
-
 import atry from '../../lib/data/try';
 
 /*

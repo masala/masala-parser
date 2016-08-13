@@ -1,5 +1,3 @@
-'use strict';
-
 import option from '../../lib/data/option';
 
 /*

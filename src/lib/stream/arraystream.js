@@ -5,34 +5,31 @@
  * Copyright (c) 2016 Didier Plaindoux
  * Licensed under the LGPL2 license.
  */
- 
- module.exports = (function() {
-     
-     'use strict';
-     
-     var stream = require('./stream.js');
-               
-     /**
-      * Array stream class
-      */
-     function ArrayStream(source) {
-         this.source = source;
-     }
+import Stream from  './stream';
 
-     ArrayStream.prototype = stream();
-     
-     // ArrayStream 'a => unit -> boolean
-     ArrayStream.prototype.endOfStream = function(index) {
-         return this.source.length <= index;
-     };
-     
-     // ArrayStream 'a => number -> 'a <+> error
-     ArrayStream.prototype.unsafeGet = function(index) {
-         return this.source[index];
-     };
+/**
+ * Array stream class
+ */
+class ArrayStream extends Stream {
 
-     return function(source) {
-         return new ArrayStream(source);
-     };
-          
- }());
+    constructor(source) {
+        super();
+        this.source = source;
+    }
+
+    // ArrayStream 'a => unit -> boolean
+    endOfStream(index) {
+        return this.source.length <= index;
+    }
+
+    // ArrayStream 'a => number -> 'a <+> error
+    unsafeGet(index) {
+        return this.source[index];
+    }
+}
+
+function factory(source) {
+    return new ArrayStream(source);
+}
+
+export default factory;

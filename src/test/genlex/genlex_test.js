@@ -1,8 +1,5 @@
-'use strict';
-
-var ParSec = require('../parsec_helper.js'),
-    stream = ParSec.stream,
-    genlex = ParSec.genlex.genlex;
+import stream from '../../lib/stream/index';
+import genlex from '../../lib/genlex/genlex';
     
 
 /*
@@ -25,7 +22,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['genlex'] = {
+export default {
   setUp: function(done) {
     done();
   },
@@ -353,6 +350,6 @@ exports['genlex'] = {
                    ["a","->","b"],
                    'should be [a,->,b].');
     test.done();
-  },  
+  }
 };
     

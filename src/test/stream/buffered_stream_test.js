@@ -1,7 +1,5 @@
-'use strict';
+import stream from '../../lib/stream/index';
 
-var ParSec = require('../parsec_helper.js'),
-    stream = ParSec.stream;
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -23,7 +21,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['buffered_stream'] = {
+export default {
   setUp: function(done) {
     done();
   },

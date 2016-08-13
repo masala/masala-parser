@@ -1,8 +1,5 @@
-'use strict';
-
-var ParSec = require('../parsec_helper.js'),
-    parser = ParSec.parsec.parser,
-    stream = ParSec.stream;
+import stream from '../../lib/stream/index';
+import parser from '../../lib/parsec/parser';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -24,7 +21,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['parser_chain'] = {
+export default {
   setUp: function(done) {
     done();
   },
@@ -55,5 +52,5 @@ exports['parser_chain'] = {
                46,
                'should be 46.');
     test.done();
-  },
+  }
 };

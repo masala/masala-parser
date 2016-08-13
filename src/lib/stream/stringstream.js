@@ -7,6 +7,9 @@
  */
 import Stream from  './stream';
 
+/**
+ * String stream class
+ */
 class StringStream extends Stream {
 
     constructor(source) {

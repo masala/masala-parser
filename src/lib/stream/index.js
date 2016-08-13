@@ -6,29 +6,15 @@
  * Licensed under the LGPL2 license.
  */
 
+
 import stringStreamFactory from './stringstream';
+import arrayStreamFactory from './arraystream';
+import parserStreamFactory from './parserstream';
+import bufferedStreamFactory from './bufferedstream';
 
 export default {
-    ofString : stringStreamFactory
+    ofString : stringStreamFactory,
+    ofArray : arrayStreamFactory,
+    ofParser : parserStreamFactory,
+    buffered : bufferedStreamFactory
 }
-
-/*
- module.exports = (function() {
-
- 'use strict';
-
- var stringstream = require('./stringstream.js'),
- arraystream = require('./arraystream.js'),
- parserstream = require('./parserstream.js'),
- bufferedstream = require('./bufferedstream.js');
-
-
- return {
- ofString : stringstream,
- ofArray : arraystream,
- ofParser : parserstream,
- buffered : bufferedstream
- };
-
- }());
- */

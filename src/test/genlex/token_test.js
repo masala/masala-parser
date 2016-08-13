@@ -1,9 +1,5 @@
-'use strict';
-
-var ParSec = require('../parsec_helper.js'),
-    stream = ParSec.stream,
-    token = ParSec.genlex.token;
-    
+import stream from '../../lib/stream/index';
+import token from '../../lib/genlex/token';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -25,7 +21,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['token'] = {
+export default {
   setUp: function(done) {
     done();
   },
@@ -127,6 +123,6 @@ exports['token'] = {
                false,
                'should be rejected.');
     test.done();
-  },  
+  }
 };
     

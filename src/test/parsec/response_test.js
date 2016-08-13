@@ -1,7 +1,4 @@
-'use strict';
-
-var ParSec = require('../parsec_helper.js'),
-    response = ParSec.parsec.response;
+import response from '../../lib/parsec/response';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -23,7 +20,7 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['response'] = {
+export default {
   setUp: function(done) {
     done();
   },

@@ -1,9 +1,7 @@
-'use strict';
+import stream from '../../lib/stream/index';
+import jsonparser from '../../lib/standard/jsonparser';
 
-var ParSec = require('../parsec_helper.js'),
-    jsonparser = ParSec.standard.json,
-    stream = ParSec.stream;
-    
+
 /*
   ======== A Handy Little Nodeunit Reference ========
   https://github.com/caolan/nodeunit
@@ -24,14 +22,14 @@ var ParSec = require('../parsec_helper.js'),
     test.ifError(value)
 */
 
-exports['json'] = {
+export default {
   setUp: function(done) {
     done();
   },
     
   'number accepted': function(test) {
     test.expect(1);
-    // tests here
+    // tests here    
     test.ok(jsonparser.parse(stream.ofString('123')).isAccepted(), 
             'should be accepted.');
     test.done();
@@ -66,12 +64,12 @@ exports['json'] = {
     
   'null accepted': function(test) {
     test.expect(1);
-    // tests here
+    // tests here    
     test.ok(jsonparser.parse(stream.ofString('null')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
-    
+ 
   'true accepted': function(test) {
     test.expect(1);
     // tests here
@@ -134,6 +132,6 @@ exports['json'] = {
     test.ok(jsonparser.parse(stream.ofString('{ "a" : "v", "a" : [] }')).isAccepted(), 
             'should be accepted.');
     test.done();
-  },
+  }
 
 };
