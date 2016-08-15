@@ -17,7 +17,7 @@ function none() {
 
 
 export default{
-    some :someOrNone,
+    some: someOrNone,
     none
 }
 

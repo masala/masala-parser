@@ -24,12 +24,12 @@
   ],
   "main": "src/index.js",
   "engines": {
-    "node": ">= 5.7.0"    
+    "node": ">= 5.7.0"
   },
   "scripts": {
     "compile": "rm -rf build/ && babel src --out-dir build  --source-maps",
     "dev": "babel --watch src --out-dir dist",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint src/**",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rm -rf ./coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
@@ -43,10 +43,9 @@
     "babel-preset-es2015": "^6.9.0",
     "browserify": "~9.0.3",
     "coveralls": "~2.11.2",
-    "eslint": "^1.2.1",
+    "eslint": "^3.3.0",
     "nodeunit": "~0.9.0"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "keywords": []
 }
