@@ -13,8 +13,6 @@
  */
 
 
-//import response from './response.js';
-
 import  stream from '../stream/index.js';
 import unit from '../data/unit.js';
 import option from '../data/option.js';
@@ -183,11 +181,7 @@ function choice(self, f) {
                 if (reject.consumed) {
                     return reject;
                 } else {
-                    try {
-                        return f.parse(input, index);
-                    } catch (e) {
-                        throw e;
-                    }
+                    return f.parse(input, index);
                 }
             }
         );
