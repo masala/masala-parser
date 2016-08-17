@@ -34,7 +34,8 @@
     "cover": "rm -rf ./coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover && npm run coveralls",
-    "concat": "npm run compile && browserify build/lib/index.js -o dist/parsec.js"
+    "concat": "npm run compile && browserify build/lib/index.js -o dist/parsec.js",
+    "dist": "npm run compile && browserify -t uglifyify build/lib/index.js -o dist/parsec.min.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -45,7 +46,8 @@
     "browserify": "~9.0.3",
     "coveralls": "~2.11.2",
     "eslint": "^3.3.0",
-    "nodeunit": "~0.9.0"
+    "nodeunit": "~0.9.0",
+    "uglifyify": "^3.0.2"
   },
   "dependencies": {},
   "keywords": []
