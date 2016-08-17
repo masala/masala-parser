@@ -7,19 +7,6 @@
  */
 
 
-export default{
-    success, failure
-}
-
-function success(value) {
-    return new Try(value, null);
-}
-
-function failure(error) {
-    return new Try(null, error);
-}
-
-
 class Try{
 
     constructor (value,error){
@@ -27,11 +14,11 @@ class Try{
         this.error = error;
     }
 
-    isSuccess(value){
+    isSuccess(){
         return this.error === null;
     }
 
-    isFailure(error){
+    isFailure(){
         return !this.isSuccess();
     }
 
@@ -109,5 +96,17 @@ class Try{
 
         return this;
     }
+}
+
+function success(value) {
+    return new Try(value, null);
+}
+
+function failure(error) {
+    return new Try(null, error);
+}
+
+export default{
+    success, failure
 }
 

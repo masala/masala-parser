@@ -7,19 +7,6 @@
  */
 
 
-function someOrNone(value) {
-    return new Option(value);
-}
-
-function none() {
-    return new Option();
-}
-
-
-export default{
-    some: someOrNone,
-    none
-}
 
 /**
  * Private class Option, accessible from someOrNone() or none()
@@ -55,7 +42,9 @@ class Option {
             return this;
         }
 
-        return none();
+        // equivalent of return none() without cyclic creation
+        // eslint : no-use-before-define
+        return new Option();
     }
 
     get() {
@@ -78,4 +67,20 @@ class Option {
         }
     }
 
+}
+
+
+function someOrNone(value) {
+    return new Option(value);
+}
+
+
+function none() {
+    return new Option();
+}
+
+
+export default{
+    some: someOrNone,
+    none
 }

@@ -34,11 +34,12 @@
     "cover": "rm -rf ./coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover && npm run coveralls",
-    "concat": "npm run compile && browserify dist/lib/index.js -o dist/parsec.js"
+    "concat": "npm run compile && browserify build/lib/index.js -o dist/parsec.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
     "babel-core": "^6.10.4",
+    "babel-eslint": "^6.1.2",
     "babel-istanbul": "^0.8.0",
     "babel-preset-es2015": "^6.9.0",
     "browserify": "~9.0.3",
