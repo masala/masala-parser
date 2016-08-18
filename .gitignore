@@ -1,5 +1,8 @@
 test/coverage
 node_modules
 build
+dist
 site
 .brackets.json
+npm-debug.log
+coverage

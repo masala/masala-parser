@@ -1,0 +1,39 @@
+{
+  "env": {
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "environment": {
+    "node": true,
+    "es6": true
+  },
+  "ecmaFeatures": {
+    "modules": true
+  },
+  "globals": {
+    "define": true
+  },
+  "rules": {
+    "curly": 2,
+    "eqeqeq": 2,
+    "wrap-iife": [
+      2,
+      "any"
+    ],
+    "no-use-before-define": [1, "nofunc"],
+    "new-cap": 2,
+    "no-caller": 2,
+    "dot-notation": 0,
+    "no-undef": 2,
+    "no-unused-vars": 2,
+    "no-cond-assign": [
+      2,
+      "except-parens"
+    ],
+    "no-eq-null": 2
+  }
+}
