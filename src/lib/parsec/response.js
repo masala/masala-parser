@@ -40,6 +40,37 @@ class Response {
     }
 }
 
+/**
+ * Reject response class
+ */
+class Reject extends Response {
+    constructor(offset, consumed) {
+        super();
+        this.offset = offset;
+        this.consumed = consumed;
+    }
+
+
+    // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
+    fold(_, reject) {
+        return reject(this);
+    }
+
+    // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
+    map() {
+        return this;
+    }
+
+    // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
+    flatmap() {
+        return this;
+    }
+
+    // Response 'a 'c => ('a -> bool) -> Response 'b 'c
+    filter() {
+        return new Reject(this.offset, false);
+    }
+}
 
 /**
  * Accept response class
@@ -79,39 +110,6 @@ class Accept extends Response {
         }
     }
 }
-
-/**
- * Reject response class
- */
-class Reject extends Response {
-    constructor(offset, consumed) {
-        super();
-        this.offset = offset;
-        this.consumed = consumed;
-    }
-
-
-    // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
-    fold(_, reject) {
-        return reject(this);
-    }
-
-    // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
-    map() {
-        return this;
-    }
-
-    // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
-    flatmap() {
-        return this;
-    }
-
-    // Response 'a 'c => ('a -> bool) -> Response 'b 'c
-    filter() {
-        return new Reject(this.offset, false);
-    }
-}
-
 
 /**
  * Constructors
