@@ -2,7 +2,7 @@
   "name": "parser-combinator",
   "description": "Parser combinators",
   "license": "LGPL-2.1",
-  "version": "0.1.0",
+  "version": "0.1.0-5",
   "homepage": "https://github.com/d-plaindoux/parsec",
   "author": {
     "name": "Didier Plaindoux",
@@ -22,12 +22,12 @@
       "url": "https://github.com/d-plaindoux/parsec/blob/master/LICENSE-LGPL2"
     }
   ],
-  "main": "build/index.js",
+  "main": "build/lib/index.js",
   "engines": {
     "node": ">= 5.7.0"
   },
   "scripts": {
-    "prepublish": "echo 'PREPUBLISH' && npm run check && npm run compile",
+    "prepublish": "echo '--- Prepublishing ---\n' && npm run test && npm run compile",
     "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps",
     "dev": "babel --watch src --out-dir dist",
     "lint": "eslint src/**",
