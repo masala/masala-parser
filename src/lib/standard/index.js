@@ -6,9 +6,10 @@
  * Licensed under the LGPL2 license.
  */
 
-import parser from './parser'
-import response from './response'
+import jsonparser from './jsonparser';
+import markdown from './markdown';
+
 
 export default{
-parser, response
+    jsonparser, markdown
 }

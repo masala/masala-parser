@@ -7,11 +7,13 @@
  */
 
 
-import unit from './data/unit';
-import atry from './data/try';
-import option from './data/option';
+import data from './data/index';
+import genlex from './genlex/index';
+import parsec from './parsec/index';
+import standard from './standard/index'
 import stream from './stream/index';
 
 export {
-unit, atry, option, stream
+data, genlex, parsec, standard, stream
 }
+
