@@ -71,7 +71,11 @@ class Genlex {
 
     // GenLexFactory 'a -> Parser 'a char
     token(f) {
-        return this.keyword(f).or(this.ident(f)).or(this.number(f)).or(this.string(f)).or(this.char(f));
+        return this.keyword(f).
+                or(this.ident(f)).
+                or(this.number(f)).
+                or(this.string(f)).
+                or(this.char(f));
     }
 
     // GenLexFactory 'a -> Parser 'a char

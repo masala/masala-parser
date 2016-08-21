@@ -30,12 +30,8 @@ class Response {
     // Response 'a 'c => unit -> bool
     toTry() {
         return this.fold(
-            function (accept) {
-                return atry.success(accept.value);
-            },
-            function (reject) {
-                return atry.failure(new Error("parser error at " + reject.offset));
-            }
+            (accept) => atry.success(accept.value),
+            (reject) => atry.failure(new Error("parser error at " + reject.offset))
         )
     }
 }
@@ -114,14 +110,8 @@ class Accept extends Response {
 /**
  * Constructors
  */
-const accept = function (value, sequence, offset, consumed) {
-    return new Accept(value, sequence, offset, consumed);
-};
-
-const reject = function (offset, consumed) {
-    return new Reject(offset, consumed);
-};
-
+const accept = (value, sequence, offset, consumed) => new Accept(value, sequence, offset, consumed);
+const reject = (offset, consumed) => new Reject(offset, consumed);
 const response = {accept, reject};
 
 export default response;

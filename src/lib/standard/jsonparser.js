@@ -26,12 +26,10 @@ function tkKey(s) {
 // unit -> Parser ? Token
 function arrayOrNothing() {
     var value = [],
-        addValue = function (e) {
+        addValue = (e) => {
             value = value.concat(e);
         },
-        getValue = function () {
-            return value;
-        },
+        getValue = () => value,
         item = parser.lazy(expr).map(addValue);
     return (item.then(tkKey(',').thenRight(item).optrep())).opt().map(getValue);
 }
@@ -39,19 +37,23 @@ function arrayOrNothing() {
 // unit -> Parser ? Token
 function objectOrNothing() {
     var value = {},
-        addValue = function (e) {
+        addValue = (e) => {
             value[e[0]] = e[1];
         },
-        getValue = function () {
-            return value;
-        },
+        getValue = () => value,
         attribute = tkString.thenLeft(tkKey(':')).then(parser.lazy(expr)).map(addValue);
     return (attribute.thenLeft(tkKey(',').then(attribute).optrep())).opt().map(getValue);
 }
 
 // unit -> Parser ? Token
 function expr() {
-    return tkNumber.or(tkString).or(tkKey("null").thenReturns(null)).or(tkKey("true").thenReturns(true)).or(tkKey("false").thenReturns(false)).or(tkKey('[').thenRight(parser.lazy(arrayOrNothing)).thenLeft(tkKey(']'))).or(tkKey('{').thenRight(parser.lazy(objectOrNothing)).thenLeft(tkKey('}')));
+    return tkNumber.
+            or(tkString).
+            or(tkKey("null").thenReturns(null)).
+            or(tkKey("true").thenReturns(true)).
+            or(tkKey("false").thenReturns(false)).
+            or(tkKey('[').thenRight(parser.lazy(arrayOrNothing)).thenLeft(tkKey(']'))).
+            or(tkKey('{').thenRight(parser.lazy(objectOrNothing)).thenLeft(tkKey('}')));
 }
 
 //const parse =

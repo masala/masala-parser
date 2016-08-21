@@ -97,53 +97,28 @@ class TKChar extends Token{
 
 // (Token -> Option 'a) -> Parser 'a Token
 function literal(tokenise) {
-    return parser.parse(function(input, index) {
-        return input.get(index).map(function(value) {
-            return tokenise(value).map(function(token){
-                return response.accept(token, input, index+1, true);
-            }).orLazyElse(function() {
-                return response.reject(input.location(index), false);
-            });
-        }).lazyRecoverWith(function() {
-            return response.reject(input.location(index), false);
-        });
+    return parser.parse((input, index) => {
+        return input.get(index).map((value) => {
+            return tokenise(value).map((token) => response.accept(token, input, index+1, true))
+                                  .orLazyElse(() => response.reject(input.location(index), false));   
+        }).lazyRecoverWith(() => response.reject(input.location(index), false));
     });
 }
 
 const token = {
     builder: {
-        keyword: function (value) {
-            return new TKKeyword(value);
-        },
-        ident: function (value) {
-            return new TKIdent(value);
-        },
-        number: function (value) {
-            return new TKNumber(value);
-        },
-        string: function (value) {
-            return new TKString(value);
-        },
-        char: function (value) {
-            return new TKChar(value);
-        }
+        keyword: (value) => new TKKeyword(value),
+        ident: (value) => new TKIdent(value),
+        number: (value) => new TKNumber(value),
+        string: (value) => new TKString(value),
+        char: (value) => new TKChar(value)
     },
     parser: {
-        keyword : literal(function(token) {
-            return token.keyword();
-        }),
-        ident : literal(function(token) {
-            return token.ident();
-        }),
-        number : literal(function(token) {
-            return token.number();
-        }),
-        string : literal(function(token) {
-            return token.string();
-        }),
-        char : literal(function(token) {
-            return token.char();
-        })
+        keyword : literal((token) => token.keyword()),
+        ident : literal((token) => token.ident()),
+        number : literal((token) => token.number()),
+        string : literal((token) => token.string()),
+        char : literal((token) => token.char())
     }
 };
 
