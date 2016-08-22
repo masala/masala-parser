@@ -111,9 +111,9 @@ P.digit.rep().map(toInteger)        (1)
 - *aString* : string &rarr; Parser string char
 
 #### Parser Combinators:
-- *and* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
-- *andLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
-- *andRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
+- *then* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
+- *thenLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
+- *thenRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
 - *or* : &forall; a c . **Parser a c** &rArr; Parser a c &rarr; Parser a c
 - *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Option a) c
 - *rep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
