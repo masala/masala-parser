@@ -343,7 +343,7 @@ export default {
   'expect (string) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.string('hello').parse(stream.ofString("hello"),0).isAccepted(),
+    test.equal(parser.string('Hello').parse(stream.ofString("Hello"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();

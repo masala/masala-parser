@@ -18,6 +18,7 @@ import jsonParseTest from './standard/jsonparser_test'
 import jsonSampleTest from './standard/jsonsample_test';
 import parserChainTest from './parsec/parser_chain_test';
 import parserCoreTest from './parsec/parser_core_test';
+import parserCoreDefaultTest from './parsec/parser_core_default_test';
 import parserExtensionTest from './parsec/parser_extensions_test';
 import parserStreamTest from './parsec/parser_stream_test';
 import parserResponseTest from './parsec/response_test';
@@ -26,7 +27,7 @@ export {
     optionTest, tryTest, streamsTest, bufferedStreamsTest,
     genlexTest, tokenTest, tokenizerTest,
     jsonParseTest, markdownTest,jsonSampleTest,
-    parserChainTest, parserCoreTest, parserExtensionTest,
+    parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
     parserStreamTest, parserResponseTest
 }
  

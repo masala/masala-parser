@@ -38,14 +38,14 @@ class Parser{
     map(f) {
         var self = this;
 
-        return new Parser((input, index) => self.parse(input, index).map(f));
+        return new Parser((input, index=0) => self.parse(input, index).map(f));
     }
 
     // Parser 'a 'c => ('a -> boolean) -> Parser 'a 'c
     filter(p) {
         var self = this;
 
-        return new Parser((input, index) => self.parse(input, index).filter(p));
+        return new Parser((input, index=0) => self.parse(input, index).filter(p));
     }
 
     // Parser 'a 'c => Comparable 'a -> Parser 'a 'c
@@ -103,7 +103,7 @@ class Parser{
     chain(p) {
         var self = this;
 
-        return new Parser((input, index) => 
+        return new Parser((input, index=0) => 
             p.parse(stream.buffered(stream.ofParser(self, input)), index)
         );
     }
@@ -130,7 +130,7 @@ function bindAccepted(accept_a, f) {
 
 // Parser 'a 'c -> ('a -> Parser 'b 'c) -> Parser 'b 'c
 function bind(self, f) {
-    return new Parser((input, index) => 
+    return new Parser((input, index=0) => 
         self.parse(input, index).fold(
             (accept_a) => bindAccepted(accept_a, f),
             (reject_a) => reject_a
@@ -140,24 +140,18 @@ function bind(self, f) {
 
 // Parser 'a 'c -> Parser 'a 'c -> Parser 'a 'c
 function choice(self, f) {
-    return new Parser((input, index) => {
-        return self.parse(input, index).fold(
+    return new Parser((input, index=0) =>
+        self.parse(input, index).fold(
             (accept) => accept,
-            (reject) => {
-                if (reject.consumed) {
-                    return reject;
-                } else {
-                    return f.parse(input, index);
-                }
-            }
-        );
-    });
+            (reject) => reject.consumed ? reject : f.parse(input, index)        
+        )
+    );
 }
 
 
 // Parser 'a 'c -> unit -> Parser (List 'a) 'c
 function repeatable(self, occurrences, accept) {
-    return new Parser((input, index) => {
+    return new Parser((input, index=0) => {
         var consumed = false,
             value = [],
             offset = index,
@@ -191,22 +185,22 @@ function parse(p) {
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
 function lazy(p, parameters) {
-    return new Parser((input, index) => p.apply(null, parameters).parse(input, index));
+    return new Parser((input, index=0) => p.apply(null, parameters).parse(input, index));
 }
 
 // 'a -> Parser 'a 'c
 function returns(v) {
-    return new Parser((input, index) => response.accept(v, input, index, false));
+    return new Parser((input, index=0) => response.accept(v, input, index, false));
 }
 
 // unit -> Parser 'a 'c
 function error() {
-    return new Parser((input, index) => response.reject(input.location(index), false));
+    return new Parser((input, index=0) => response.reject(input.location(index), false));
 }
 
 // unit -> Parser unit 'c
 function eos() {
-    return new Parser((input, index) => {
+    return new Parser((input, index=0) => {
         if (input.endOfStream(index)) {
             return response.accept(unit, input, index, false);
         } else {
@@ -217,7 +211,7 @@ function eos() {
 
 // ('a -> boolean) -> Parser a 'c
 function satisfy(predicate) {
-    return new Parser((input, index) =>
+    return new Parser((input, index=0) =>
         input.get(index).filter(predicate).
                       map((value) => response.accept(value, input, index + 1, true)).
                       lazyRecoverWith(() => response.reject(input.location(index), false))
@@ -226,7 +220,7 @@ function satisfy(predicate) {
 
 // Parser 'a 'c -> Parser 'a 'c
 function doTry(p) {
-    return new Parser((input, index) =>
+    return new Parser((input, index=0) =>
         p.parse(input, index).fold(
             (accept) => accept,
             (reject) => response.reject(input.location(reject.offset), false)
@@ -294,7 +288,7 @@ function charNotIn(c) {
 
 // string -> Parser string char
 function string(s) {
-    return new Parser((input, index) => {
+    return new Parser((input, index=0) => {
         if (input.subStreamAt(s.split(''), index)) {
             return response.accept(s, input, index + s.length, true);
         } else {

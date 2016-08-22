@@ -3,6 +3,7 @@
   "description": "Parser combinators",
   "license": "LGPL-2.1",
   "version": "0.1.1",
+  "keywords": ["parser","ll","combinator","functional","composable"],
   "homepage": "https://github.com/d-plaindoux/parsec",
   "author": {
     "name": "Didier Plaindoux",
