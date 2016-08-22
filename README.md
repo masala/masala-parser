@@ -21,7 +21,7 @@ var P = require('parser-combinator').parsec.parser,
 
 var p = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
             
-p.parse(S.ofString("Hello World")).value.join() === "World"
+p.parse(S.ofString("Hello World"), 0).value.join('') === "World"
 ```
 
 ### Character based parsers
