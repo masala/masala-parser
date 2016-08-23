@@ -97,12 +97,12 @@ class TKChar extends Token{
 
 // (Token -> Option 'a) -> Parser 'a Token
 function literal(tokenise) {
-    return parser.parse((input, index) => {
-        return input.get(index).map((value) => {
-            return tokenise(value).map((token) => response.accept(token, input, index+1, true))
-                                  .orLazyElse(() => response.reject(input.location(index), false));   
-        }).lazyRecoverWith(() => response.reject(input.location(index), false));
-    });
+    return parser.parse((input, index) => 
+        input.get(index).map((value) => 
+            tokenise(value).map((token) => response.accept(token, input, index+1, true))
+                           .orLazyElse(() => response.reject(input.location(index), false))
+        ).lazyRecoverWith(() => response.reject(input.location(index), false))
+    );
 }
 
 const token = {

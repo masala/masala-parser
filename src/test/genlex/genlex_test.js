@@ -30,7 +30,7 @@ export default {
   'expect (space) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).space().parse(stream.ofString(" "),0).isAccepted(),
+    test.equal(genlex.generator().space().parse(stream.ofString(" "),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -39,7 +39,7 @@ export default {
   'expect (meta space) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).space().parse(stream.ofString("\t"),0).isAccepted(),
+    test.equal(genlex.generator().space().parse(stream.ofString("\t"),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -48,7 +48,7 @@ export default {
   'expect (spaces) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).spaces().parse(stream.ofString(" \n  "),0).isAccepted(),
+    test.equal(genlex.generator().spaces().parse(stream.ofString(" \n  "),0).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -57,7 +57,7 @@ export default {
   'expect (spaces) to be skipped': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(genlex.generator([]).spaces().parse(stream.ofString(" \n "),0).offset,
+    test.equal(genlex.generator().spaces().parse(stream.ofString(" \n "),0).offset,
                3,
                'should be skipped.');
     test.done();

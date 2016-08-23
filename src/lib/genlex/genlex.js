@@ -22,14 +22,10 @@ function GenlexFactory(keyword, ident, number, string, char) {
 class Genlex {
 
     // [String] -> Genlex
-    constructor(keywords) {
-        this.keywordParser = (keywords || []).reduce(
-            (p, s) => parser.string(s).or(p),
-            parser.error
-        );
-
+    constructor(keywords=[]) {
         var idletter = parser.letter.or(parser.char('_')).or(parser.digit);
-        this.identParser = parser.letter.then(idletter.optrep());
+        this.identParser = parser.letter.then(idletter.optrep()).map((r) => [r[0]].concat(r[1]).join(''));
+        this.keywordParser = keywords.reduce((p, s) => parser.string(s).or(p),parser.error);
     }
 
     // unit -> Parser char char
@@ -44,29 +40,27 @@ class Genlex {
 
     // GenLexFactory 'a -> Parser 'a char
     keyword(f) {
-        return this.keywordParser.map(s => f.keyword(s));
+        return this.keywordParser.map(f.keyword);
     }
 
     // GenLexFactory 'a -> Parser 'a char
     ident(f) {
-        return this.identParser.map(
-            r => f.ident([r[0]].concat(r[1]).join(''))
-        );
+        return this.identParser.map(f.ident);
     }
 
     // GenLexFactory 'a -> Parser 'a char
     number(f) {
-        return parser.numberLiteral.map(s => f.number(s));
+        return parser.numberLiteral.map(f.number);
     }
 
     // GenLexFactory 'a -> Parser 'a char
     string(f) {
-        return parser.stringLiteral.map(s => f.string(s));
+        return parser.stringLiteral.map(f.string);
     }
 
     // GenLexFactory 'a -> Parser 'a char
     char(f) {
-        return parser.charLiteral.map(s => f.char(s));
+        return parser.charLiteral.map(f.char);
     }
 
     // GenLexFactory 'a -> Parser 'a char
