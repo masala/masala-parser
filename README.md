@@ -1,8 +1,9 @@
 # Javascript Parser Combinators
 
+[![npm version](https://badge.fury.io/js/parser-combinator.svg)](https://badge.fury.io/js/parser-combinator)
 [![Build Status](https://travis-ci.org/d-plaindoux/parsec.svg)](https://travis-ci.org/d-plaindoux/parsec) 
 [![Coverage Status](https://coveralls.io/repos/d-plaindoux/parsec/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parsec?branch=master) 
-[![unstable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
+[![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
 Javascript parser combinator implementation inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf).
@@ -21,7 +22,7 @@ var P = require('parser-combinator').parsec.parser,
 
 var p = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
             
-p.parse(S.ofString("Hello World"), 0).value.join('') === "World"
+p.parse(S.ofString("Hello World")).value.join('') === "World"
 ```
 
 ### Character based parsers
@@ -111,9 +112,9 @@ P.digit.rep().map(toInteger)        (1)
 - *aString* : string &rarr; Parser string char
 
 #### Parser Combinators:
-- *and* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
-- *andLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
-- *andRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
+- *then* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
+- *thenLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
+- *thenRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
 - *or* : &forall; a c . **Parser a c** &rArr; Parser a c &rarr; Parser a c
 - *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Option a) c
 - *rep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
