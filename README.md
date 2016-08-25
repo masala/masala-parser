@@ -25,6 +25,8 @@ var p = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
 p.parse(S.ofString("Hello World")).value.join('') === "World"
 ```
 
+You can also [try it online](https://tonicdev.com/d-plaindoux/parser-combinator-hello-world) !
+
 ### Character based parsers
 
 Let `P` be the parser library.
