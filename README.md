@@ -86,9 +86,9 @@ P.digit.rep().map(toInteger)        (1)
 
 ### Stream constructors
 - *ofString* : string -> Stream char
-- *ofArray* : &forall; a . [a] -> Stream a
-- *ofParser* : &forall; a c .(Parse a c, Stream c) -> Stream a
-- *buffered* : &forall; a .Stream a -> Stream a
+- *ofArray* : &forall; a . [a] &rarr; Stream a
+- *ofParser* : &forall; a c .(Parse a c, Stream c) &rarr; Stream a
+- *buffered* : &forall; a .Stream a &rarr; Stream a
 
 ### Parser
 
@@ -160,18 +160,18 @@ P.digit.rep().map(toInteger)        (1)
 - *char* : &forall; a .char &rarr; a
 
 #### Genlex generator:
-- *keyword* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser a char
-- *ident* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser a char
-- *number* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser a char
-- *string* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser a char
-- *char* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser a char
-- *token* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser a char
-- *tokens* : &forall; a . **Genlex [String]** &rArr; GenlexFactory a &rarr; Parser [a] char
+- *keyword* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
+- *ident* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
+- *number* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
+- *string* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
+- *char* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
+- *token* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
+- *tokens* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser [a] char
 
 ### Tokenizer
 
 #### Tokenizer [String]
-- *tokenize* : **Tokenizer [String]** &rArr; Stream char &rarr; Try [Token]
+- *tokenize* : **Tokenizer [String]** &odot; Stream char &rarr; Try [Token]
 
 ## License
 
