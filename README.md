@@ -114,25 +114,25 @@ P.digit.rep().map(toInteger)        (1)
 - *aString* : string &rarr; Parser string char
 
 #### Parser Combinators:
-- *then* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser [a,b] c
-- *thenLeft* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser a c
-- *thenRight* : &forall; a b c . **Parser a c** &rArr; Parser b c &rarr; Parser b c
-- *or* : &forall; a c . **Parser a c** &rArr; Parser a c &rarr; Parser a c
-- *opt* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (Option a) c
-- *rep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
-- *optrep* : &forall; a c . **Parser a c** &rArr; unit &rarr; Parser (List a) c
-- *match* : &forall; a c . **Parser a c** &rArr; Comparable a &rarr; Parser a c
+- *then* : &forall; a b c . **Parser a c** &odot; Parser b c &rarr; Parser [a,b] c
+- *thenLeft* : &forall; a b c . **Parser a c** &odot; Parser b c &rarr; Parser a c
+- *thenRight* : &forall; a b c . **Parser a c** &odot; Parser b c &rarr; Parser b c
+- *or* : &forall; a c . **Parser a c** &odot; Parser a c &rarr; Parser a c
+- *opt* : &forall; a c . **Parser a c** &odot; unit &rarr; Parser (Option a) c
+- *rep* : &forall; a c . **Parser a c** &odot; unit &rarr; Parser (List a) c
+- *optrep* : &forall; a c . **Parser a c** &odot; unit &rarr; Parser (List a) c
+- *match* : &forall; a c . **Parser a c** &odot; Comparable a &rarr; Parser a c
 
 #### Parser manipulation:
-- *map* : &forall; a b c . **Parser a c** &rArr; (a &rarr; b) &rarr; Parser b c
-- *flatmap* : &forall; a b c . **Parser a c** &rArr; (a &rarr; Parser b c) &rarr; Parser b c
-- *filter* : &forall; a b c . **Parser a c** &rArr; (a &rarr; bool) &rarr; Parser a c
+- *map* : &forall; a b c . **Parser a c** &odot; (a &rarr; b) &rarr; Parser b c
+- *flatmap* : &forall; a b c . **Parser a c** &odot; (a &rarr; Parser b c) &rarr; Parser b c
+- *filter* : &forall; a b c . **Parser a c** &odot; (a &rarr; bool) &rarr; Parser a c
 
 #### Chaining parsers by composition:
-- *chain* : &forall; a b c . **Parser a c** &rArr; Parser b a &rarr; Parser b c
+- *chain* : &forall; a b c . **Parser a c** &odot; Parser b a &rarr; Parser b c
 
 #### Parser Main Function:
-- *parse* : &forall; a c . **Parser a c** &rArr; Stream c &rarr; number &rarr; Response a
+- *parse* : &forall; a c . **Parser a c** &odot; Stream c &rarr; number &rarr; Response a
 
 ### Token
 
