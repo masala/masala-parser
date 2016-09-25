@@ -12,7 +12,8 @@ import P from '../parsec/parser';
 // Facilities
 //
 
-var eol = P.char('\n');
+const blocSeparation = P.char('\n').then(P.char('\n'));
+var eol = P.char('\n');//.then(P.charNotIn('\n'));
 
 function title(line, level) {
     return {title: line, level: level};
@@ -31,8 +32,16 @@ function strikeText(text) {
 }
 
 function normalText(c) {
+    console.log('==> FOUND a normal text: ', c);
     return {text: c.join('')};
 }
+
+
+function paragraphText(text) {
+    console.log('==> FOUND a paragraph : ', text[0][1]);
+    return {paragraph: text[0][1]};
+}
+
 
 function italic() {
     return P.try(P.string("*").thenRight(P.lazy(text, ["*"])).thenLeft(P.string("*")).
@@ -50,23 +59,33 @@ function strike() {
 
 function text(separator) {
     if (separator) {
+        console.log('==> text with separator :', separator);
         return P.not(eol.or(P.string(separator))).optrep().map(normalText);
     } else {
+        console.log('==> text without separator :', separator);
         return P.not(eol).then(P.charNotIn('\n*_~').optrep()).
                 map((c) => [c[0]].concat(c[1])).
                 map(normalText);
     }
 }
 
+
+function paragraph() {
+    console.log('in paragraph');
+    return eol.then(text()).then(eol.optrep()).map(paragraphText);
+}
+
 function line() {
     return (bold().or(italic()).or(strike()).or(text())).optrep().thenLeft(eol.opt());
 }
+
 
 function titleSharp() {
     return P.char('#').rep().then(line()).map(function (c) {
         return [title(c[1], c[0].length)];
     });
 }
+
 
 function titleAlt() {
     return P.try(
@@ -77,5 +96,5 @@ function titleAlt() {
     );
 }
 
-export default titleSharp().or(titleAlt()).or(line()).thenLeft(P.eos);
+export default paragraph().or(titleSharp()).or(titleAlt()).or(line()).thenLeft(P.eos);
  
