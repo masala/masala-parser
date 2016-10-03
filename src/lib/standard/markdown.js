@@ -32,13 +32,11 @@ function strikeText(text) {
 }
 
 function normalText(c) {
-    console.log('==> FOUND a normal text: ', c);
     return {text: c.join('')};
 }
 
 
 function paragraphText(text) {
-    console.log('==> FOUND a paragraph : ', text[0][1]);
     return {paragraph: text[0][1]};
 }
 
@@ -59,10 +57,8 @@ function strike() {
 
 function text(separator) {
     if (separator) {
-        console.log('==> text with separator :', separator);
         return P.not(eol.or(P.string(separator))).optrep().map(normalText);
     } else {
-        console.log('==> text without separator :', separator);
         return P.not(eol).then(P.charNotIn('\n*_~').optrep()).
                 map((c) => [c[0]].concat(c[1])).
                 map(normalText);
@@ -71,7 +67,6 @@ function text(separator) {
 
 
 function paragraph() {
-    console.log('in paragraph');
     return eol.then(text()).then(eol.optrep()).map(paragraphText);
 }
 
