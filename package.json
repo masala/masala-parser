@@ -51,6 +51,5 @@
     "nodeunit": "~0.9.0",
     "uglifyify": "^3.0.2"
   },
-  "dependencies": {},
-  "keywords": []
+  "dependencies": {}
 }
