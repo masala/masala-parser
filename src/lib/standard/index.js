@@ -8,8 +8,8 @@
 
 import jsonparser from './jsonparser';
 import markdown from './markdown';
-
+import lines from './line-parser'
 
 export default{
-    jsonparser, markdown
+    jsonparser, markdown, lines
 }
