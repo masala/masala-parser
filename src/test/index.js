@@ -13,6 +13,7 @@ import bufferedStreamsTest from './stream/buffered_stream_test';
 import genlexTest from './genlex/genlex_test';
 import tokenTest from './genlex/token_test';
 import tokenizerTest from './genlex/tokenizer_test';
+import lineTest from './standard/line-parser-test';
 import markdownTest from './standard/markdown_test';
 import jsonParseTest from './standard/jsonparser_test'
 import jsonSampleTest from './standard/jsonsample_test';
@@ -26,7 +27,7 @@ import parserResponseTest from './parsec/response_test';
 export {
     optionTest, tryTest, streamsTest, bufferedStreamsTest,
     genlexTest, tokenTest, tokenizerTest,
-    jsonParseTest, markdownTest,jsonSampleTest,
+    jsonParseTest, lineTest, markdownTest,jsonSampleTest,
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
     parserStreamTest, parserResponseTest
 }

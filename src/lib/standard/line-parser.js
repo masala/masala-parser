@@ -6,57 +6,57 @@ export default class LineParser {
 
 
 
-    titleValue(line, level) {
+    static titleValue(line, level) {
         return { title: line.text.trim(), level: level };
     }
 
 
-    italicValue(text) {
+    static italicValue(text) {
         return { italic: text };
     }
 
-    boldValue(text) {
+    static boldValue(text) {
         return { bold: text };
     }
 
-    strikeValue(text) {
+    static strikeValue(text) {
         return { strike: text };
     }
 
-    textValue(chars) {
-        return { text: chars.join('') };
+    static textValue(chars) {
+        return { text: chars.join('').trim() };
     }
 
     titleSharp() {
         return P.char('#').rep().then(this.notFormattedText())
-            .map(c=> this.titleValue(c[1], c[0].length));
+            .map(c=> LineParser.titleValue(c[1], c[0].length));
     }
 
     italic() {
         return P.try(P.string("*").thenRight(P.lazy(this.text, ["*"])).thenLeft(P.string("*")).or(P.string("_")
-            .thenRight(P.lazy(this.text, ["_"])).thenLeft(P.string("_"))).map(this.italicValue));
+            .thenRight(P.lazy(this.text, ["_"])).thenLeft(P.string("_"))).map(LineParser.italicValue.bind(this)));
     }
 
     bold() {
         return P.try(P.string("**").thenRight(P.lazy(this.text, ["**"])).thenLeft(P.string("**")).or(P.string("__")
-            .thenRight(P.lazy(this.text, ["__"])).thenLeft(P.string("__"))).map(this.boldValue));
+            .thenRight(P.lazy(this.text, ["__"])).thenLeft(P.string("__"))).map(LineParser.boldValue.bind(this)));
     }
 
     strike() {
-        return P.try(P.string("~~").thenRight(P.lazy(this.text, ["~~"])).thenLeft(P.string("~~")).map(this.strikeValue));
+        return P.try(P.string("~~").thenRight(P.lazy(this.text, ["~~"])).thenLeft(P.string("~~")).map(LineParser.strikeValue.bind(this)));
     }
 
     notFormattedText() {
-        return P.not(eol).then(P.charNotIn('\n').optrep()).map((c) => [c[0]].concat(c[1])).map(this.textValue);
+        return P.not(eol).then(P.charNotIn('\n').optrep()).map((c) => [c[0]].concat(c[1])).map(LineParser.textValue.bind(this));
 
     }
 
 
     text(separator) {
         if (separator) {
-            return P.not(eol.or(P.string(separator))).optrep().map(this.textValue);
+            return P.not(eol.or(P.string(separator))).optrep().map(LineParser.textValue.bind(this));
         } else {
-            return P.not(eol).then(P.charNotIn('\n*_~').optrep()).map((c) => [c[0]].concat(c[1])).map(this.textValue);
+            return P.not(eol).then(P.charNotIn('\n*_~').optrep()).map((c) => [c[0]].concat(c[1])).map(LineParser.textValue.bind(this));
         }
     }
 
@@ -112,6 +112,7 @@ function aloneEndOfLines() {
 }
 
 function indent() {
+    return P.try(P.char(' ').occ(8).or(P.char('\t').occ(2)));
     return P.try(P.char(' ').occ(8).or(P.char('\t').occ(2)));
     //return P.char('\t').debug('some tab').then(P.char('\t'));
 }
