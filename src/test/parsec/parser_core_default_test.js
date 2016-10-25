@@ -382,11 +382,11 @@ export default  {
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("b")).isAccepted(),
                    true,
-                   'should be rejected.');
+                   'should be accepted.');
     test.done();
   },
 
-  'expect (optrep) mutiple to accepted': function(test) {
+  'expect (optrep) multiple to accepted': function(test) {
     test.expect(1);
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("aaaabbb")).isAccepted(),
@@ -395,7 +395,7 @@ export default  {
     test.done();
   },
     
-  'expect (optrep) mutiple to return some [a,a,a,a]': function(test) {
+  'expect (optrep) multiple to return some [a,a,a,a]': function(test) {
     test.expect(1);
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("aaaabbb")).value,
