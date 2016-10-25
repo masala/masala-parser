@@ -185,7 +185,8 @@ function parse(p) {
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
 function lazy(p, parameters) {
-    return new Parser((input, index=0) => p.apply(null, parameters).parse(input, index));
+    // equivalent of p(...parameters), but would fail if parameters are undefined
+    return new Parser((input, index=0) => p.apply(p.prototype, parameters).parse(input, index));
 }
 
 // 'a -> Parser 'a 'c
