@@ -505,7 +505,7 @@ export default {
   'expect (occurence 1) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.any.occ(1).parse(stream.ofString('a'),0).isAccepted(), 
+    test.equal(parser.any.occurrence(1).parse(stream.ofString('a'),0).isAccepted(), 
                true,
                'should be accepted.');
     test.done();
@@ -514,7 +514,7 @@ export default {
   'expect (occurence 1) to return [a]': function(test) {
     test.expect(1);
     // tests here  
-    test.deepEqual(parser.any.occ(1).parse(stream.ofString('a'),0).value, 
+    test.deepEqual(parser.any.occurrence(1).parse(stream.ofString('a'),0).value, 
                    ['a'],
                    'should be accepted.');
     test.done();
@@ -523,7 +523,7 @@ export default {
   'expect (occurence 2) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.any.occ(1).parse(stream.ofString('aa'),0).isAccepted(), 
+    test.equal(parser.any.occurrence(1).parse(stream.ofString('aa'),0).isAccepted(), 
                true,
                'should be accepted.');
     test.done();
@@ -532,7 +532,7 @@ export default {
   'expect (occurence 2) to return [a,a]': function(test) {
     test.expect(1);
     // tests here  
-    test.deepEqual(parser.any.occ(2).parse(stream.ofString('aa'),0).value, 
+    test.deepEqual(parser.any.occurrence(2).parse(stream.ofString('aa'),0).value, 
                    ['a','a'],
                    'should be accepted.');
     test.done();
@@ -541,7 +541,7 @@ export default {
   'expect (occurence 2) to return [a,a,a]': function(test) {
     test.expect(1);
     // tests here  
-    test.deepEqual(parser.any.occ(3).parse(stream.ofString('aaa'),0).value, 
+    test.deepEqual(parser.any.occurrence(3).parse(stream.ofString('aaa'),0).value, 
                    ['a','a','a'],
                    'should be accepted.');
     test.done();
@@ -550,7 +550,7 @@ export default {
   'expect (occurence 0) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.any.occ(0).parse(stream.ofString('aa'),0).isAccepted(), 
+    test.equal(parser.any.occurrence(0).parse(stream.ofString('aa'),0).isAccepted(), 
                true,
                'should be accepter.');
     test.done();
@@ -560,7 +560,7 @@ export default {
   'expect (occurence 0) to return []': function(test) {
     test.expect(1);
     // tests here  
-    test.deepEqual(parser.any.occ(0).parse(stream.ofString('aa'),0).value, 
+    test.deepEqual(parser.any.occurrence(0).parse(stream.ofString('aa'),0).value, 
                    [],
                    'should be accepter.');
     test.done();

@@ -90,7 +90,7 @@ class Parser{
     }
 
     // Parser 'a 'c => number -> Parser (List 'a) 'c
-    occ(occurrence) {
+    occurrence(occurrence) {
         return repeatable(this, (l) => l < occurrence, (l) => l === occurrence);
     }
 
