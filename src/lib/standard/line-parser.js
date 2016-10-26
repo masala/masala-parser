@@ -75,8 +75,18 @@ export default class LineParser {
             .map(val => ({ blankLine: val.join('') }));
     }
 
+
+    /**
+     * !! this can be a block
+     * These end of lines must have the last precedence
+     * @returns {*|Array}
+     */
+    aloneEndOfLines() {
+        return eol.rep().map(eols => ({ eol: eols.length }));
+    }
+
     combinator(){
-        return this.titleSharp().or(this.blankLine()).or(this.line());
+        return this.titleSharp().or(this.blankLine()).or(this.line()).or(this.aloneEndOfLines());
     }
 
     parse(stream, offset = 0) {

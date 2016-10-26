@@ -175,6 +175,29 @@ export default {
 
         test.done();
 
+    },
+
+
+    'direct end of lines are not blankLines': function (test) {
+        test.expect(2);
+
+        testLine('\n');
+
+        test.ok(accepted, 'should be accepted.');
+        test.deepEqual(value, { eol: 1 }, 'test eol');
+
+        test.done();
+    },
+    'combine multiple end of lines': function (test) {
+        test.expect(2);
+
+        testLine('\n\n\n');
+
+        test.ok(accepted, 'should be accepted.');
+        test.deepEqual(value, { eol: 3 }, 'test multiple eol');
+
+        test.done();
     }
+
 
 };
