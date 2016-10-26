@@ -197,7 +197,63 @@ export default {
         test.deepEqual(value, { eol: 3 }, 'test multiple eol');
 
         test.done();
+    },
+
+    'spaces indented line': function (test) {
+        test.expect(3);
+
+        testLine('        Exactly IndentedLine\n');
+
+        test.ok(accepted, 'should be accepted.');
+        test.ok(isDefined(value.indent.line[0].text), 'test space indent');
+        test.equals(value.spaces, '        ', 'Count spaces');
+
+        test.done();
+    },
+
+    'tabs indented line': function (test) {
+        test.expect(3);
+
+        testLine('\t\tExactly IndentedLine\n');
+
+        test.ok(accepted, 'should be accepted.');
+        test.equals(value.spaces, '\t\t', 'extra spcaces are not in indet spaces');
+
+        test.ok(isDefined(value.indent.line[0].text), 'test tab indent eol');
+
+        test.done();
     }
+
+    ,
+
+    'mix tabs indented line and starting spaces': function (test) {
+        test.expect(3);
+
+        testLine('\t\t   Not exactly IndentedLine\n');
+
+        test.ok(accepted, 'should be accepted.');
+
+        test.ok(isDefined(value.indent.line[0].text), 'test tab indent eol');
+        test.equals(value.spaces, '\t\t', 'extra spaces are not in indent spaces');
+
+        test.done();
+    }
+
+    ,
+
+    'Not enough spaces for indent': function (test) {
+        test.expect(2);
+
+        testLine(' Not enough spaces for indent\n');
+
+        test.ok(accepted, 'should be accepted, but not as indent');
+
+        test.ok(!isDefined(value.indent), 'test tab indent eol');
+
+        test.done();
+    }
+
+
 
 
 };

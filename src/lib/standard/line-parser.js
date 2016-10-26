@@ -85,9 +85,24 @@ export default class LineParser {
         return eol.rep().map(eols => ({ eol: eols.length }));
     }
 
-    combinator(){
-        return this.titleSharp().or(this.blankLine()).or(this.line()).or(this.aloneEndOfLines());
+    indent() {
+        return P.try(P.char(' ').occ(8).or(P.char('\t').occ(2)));
     }
+
+    indentedLine() {
+        return P.try(this.indent().then(this.line()))
+            .map(values=>({
+                indent: values[1],
+                spaces: values[0].join('')
+            }));
+    }
+
+
+    combinator(){
+        return this.titleSharp().or(this.indentedLine()).or(this.blankLine()).or(this.line()).or(this.aloneEndOfLines());
+    }
+
+
 
     parse(stream, offset = 0) {
         return this.combinator().parse(stream, offset);
@@ -99,33 +114,4 @@ export default class LineParser {
     parseLine(line) {
         return this.parse(stream.ofString(line));
     }
-}
-
-
-
-
-
-/**
- *
- * !! this can be a block
- * These end of lines must have the last precedence
- * @returns {*|Array}
- */
-function aloneEndOfLines() {
-    return eol.map(() =>({ eol: 'eol' }))
-        .rep().map(eols => ({ eol: eols.length }));
-}
-
-function indent() {
-    return P.try(P.char(' ').occ(8).or(P.char('\t').occ(2)));
-    return P.try(P.char(' ').occ(8).or(P.char('\t').occ(2)));
-    //return P.char('\t').debug('some tab').then(P.char('\t'));
-}
-
-function indentedLine() {
-    return P.try(indent().then(strictLine()))
-        .map(values=>({
-            indent: values[1],
-            spaces: values[0]
-        }));
 }
