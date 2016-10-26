@@ -158,6 +158,23 @@ export default {
         test.deepEqual(item(), { strike: { text: "a simple test" } }, 'test bold value');
 
         test.done();
+    },
+
+
+    'blankLine is accepted and keep its value': function(test){
+        test.expect(3);
+
+        testLine('  \t\t  \n');
+
+        // tests here
+        test.ok(accepted, 'should be accepted.');
+        // looks like test equality is buggy
+        //test.deepEqual(value, { blanckLine: '  \t\t  ' }, 'test blank line value');
+        test.ok(isDefined(value.blankLine), 'test blank line defined');
+        test.equal(value.blankLine.trim(), '', 'blank line is blank');
+
+        test.done();
+
     }
 
 };

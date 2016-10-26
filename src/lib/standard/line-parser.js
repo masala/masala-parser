@@ -67,11 +67,16 @@ export default class LineParser {
     line() {
         return (this.bold().or(this.italic()).or(this.strike()).or(this.text())).rep()
             .thenLeft(eol)
-            .map(this.lineValue);
+            .map(this.lineValue.bind(this));
+    }
+
+    blankLine() {
+        return P.try(P.charIn('\t ').rep().thenLeft(eol))
+            .map(val => ({ blankLine: val.join('') }));
     }
 
     combinator(){
-        return this.titleSharp().or(this.line());
+        return this.titleSharp().or(this.blankLine()).or(this.line());
     }
 
     parse(stream, offset = 0) {
@@ -87,17 +92,7 @@ export default class LineParser {
 }
 
 
-function lineValue(line) {
-    return { line };
-}
 
-
-
-function blankLine() {
-    return P.charIn('\t ').rep()
-        .map(val => ({ blankLine: val.join('') }))
-        .thenLeft(eol);
-}
 
 
 /**
