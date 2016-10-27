@@ -107,6 +107,24 @@ class Parser{
             p.parse(stream.buffered(stream.ofParser(self, input)), index)
         );
     }
+
+    /**
+     * Prints a hint if the parser enters in this step
+     * @param hint
+     * @returns the equivalent Parser
+     */
+    debug(hint, details = true) {
+        var f = (p)=> {
+            if (details){
+                console.log('[debug] : ', hint, p);
+            }else{
+                console.log('[debug] : ', hint);
+            }
+
+            return p;
+        };
+        return this.map(f);
+    }
 }
 
 
