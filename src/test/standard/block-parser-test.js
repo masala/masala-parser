@@ -17,7 +17,14 @@ function isObject(object) {
     return !(object instanceof Array) && typeof object == 'object';
 }
 
-
+function  includesAll(str, ...values) {
+    return values.reduce(function(accu, current){
+        return accu
+            && typeof str ==='string'
+            && typeof current === 'string'
+            && str.includes(current);
+    }, true);
+}
 
 let blocParser = null;
 let value = undefined;
@@ -41,6 +48,14 @@ function testBlock(block) {
     accepted = parsing.isAccepted();
 }
 
+function blockCount(){
+    // TODO : return number of blocks or items
+}
+
+function blockSize(x){
+    // TODO : return size (number of lines) of xth block
+}
+
 
 
 export default {
@@ -49,14 +64,28 @@ export default {
         done();
     },
 
-    'Two lines paragraph should be accepted': function (test) {
-        test.expect(2);
-        const block = 'Some talks\nand othertalks\n';
+    'Multilines lines paragraph should be accepted': function (test) {
+        test.expect(3);
+        const block = 'Some talks\nand othertalks\n And this one with space\n';
         testBlock(block);
         // tests here
         test.ok(accepted,'should be accepted.');
+        test.ok(blockCount() === 1,'should be accepted.');
         console.log('value : ', value);
         test.ok(isObject(value.paragraph), 'value is an object');
+        test.done();
+    },
+
+    'Multilines lines paragraph with one starting with space should be accepted': function (test) {
+        test.expect(2);
+        const block = 'Some talks\nand other\n And this one with space\n';
+        testBlock(block);
+        // tests here
+        test.ok(accepted,'should be accepted.');
+        test.ok(blockCount() === 1,'should be accepted.');
+        console.log('value : ', value);
+        test.ok(isObject(value.paragraph), 'value is an object');
+        test.ok(includesAll(value.paragraph, 'Some', 'and other', 'with'), 'values are correct');
         test.done();
     }
 }

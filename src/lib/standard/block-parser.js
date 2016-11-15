@@ -11,9 +11,12 @@ export default class BlockParser {
     }
 
     paragraph(){
-        return P.try(this.lineParser.line().rep().debug('found', true))
-            .thenLeft(eol)
-            .map(val => {paragraph : val})
+        return P.try(this.lineParser.line().rep().debug('found', true)
+            .thenLeft(eol))
+            .map(val => {
+                console.log('current val : ', val);
+                return ({paragraph : val})
+            })
     }
 
     combinator(){
