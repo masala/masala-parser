@@ -34,24 +34,6 @@ class Parser{
         return bind(this, f);
     }
 
-    /**
-     * Prints a hint if the parser enters in this step
-     * @param hint
-     * @returns the equivalent Parser
-     */
-    debug(hint, details = true) {
-        var f = (p)=> {
-            if (details){
-                console.log('[debug] : ', hint, p);
-            }else{
-                console.log('[debug] : ', hint);
-            }
-
-            return p;
-        };
-        return this.map(f);
-    }
-
     // Parser 'a 'c => ('a -> 'b) -> Parser 'b 'c
     map(f) {
         var self = this;
