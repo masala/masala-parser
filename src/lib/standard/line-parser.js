@@ -6,24 +6,24 @@ export default class LineParser {
     
 
 
-     titleValue(line, level) {
+    titleValue(line, level) {
         return { title: line.text.trim(), level: level };
     }
 
 
-     italicValue(text) {
+    italicValue(text) {
         return { italic: text };
     }
 
-     boldValue(text) {
+    boldValue(text) {
         return { bold: text };
     }
 
-     strikeValue(text) {
+    strikeValue(text) {
         return { strike: text };
     }
 
-     textValue(chars) {
+    textValue(chars) {
         return { text: chars.join('').trim() };
     }
 
@@ -51,12 +51,16 @@ export default class LineParser {
 
     }
 
+    white() {
+        return P.charIn(' \t').rep().map(repetition => ' ');
+    }
 
     text(separator) {
         if (separator) {
             return P.not(eol.or(P.string(separator))).optrep().map(this.textValue.bind(this));
         } else {
-            return P.not(eol).then(P.charNotIn('\n*_~').optrep()).map((c) => [c[0]].concat(c[1])).map(this.textValue.bind(this));
+            return P.not(eol).then((this.white().or(P.charNotIn('\n*_~')).optrep()))
+                .map((c) => [c[0]].concat(c[1])).map(this.textValue.bind(this));
         }
     }
 
@@ -86,7 +90,7 @@ export default class LineParser {
     }
 
     indent() {
-        return P.try(P.char(' ').occ(8).or(P.char('\t').occ(2)));
+        return P.try(P.char(' ').occurrence(8).or(P.char('\t').occurrence(2)));
     }
 
     indentedLine() {
@@ -97,12 +101,16 @@ export default class LineParser {
             }));
     }
 
-
-    // TODO: Maybe change line with textualLine
-    combinator(){
-        return this.titleSharp().or(this.indentedLine()).or(this.blankLine()).or(this.line()).or(this.aloneEndOfLines());
+    bullet() {
+        //TODO : test without try
+        return P.try(P.char('*').then(P.char(' ').rep()).then(this.line()))
     }
 
+
+    // TODO: Maybe change line with textualLine
+    combinator() {
+        return this.titleSharp().or(this.indentedLine()).or(this.blankLine()).or(this.line()).or(this.aloneEndOfLines());
+    }
 
 
     parse(stream, offset = 0) {

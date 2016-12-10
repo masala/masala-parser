@@ -17,14 +17,13 @@ function isObject(object) {
 }
 
 
-
 let lineParser = null;
 let value = undefined;
 let accepted = undefined;
 
 
 function display(val, prefix = false) {
-    if (val === undefined){
+    if (val === undefined) {
         val = value;
     }
     if (prefix) {
@@ -49,7 +48,7 @@ export default {
     setUp: function (done) {
         lineParser = new LineParser();
         done();
-    },
+    } /* ,
 
     'Sharp title 1 should be accepted': function (test) {
         test.expect(1);
@@ -161,7 +160,7 @@ export default {
     },
 
 
-    'blankLine is accepted and keep its value': function(test){
+    'blankLine is accepted and keep its value': function (test) {
         test.expect(3);
 
         testLine('  \t\t  \n');
@@ -252,8 +251,32 @@ export default {
 
         test.done();
     }
-    ,
+  ,
 
+    'spaces are repeated spaces or tabs ': function (test) {
+        test.expect(1);
+
+        testLine('  ');
+        test.ok(accepted, 'should be accepted, but not as indent');
+
+        test.done();
+    }
+*/
+    // TODO : should test also with italic, bold and titles
+    ,
+    'If not line start, repeated whites are just one blank ': function (test) {
+        test.expect(1);
+
+        testLine('Hello    World\n');
+        test.ok(accepted, 'should be accepted');
+        console.info(value);
+        //test.deepEqual(value.text, [{ text: 'Hello World' }], 'Whites are still repeated');
+
+        test.done();
+    },
+
+
+    /*
     'Simple Bullet': function (test) {
         test.expect(2);
 
@@ -261,9 +284,9 @@ export default {
 
         test.ok(accepted, 'should be accepted');
         const expected = {
-            bullet:{
+            bullet: {
                 level: 0,
-                text:'This is a bullet'
+                text: 'This is a bullet'
             }
         };
         test.deepEqual(value, expected, 'This should be a bullet line');
@@ -278,9 +301,9 @@ export default {
 
         test.ok(accepted, 'should be accepted');
         const expected = {
-            bullet:{
-                level:0,
-                text:'This is a bullet'
+            bullet: {
+                level: 0,
+                text: 'This is a bullet'
             }
         };
         test.deepEqual(value, expected, 'This should be a bullet line');
@@ -294,10 +317,10 @@ export default {
 
         test.ok(accepted, 'should be accepted');
         const expected = {
-                bullet:{
-                    level:1,
-                    text:'This is a bullet'
-                }
+            bullet: {
+                level: 1,
+                text: 'This is a bullet'
+            }
         };
         test.deepEqual(value, expected, 'This should be a bullet line');
 
@@ -314,9 +337,6 @@ export default {
 
         test.done();
     }
-
-
-
-
+*/
 
 };
