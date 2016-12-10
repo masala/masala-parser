@@ -252,6 +252,69 @@ export default {
 
         test.done();
     }
+    ,
+
+    'Simple Bullet': function (test) {
+        test.expect(2);
+
+        testLine('* This is a bullet\n');
+
+        test.ok(accepted, 'should be accepted');
+        const expected = {
+            bullet:{
+                level: 0,
+                text:'This is a bullet'
+            }
+        };
+        test.deepEqual(value, expected, 'This should be a bullet line');
+
+        test.done();
+    },
+
+    'Also a bullet': function (test) {
+        test.expect(2);
+
+        testLine('- This is also a bullet\n');
+
+        test.ok(accepted, 'should be accepted');
+        const expected = {
+            bullet:{
+                level:0,
+                text:'This is a bullet'
+            }
+        };
+        test.deepEqual(value, expected, 'This should be a bullet line');
+
+        test.done();
+    },
+    'Indented bullet': function (test) {
+        test.expect(2);
+
+        testLine('\n- This is an indented bullet\n');
+
+        test.ok(accepted, 'should be accepted');
+        const expected = {
+                bullet:{
+                    level:1,
+                    text:'This is a bullet'
+                }
+        };
+        test.deepEqual(value, expected, 'This should be a bullet line');
+
+        test.done();
+    },
+
+    'Not a valid bullet': function (test) {
+        test.expect(2);
+
+        testLine('*This is not a bullet\n');
+
+        test.ok(accepted, 'should be accepted');
+        test.ok(!isDefined(value.bullet), 'Space is missing for a bullet');
+
+        test.done();
+    }
+
 
 
 

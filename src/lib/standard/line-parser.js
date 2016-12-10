@@ -98,6 +98,7 @@ export default class LineParser {
     }
 
 
+    // TODO: Maybe change line with textualLine
     combinator(){
         return this.titleSharp().or(this.indentedLine()).or(this.blankLine()).or(this.line()).or(this.aloneEndOfLines());
     }
