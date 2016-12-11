@@ -239,6 +239,14 @@ export default {
                'should be accepted.');
     test.done();
   },
+  'expect space (letter) to be rejected': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(parser.letter.parse(stream.ofString(" "),0).isAccepted(),
+        false,
+        'should be rejected.');
+    test.done();
+  },
         
   'expect non (letter) to be rejected': function(test) {
     test.expect(1);
@@ -248,7 +256,26 @@ export default {
                'should be rejected.');
     test.done();
   },
-       
+
+  'expect (letters) to be accepted': function(test) {
+    test.expect(2);
+    // tests here
+    const parsing =parser.letters.parse(stream.ofString("someLetters"),0);
+    test.equal(parsing.isAccepted(), true, 'should be accepted.');
+    test.deepEqual(parsing.value, 'someLetters', 'should be equal.');
+    test.done();
+  },
+
+  'expect (letters) with space to be rejected': function(test) {
+    test.expect(2);
+    // tests here
+    const parsing =parser.letters.parse(stream.ofString("some Letters"),0);
+    test.equal(parsing.isAccepted(), true, 'should be accepted.');
+    test.notDeepEqual(parsing.value, 'some Letters', 'should be equal.');
+    test.done();
+  },
+
+
   'expect (char) to be accepted': function(test) {
     test.expect(1);
     // tests here  
@@ -565,7 +592,7 @@ export default {
                    'should be accepter.');
     test.done();
   },
-/*
+
   "expect sequence ( '(',text(), ')' ) to return ['(', text, ')']": function(test) {
     test.expect(1);
     // tests here
@@ -578,7 +605,7 @@ export default {
 
     test.deepEqual(parsing.value,expected,'should be equal');
     test.done();
-  },*/
+  },
   "expect sequence ( 2+2) to return [2,'+' ,2]": function(test) {
     test.expect(1);
     // tests here

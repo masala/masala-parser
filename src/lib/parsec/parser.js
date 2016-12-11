@@ -302,6 +302,11 @@ function letter() {
     return satisfy((v) => ('a' <= v && v <= 'z') || ('A' <= v && v <= 'Z'));
 }
 
+function letters() {
+    return letter().rep().map(values=>values.join(''));
+}
+
+
 // char -> Parser char char
 function char(c) {
     if (c.length !== 1) {
@@ -388,6 +393,7 @@ export default {
     upperCase: upperCase(),
     not: not,
     letter: letter(),
+    letters: letters(),
     notChar: notChar,
     char: char,
     charIn: charIn,
