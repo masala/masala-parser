@@ -125,6 +125,31 @@ class Parser{
         };
         return this.map(f);
     }
+
+
+}
+
+function sequence() {
+    const args = [];
+
+    function getParser(x) {
+        if (typeof (x) === 'string') {
+            return string(x).map(val=> [x]);
+        } else {
+            return x.map(val=>[val]);
+        }
+    }
+
+    for (let key in arguments) {
+        args.push(arguments[key]);
+    }
+    let current = getParser(args[0]);
+    for (var i = 1; i < args.length; i++) {
+        const next = getParser(args[i]);
+        current = current.then(next)
+            .map(values=> values[0].concat( values[1]));
+    }
+    return current;
 }
 
 
@@ -371,5 +396,6 @@ export default {
     notString: notString,
     charLiteral: charLiteral(),
     stringLiteral: stringLiteral(),
-    numberLiteral: numberLiteral()
+    numberLiteral: numberLiteral(),
+    sequence: sequence
 }

@@ -564,5 +564,35 @@ export default {
                    [],
                    'should be accepter.');
     test.done();
-  }  
+  },
+/*
+  "expect sequence ( '(',text(), ')' ) to return ['(', text, ')']": function(test) {
+    test.expect(1);
+    // tests here
+    const string = '(Hello)';
+    const expected = ['(', 'Hello', ')'];
+
+    const parsing=parser
+        .sequence('(', parser.charNotIn(')').rep().map(v=>v.join('')), ')')
+        .parse(stream.ofString(string),0);
+
+    test.deepEqual(parsing.value,expected,'should be equal');
+    test.done();
+  },*/
+  "expect sequence ( 2+2) to return [2,'+' ,2]": function(test) {
+    test.expect(1);
+    // tests here
+    const string = '2+2';
+    const expected = [2, '+', 2];
+
+    const parsing=parser
+        .sequence(parser.numberLiteral, '+', parser.numberLiteral)
+        .parse(stream.ofString(string),0);
+
+    test.deepEqual(parsing.value,expected,'should be equal');
+    test.done();
+  },
+
+
+
 };
