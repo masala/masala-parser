@@ -88,4 +88,18 @@ export default {
         test.ok(includesAll(value.paragraph, 'Some', 'and other', 'with'), 'values are correct');
         test.done();
     }
+    ,
+
+    'Read title and its paragraphs': function (test) {
+        test.expect(2);
+        const block = 'Some talks\nand other\n And this one with space\n';
+        testBlock(block);
+        // tests here
+        test.ok(accepted,'should be accepted.');
+        test.ok(blockCount() === 1,'should be accepted.');
+        console.log('value : ', value);
+        test.ok(isObject(value.paragraph), 'value is an object');
+        test.ok(includesAll(value.paragraph, 'Some', 'and other', 'with'), 'values are correct');
+        test.done();
+    }
 }
