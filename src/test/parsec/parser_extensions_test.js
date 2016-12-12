@@ -260,7 +260,7 @@ export default {
   'expect (letters) to be accepted': function(test) {
     test.expect(2);
     // tests here
-    const parsing =parser.letters.parse(stream.ofString("someLetters"),0);
+    const parsing =parser.letters.thenLeft(parser.eos).parse(stream.ofString("someLetters"),0);
     test.equal(parsing.isAccepted(), true, 'should be accepted.');
     test.deepEqual(parsing.value, 'someLetters', 'should be equal.');
     test.done();
@@ -269,9 +269,17 @@ export default {
   'expect (letters) with space to be rejected': function(test) {
     test.expect(2);
     // tests here
-    const parsing =parser.letters.parse(stream.ofString("some Letters"),0);
-    test.equal(parsing.isAccepted(), true, 'should be accepted.');
+    const parsing =parser.letters.then(parser.eos).parse(stream.ofString("some Letters"),0);
+    test.equal(parsing.isAccepted(), false, 'should be rejected.');
     test.notDeepEqual(parsing.value, 'some Letters', 'should be equal.');
+    test.done();
+  },
+
+  'expect (letters) with number to be rejected': function(test) {
+    test.expect(1);
+    // tests here
+    const parsing =parser.letters.then(parser.eos).parse(stream.ofString("some2Letters"),0);
+    test.equal(parsing.isAccepted(), false, 'should be accepted.');
     test.done();
   },
 
