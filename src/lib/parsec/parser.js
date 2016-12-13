@@ -387,7 +387,7 @@ export default {
     eos: eos(),
     satisfy: satisfy,
     try: doTry,
-    any: any(),
+    any: any,
     digit: digit(),
     lowerCase: lowerCase(),
     upperCase: upperCase(),
