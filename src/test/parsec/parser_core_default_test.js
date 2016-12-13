@@ -266,7 +266,7 @@ export default  {
     test.done();
   },
 
-  'expect (or) to be accepted': function(test) {
+  'expect (or) bis to be accepted': function(test) {
     test.expect(1);
     // tests here
     test.equal(parser.char("a").or(parser.char("b")).parse(stream.ofString("b")).isAccepted(),
