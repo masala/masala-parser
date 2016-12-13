@@ -49,7 +49,7 @@ TODO : link explanations with parser_stream_test.js
 ### map(f)
 
 * difficulty : 0
-* Change the value inside the monoïde
+* Change the value inside the monoïd
 
         'expect (map) to be return ab': function(test) {
             test.equal(parser.char("a").map(function(a) { return a + "b"; })
@@ -101,25 +101,28 @@ TODO : link explanations with parser_stream_test.js
 * difficulty : 1
 * Uses `then()` and returns only the left or right value
 
-        'expect (then) to be build [a,b]': function(test) {
+        'expect (thenLeft) to keep only 'a' from ['a','b']': function(test) {
             test.deepEqual(
-                const stream = stream.ofString("ab"); 
-                P.char("a").thenLeft(parser.char("b")).parse(stream).value,
+                const stream = stream.ofString('ab'); 
+                P.char('a').thenLeft(parser.char('b')).parse(stream).value,
                 'a',
                 'should be accepted.');
         },
 
-### thenReturns
+### thenReturns(value)
 
 * difficulty : 1
 * Shortcut for `thenRight()`
 
-        parser.char("a").thenReturns("b")
+        const P = parser;
+        const value = 'b'
+        P.char('a').thenReturns(value)
         
 instead of :         
         
-        parser.char("a").then(parser.char("b"))
+        P.char('a').thenRight(P.char('b'))
 
+TODO : What if value is not a character ?
 
 ### error()
 
@@ -161,7 +164,61 @@ TODO : There is a story of consumed input
 * difficulty : 0
 * next character will always work
 
- 
+TODO : There is no explicit test for `any()` 
+
+
+### opt()
+
+* difficulty : 0
+* Allows optional use of a Parser 
+* Internally used for `optrep()` function
+
+        const P = parser;
+        // ok for 'ac' but also 'abc'    
+        P.char('a').opt( P.char('b') ).char('P.c')
+
+### rep()
+
+* difficulty : 0
+* Ensure a parser is repeated **at least** one time
+
+
+        'expect (rep) to accepted': function(test) { 
+             const stream = stream.ofString("aaa");
+             const accepted = parser.char("a").rep().parse(stream,0).isAccepted()
+                test.deepEqual(accepted,true);
+        }
+
+### optrep
+
+* difficulty : 0
+* A Parser can be repeated zero or many times  
+
+        const P = parser;
+        // ok for 'ac' but also 'abbbbbc'    
+        P.char('a').optrep( P.char('b') ).char('P.c')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Parse() :  
