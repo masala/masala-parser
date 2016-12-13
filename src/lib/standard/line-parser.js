@@ -2,6 +2,7 @@ import stream from '../../lib/stream/index';
 import P from '../parsec/parser';
 const eol = P.char('\n');
 
+// TODO : Maybe rename this with LineFunctions
 export default class LineParser {
     
 

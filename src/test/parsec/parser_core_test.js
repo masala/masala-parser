@@ -145,8 +145,9 @@ export default  {
         
   'expect (then) to return [a,b]': function(test) {
     test.expect(1);
-    // tests here  
-    test.deepEqual(parser.char("a").then(parser.char("b")).parse(stream.ofString("ab"),0).value,
+    // tests here
+    const stream = stream.ofString("ab");
+    test.deepEqual(parser.char("a").then(parser.char("b")).parse(stream,0).value,
                    ['a','b'],
                    'should be accepted.');
     test.done();
