@@ -126,6 +126,10 @@ class Parser{
         return this.map(f);
     }
 
+    flattenDeep() {
+        return this.map(self => flattenDeep(self))
+    }
+
 
 }
 
@@ -377,6 +381,34 @@ function numberLiteral() {
 
     return float.map((r) => parseFloat(r, 10));
 }
+
+// utility function for flattenDeep()
+// TODO : Unit test
+function flattenDeep(array) {
+    let toString = Object.prototype.toString;
+    let arrayTypeStr = '[object Array]';
+    let result = [];
+    let nodes =  array.slice();
+    let node;
+
+    if (!array.length) {
+        return result;
+    }
+
+    node = nodes.pop();
+
+    do {
+        if (toString.call(node) === arrayTypeStr) {
+            nodes.push.apply(nodes, node);
+        } else {
+            result.push(node);
+        }
+    } while (nodes.length && (node = nodes.pop()) !== undefined);
+
+    result.reverse(); // we reverse result to restore the original order
+    return result;
+}
+
 
 
 export default {
