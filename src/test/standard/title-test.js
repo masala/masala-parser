@@ -2,7 +2,7 @@
  * Created by Simon on 14/12/2016.
  */
 
-import titleParser from '../../lib/standard/title-parser';
+import Parser from '../../lib/standard/title-parser';
 
 
 let value = undefined;
@@ -14,13 +14,12 @@ function testLine(line){
     value = parsing.value;
     accepted = parsing.isAccepted();
     console.info('parsing', parsing, '\n');
-
 }
 
 export default {
     setUp: function (done) {
 
-        parser =  titleParser;
+        parser =  Parser;
         done();
     },
 
@@ -46,5 +45,7 @@ export default {
         test.done();
     },
 
+    
+    
 
 }

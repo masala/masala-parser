@@ -5,12 +5,12 @@ import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';
 
-function hashes(){
+function sharps(){
     return P.char('#').rep().map(string => string.length)
 }
 
 function title(){
-    return hashes()
+    return sharps()
         .then(T.rawTextUntilChar('\n'))
         .thenLeft(T.eol())
         .map(array => ({
