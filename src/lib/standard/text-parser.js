@@ -15,7 +15,6 @@ function italic(){
         .thenRight(pureText())
         .thenLeft(P.char('*'))
         .map(string => ({italic:string})  )
-        .debug('Italic ->')
 }
 
 function bold(){
@@ -23,33 +22,31 @@ function bold(){
         .thenRight(pureText())
         .thenLeft(P.string('**'))
         .map(string => ({bold:string})  )
-        .debug('bold ->')
 }
 
 function text(){
     return pureText()
         .map(string => ({text:string}) )
-        .debug('text->')
 }
 
 function eol(){
     return T.eol().map((a=> ({eol:'\n'})))
 }
 
-function formattedText(){
+function formattedParagraph(){
     return T.blank()
         .thenRight(bold().or(italic()).or(text()).rep() )
-        .then(eol())
-        .flattenDeep()    
+        .thenLeft(eol())
+        .map(array =>({paragraph:array}))
 }
 
 function parseText( line, offset=0){
-    return formattedText().parse(stream.ofString(line), offset)
+    return formattedParagraph().parse(stream.ofString(line), offset)
 }
 
 
 export default {
-    formattedText,
+    formattedParagraph,
 
     parse(line){
         return parseText(line,0);

@@ -22,10 +22,18 @@ function eol(){
     return P.char('\n');
 }
 
+//A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
+function lineFeed(){
+    return eol().then(blank()).then(eol());
+}
+
 
 export default {
     blank,
     rawTextUntilChar,
-    eol
+    eol,
+    lineFeed
 }
+
+
 

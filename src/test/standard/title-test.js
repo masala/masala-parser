@@ -45,7 +45,61 @@ export default {
         test.done();
     },
 
+    'title alternate 1 should be accepted': function(test) {
+        test.expect(1);
+
+        testLine('Title\n=====\n');
+        let expected={ title: { level: 1, text: 'Title' } };
+
+        test.deepEqual(expected, value, 'test title1 alt');        
+        test.done();
+    },
+
+    'title alternate 1 should be title1': function(test) {
+        test.expect(1);
+        
+        testLine('Title\n=====   \n');
+        let expected={ title: { level: 1, text: 'Title' } };
+
+        test.deepEqual(expected, value, 'test title1 alt');
+        test.done();
+    },
+
+    'title alternate 2 should be accepted': function(test) {
+        test.expect(1);
+
+        testLine('Title\n-----\n');
+        let expected={ title: { level: 2, text: 'Title' } };
+
+        test.deepEqual(expected, value, 'test title2 alt');
+        test.done();
+    },
+
+    'title alternate 2 should be title1': function(test) {
+        test.expect(1);
+
+        testLine('Title\n------   \n');
+        let expected={ title: { level: 2, text: 'Title' } };
+
+        test.deepEqual(expected, value, 'test title2 alt');
+        test.done();
+    },
     
-    
+    ' stars into title': function(test) {
+        test.expect(2);
+
+        testLine('2*3*4 = 24\n------   \n');
+        let expected={ title: { level: 2, text: '2*3*4 = 24' }} ;
+
+        test.deepEqual(expected, value, 'test stars in title1');
+
+
+        testLine('##2*3*4 = 24\n');
+        expected={ title: { level: 2, text: '2*3*4 = 24' } };
+
+        test.deepEqual(expected, value, 'test stars in title2');
+        
+        test.done();
+    },
 
 }

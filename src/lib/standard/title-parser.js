@@ -9,7 +9,21 @@ function sharps(){
     return P.char('#').rep().map(string => string.length)
 }
 
-function title(){
+function equals(){
+    return P.string('===')
+        .then(T.rawTextUntilChar('\n'))
+        .then(T.eol())
+        .map(a=>1);  // this mean a level 1 title
+}
+
+function minuses(){
+    return P.string('---')
+        .then(T.rawTextUntilChar('\n'))
+        .then(T.eol())
+        .map(a=>2); // this mean a level 2 title
+}
+
+function titleStyle1(){
     return sharps()
         .then(T.rawTextUntilChar('\n'))
         .thenLeft(T.eol())
@@ -20,6 +34,23 @@ function title(){
                         }
         }))
         .debug('title:');
+}
+
+function titleAlt(){
+    return T.rawTextUntilChar('\n')
+        .thenLeft(T.eol())
+        .then(equals().or(minuses())).debug('titleAlt avant Map')
+        .map(array => ({
+            title:{
+                level:array[1],
+                text:array[0]
+            }
+        }))
+}
+
+
+function title(){
+    return titleStyle1().or(titleAlt())
 }
 
 function parseTitle( line, offset=0){
@@ -34,3 +65,9 @@ export default {
         return parseTitle(line,0);
     }
 }
+
+/*  SHORTCOMINGS :
+* Can not have formatted text in a title.  "##2*3*4 = 24\n" will display "2*3*4 = 24" 
+    
+* End Of Line (\n) is compulsary. You have to type  "###title" or "title\n===\n"    
+ */
