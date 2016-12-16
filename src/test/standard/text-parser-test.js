@@ -24,61 +24,73 @@ export default {
     },
 
 
+
+
     'test empty text': function (test) {
-        test.expect(2);
+            test.expect(2);
+    
+            testLine('');
+            test.ok(!accepted, 'empty line are to be rejected');
+    
+            testLine('   ');
+            test.ok(!accepted, 'blank line are to be rejected');
+    
+            test.done();
+        },
 
-        testLine('\n');
-        test.ok(!accepted, 'empty line are to be rejected');
+    
+        'test simple text': function (test) {
+            test.expect(2);
+    
+            testLine('text');
+            test.deepEqual({paragraph:[{text:'text'} ]}, value );
+    
+            testLine('  text ');
+            test.deepEqual({paragraph:[{text:'text '} ]}, value );
+    
+            test.done();
+        },
 
-        testLine('   \n');
-        test.ok(!accepted, 'blank line are to be rejected');
+        'test italic': function (test) {
+            test.expect(1);
+    
+            testLine('*text*');
+            test.deepEqual({paragraph:[{italic:'text'}]}, value );
+    
+            test.done();
+        },
+    
+        'test bold': function (test) {
+            test.expect(1);
+    
+            testLine('**text**');
+            test.deepEqual({paragraph:[{bold:'text'} ]}, value );
+    
+            test.done();
+        },
+    
+    
+        'test combined format': function (test) {
+            test.expect(1);
+    
+            testLine('  *italic* text **then bold** ');
+            let expected={paragraph:[{italic:'italic'},{text:' text '}
+                ,{bold:'then bold'}, {text:' '} ]}
+            test.deepEqual(expected, value );
+    
+            test.done();
+        },
 
-        test.done();
-    },
 
-
-    'test simple text': function (test) {
-        test.expect(2);
-
-        testLine('text\n');
-        test.deepEqual({paragraph:[{text:'text'} ]}, value );
-
-        testLine('  text \n');
-        test.deepEqual({paragraph:[{text:'text '} ]}, value );
-
-        test.done();
-    },
-
-    'test italic': function (test) {
+    'single \\n must be translated as space': function (test) {
         test.expect(1);
 
-        testLine('*text*\n');
-        test.deepEqual({paragraph:[{italic:'text'}]}, value );
-
-        test.done();
-    },
-
-    'test bold': function (test) {
-        test.expect(1);
-
-        testLine('**text**\n');
-        test.deepEqual({paragraph:[{bold:'text'} ]}, value );
-
-        test.done();
-    },
-
-
-    'test combined format': function (test) {
-        test.expect(1);
-
-        testLine('  *italic* text **then bold** \n');
+        testLine('  *italic* text\n**then bold** ');
         let expected={paragraph:[{italic:'italic'},{text:' text '}
             ,{bold:'then bold'}, {text:' '} ]}
         test.deepEqual(expected, value );
 
         test.done();
     },
-
-    
 
 }

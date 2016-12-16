@@ -1,13 +1,23 @@
 /**
  * Created by Simon on 14/12/2016.
  */
+
+/**
+ * This parse a text paragraph
+ * text can be "simple" text; bold, italic or a mix (sequence) of those
+ * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (P.eos())
+ */
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';
 
- 
+function stop(){
+    return P.eos.or(T.lineFeed()).or(P.char('*'));
+}
+
 function pureText(){
-    return T.rawTextUntilChar('*\n')
+    return P.not(stop()).rep()
+        .map(a=>a.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
 }
 
 function italic(){
@@ -29,18 +39,29 @@ function text(){
         .map(string => ({text:string}) )
 }
 
-function eol(){
-    return T.eol().map((a=> ({eol:'\n'})))
-}
 
 function formattedParagraph(){
     return T.blank()
         .thenRight(bold().or(italic()).or(text()).rep() )
-        .thenLeft(eol())
+        .thenLeft(stop())
         .map(array =>({paragraph:array}))
 }
 
+function readText(){
+  //  return stop().or(anything().rep().map(a=>a.join(''))).optrep();
+    return stop().opt()
+            .thenRight(
+        rawText()
+        .thenLeft(stop()).rep()
+        )
+        .then(rawText())
+        .flattenDeep()
+}
+
+
+
 function parseText( line, offset=0){
+   // return formattedParagraph().parse(stream.ofString(line), offset)
     return formattedParagraph().parse(stream.ofString(line), offset)
 }
 
