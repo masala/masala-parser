@@ -47,16 +47,6 @@ function formattedParagraph(){
         .map(array =>({paragraph:array}))
 }
 
-function readText(){
-  //  return stop().or(anything().rep().map(a=>a.join(''))).optrep();
-    return stop().opt()
-            .thenRight(
-        rawText()
-        .thenLeft(stop()).rep()
-        )
-        .then(rawText())
-        .flattenDeep()
-}
 
 
 
