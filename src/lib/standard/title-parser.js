@@ -1,6 +1,14 @@
 /**
  * Created by Simon on 14/12/2016.
  */
+ /*
+ * This module try parse a title. The folowing will be recognised as titles:
+ * "#foo\n"  "##foo\n"  "foo\n==="  "foo\n---"  "##########     foo     \n"
+ * 
+ * Limits and axiomes
+ * A lineFeed in the code ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar} 
+ * The parsing NEEDS a "\n" to end. No detection for end of stream
+ */
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';
