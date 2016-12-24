@@ -12,7 +12,7 @@ let parser = null
 
 
 function testLine(line){
-    let parsing = parser.parse(line);
+    let parsing = Parser.parse(line);
     value = parsing.value;
     accepted = parsing.isAccepted();
     console.info('parsing', parsing, '\n\n');
@@ -20,8 +20,6 @@ function testLine(line){
 
 export default {
     setUp: function (done) {
-
-        parser = Parser;
         done();
     },
 

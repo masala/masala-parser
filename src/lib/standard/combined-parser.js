@@ -10,26 +10,22 @@ import TitleParser from '../../lib/standard/title-parser';
 
 
 
-function document(){
-   /* return  T.blank().debug("blank")
-      .or(TitleParser.title().debug("Title"))
-      .or(TextParser.formattedParagraph().debug("Paragraphe"))  */
+function validLine(){
     return P.try(TitleParser.title().debug("Title"))
         .or(P.try(TextParser.formattedParagraph().debug("Paragraphe")))
-        .or(T.blank().debug("blank"))
-
+        .or(T.lineFeed().debug("lineFeed"))
 }
 
-function parseDocument( line, offset=0){
-    return document().parse(stream.ofString(line), offset)
+function parseLine( line, offset=0){
+    return validLine().parse(stream.ofString(line), offset)
 }
 
                                                   
                                                   
 export default {
-    document,
+    validLine,
     
     parse(line){
-        return parseDocument(line,0);
+        return parseLine(line,0);
     }
 }
