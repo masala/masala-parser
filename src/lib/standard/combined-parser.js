@@ -11,9 +11,13 @@ import TitleParser from '../../lib/standard/title-parser';
 
 
 function document(){
-    return  T.blank()
-      .or(TitleParser.title())
-      .or(TextParser.formattedParagraph())
+   /* return  T.blank().debug("blank")
+      .or(TitleParser.title().debug("Title"))
+      .or(TextParser.formattedParagraph().debug("Paragraphe"))  */
+    return P.try(TitleParser.title().debug("Title"))
+        .or(P.try(TextParser.formattedParagraph().debug("Paragraphe")))
+        .or(T.blank().debug("blank"))
+
 }
 
 function parseDocument( line, offset=0){

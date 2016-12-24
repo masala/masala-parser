@@ -6,3 +6,4 @@ site
 .brackets.json
 npm-debug.log
 coverage
+.idea
