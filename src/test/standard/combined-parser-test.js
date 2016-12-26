@@ -24,13 +24,8 @@ export default {
     },
 
 
-    'test empty text1': function (test) {
-        testLine('');
-        test.ok(accepted, 'empty line are accepted');
-        test.done();
-    },
 
-
+/*
     'test empty text2': function (test) {
         testLine('   ');
         test.ok(accepted, 'blank line is accepted');
@@ -41,7 +36,7 @@ export default {
         testLine('  \n\n  \n    \n ');
         test.ok(accepted, 'blank lines are accepted');
         test.done();
-    },
+    },   */
 
 
     'test level1': function (test) {
@@ -145,5 +140,18 @@ export default {
     },
 
 
+    'test normal bullet': function (test) {
+        const line = `* This is a bullet`;
+        testLine(line);
+        test.deepEqual({bullet:'This is a bullet'}, value,'probleme test:test normal bullet');
+        test.done();
+    },
+
+    'test bullet tordue': function (test) {
+        const line = "*    This is a bullet \n  ";
+        testLine(line);
+        test.deepEqual({bullet:'   This is a bullet '}, value,'probleme test:test bullet tortue');
+        test.done();
+    },
 
 }

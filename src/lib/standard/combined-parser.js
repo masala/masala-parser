@@ -7,13 +7,15 @@ import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';   
 import TextParser from '../../lib/standard/text-parser';
 import TitleParser from '../../lib/standard/title-parser';
+import BulletParser from '../../lib/standard/bullet-parser';
 
 
 
 function validLine(){
-    return P.try(TitleParser.title().debug("Title"))
-        .or(P.try(TextParser.formattedParagraph().debug("Paragraphe")))
-        .or(T.lineFeed().debug("lineFeed"))
+    return P.try(TitleParser.title())
+        .or(P.try(BulletParser.bullet()))
+        .or(P.try(TextParser.formattedParagraph()))
+        .or(T.lineFeed())
 }
 
 function parseLine( line, offset=0){

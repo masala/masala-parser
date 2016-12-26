@@ -60,7 +60,7 @@ const expectedComplexParagraph = {
     ]
 };
 
-const bullet1 = ' * Look for plans\n';
+const bullet1 = '* Look for plans\n';
 const bullet2 = '* Find an **unexpensive** youngster\n';
 const bullet3 = '- Kill an *old man*\n';
 const bullet4level2 = '    - Use the `force`\n';
