@@ -32,14 +32,21 @@ export default {
     'test normal bullet': function (test) {
         const line = `* This is a bullet`;
         testLine(line);
-        test.deepEqual({bullet:'This is a bullet'}, value,'probleme test:test normal bullet');
+        test.deepEqual({bullet:{level:1, content:'This is a bullet'}}, value,'probleme test:test normal bullet');
         test.done();
     },
 
-    'test bullet tordue': function (test) {
-        const line = "*    This is a bullet \n  ";
+    'test bullet niveau 2': function (test) {
+        const line = "      * This is a lvl2 bullet \n  ";
         testLine(line);
-        test.deepEqual({bullet:'   This is a bullet '}, value,'probleme test:test bullet tortue');
+        test.deepEqual({bullet:{level:2, content:'This is a lvl2 bullet '}}, value,'probleme test:test bullet Lvl2');
+        test.done();
+    },
+
+    'test bullet niveau 2': function (test) {
+        const line = "\t  * This is another lvl2 bullet \n  ";
+        testLine(line);
+        test.deepEqual({bullet:{level:2, content:'This is another lvl2 bullet '}}, value,'probleme test:test bullet Lvl2');
         test.done();
     },
 

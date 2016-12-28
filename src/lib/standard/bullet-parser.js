@@ -23,17 +23,26 @@ function bulletLv1(){
     return P.char('\n').optrep()
         .then(P.charIn('*-'))  //first character of a bullet is  * or -
         .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
-        .thenRight(pureText()).debug("bullet")
-        .map(a => ({bullet:a}))
+        .thenRight(pureText()).debug("bullet1")
+        .map(a => ({bullet:{level:1, content: a }}  ))
 }
 
+function bulletLv2(){
+    return P.char('\n').optrep()
+        .then (P.char('\t'))
+        .or(P.string('    '))
+        .then(P.char(' ').optrep())  //carfull. This will accept 8 space. therefore the code must have higher priority
+        // minor (?) bug: "  \t  *" will not be recognised
+        .then(P.charIn('*-'))  //first character of a bullet is  * or -
+        .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
+        .thenRight(pureText()).debug("bullet2")
+        .map(a => ({bullet:{level:2, content: a }}  ))
+}
 
 function bullet(){
-    return P.char('\n').optrep()
-           .then(P.charIn('*-'))  //first character of a bullet is  * or -
-           .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
-           .thenRight(pureText()).debug("bullet")
-           .map(a => ({bullet:a}))
+ //   return bulletLv2()
+    return P.try(bulletLv2())
+        .or(bulletLv1())
 }
 
 function parseBullet( line, offset=0){
