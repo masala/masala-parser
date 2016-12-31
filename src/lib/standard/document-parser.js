@@ -12,8 +12,7 @@ function document(){
  /*   return P.eos
         .or(CombinedParser.validLine())
         .rep()  */
-    return CombinedParser.validLine()
-        .rep()
+    return CombinedParser.validLine().rep()
 }
 
 function parseDocument( stream, offset=0){

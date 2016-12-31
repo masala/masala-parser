@@ -45,8 +45,9 @@ function titleStyle1(){
 }
 
 function titleAlt(){
-    return T.rawTextUntilChar('\n')
-        .thenLeft(T.eol())
+    return T.blank().debug("blank")
+        .thenRight( T.rawTextUntilChar('\n').debug("titleAlt.mark1"))
+        .thenLeft(T.eol()).debug("titleAlt.mark2")
         .then(equals().or(minuses())).debug('titleAlt avant Map')
         .map(array => ({
             title:{

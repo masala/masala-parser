@@ -12,7 +12,7 @@ import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';
 
 function stop(){
-    return P.eos.or(T.lineFeed()).or(P.char('*'));
+    return P.eos.or(T.lineFeed()).or(P.charIn('*`'));
 }
 
 function pureText(){
@@ -34,6 +34,13 @@ function bold(){
         .map(string => ({bold:string})  )
 }
 
+function code(){
+    return P.char('`')
+        .thenRight(pureText())
+        .thenLeft(P.char('`'))
+        .map(string => ({code:string})  )
+}
+
 function text(){
     return pureText()
         .map(string => ({text:string}) )
@@ -42,7 +49,7 @@ function text(){
 
 function formattedParagraph(){
     return T.blank()
-        .thenRight(bold().or(italic()).or(text()).rep() )
+        .thenRight(bold().or(italic()).or(text()).or(code()).rep() )
         .thenLeft(stop())
         .map(array =>({paragraph:array}))
 }

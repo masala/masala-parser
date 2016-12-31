@@ -36,12 +36,12 @@ const expectedStandardParagraph = {
     ]
 };
 
-const lev1Title='# Star Wars Rocks';
-const otherLev1Title='# Star Trek also Rocks';
+const lev1Title='#Star Wars Rocks';
+const otherLev1Title='#Star Trek also Rocks';
 const lev1AltTitle='Star Wars Rocks\n======';
-const lev2Title='## C3PO and R2D2';
+const lev2Title='##C3PO and R2D2';
 const lev2AltTitle='C3PO and R2D2\n----';
-const expectedLev1Title= { title: { level: 1, text: ' Star Wars Rocks' } };
+const expectedLev1Title= { title: { level: 1, text: 'Star Wars Rocks' } };
 const expectedOtherLev1Title= { title: { level: 1, text: 'Star Trek also Rocks' } };
 const expectedLev2Title= { title: { level: 2, text: 'C3PO and R2D2' } };
 
@@ -60,38 +60,40 @@ const expectedComplexParagraph = {
     ]
 };
 
-const bullet1 = '* Look for plans\n';
-const bullet2 = '* Find an **unexpensive** youngster\n';
-const bullet3 = '- Kill an *old man*\n';
-const bullet4level2 = '    - Use the `force`\n';
-const bullet5level2 = '\t* Destroy Death Star   \n';
-const bullets= `${bullet1}${bullet2}${bullet3}${bullet4level2}${bullet5level2}\n`;
+const bullet1 = '* Look for plans';
+const bullet2 = '* Find an **unexpensive** youngster';
+const bullet3 = '- Kill an *old man*';
+const bullet4level2 = '    - Use the `force`';
+const bullet5level2 = '\t* Destroy Death Star   ';
+const bullets= `${bullet1}\n${bullet2}\n${bullet3}\n${bullet4level2}\n${bullet5level2}`;
 
-const expectedBullet1={level:1, content:[{text:'Look for plans'}]};
-const expectedBullet2={level:1, content:[
+const expectedBullet1={bullet:{level:1, content:[{text:'Look for plans'}]}};
+const expectedBullet2={bullet:{level:1, content:[
     {text:'Find an '},
     {bold:'unexpensive'},
-    {text:'youngster'},
-]};
-const expectedBullet3={level:1, content:[
+    {text:' youngster'},
+]}};
+const expectedBullet3={bullet:{level:1, content:[
     {text:'Kill an '},
     {italic:'old man'}
-]};
-const expectedBullet4level2={level:2, content:[
+]}};
+const expectedBullet4level2={bullet:{level:2, content:[
     {text:'Use the '},
     {code:'force'}
-]};
-const expectedBullet5level2={level:2, content:[
-    {text:'Destroy Death Star'}
-]};
+]}};
+const expectedBullet5level2={bullet:{level:2, content:[
+    {text:'Destroy Death Star   '}
+]}};
 
-const expectedBullets={bullets:[
+
+
+const expectedBullets=[
     expectedBullet1,
     expectedBullet2,
     expectedBullet3,
     expectedBullet4level2,
     expectedBullet5level2
-]};
+];
 
 
 const spaceCodeLine = '        Star Wars is an Atari game\n';
@@ -147,10 +149,10 @@ export default {
         const block = `${bullets}`;
         testBlock(block);
 
-        const expected= [expectedBullets];
+        const expected= expectedBullets;
 
         //test.ok(accepted, 'should be accepted.');
-        test.deepEqual(expected, value, 'bad value for bullets');
+        test.deepEqual(value, expected, 'bad value for bullets');
         test.done();
     }
 
@@ -162,12 +164,14 @@ export default {
         testBlock(block);
 
         //test.ok(accepted, 'should be accepted.');
-        const expected= [expectedLev1Title, expectedBullets,
-            expectedStandardParagraph];
+       // const expected= [expectedLev1Title, expectedBullets,
+         //   expectedStandardParagraph];
+        const  expected= [expectedLev1Title].concat(expectedBullets).concat([expectedStandardParagraph])
 
         test.deepEqual(expected, value, 'bad value for bullets');
         test.done();
     },
+
 
     'Read multilevel chapters': function (test) {
         //test.expect(2);
@@ -186,7 +190,7 @@ ${complexParagraph}
             expectedLev2Title, expectedStandardParagraph,
         expectedOtherLev1Title, expectedComplexParagraph];
 
-        test.deepEqual(expected, value, 'bad value for bullets');
+        test.deepEqual(value, expected, 'bad value for bullets');
         test.done();
     }
 
