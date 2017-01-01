@@ -172,7 +172,7 @@ export default {
         test.done();
     },
 
-
+/*
     'Read multilevel chapters': function (test) {
         //test.expect(2);
         const block = `
@@ -190,9 +190,9 @@ ${complexParagraph}
             expectedLev2Title, expectedStandardParagraph,
         expectedOtherLev1Title, expectedComplexParagraph];
 
-        test.deepEqual(value, expected, 'bad value for bullets');
+        test.deepEqual(value, expected, 'bad value for complex text');
         test.done();
-    }
+    }  */
 
 
 }

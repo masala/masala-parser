@@ -1,4 +1,4 @@
-import Token from '../../lib/standard/token';
+import Token from '../../lib/standard/_token';
 import stream from '../../lib/stream/index';
 import P from '../../lib/parsec/parser';
 

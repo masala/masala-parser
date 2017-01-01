@@ -143,14 +143,14 @@ export default {
     'test normal bullet': function (test) {
         const line = `* This is a bullet`;
         testLine(line);
-        test.deepEqual({bullet:'This is a bullet'}, value,'probleme test:test normal bullet');
+        test.deepEqual({ bullet: { level: 1, content: [{text:'This is a bullet'}] } }, value,'probleme test:test normal bullet');
         test.done();
     },
 
     'test bullet tordue': function (test) {
         const line = "*    This is a bullet \n  ";
         testLine(line);
-        test.deepEqual({bullet:'   This is a bullet '}, value,'probleme test:test bullet tortue');
+        test.deepEqual({ bullet: { level: 1, content: [{text:'   This is a bullet '}] } }, value,'probleme test:test bullet tortue');
         test.done();
     },
 

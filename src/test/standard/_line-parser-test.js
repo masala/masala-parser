@@ -48,7 +48,7 @@ export default {
     setUp: function (done) {
         lineParser = new LineParser();
         done();
-    } /* ,
+    }  ,
 
     'Sharp title 1 should be accepted': function (test) {
         test.expect(1);
@@ -252,7 +252,7 @@ export default {
         test.done();
     }
   ,
-
+/*
     'spaces are repeated spaces or tabs ': function (test) {
         test.expect(1);
 
@@ -260,10 +260,10 @@ export default {
         test.ok(accepted, 'should be accepted, but not as indent');
 
         test.done();
-    }
-*/
+    },*/
+
     // TODO : should test also with italic, bold and titles
-    ,
+
     'If not line start, repeated whites are just one blank ': function (test) {
         test.expect(1);
 
@@ -276,7 +276,7 @@ export default {
     },
 
 
-    /*
+
     'Simple Bullet': function (test) {
         test.expect(2);
 
@@ -286,7 +286,7 @@ export default {
         const expected = {
             bullet: {
                 level: 0,
-                text: 'This is a bullet'
+                content:[{text: 'This is a bullet'}]
             }
         };
         test.deepEqual(value, expected, 'This should be a bullet line');
@@ -337,6 +337,6 @@ export default {
 
         test.done();
     }
-*/
+
 
 };
