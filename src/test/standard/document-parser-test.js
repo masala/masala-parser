@@ -4,6 +4,7 @@
 
 import Parser from '../../lib/standard/document-parser';
 
+
 let value = undefined;
 let accepted = undefined;
 let parser = null

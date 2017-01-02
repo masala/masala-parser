@@ -7,3 +7,4 @@ site
 npm-debug.log
 coverage
 .idea
+**/zztest.*

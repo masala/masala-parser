@@ -4,7 +4,7 @@
 
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
-import T from '../../lib/standard/token';
+import T from './_token';
 
 
 
