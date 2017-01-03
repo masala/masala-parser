@@ -91,6 +91,29 @@ export default {
     },
 
 
+    'test fourSpacesBlock1': function (test) {
+        testAParser(Token.fourSpacesBlock(), 'foo     bar');
+        test.ok(!accepted, 'fourSpacesBlock must reject anything not starting with a 4 spaces block or equivalent ' )
+        test.done();
+    },
+
+    'test fourSpacesBlock2': function (test) {
+        testAParser(Token.fourSpacesBlock(), '    ');
+        test.ok(!accepted, 'fourSpacesBlock must accept 4 spaces' )
+        test.done();
+    },
+
+    'test fourSpacesBlock3': function (test) {
+        testAParser(Token.fourSpacesBlock(), '\t');
+        test.ok(!accepted, 'fourSpacesBlock must accept tab character' )
+        test.done();
+    },
+
+    'test fourSpacesBlock': function (test) {
+        testAParser(Token.fourSpacesBlock(), '  \u00A0  ');
+        test.ok(!accepted, 'fourSpacesBlock must accept a mix of breakable and non-breakable spaces' )
+        test.done();
+    },
 
 
 }
