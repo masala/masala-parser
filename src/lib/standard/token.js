@@ -10,11 +10,11 @@ function blank() {
 function rawTextUntilChar(charList, allowVoid = false) {
     if (allowVoid) {
         return P.charNotIn(charList).optrep()
-            .map(a => a.join(''))
+            .map(characters => characters.join(''))
     }
     else {
         return P.charNotIn(charList).rep()
-            .map(a => a.join(''))
+            .map(characters => characters.join(''))
     }
 }
 

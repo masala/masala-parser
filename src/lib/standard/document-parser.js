@@ -22,11 +22,9 @@ function parseDocument( stream, offset=0){
 function parseFile(fileName){
     fs.readFile(fileName, 'utf8', function (err,data) {
         if (err) {
-            console.log("ERREUR readFile")
+            console.log("ERROR readFile")
             return console.log(err);
         }
-        console.log("marké")
-        console.log(data)
         return parseDocument(data);
     });
 }
@@ -34,7 +32,7 @@ function parseFile(fileName){
 function writeParser(parser, fileName){
     fs.writeFile(fileName, parser.value , function (err) {
         if (err) return console.log(err);
-        console.log(fileName , 'has been writen');
+        console.log(fileName , 'has been written');
     });
 }
 

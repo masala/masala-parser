@@ -17,7 +17,7 @@ function stop(){
 
 function pureText(){
     return P.not(stop()).rep()
-        .map(a=>a.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
+        .map(characters=>characters.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
 }
 
 function italic(pureTextParser){

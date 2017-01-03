@@ -11,9 +11,7 @@ import BulletParser from '../../lib/standard/bullet-parser';
 import codeBlockParser from './code-line-parser';
 
 
-
-
-function validLine(){
+function validLine() {
     return P.try(TitleParser.title()).debug("title")
         .or(P.try(codeBlockParser.codeLine().debug("code")))
         .or(P.try(BulletParser.bullet().debug("bullet")))
@@ -21,16 +19,15 @@ function validLine(){
         .or(T.lineFeed().debug("line feed"))
 }
 
-function parseLine( line, offset=0){
+function parseLine(line, offset = 0) {
     return validLine().parse(stream.ofString(line), offset)
 }
 
-                                                  
-                                                  
+
 export default {
     validLine,
-    
+
     parse(line){
-        return parseLine(line,0);
+        return parseLine(line, 0);
     }
 }

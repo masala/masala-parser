@@ -6,8 +6,7 @@
  * "#foo\n"  "##foo\n"  "foo\n==="  "foo\n---"  "##########     foo     \n"
  * 
  * Limits and axiomes
- * A lineFeed in the code ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar} 
- * The parsing NEEDS a "\n" to end. No detection for end of stream
+ * A \n in the markdown source ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar}
  */
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
@@ -21,14 +20,14 @@ function equals(){
     return P.string('===')
         .then(T.rawTextUntilChar('\n'))
         .then(T.eol())
-        .map(a=>1);  // this mean a level 1 title
+        .map(whatever=>1);  // this mean a level 1 title
 }
 
 function minuses(){
     return P.string('---')
         .then(T.rawTextUntilChar('\n'))
         .then(T.eol())
-        .map(a=>2); // this mean a level 2 title
+        .map(whatever=>2); // this mean a level 2 title
 }
 
 function titleStyle1(){
@@ -75,7 +74,5 @@ export default {
 }
 
 /*  SHORTCOMINGS :
-* Can not have formatted text in a title.  "##2*3*4 = 24\n" will display "2*3*4 = 24" 
-    
-* End Of Line (\n) is compulsary. You have to type  "###title" or "title\n===\n"    
+* Can not have formatted text in a title.  "##2*3*4 = 24\n" will display "2*3*4 = 24"
  */
