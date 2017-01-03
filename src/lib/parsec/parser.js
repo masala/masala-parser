@@ -382,14 +382,17 @@ function numberLiteral() {
     return float.map((r) => parseFloat(r, 10));
 }
 
-// utility function for flattenDeep()
-// TODO : Unit test
+/**
+ * utility function for flattenDeep()
+ */
+
 function flattenDeep(array) {
     let toString = Object.prototype.toString;
     let arrayTypeStr = '[object Array]';
     let result = [];
     let nodes =  array.slice();
     let node;
+
 
     if (!array.length) {
         return result;
