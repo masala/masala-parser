@@ -20,52 +20,58 @@ function pureText(){
         .map(a=>a.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
 }
 
-function italic(){
+function italic(pureTextParser){
     return P.char('*')
-        .thenRight(pureText())
+        .thenRight(pureTextParser)
         .thenLeft(P.char('*'))
         .map(string => ({italic:string})  )
 }
 
-function bold(){
+function bold(pureTextParser){
     return P.string('**')
-        .thenRight(pureText())
+        .thenRight(pureTextParser)
         .thenLeft(P.string('**'))
         .map(string => ({bold:string})  )
 }
 
-function code(){
+function code(pureTextParser){
     return P.char('`')
-        .thenRight(pureText())
+        .thenRight(pureTextParser)
         .thenLeft(P.char('`'))
         .map(string => ({code:string})  )
 }
 
-function text(){
-    return pureText()
+function text(pureTextParser){
+    return pureTextParser
         .map(string => ({text:string}) )
+}
+
+/**
+ * @param pureTextParser : defines if a text accept some chars or not
+ * @param stopParser : defines if text stops at the end of line
+ * @returns Parser
+ */
+function formattedSequence(pureTextParser, stopParser) {
+    return  bold(pureTextParser).or(italic(pureTextParser))
+        .or(text(pureTextParser)).or(code(pureTextParser)).rep()
+        .thenLeft(stopParser);
 }
 
 
 function formattedParagraph(){
     return T.blank()
-        .thenRight(bold().or(italic()).or(text()).or(code()).rep() )
-        .thenLeft(stop())
+        .thenRight(formattedSequence(pureText(), stop()))
         .map(array =>({paragraph:array}))
 }
 
-
-
-
 function parseText( line, offset=0){
-   // return formattedParagraph().parse(stream.ofString(line), offset)
     return formattedParagraph().parse(stream.ofString(line), offset)
 }
 
 
 export default {
+    formattedSequence,
     formattedParagraph,
-
     parse(line){
         return parseText(line,0);
     }
