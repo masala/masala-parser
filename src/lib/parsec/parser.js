@@ -424,7 +424,7 @@ export default {
     lowerCase: lowerCase(),
     upperCase: upperCase(),
     not: not,
-    letter: letter,
+    letter: letter(),
     letters: letters,
     notChar: notChar,
     char: char,

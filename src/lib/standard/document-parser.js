@@ -4,7 +4,7 @@
 
 import P from '../parsec/parser';
 import Stream from '../../lib/stream/index';
-import T from './_token';
+import T from './token';
 import CombinedParser from '../../lib/standard/combined-parser';
 
 import fs from 'fs'
@@ -22,8 +22,11 @@ function parseDocument( stream, offset=0){
 function parseFile(fileName){
     fs.readFile(fileName, 'utf8', function (err,data) {
         if (err) {
+            console.log("ERREUR readFile")
             return console.log(err);
         }
+        console.log("marké")
+        console.log(data)
         return parseDocument(data);
     });
 }

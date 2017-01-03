@@ -9,7 +9,7 @@
  */
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
-import T from './_token';
+import T from './token';
 
 function stop(){
     return P.eos.or(T.lineFeed()).or(P.charIn('*`'));

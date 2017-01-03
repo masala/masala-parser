@@ -4,7 +4,7 @@
 
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
-import T from './_token';
+import T from './token';
 import TextParser from '../../lib/standard/text-parser';
 import TitleParser from '../../lib/standard/title-parser';
 import BulletParser from '../../lib/standard/bullet-parser';

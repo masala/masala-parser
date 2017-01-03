@@ -4,7 +4,7 @@
 
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
-import T from './_token';
+import T from './token';
 
 
 
@@ -18,9 +18,9 @@ function pureText(){
         .map(a=>a.join(''))
 }
 
-/* what follows is very redondant with text_parser.js
-I cannot reuse this module directly as the stop() and blank() condition are diferent
-I feel that making something such as formatedSequence(stop, blank) would be less readable. This may change
+/*TODO: what follows is very redondant with text_parser.js
+I cannot reuse this module directly as the stop() and blank() condition are different
+I feel that making something such as formattedSequence(stop, blank) would be less readable. This may change
  */
 function italic(){
     return P.char('*')
@@ -48,35 +48,35 @@ function text(){
         .map(string => ({text:string}) )
 }
 
-function formatedSequence() {
+function formattedSequence() {
    return  bold().or(italic()).or(text()).or(code()).rep()
     .thenLeft(stop())
 }
 
 
-function bulletLv1(){
+function bulletLevel1(){
     return P.char('\n').optrep()
         .then(P.charIn('*-'))  //first character of a bullet is  * or -
         .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
-        .thenRight(formatedSequence())
+        .thenRight(formattedSequence())
         .map(a => ({bullet:{level:1, content: a }}  ))
 }
 
-function bulletLv2(){
+function bulletLevel2(){
     return P.char('\n').optrep()
         .then (P.char('\t'))
         .or(P.string('    '))
-        .then(P.char(' ').optrep())  //carfull. This will accept 8 space. therefore the code must have higher priority
+        .then(P.char(' ').optrep())  //careful. This will accept 8 space. therefore the code must have higher priority
         // minor (?) bug: "  \t  *" will not be recognised
         .then(P.charIn('*-'))  //first character of a bullet is  * or -
         .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
-        .thenRight(formatedSequence())
+        .thenRight(formattedSequence())
         .map(a => ({bullet:{level:2, content: a }}  ))
 }
 
 function bullet(){
-    return P.try(bulletLv2())
-        .or(bulletLv1())
+    return P.try(bulletLevel2())
+        .or(bulletLevel1())
 }
 
 function parseBullet( line, offset=0){

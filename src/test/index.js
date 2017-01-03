@@ -15,8 +15,8 @@ import tokenTest from './genlex/token_test';
 import tokenizerTest from './genlex/tokenizer_test';
 import lineTest from './standard/_line-parser-test';
 import markdownTest from './standard/_markdown_test';
-import jsonParseTest from './standard/_jsonparser_test'
-import jsonSampleTest from './standard/_jsonsample_test';
+import jsonParseTest from './standard/jsonparser_test'
+import jsonSampleTest from './standard/jsonsample_test';
 import parserChainTest from './parsec/parser_chain_test';
 import parserCoreTest from './parsec/parser_core_test';
 import parserCoreDefaultTest from './parsec/parser_core_default_test';
