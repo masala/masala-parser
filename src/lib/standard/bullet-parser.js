@@ -16,7 +16,7 @@ function stop(){
 
 function pureText(){
     return P.not(stop()).rep()
-        .map(a=>a.join(''))
+        .map(characters=>characters.join(''))
 }
 
 function formattedSequence(){
@@ -28,18 +28,17 @@ function bulletLv1(){
         .then(P.charIn('*-'))  //first character of a bullet is  * or -
         .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
-        .map(a => ({bullet:{level:1, content: a }}  ))
+        .map(someText => ({bullet:{level:1, content: someText }}  ))
 }
 
 function bulletLv2(){
     return P.char('\n').optrep()
-        .then (P.char('\t'))
-        .or(P.string('    '))
-        .then(P.char(' ').optrep())  //carfull. This will accept 8 space. therefore the code must have higher priority
-        .then(P.charIn('*-'))  //first character of a bullet is  * or -
+        .then(T.fourSpacesBlock())
+        .then(P.char(' ').optrep())  //careful. This will accept 8 space. therefore the code-parser must have higher priority
+        .then(P.charIn('*-'))       //first character of a bullet is  * or -
         .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
-        .map(a => ({bullet:{level:2, content: a }}  ))
+        .map(someText => ({bullet:{level:2, content: someText }}  ))
 }
 
 function bullet(){

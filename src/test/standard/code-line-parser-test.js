@@ -2,7 +2,7 @@
  * Created by Simon on 03/01/2017.
  */
 
-import Parser from '../../lib/standard/code-block-parser';
+import Parser from '../../lib/standard/code-line-parser';
 
 let value = undefined;
 let accepted = undefined;
@@ -48,11 +48,27 @@ export default {
     },
 
     'test code 2': function (test) {
-        const line = `          This is a code block`;
+        const line = `\t\t  This is a code block`;
         testLine(line);
-        expected = {code:"This is a code block"};
-        test.deepEqual(value, expected, 'This is a  block code ending with eos');
+        expected = {code:"  This is a code block"};
+        test.deepEqual(value, expected, '  This is a  block code stzrting with spaces and ending with eos');
         test.done();
     },
 
+    'test code 3': function (test) {
+        const line = `\t\t`;
+        testLine(line);
+        expected = {code:""};
+        test.deepEqual(value, expected, '  This is a blank line in a code');
+        test.done();
+    },
+
+
+    'test code 4': function (test) {
+        const line = `\t\t  `;
+        testLine(line);
+        expected = {code:"  "};
+        test.deepEqual(value, expected, '  This is a code line with only 2 spaces');
+        test.done();
+    },
 }

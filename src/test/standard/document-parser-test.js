@@ -7,7 +7,7 @@ import Parser from '../../lib/standard/document-parser';
 
 let value = undefined;
 let accepted = undefined;
-let parser = null
+let parser = null;
 
 
 // used to debug value easily and to avoid [Object object] notation.
@@ -163,18 +163,28 @@ export default {
         //test.expect(2);
         const block = `${lev1Title}\n${bullets}\n${standardParagraph}`;
         testBlock(block);
-
-        //test.ok(accepted, 'should be accepted.');
-        // const expected= [expectedLev1Title, expectedBullets,
-        //   expectedStandardParagraph];
         const expected = [expectedLev1Title].concat(expectedBullets).concat([expectedStandardParagraph])
-
         test.deepEqual(expected, value, 'bad value for bullets');
         test.done();
     },
 
-    /*
+
      'Read multilevel chapters': function (test) {
+     const block = `${lev1AltTitle}\n${bullets}\n ${lev2AltTitle}\n ${standardParagraph}\n  
+${otherLev1Title}\n ${complexParagraph}`;
+     testBlock(block);
+
+     //test.ok(accepted, 'should be accepted.');
+     const expected= [expectedLev1Title].concat(expectedBullets)
+         .concat([expectedLev2Title, expectedStandardParagraph,
+     expectedOtherLev1Title, expectedComplexParagraph]);
+
+     test.deepEqual(value, expected, 'bad value for complex text');
+     test.done();
+     }  ,
+
+    /*
+     'Read multilevel with initial \n ': function (test) {
      //test.expect(2);
      const block = `
      ${lev1AltTitle}
@@ -194,41 +204,43 @@ export default {
      test.deepEqual(value, expected, 'bad value for complex text');
      test.done();
      }  */
-
     'Read space code line': function (test) {
 
 
-        const spaceCodeLine = '        Star Wars is an Atari game\n';
-        const expectedSpaceCodeLine = { code: 'Star Wars is an Amstrad game\n' };
+        const spaceCodeLine = '        Star Wars is an Atari game';
+        const expectedSpaceCodeLine = [{ code: 'Star Wars is an Atari game' }];
 
 
         testBlock(spaceCodeLine);
-        test.deepEqual(expectedSpaceCodeLine, value, 'bad value for space code line');
+        test.deepEqual(value, expectedSpaceCodeLine,  'bad value for space code line');
         test.done();
     },
 
 
     'Read tab code line': function (test) {
 
-        const tabCodeLine = '\t\tStar Wars is an Amstrad game\n';
-        const expectedTabCodeLine = { code: 'Star Wars is an Amstrad game\n' };
+        const tabCodeLine = '\t\tStar Wars is an Amstrad game';
+        const expectedTabCodeLine = [{ code: 'Star Wars is an Amstrad game' }];
         testBlock(tabCodeLine);
-        test.deepEqual(expectedTabCodeLine, value, 'bad value for space code line');
+        test.deepEqual(value, expectedTabCodeLine,  'bad value for space code line');
         test.done();
     },
 
     'Read tab code blocks': function (test) {
         //test.expect(2);
 
-        const haskellCode = ```\t\timport Control.Monad
+        const haskellCode = `\t\timport Control.Monad
 \t\t
-\t\tsolveTable :: [String] -> [String] -> [(String, Integer)]
-```;
-        const concatenation = 'import Control.Monad\n\nsolveTable :: [String] -> [String] -> [(String, Integer)]\n';
-        const expectedHaskellCode = { code: concatenation };
+\t\tsolveTable :: [String] -> [String] -> [(String, Integer)]`;
+
+        const expectedHaskellCode = [
+            { "code": "import Control.Monad" },
+            { "code": ""},
+            { "code": "solveTable :: [String] -> [String] -> [(String, Integer)]"  }
+            ]
 
         testBlock(haskellCode);
-        test.deepEqual(expectedHaskellCode, value, 'bad value for bullets');
+        test.deepEqual(value, expectedHaskellCode, 'bad value for bullets');
         test.done();
     },
     'Read space code blocks': function (test) {
@@ -236,11 +248,13 @@ export default {
 
         // there are 8 spaces for first line, then 10 for the second line
         const spaceCodeBloc = `        Star Wars is an Amstrad game
-           Star Wars is an Atari game
-`;
+           Star Wars is an Atari game`;
 
 
-        const expectedSpaceCodeBloc = { code: 'Star Wars is an Amstrad game\n  Star Wars is an Atari game' };
+        const expectedSpaceCodeBloc = [
+            { code: 'Star Wars is an Amstrad game'},
+            { code:'   Star Wars is an Atari game' }
+            ];
 
 
         testBlock(spaceCodeBloc);

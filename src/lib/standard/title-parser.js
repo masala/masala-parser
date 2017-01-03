@@ -41,20 +41,19 @@ function titleStyle1(){
                             text:array[1]
                         }
         }))
-        .debug('title:');
 }
 
 function titleAlt(){
-    return T.blank().debug("blank")
-        .thenRight( T.rawTextUntilChar('\n').debug("titleAlt.mark1"))
-        .thenLeft(T.eol()).debug("titleAlt.mark2")
-        .then(equals().or(minuses())).debug('titleAlt avant Map')
+    return T.blank()
+        .thenRight( T.rawTextUntilChar('\n')
+        .thenLeft(T.eol())
+        .then(equals().or(minuses()))
         .map(array => ({
             title:{
                 level:array[1],
                 text:array[0]
             }
-        }))
+        })))
 }
 
 

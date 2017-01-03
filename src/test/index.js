@@ -18,8 +18,8 @@ import textTest from './standard/text-parser-test';
 import bulletParser from './standard/bullet-parser-test';
 import combinedParser from './standard/combined-parser-test';
 import documentParserTest from './standard/document-parser-test';
-import jsonParseTest from './standard/_jsonparser_test'
-import jsonSampleTest from './standard/_jsonsample_test';
+import jsonParseTest from './standard/jsonparser_test'
+import jsonSampleTest from './standard/jsonsample_test';
 import parserChainTest from './parsec/parser_chain_test';
 import parserCoreTest from './parsec/parser_core_test';
 import parserCoreDefaultTest from './parsec/parser_core_default_test';
