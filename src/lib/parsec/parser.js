@@ -425,7 +425,7 @@ export default {
     upperCase: upperCase(),
     not: not,
     letter: letter(),
-    letters: letters,
+    letters: letters(),
     notChar: notChar,
     char: char,
     charIn: charIn,
