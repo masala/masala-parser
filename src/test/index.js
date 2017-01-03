@@ -13,8 +13,11 @@ import bufferedStreamsTest from './stream/buffered_stream_test';
 import genlexTest from './genlex/genlex_test';
 import tokenTest from './genlex/token_test';
 import tokenizerTest from './genlex/tokenizer_test';
-import lineTest from './standard/_line-parser-test';
-import markdownTest from './standard/_markdown_test';
+import titleTest from './standard/title-test';
+import textTest from './standard/text-parser-test';
+import bulletParser from './standard/bullet-parser-test';
+import combinedParser from './standard/combined-parser-test';
+import documentParserTest from './standard/document-parser-test';
 import jsonParseTest from './standard/_jsonparser_test'
 import jsonSampleTest from './standard/_jsonsample_test';
 import parserChainTest from './parsec/parser_chain_test';
@@ -27,7 +30,8 @@ import parserResponseTest from './parsec/response_test';
 export {
     optionTest, tryTest, streamsTest, bufferedStreamsTest,
     genlexTest, tokenTest, tokenizerTest,
-    jsonParseTest, lineTest, markdownTest,jsonSampleTest,
+    jsonParseTest, jsonSampleTest,
+    titleTest, textTest, bulletParser, combinedParser, documentParserTest,
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
     parserStreamTest, parserResponseTest
 }
