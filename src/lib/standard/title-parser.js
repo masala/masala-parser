@@ -31,9 +31,9 @@ function minuses(){
 }
 
 function titleStyle1(){
-    return sharps()
+    return sharps().debug("sharps")
         .then(T.rawTextUntilChar('\n'))
-        .thenLeft(T.eol())
+        .thenLeft(T.eol().or(P.eos))
         .map(array => ({
                         title:{
                             level:array[0],

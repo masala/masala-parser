@@ -260,5 +260,15 @@ ${otherLev1Title}\n ${complexParagraph}`;
         testBlock(spaceCodeBloc);
         test.deepEqual(expectedSpaceCodeBloc, value, 'bad value for bullets');
         test.done();
+    },
+
+    'parseFile test': function (test) {
+        const fileName = "trivialtest.txt"
+        const expectedTrivialFile = [{ title: { level: 1, text: 'title1' } }]
+        let parserTemp = Parser.parseFile(fileName)
+        test.deepEqual(parserTemp.value, expectedTrivialFile, 'bad value for file "trivialtest.txt"');
+        test.done();
+    },
+
+
     }
-}
