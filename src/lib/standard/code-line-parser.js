@@ -13,8 +13,8 @@ import T from '../../lib/standard/token';
 function codeLine(){
     return P.char('\n').optrep()
         .thenRight(T.fourSpacesBlock())
-        .thenRight(T.fourSpacesBlock()).debug("double bloc detected")
-        .thenRight(T.rawTextUntilChar('\n', true)).debug("code line detected")
+        .thenRight(T.fourSpacesBlock())
+        .thenRight(T.rawTextUntilChar('\n', true))
         .map(text => ({code: text }  ))
 }
 

@@ -12,11 +12,11 @@ import codeBlockParser from './code-line-parser';
 
 
 function validLine() {
-    return P.try(TitleParser.title()).debug("title")
-        .or(P.try(codeBlockParser.codeLine().debug("code")))
-        .or(P.try(BulletParser.bullet().debug("bullet")))
-        .or(P.try(TextParser.formattedParagraph().debug("test")))
-        .or(T.lineFeed().debug("line feed"))
+    return P.try(TitleParser.title())
+        .or(P.try(codeBlockParser.codeLine()))
+        .or(P.try(BulletParser.bullet()))
+        .or(P.try(TextParser.formattedParagraph()))
+        .or(T.lineFeed())
 }
 
 function parseLine(line, offset = 0) {
