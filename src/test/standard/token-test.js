@@ -115,7 +115,19 @@ export default {
         test.done();
     },
 
+    'test email1': function (test) {
+        testAParser(Token.email(), 'random text');
+        test.ok(!accepted, 'random text should not be recognise as email' )
+        test.done();
+    },
 
+    'test email2': function (test) {
+        testAParser(Token.email(), 'simon.zozol@gmail.com');
+        let expected = {email:"simon.zozol@gmail.com"}
+
+        test.deepEqual(value, expected, 'error parsing email' )
+        test.done();
+    },
 
 
 }
