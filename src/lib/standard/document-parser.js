@@ -14,9 +14,11 @@ function document(){
         .rep()
 }
 
-function parseDocument( stream, offset=0){
-    return document().parse(Stream.ofString(stream), offset)
+function parseDocument( string, offset=0){
+    return document().parse(Stream.ofString(string), offset)
 }
+
+
 
 // get a file name, return a parser
 function parseFile(fileName){

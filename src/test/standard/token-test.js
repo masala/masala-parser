@@ -99,19 +99,19 @@ export default {
 
     'test fourSpacesBlock2': function (test) {
         testAParser(Token.fourSpacesBlock(), '    ');
-        test.ok(!accepted, 'fourSpacesBlock must accept 4 spaces' )
+        test.ok(accepted, 'fourSpacesBlock must accept 4 spaces' )
         test.done();
     },
 
     'test fourSpacesBlock3': function (test) {
         testAParser(Token.fourSpacesBlock(), '\t');
-        test.ok(!accepted, 'fourSpacesBlock must accept tab character' )
+        test.ok(accepted, 'fourSpacesBlock must accept tab character' )
         test.done();
     },
 
     'test fourSpacesBlock': function (test) {
         testAParser(Token.fourSpacesBlock(), '  \u00A0  ');
-        test.ok(!accepted, 'fourSpacesBlock must accept a mix of breakable and non-breakable spaces' )
+        test.ok(accepted, 'fourSpacesBlock must accept a mix of breakable and non-breakable spaces' )
         test.done();
     },
 
