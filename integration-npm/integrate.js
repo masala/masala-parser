@@ -1,9 +1,9 @@
-const parsec = require('./parser-combinator.min');
+const parsec = require('parser-combinator');
 const P = parsec.parser;
 const T= parsec.standard.token;
 
 
-console.log(parsec.parser);
+
 
 const document = '12';
 const stream = parsec.stream.ofString(document);
