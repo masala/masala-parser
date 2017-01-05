@@ -14,18 +14,97 @@ According to Wikipedia *"in functional programming, a parser combinator is a
 higher-order function that accepts several parsers as input and returns a new 
 parser as its output."* 
 
+### The Parser
+
+Let's say we have a document : 
+
+>>> This year James Bond, the dapper British super-spy with a taste for violence and sex, turns 50, and in celebration of this momentous achievement a new deluxe Blu-ray box set is being released, a new film premieres in theaters this fall ("Skyfall" from "American Beauty" director Sam Mendes) and a new documentary, "Everything or Nothing: The Untold Story of 007," debuts on the Epix channel.
+
+There are many way to analyze this document, for example finding names inside. But what is a name ? We can say that it 
+ is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
+  What is a starting uppercase word ?
+ 
+The goal of a parser is to find out. The goal of Parsec is make this easy.
+
+### The Mononoid structure
+
+The parser will read through the document and aggregate value.
+ 
+
+## Quick Examples
+
+
+### Count numbers
+
+      const parsec = require('parser-combinator');
+      const P = parsec.parser;
+      
+      // Parsec needs a stream of characters
+      const document = '12';
+      const stream = parsec.stream.ofString(document);
+      
+      // numberLitteral defines any int or float number
+      // We expect a number, then eos: End Of Stream
+      // We use thenLeft because we don't need the value of P.eos, we only want 12
+      const numberParser = P.numberLiteral.thenLeft(P.eos);
+      const parsing = numberParser.parse(stream);
+      
+      // If the parser reached the end of stream (P.eos) without rejection, parsing is accepted
+      console.info(parsing.isAccepted());
+      // The parser has a 
+      console.log(parsing.value===12);
+
 ### Hello World
 
-```
-var P = require('parser-combinator').parsec.parser,
-    S = require('parser-combinator').stream;
+       // Plain old ES
+       var parsec = require('parser-combinator');
+       var S = require('parser-combinator').stream;
+       var P = parsec.parser;
+       
+       // The goal is check that we have Hello 'something', then to grab that something
+       // With P.string("Hello").then(P.char(' ').rep()), we expect 'Hello' then some spaces
+       // With P.letter.rep(), we expect an array of letters, that we'll join to form a string
+       // We use thenRight, because we keep only the right value : the one we say hello 
+       var helloParser = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
+       
+       var assertWorld = helloParser.parse(S.ofString("Hello World")).value.toString() == ['W','o','r','l','d'].toString();
+       console.info('assertWorld', assertWorld);
+       
+       // Note that helloParser will not reach the end of the stream; it will stop at the space after People
+       var peopleParsing = helloParser.parse(S.ofString("Hello People in 2017"));
+       var peopleAssert = peopleParsing.value.join('') === "People";
+       
+       console.info('assert: ', peopleAssert);
+       console.info('assert: ', peopleParsing.offset < "Hello People in 2017".length);
 
-var p = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
-            
-p.parse(S.ofString("Hello World")).value.join('') === "World"
-```
 
+### Improvement with Combination
+
+We have used above a given parser named `P.letter`. Using `P.letter.rep()`, we create a new parser that works when it
+ meets several letters. Its value is an array of letters, which is not easy to use : we must use `join()` later.
+ 
+So we can create a `letters` parser that will seek many letters and directly return the string value.
+
+        var parsec = require('parser-combinator');
+        var S = require('parser-combinator').stream;
+        var P = parsec.parser;
+        
+        const letters = P.letter.rep().map(letterArray => letterArray.join(''));
+        
+        var helloParser = P.string("Hello").then(P.char(' ').rep()).thenRight(letters);
+        
+        var assertWorld = helloParser.parse(S.ofString("Hello World")).value === "World";
+        console.info('assertWorld', assertWorld);
+
+ 
+ 
+  
+
+  
+
+<!--
 You can also [try it online](https://tonicdev.com/d-plaindoux/parser-combinator-hello-world) !
+-->
 
 ### Character based parsers
 
