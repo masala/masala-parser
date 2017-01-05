@@ -2,14 +2,31 @@
   "name": "parser-combinator",
   "description": "Parser combinators",
   "license": "LGPL-2.1",
-  "version": "0.1.2",
-  "keywords": ["parser","ll","combinator","functional","composable"],
+  "version": "0.2.0",
+  "keywords": [
+    "parser",
+    "ll",
+    "combinator",
+    "functional",
+    "composable"
+  ],
   "homepage": "https://github.com/d-plaindoux/parsec",
   "author": {
     "name": "Didier Plaindoux",
     "email": "d.plaindoux@free.fr",
     "url": "d.plaindoux.free.fr"
   },
+  "contributors": [
+    {
+      "name": "Nicolas Zozol",
+      "email": "nz@robusta.io",
+      "url": "http://www.robusta.io"
+    },
+    {
+      "name": "Simon Zozol",
+      "url": "http://www.robusta.io"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/d-plaindoux/parsec"
@@ -23,21 +40,21 @@
       "url": "https://github.com/d-plaindoux/parsec/blob/master/LICENSE-LGPL2"
     }
   ],
-  "main": "build/lib/index.js",
+  "main": "dist/parser-combinator.min.js",
   "engines": {
     "node": ">= 5.7.0"
   },
   "scripts": {
     "prepublish": "echo '--- Prepublishing ---\n' && npm run test && npm run compile",
-    "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps",
+    "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
     "lint": "eslint src/**",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rm -rf ./coverage && mkdir coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover && npm run coveralls",
-    "concat": "rm -rf dist/ && mkdir dist && npm run compile && browserify build/lib/index.js -o index.js",
-    "dist": "rm -rf dist/ && mkdir dist && npm run compile && browserify -t uglifyify build/lib/index.js -o dist/parser-combinator.min.js"
+    "concat": "rm -rf dist/ && mkdir dist && npm run compile && browserify build/lib/index.js --standalone parsec -o dist/parser-combinator.js",
+    "dist": "rm -rf dist/ && mkdir dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone parsec -o dist/parser-combinator.min.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -48,6 +65,7 @@
     "browserify": "~9.0.3",
     "coveralls": "~2.11.2",
     "eslint": "^3.3.0",
+    "ncp": "^2.0.0",
     "nodeunit": "~0.9.0",
     "uglifyify": "^3.0.2"
   },

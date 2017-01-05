@@ -6,3 +6,7 @@ site
 .brackets.json
 npm-debug.log
 coverage
+.idea
+**/zztest.*
+**/parser-combinator.js
+**/parser-combinator.min.js

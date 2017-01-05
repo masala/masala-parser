@@ -79,11 +79,24 @@ export default  {
                'should be accepted.');
     test.done();
   },
+
+  'expect (flatmap) to be return a-b-c': function(test) {
+    test.expect(1);
+    // tests here  
+    test.equal(parser.char("a")
+        .flatmap(aVal=> parser.char('b').then(parser.char('c'))
+        .map(bcVal=>aVal+'-'+bcVal.join('-'))) //--> join 3 letters
+        .parse(stream.ofString("abc")).value,
+        'a-b-c',
+        'should be accepted.');
+    test.done();
+  },
         
   'expect (filter) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char("a").filter(function(a) { return a === 'a'; }).parse(stream.ofString("a")).isAccepted(),
+    test.equal(parser.char("a").filter(a => a === 'a')
+              .parse(stream.ofString("a")).isAccepted(),
                true,
                'should be accepted.');
     test.done();
@@ -92,7 +105,7 @@ export default  {
   'expect (filter) to be rejected': function(test) {
     test.expect(1);
     // tests here  
-    test.equal(parser.char("a").filter(function(a) { return a === 'b'; }).parse(stream.ofString("a")).isAccepted(),
+    test.equal(parser.char("a").filter(a=> a === 'b').parse(stream.ofString("a")).isAccepted(),
                false,
                'should be rejected.');
     test.done();
@@ -115,6 +128,8 @@ export default  {
                'should be rejected.');
     test.done();
   },
+  
+  
         
   'expect (then) to be accepted': function(test) {
     test.expect(1);
@@ -122,6 +137,15 @@ export default  {
     test.equal(parser.char("a").then(parser.char("b")).parse(stream.ofString("ab")).isAccepted(),
                true,
                'should be accepted.');
+    test.done();
+  },
+
+  'expect (then) to be build [a,b]': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(parser.char("a").then(parser.char("b")).parse(stream.ofString("ab")).value,
+        ['a', 'b'],
+        'should be accepted.');
     test.done();
   },
         
@@ -215,7 +239,7 @@ export default  {
     test.done();
   },
         
-  'expect (thenRight) to return b': function(test) {
+  'expect (thenReturns) to return b': function(test) {
     test.expect(1);
     // tests here  
     test.equal(parser.char("a").thenReturns("b").parse(stream.ofString("ab")).value,
@@ -241,7 +265,17 @@ export default  {
                'should be accepted.');
     test.done();
   },
-            
+
+  'expect (or) bis to be accepted': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(parser.char("a").or(parser.char("b")).parse(stream.ofString("b")).isAccepted(),
+        true,
+        'should be accepted.');
+    test.done();
+  },
+
+
   'expect (or) to be rejected': function(test) {
     test.expect(1);
     // tests here  
@@ -382,11 +416,11 @@ export default  {
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("b")).isAccepted(),
                    true,
-                   'should be rejected.');
+                   'should be accepted.');
     test.done();
   },
 
-  'expect (optrep) mutiple to accepted': function(test) {
+  'expect (optrep) multiple to accepted': function(test) {
     test.expect(1);
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("aaaabbb")).isAccepted(),
@@ -395,7 +429,7 @@ export default  {
     test.done();
   },
     
-  'expect (optrep) mutiple to return some [a,a,a,a]': function(test) {
+  'expect (optrep) multiple to return some [a,a,a,a]': function(test) {
     test.expect(1);
     // tests here  
     test.deepEqual(parser.char("a").optrep().parse(stream.ofString("aaaabbb")).value,

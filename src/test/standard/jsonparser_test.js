@@ -132,6 +132,14 @@ export default {
     test.ok(jsonparser.parse(stream.ofString('{ "a" : "v", "a" : [] }')).isAccepted(), 
             'should be accepted.');
     test.done();
-  }
+  },
+
+  'multi level object accepted': function(test) {
+    test.expect(1);
+    // tests here
+    test.ok(jsonparser.parse(stream.ofString('{ "a" : "v", "b" : {"c":{"d":12} }}')).isAccepted(),
+        'should be accepted.');
+    test.done();
+  },
 
 };
