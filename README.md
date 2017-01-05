@@ -24,7 +24,7 @@ There are many way to analyze this document, for example finding names inside. B
  is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
   What is a starting uppercase word ?
  
-The goal of a parser is to find out. The goal of Parsec is make this easy.
+The goal of a parser is to find out. The goal of Parsec is to make this easy.
 
 ### The Monoid structure
 
@@ -101,15 +101,25 @@ So we can create a `letters` parser that will seek many letters and directly ret
         var assertWorld = helloParser.parse(S.ofString("Hello World")).value === "World";
         console.info('assertWorld', assertWorld);
 
- 
- 
-  
 
+ Hopefully, the Parser object, often imported as `P` has already a `letters` parser.
+ 
   
 
 <!--
 You can also [try it online](https://tonicdev.com/d-plaindoux/parser-combinator-hello-world) !
 -->
+
+
+## Deep documentation
+
+### Core Parser Functions
+
+Here is a link for [Core functions documentation](./documentation/parser-core-functions.md). 
+
+### Extension Parser functions
+
+Here is a link for [Extension functions documentation](./documentation/parser-extension-functions.md) of the parser.
 
 ### Character based parsers
 
