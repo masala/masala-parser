@@ -3,7 +3,7 @@
  */
 
 import Parser from '../../lib/standard/document-parser';
-
+import path from 'path';
 
 let value = undefined;
 let accepted = undefined;
@@ -263,12 +263,11 @@ ${otherLev1Title}\n ${complexParagraph}`;
     },
 
     'parseFile test': function (test) {
-        const fileName = "trivialtest.txt"
-        const expectedTrivialFile = [{ title: { level: 1, text: 'title1' } }]
-        let parserTemp = Parser.parseFile(fileName)
-        test.deepEqual(parserTemp.value, expectedTrivialFile, 'bad value for file "trivialtest.txt"');
+        const fileName = path.join(__dirname, 'samples/trivial-test.md');
+        const expectedTrivialFile = [{ title: { level: 1, text: 'title1' } }];
+        let parserTemp = Parser.parseFile(fileName);
+        test.deepEqual(parserTemp.value, expectedTrivialFile, 'bad value for file "trivial-test.md"');
         test.done();
     },
 
-
-    }
+}
