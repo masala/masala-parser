@@ -18,7 +18,7 @@ parser as its output."*
 
 Let's say we have a document : 
 
->>> This year James Bond, the dapper British super-spy with a taste for violence and sex, turns 50, and in celebration of this momentous achievement a new deluxe Blu-ray box set is being released, a new film premieres in theaters this fall ("Skyfall" from "American Beauty" director Sam Mendes) and a new documentary, "Everything or Nothing: The Untold Story of 007," debuts on the Epix channel.
+>>> The James Bond series, by writer Ian Fleming, focuses on a fictional British Secret Service agent created in 1953, who featured him in twelve novels and two short-story collections. Since Fleming's death in 1964, eight other authors have written authorised Bond novels or novelizations: Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz. 
 
 There are many way to analyze this document, for example finding names inside. But what is a name ? We can say that it 
  is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
@@ -26,9 +26,14 @@ There are many way to analyze this document, for example finding names inside. B
  
 The goal of a parser is to find out. The goal of Parsec is make this easy.
 
-### The Mononoid structure
+### The Monoid structure
 
-The parser will read through the document and aggregate value.
+A monoid is an object with functions and one single encapsulated value. Have you heard of jQuery ? The `$` object is a monoid, where
+ the value is the DOM selection.
+The parser will read through the document and aggregate values. The single value of the monoid will be modified by the document stream,
+  but can also be modified by function calls, such as the `map()` function.
+  
+![](./documentation/parsec-monoid.png)
  
 
 ## Quick Examples
