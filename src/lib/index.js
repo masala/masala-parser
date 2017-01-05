@@ -10,10 +10,11 @@
 import data from './data/index';
 import genlex from './genlex/index';
 import parsec from './parsec/index';
+import parser from './parsec/parser';
 import standard from './standard/index'
 import stream from './stream/index';
 
 export {
-data, genlex, parsec, standard, stream
+data, genlex, parsec, standard, stream, parser
 }
 

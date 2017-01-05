@@ -1,0 +1,15 @@
+{
+  "name": "integration-npm",
+  "version": "1.0.0",
+  "description": "used to test npm publications",
+  "main": "index.js",
+  "dependencies": {
+    "parser-combinator": "0.2.0-prerelease2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

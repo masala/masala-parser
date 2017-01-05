@@ -125,6 +125,35 @@ class Parser{
         };
         return this.map(f);
     }
+
+    flattenDeep() {
+        return this.map(self => flattenDeep(self))
+    }
+
+
+}
+
+function sequence() {
+    const args = [];
+
+    function getParser(x) {
+        if (typeof (x) === 'string') {
+            return string(x).map(val=> [x]);
+        } else {
+            return x.map(val=>[val]);
+        }
+    }
+
+    for (let key in arguments) {
+        args.push(arguments[key]);
+    }
+    let current = getParser(args[0]);
+    for (var i = 1; i < args.length; i++) {
+        const next = getParser(args[i]);
+        current = current.then(next)
+            .map(values=> values[0].concat( values[1]));
+    }
+    return current;
 }
 
 
@@ -277,6 +306,11 @@ function letter() {
     return satisfy((v) => ('a' <= v && v <= 'z') || ('A' <= v && v <= 'Z'));
 }
 
+function letters() {
+    return letter().rep().map(values=>values.join(''));
+}
+
+
 // char -> Parser char char
 function char(c) {
     if (c.length !== 1) {
@@ -348,6 +382,37 @@ function numberLiteral() {
     return float.map((r) => parseFloat(r, 10));
 }
 
+/**
+ * utility function for flattenDeep()
+ */
+
+function flattenDeep(array) {
+    let toString = Object.prototype.toString;
+    let arrayTypeStr = '[object Array]';
+    let result = [];
+    let nodes =  array.slice();
+    let node;
+
+
+    if (!array.length) {
+        return result;
+    }
+
+    node = nodes.pop();
+
+    do {
+        if (toString.call(node) === arrayTypeStr) {
+            nodes.push.apply(nodes, node);
+        } else {
+            result.push(node);
+        }
+    } while (nodes.length && (node = nodes.pop()) !== undefined);
+
+    result.reverse(); // we reverse result to restore the original order
+    return result;
+}
+
+
 
 export default {
     parse: parse,
@@ -363,6 +428,7 @@ export default {
     upperCase: upperCase(),
     not: not,
     letter: letter(),
+    letters: letters(),
     notChar: notChar,
     char: char,
     charIn: charIn,
@@ -371,5 +437,6 @@ export default {
     notString: notString,
     charLiteral: charLiteral(),
     stringLiteral: stringLiteral(),
-    numberLiteral: numberLiteral()
+    numberLiteral: numberLiteral(),
+    sequence: sequence
 }
