@@ -45,7 +45,7 @@
     "node": ">= 5.7.0"
   },
   "scripts": {
-    "prepublish": "echo '--- Prepublishing ---\n' && npm run test && npm run compile",
+    "prepublish": "echo '--- Prepublishing ---\n' && npm run dist",
     "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
     "lint": "eslint src/**",
