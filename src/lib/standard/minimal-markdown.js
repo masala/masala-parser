@@ -12,7 +12,6 @@ import P from '../parsec/parser';
 // Facilities
 //
 
-const blocSeparation = P.char('\n').then(P.char('\n'));
 var eol = P.char('\n');//.then(P.charNotIn('\n'));
 
 function title(line, level) {
