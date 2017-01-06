@@ -19,19 +19,8 @@ function parseDocument( string, offset=0){
 }
 
 
-
-// get a file name, return a parser, synchronously
-//TODO document() should be fed directly with a stream
-function parseFile(fileName){
-    let data = fs.readFileSync(fileName, 'utf8' );
-    return parseDocument(data);
-}
-
-
-
 export default {
     document,
-    parseFile,
 
     parse(stream){
         return parseDocument(stream,0);
