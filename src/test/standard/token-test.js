@@ -115,7 +115,50 @@ export default {
         test.done();
     },
 
+    'test email1': function (test) {
+        testAParser(Token.email(), 'random text');
+        test.ok(!accepted, 'random text should not be recognise as email' )
+        test.done();
+    },
 
+    'test email2': function (test) {
+        testAParser(Token.email(), 'simon.zozol@gmail.com');
+        let expected = {email:"simon.zozol@gmail.com"}
+        test.deepEqual(value, expected, 'error parsing email' )
+        test.done();
+    },
 
+    'test email3': function (test) {
+        testAParser(Token.email(), 'δοκιμή@παράδειγμα.δοκιμή');
+        let expected = {email:"δοκιμή@παράδειγμα.δοκιμή"}
+        test.deepEqual(value, expected, 'error parsing email in greek' )
+        test.done();
+    },
+    'test email4': function (test) {
+        testAParser(Token.email(), 'simon@zozol@gmail.com');
+        test.ok(!accepted, 'email adress should reject 2 @ (unless in double quote)' )
+        test.done();
+    },
+
+    'test email5': function (test) {
+        testAParser(Token.email(), 'simon"zozol@gmail.com');
+        test.ok(!accepted, 'email adress should reject unbalanced double quote' )
+        test.done();
+    },
+
+    'test email6': function (test) {
+        testAParser(Token.email(), 'simon"le gr@nd"@holy-python.com');
+        let expected = {email:'simon"le gr@nd"@holy-python.com'}
+        test.deepEqual(value, expected, 'error parsing email with quote' )
+        test.done();
+    },
+
+    'test email chain': function (test) {
+        const testString = 'simon@holy-python.com δοκιμή@παράδειγμα.δοκιμή'
+        testAParser(Token.email().thenLeft(P.char(' ')).then(Token.email()) , testString);
+        let expected = [{email:'simon@holy-python.com'}, {email:'δοκιμή@παράδειγμα.δοκιμή'}]
+        test.deepEqual(value, expected, 'error parsing email chain' )
+        test.done();
+    },
 
 }
