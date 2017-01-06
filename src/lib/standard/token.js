@@ -55,19 +55,6 @@ function email(){
 }
 
 
-// todo: in theory,  simon"le gr@nd"@gmail.com is valid
-function email2(){
-    let illegalCharSet1=' @\u00A0\n\t'
-    let illegalCharSet2=' @\u00A0\n\t.'
-
-    return P.charNotIn(illegalCharSet1).optrep()
-        .then(P.char('@'))
-        .then(P.charNotIn(illegalCharSet2).rep() )
-        .then(P.char('.'))
-        .then(P.charNotIn(illegalCharSet2).rep() )
-        .flattenDeep().map(characters => ({email:characters.join('') }) )
-}
-
 export default {
     blank,
     rawTextUntilChar,
