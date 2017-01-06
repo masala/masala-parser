@@ -7,14 +7,11 @@
 import Parser from '../../lib/standard/combined-parser';
 
 let value = undefined;
-let accepted = undefined;
-let parser = null
 
 
 function testLine(line){
     let parsing = Parser.parse(line);
     value = parsing.value;
-    accepted = parsing.isAccepted();
     console.info('parsing', parsing, '\n\n');
 }
 
