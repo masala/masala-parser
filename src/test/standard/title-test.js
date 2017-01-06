@@ -26,7 +26,7 @@ export default {
     'test level1': function (test) {
         test.expect(2);
 
-        testLine('#title1\n');
+        testLine('# title1\n');
         let expected={ title: { level: 1, text: 'title1' } }
         test.ok(accepted, 'test title1');
         test.deepEqual(expected, value, 'test title1')
@@ -37,7 +37,7 @@ export default {
     'test level3': function (test) {
         test.expect(2);
 
-        testLine('###title\n');
+        testLine('### title\n');
         let expected={ title: { level: 3, text: 'title' } }
         test.ok(accepted, 'test title level 3');
         test.deepEqual(expected, value, 'test title level 3')
@@ -94,11 +94,20 @@ export default {
         test.deepEqual(expected, value, 'test stars in title1');
 
 
-        testLine('##2*3*4 = 24\n');
+        testLine('## 2*3*4 = 24\n');
         expected={ title: { level: 2, text: '2*3*4 = 24' } };
 
         test.deepEqual(expected, value, 'test stars in title2');
         
+        test.done();
+    },
+
+    'Sharps not folowed by space': function(test) {
+        test.expect(1);
+
+        testLine('#Not tile');
+
+        test.ok(!accepted, 'Sharp not folloed by space shall not be parsed');
         test.done();
     },
 

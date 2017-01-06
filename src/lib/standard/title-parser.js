@@ -16,6 +16,11 @@ function sharps(){
     return P.char('#').rep().map(string => string.length)
 }
 
+// a white is a sequence of at least one space, tab or non-breakable space
+function white() {
+    return P.charIn(" \t\u00A0").rep()
+}
+
 function equals(){
     return P.string('===')
         .then(T.rawTextUntilChar('\n'))
@@ -31,7 +36,8 @@ function minuses(){
 }
 
 function titleStyle1(){
-    return sharps().debug("sharps")
+    return sharps()
+        .thenLeft(white())
         .then(T.rawTextUntilChar('\n'))
         .thenLeft(T.eol().or(P.eos))
         .map(array => ({
