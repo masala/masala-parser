@@ -6,26 +6,11 @@ import Parser from '../../lib/standard/document-parser';
 import path from 'path';
 
 let value = undefined;
-let accepted = undefined;
-let parser = null;
 
-
-// used to debug value easily and to avoid [Object object] notation.
-function display(val, prefix = false) {
-    if (val === undefined) {
-        val = value;
-    }
-    if (prefix) {
-        console.info(`${prefix} : ${JSON.stringify(val)}`);
-    } else {
-        console.info(JSON.stringify(val));
-    }
-}
 
 function testBlock(block) {
     const parsing = Parser.parse(block);
     value = parsing.value;
-    accepted = parsing.isAccepted();
     console.info('parsing', parsing, '\n\n');
 }
 
@@ -237,7 +222,7 @@ ${otherLev1Title}\n ${complexParagraph}`;
             { "code": "import Control.Monad" },
             { "code": ""},
             { "code": "solveTable :: [String] -> [String] -> [(String, Integer)]"  }
-            ]
+            ];
 
         testBlock(haskellCode);
         test.deepEqual(value, expectedHaskellCode, 'bad value for bullets');

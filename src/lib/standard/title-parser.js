@@ -20,14 +20,14 @@ function equals(){
     return P.string('===')
         .then(T.rawTextUntilChar('\n'))
         .then(T.eol())
-        .map(whatever=>1);  // this mean a level 1 title
+        .thenReturns(1);  // this mean a level 1 title
 }
 
 function minuses(){
     return P.string('---')
         .then(T.rawTextUntilChar('\n'))
         .then(T.eol())
-        .map(whatever=>2); // this mean a level 2 title
+        .thenReturns(2); // this mean a level 2 title
 }
 
 function titleStyle1(){

@@ -138,7 +138,7 @@ function sequence() {
 
     function getParser(x) {
         if (typeof (x) === 'string') {
-            return string(x).map(val=> [x]);
+            return string(x).thenReturns([x]);
         } else {
             return x.map(val=>[val]);
         }
