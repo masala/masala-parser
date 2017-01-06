@@ -35,21 +35,38 @@ function fourSpacesBlock() {
         .then(P.charIn(' \u00A0')).then(P.charIn(' \u00A0'))));
 }
 
+function inQuote(){
+    return P.char('"')
+        .then(P.notChar('"').rep())
+        .then(P.char('"'))
+}
 
-// todo: in theory,  simon"le grand@Viarmes"@gmail.com is valid
+// accept simon@gmail.com, but also  simon"le gr@nd"@gmail.com
 function email(){
     let illegalCharSet1=' @\u00A0\n\t'
     let illegalCharSet2=' @\u00A0\n\t.'
 
-    return P.charNotIn(illegalCharSet2).debug("mark1")      // email address shall not begin with dot
-        .then(P.charNotIn(illegalCharSet1).optrep().debug("mark2") )
-        .then(P.char('@').debug("mark3"))
-        .then(P.charNotIn(illegalCharSet2).rep().debug("mark4") )
-        .then(P.char('.').debug("mark5"))
-        .then(P.charNotIn(illegalCharSet2).rep().debug("mark6") )
+    return inQuote().debug("inQuote")
+        .or(P.charNotIn(illegalCharSet1).debug("normalChar")).rep()  // this mean:   repeat(inQuote or anyCharacter)
+        .then(P.char('@'))
+        .then(P.charNotIn(illegalCharSet2).rep() )
+        .then(P.char('.'))
+        .then(P.charNotIn(illegalCharSet2).rep())
         .flattenDeep().map(characters => ({email:characters.join('') }) )
+}
 
 
+// todo: in theory,  simon"le gr@nd"@gmail.com is valid
+function email2(){
+    let illegalCharSet1=' @\u00A0\n\t'
+    let illegalCharSet2=' @\u00A0\n\t.'
+
+    return P.charNotIn(illegalCharSet1).optrep()
+        .then(P.char('@'))
+        .then(P.charNotIn(illegalCharSet2).rep() )
+        .then(P.char('.'))
+        .then(P.charNotIn(illegalCharSet2).rep() )
+        .flattenDeep().map(characters => ({email:characters.join('') }) )
 }
 
 export default {
