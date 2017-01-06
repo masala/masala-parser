@@ -3,7 +3,7 @@ import P from '../parsec/parser';
 // resolve meanningles characters as an empty string
 // also accept an empty string
 function blank() {
-    return P.charIn(" \t").optrep().map(blank => '')
+    return P.charIn(' \t').optrep().thenReturns('');
 }
 
 //todo: escape characters
@@ -24,14 +24,13 @@ function eol() {
 
 //A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
 function lineFeed() {
-    return eol().then(blank()).then(eol()).map(whatever => {
+    return eol().then(blank()).then(eol()).thenReturns({
         linefeed:undefined
     });
 }
 
 function fourSpacesBlock() {
-    return P.char('\t').or(P.try(P.charIn(' \u00A0').then(P.charIn(' \u00A0'))
-        .then(P.charIn(' \u00A0')).then(P.charIn(' \u00A0'))));
+    return P.char('\t').or(P.charIn(' \u00A0').occurrence(4));
 }
 
 

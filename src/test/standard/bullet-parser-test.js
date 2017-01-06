@@ -6,7 +6,6 @@ import Parser from '../../lib/standard/bullet-parser';
 
 let value = undefined;
 let accepted = undefined;
-let parser = null
 
 
 function testLine(line) {

@@ -4,7 +4,6 @@
 
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
-import textParser from './text-parser';
 import T from '../../lib/standard/token';
 
 /* TODO mix spaces &  tab bug  "  \t  " will not be accepted
