@@ -1,5 +1,13 @@
-node_modules/
-coverage/
-.coveralls.yml
-.travis.yml
-.gitignore
+# from http://stackoverflow.com/a/29932318/968988
+# Blacklist files/folders in same directory as the .gitignore file
+/*
+
+# Whitelist some files
+!.gitignore
+!README.md
+!documentation
+!dist
+
+# Ignore all files named .DS_Store or ending with .log
+**/.DS_Store
+**.log

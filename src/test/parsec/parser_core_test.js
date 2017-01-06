@@ -25,7 +25,7 @@ export default  {
   setUp: function(done) {
     done();
   },
-        
+    
   'expect (map) to be accepted': function(test) {
     test.expect(1);
     // tests here  
@@ -420,6 +420,61 @@ export default  {
     test.deepEqual(parser.notChar("a").optrep().parse(stream.ofString("bbba"),0).value,
                    ['b','b','b'],
                    'should be accepted.');
+    test.done();
+  },
+
+  'expect debug() to make side effect': function(test) {
+    test.expect(1);
+    // tests here
+    const original = console.log;
+    let sideEffect = false;
+
+    console.log = function () {
+      sideEffect = true;
+    };
+
+    // side effect action
+    parser.char("a").debug('found').optrep().parse(stream.ofString("aaa"),0);
+
+    console.log = original;
+    test.deepEqual(sideEffect,true, 'should make side effect.');
+    test.done();
+  },
+
+  'expect debug(param, false) to make side effect': function(test) {
+    test.expect(1);
+    // tests here
+    const original = console.log;
+    let sideEffect = false;
+
+    console.log = function () {
+      sideEffect = true;
+    };
+
+    // side effect action : will hide the details
+    parser.char("a").debug('found', false).optrep().parse(stream.ofString("aaa"),0);
+
+    console.log = original;
+    test.deepEqual(sideEffect,true, 'should make side effect.');
+    test.done();
+  },
+
+
+  'expect (debug) to not make side effect': function(test) {
+    test.expect(1);
+    // tests here
+    const original = console.log;
+    let sideEffect = false;
+
+    console.log = function () {
+      sideEffect = true;
+    };
+
+    // side effect action
+    parser.char("a").debug('found').optrep().parse(stream.ofString("xxxx"),0);
+
+    console.log = original;
+    test.deepEqual(sideEffect,false, 'should make side effect.');
     test.done();
   },
 

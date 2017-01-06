@@ -2,9 +2,7 @@
  * Created by Simon on 15/12/2016.
  */
 
-import P from '../parsec/parser';
 import Stream from '../../lib/stream/index';
-import T from './token';
 import CombinedParser from '../../lib/standard/combined-parser';
 
 import fs from 'fs'

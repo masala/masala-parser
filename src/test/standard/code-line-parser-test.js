@@ -6,7 +6,6 @@ import Parser from '../../lib/standard/code-line-parser';
 
 let value = undefined;
 let accepted = undefined;
-let parser = null;
 let expected = undefined;
 
 

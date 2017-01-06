@@ -12,7 +12,7 @@ import P from '../parsec/parser';
 // Facilities
 //
 
-var eol = P.char('\n');
+var eol = P.char('\n');//.then(P.charNotIn('\n'));
 
 function title(line, level) {
     return {title: line, level: level};
@@ -33,6 +33,12 @@ function strikeText(text) {
 function normalText(c) {
     return {text: c.join('')};
 }
+
+
+function paragraphText(text) {
+    return {paragraph: text[0][1]};
+}
+
 
 function italic() {
     return P.try(P.string("*").thenRight(P.lazy(text, ["*"])).thenLeft(P.string("*")).
@@ -58,15 +64,22 @@ function text(separator) {
     }
 }
 
+
+function paragraph() {
+    return eol.then(text()).then(eol.optrep()).map(paragraphText);
+}
+
 function line() {
     return (bold().or(italic()).or(strike()).or(text())).optrep().thenLeft(eol.opt());
 }
+
 
 function titleSharp() {
     return P.char('#').rep().then(line()).map(function (c) {
         return [title(c[1], c[0].length)];
     });
 }
+
 
 function titleAlt() {
     return P.try(
@@ -77,5 +90,5 @@ function titleAlt() {
     );
 }
 
-export default titleSharp().or(titleAlt()).or(line()).thenLeft(P.eos);
+export default paragraph().or(titleSharp()).or(titleAlt()).or(line()).thenLeft(P.eos);
  
