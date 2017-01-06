@@ -37,14 +37,14 @@ export default {
 
 
     'test level1': function (test) {
-        testLine('#title1\n');
+        testLine('# title1\n');
         let expected={ title: { level: 1, text: 'title1' } }
         test.deepEqual(expected, value, 'test title1')
         test.done();
     },
 
     'test level3': function (test) {
-        testLine('###title\n');
+        testLine('### title\n');
         let expected={ title: { level: 3, text: 'title' } }
         test.deepEqual(expected, value, 'test title level 3')
         test.done();
@@ -87,7 +87,7 @@ export default {
 
 
     ' stars into title2': function(test) {
-        testLine('##2*3*4 = 24\n');
+        testLine('## 2*3*4 = 24\n');
         let expected={ title: { level: 2, text: '2*3*4 = 24' } };
         test.deepEqual(expected, value, 'test stars in title2');
         test.done();
