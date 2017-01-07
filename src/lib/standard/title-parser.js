@@ -31,7 +31,7 @@ function minuses(){
 }
 
 function titleStyle1(){
-    return sharps().debug("sharps")
+    return sharps()
         .then(T.rawTextUntilChar('\n'))
         .thenLeft(T.eol().or(P.eos))
         .map(array => ({
