@@ -664,6 +664,7 @@ export default {
         test.deepEqual(parsing.value, expected, 'should be equal');
         test.done();
     },
+
     "expect flattenDeep ( 2+2) to return []": function (test) {
         // Main difference with sequence, is that a sequence element could be an array
         test.expect(1);
@@ -682,5 +683,32 @@ export default {
         test.done();
     },
 
+    "export subStream(4) to return [h,e,l,l]": function (test) {
+        // Main difference with sequence, is that a sequence element could be an array
+        test.expect(1);
+        // tests here
+        const string = 'hello';
+        const expected = ['h','e','l','l'];
+
+        const parsing = parser.subStream(4)
+                .parse(stream.ofString(string), 0);
+
+        test.deepEqual(parsing.value, expected, 'should be equal');
+        test.done();
+    },
+
+    "export subString(4) to return hell": function (test) {
+        // Main difference with sequence, is that a sequence element could be an array
+        test.expect(1);
+        // tests here
+        const string = 'hello';
+        const expected = 'hell';
+
+        const parsing = parser.subString(4)
+            .parse(stream.ofString(string), 0);
+
+        test.deepEqual(parsing.value, expected, 'should be equal');
+        test.done();
+    }
 
 };

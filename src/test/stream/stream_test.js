@@ -24,27 +24,27 @@ export default {
   setUp: function(done) {
     done();
   },
-    
+
   'endOfStream for empty stream': function(test) {
     test.expect(1);
-    // tests here  
-    test.ok(stream.ofString('').endOfStream(0), 
+    // tests here
+    test.ok(stream.ofString('').endOfStream(0),
             'should be endOfStream.');
     test.done();
   },
 
   'endOfStream for non empty stream': function(test) {
     test.expect(1);
-    // tests here  
-    test.ok(stream.ofString('1').endOfStream(1), 
+    // tests here
+    test.ok(stream.ofString('1').endOfStream(1),
             'should be endOfStream.');
     test.done();
   },
 
   'no endOfStream for non empty stream': function(test) {
     test.expect(1);
-    // tests here  
-    test.equal(stream.ofString('1').endOfStream(0), 
+    // tests here
+    test.equal(stream.ofString('1').endOfStream(0),
                false,
                'should be endOfStream.');
     test.done();
@@ -52,55 +52,28 @@ export default {
 
   'get from stream': function(test) {
     test.expect(1);
-    // tests here  
-    test.equal(stream.ofString('1').get(0).isSuccess(), 
+    // tests here
+    test.equal(stream.ofString('1').get(0).isSuccess(),
                true,
                'should be a success.');
     test.done();
   },
-    
+
   'do not get from empty stream': function(test) {
     test.expect(1);
-    // tests here  
-    test.equal(stream.ofString('1').get(1).isSuccess(), 
+    // tests here
+    test.equal(stream.ofString('1').get(1).isSuccess(),
                false,
                'should be a failure.');
     test.done();
   },
-    
+
   'do not get from erroneous stream': function(test) {
     test.expect(1);
-    // tests here  
-    test.equal(stream.ofString({length:1,charAt:function() { throw new Error(); }}).get(0).isSuccess(), 
+    // tests here
+    test.equal(stream.ofString({length:1,charAt:function() { throw new Error(); }}).get(0).isSuccess(),
                false,
                'should be a failure.');
     test.done();
   },
-
-  'subStreamAt empty from stream': function(test) {
-    test.expect(1);
-    // tests here  
-    test.equal(stream.ofString('123').subStreamAt('',0), 
-               true,
-               'should be a success.');
-    test.done();
-  },
-
-  'subStreamAt first element from stream': function(test) {
-    test.expect(1);
-    // tests here  
-    test.equal(stream.ofString('123').subStreamAt('1',0), 
-               true,
-               'should be a success.');
-    test.done();
-  },
-    
-  'subStreamAt second element and more from stream': function(test) {
-    test.expect(1);
-    // tests here  
-    test.equal(stream.ofString('123').subStreamAt('23',1), 
-               true,
-               'should be a success.');
-    test.done();
-  }
 }
