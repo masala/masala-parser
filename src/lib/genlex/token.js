@@ -6,9 +6,9 @@
  * Licensed under the LGPL2 license.
  */
 
-import parser from '../parsec/parser';
 import response from '../parsec/response';
 import option  from '../data/option';
+import F from '../parsec/flow-bundle';
 
 class Token {
 
@@ -97,7 +97,7 @@ class TKChar extends Token{
 
 // (Token -> Option 'a) -> Parser 'a Token
 function literal(tokenise) {
-    return parser.parse((input, index) => 
+    return F.parse((input, index) =>
         input.get(index).map((value) => 
             tokenise(value).map((token) => response.accept(token, input, index+1, true))
                            .orLazyElse(() => response.reject(input.location(index), false))

@@ -9,7 +9,6 @@ import F from './flow-bundle';
 
 // unit -> Parser char char
 function letter() {
-    console.log('F:', F);
     return F.satisfy((v) => ('a' <= v && v <= 'z') || ('A' <= v && v <= 'Z'));
 }
 
