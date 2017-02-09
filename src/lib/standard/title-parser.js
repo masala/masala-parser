@@ -13,23 +13,23 @@ import stream from '../../lib/stream/index';
 import T from './token';
 
 function sharps(){
-    return P.char('#').rep().map(string => string.length)
+    return C.char('#').rep().map(string => string.length)
 }
 
 // a white is a sequence of at least one space, tab or non-breakable space
 function white() {
-    return P.charIn(" \t\u00A0").rep()
+    return C.charIn(" \t\u00A0").rep()
 }
 
 function equals(){
-    return P.string('===')
+    return C.string('===')
         .then(T.rawTextUntilChar('\n'))
         .then(T.eol())
         .thenReturns(1);  // this mean a level 1 title
 }
 
 function minuses(){
-    return P.string('---')
+    return C.string('---')
         .then(T.rawTextUntilChar('\n'))
         .then(T.eol())
         .thenReturns(2); // this mean a level 2 title
@@ -39,7 +39,7 @@ function titleStyle1(){
     return sharps()
         .thenLeft(white())
         .then(T.rawTextUntilChar('\n'))
-        .thenLeft(T.eol().or(P.eos))
+        .thenLeft(T.eol().or(F.eos))
         .map(array => ({
                         title:{
                             level:array[0],

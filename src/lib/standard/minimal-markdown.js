@@ -12,7 +12,7 @@ import P from '../parsec/parser';
 // Facilities
 //
 
-var eol = P.char('\n');//.then(P.charNotIn('\n'));
+var eol = C.char('\n');//.then(C.charNotIn('\n'));
 
 function title(line, level) {
     return {title: line, level: level};
@@ -41,24 +41,24 @@ function paragraphText(text) {
 
 
 function italic() {
-    return P.try(P.string("*").thenRight(P.lazy(text, ["*"])).thenLeft(P.string("*")).
-                 or(P.string("_").thenRight(P.lazy(text, ["_"])).thenLeft(P.string("_"))).map(italicText));
+    return F.try(C.string("*").thenRight(F.lazy(text, ["*"])).thenLeft(C.string("*")).
+                 or(C.string("_").thenRight(F.lazy(text, ["_"])).thenLeft(C.string("_"))).map(italicText));
 }
 
 function bold() {
-    return P.try(P.string("**").thenRight(P.lazy(text, ["**"])).thenLeft(P.string("**")).
-                 or(P.string("__").thenRight(P.lazy(text, ["__"])).thenLeft(P.string("__"))).map(boldText));
+    return F.try(C.string("**").thenRight(F.lazy(text, ["**"])).thenLeft(C.string("**")).
+                 or(C.string("__").thenRight(F.lazy(text, ["__"])).thenLeft(C.string("__"))).map(boldText));
 }
 
 function strike() {
-    return P.try(P.string("~~").thenRight(P.lazy(text, ["~~"])).thenLeft(P.string("~~")).map(strikeText));
+    return F.try(C.string("~~").thenRight(F.lazy(text, ["~~"])).thenLeft(C.string("~~")).map(strikeText));
 }
 
 function text(separator) {
     if (separator) {
-        return P.not(eol.or(P.string(separator))).optrep().map(normalText);
+        return F.not(eol.or(C.string(separator))).optrep().map(normalText);
     } else {
-        return P.not(eol).then(P.charNotIn('\n*_~').optrep()).
+        return F.not(eol).then(C.charNotIn('\n*_~').optrep()).
                 map((c) => [c[0]].concat(c[1])).
                 map(normalText);
     }
@@ -75,20 +75,20 @@ function line() {
 
 
 function titleSharp() {
-    return P.char('#').rep().then(line()).map(function (c) {
+    return C.char('#').rep().then(line()).map(function (c) {
         return [title(c[1], c[0].length)];
     });
 }
 
 
 function titleAlt() {
-    return P.try(
+    return F.try(
         line().flatmap((l) =>
-            P.char('=').rep().map(() => [title(l, 1)]).
-            or(P.char('-').rep().map(() => [title(l, 2)])).
+            C.char('=').rep().map(() => [title(l, 1)]).
+            or(C.char('-').rep().map(() => [title(l, 2)])).
             thenLeft(eol.opt()))
     );
 }
 
-export default paragraph().or(titleSharp()).or(titleAlt()).or(line()).thenLeft(P.eos);
+export default paragraph().or(titleSharp()).or(titleAlt()).or(line()).thenLeft(F.eos);
  

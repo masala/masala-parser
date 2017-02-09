@@ -1,6 +1,6 @@
 import stream from '../../lib/stream/index';
 import parser from '../../lib/parsec/parser';
-
+import {F,C,N} from '../../lib/parsec/index';
 /*
   ======== A Handy Little Nodeunit Reference ========
   https://github.com/caolan/nodeunit
@@ -29,8 +29,8 @@ export default {
   'expect (chain) to be accepted': function(test) {
     test.expect(1);
     // tests here  
-    var p1  = parser.numberLiteral.thenLeft(parser.char(' ').opt()),
-        p2  = parser.any.then(parser.any).thenLeft(parser.eos).map(function (r) {
+    var p1  = N.numberLiteral.thenLeft(C.char(' ').opt()),
+        p2  = F.any.then(F.any).thenLeft(F.returns).map(function (r) {
             return r[0] + r[1];
         });
 
@@ -39,12 +39,12 @@ export default {
                'should be accepted.');
     test.done();
   },
-
+/*
   'expect (chain) to return 46': function(test) {
     test.expect(1);
     // tests here  
-    var p1  = parser.numberLiteral.thenLeft(parser.char(' ').opt()),
-        p2  = parser.any.then(parser.any).thenLeft(parser.eos).map(function (r) {
+    var p1  = N.numberLiteral.thenLeft(C.char(' ').opt()),
+        p2  = F.any.then(F.any).thenLeft(F.returns).map(function (r) {
             return r[0] + r[1];
         });
       
@@ -52,5 +52,5 @@ export default {
                46,
                'should be 46.');
     test.done();
-  }
+  }*/
 };

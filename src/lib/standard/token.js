@@ -1,25 +1,26 @@
-import P from '../parsec/parser';
+import C from '../../lib/parsec/chars-bundle';
+
 
 // resolve meanningles characters as an empty string
 // also accept an empty string
 function blank() {
-    return P.charIn(' \t').optrep().thenReturns('');
+    return C.charIn(' \t').optrep().thenReturns('');
 }
 
 //todo: escape characters
 function rawTextUntilChar(charList, allowVoid = false) {
     if (allowVoid) {
-        return P.charNotIn(charList).optrep()
+        return C.charNotIn(charList).optrep()
             .map(characters => characters.join(''))
     }
     else {
-        return P.charNotIn(charList).rep()
+        return C.charNotIn(charList).rep()
             .map(characters => characters.join(''))
     }
 }
 
 function eol() {
-    return P.char('\n');
+    return C.char('\n');
 }
 
 //A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
@@ -31,13 +32,13 @@ function lineFeed() {
 
 //accept 1 tab or 4 spaces. Space may be unbreakable
 function fourSpacesBlock() {
-    return P.char('\t').or(P.charIn(' \u00A0').occurrence(4));
+    return C.char('\t').or(C.charIn(' \u00A0').occurrence(4));
 }
 
 function inQuote(){
-    return P.char('"')
-        .then(P.notChar('"').rep())
-        .then(P.char('"'))
+    return C.char('"')
+        .then(C.notChar('"').rep())
+        .then(C.char('"'))
 }
 
 // accept simon@gmail.com, but also  simon"le gr@nd"@gmail.com
@@ -46,11 +47,11 @@ function email(){
     let illegalCharSet2=' @\u00A0\n\t.'
 
     return inQuote().debug("inQuote")
-        .or(P.charNotIn(illegalCharSet1).debug("normalChar")).rep()  // this mean:   repeat(inQuote or anyCharacter)
-        .then(P.char('@'))
-        .then(P.charNotIn(illegalCharSet2).rep() )
-        .then(P.char('.'))
-        .then(P.charNotIn(illegalCharSet2).rep())
+        .or(C.charNotIn(illegalCharSet1).debug("normalChar")).rep()  // this mean:   repeat(inQuote or anyCharacter)
+        .then(C.char('@'))
+        .then(C.charNotIn(illegalCharSet2).rep() )
+        .then(C.char('.'))
+        .then(C.charNotIn(illegalCharSet2).rep())
         .flattenDeep().map(characters => ({email:characters.join('') }) )
 }
 

@@ -5,39 +5,39 @@
 /**
  * This parse a text paragraph
  * text can be "simple" text; bold, italic or a mix (sequence) of those
- * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (P.eos())
+ * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (F.eos())
  */
 import P from '../parsec/parser';
 import stream from '../../lib/stream/index';
 import T from './token';
 
 function stop(){
-    return P.eos.or(T.lineFeed()).or(P.charIn('*`'));
+    return F.eos.or(T.lineFeed()).or(C.charIn('*`'));
 }
 
 function pureText(){
-    return P.not(stop()).rep()
+    return F.not(stop()).rep()
         .map(characters=>characters.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
 }
 
 function italic(pureTextParser){
-    return P.char('*')
+    return C.char('*')
         .thenRight(pureTextParser)
-        .thenLeft(P.char('*'))
+        .thenLeft(C.char('*'))
         .map(string => ({italic:string})  )
 }
 
 function bold(pureTextParser){
-    return P.string('**')
+    return C.string('**')
         .thenRight(pureTextParser)
-        .thenLeft(P.string('**'))
+        .thenLeft(C.string('**'))
         .map(string => ({bold:string})  )
 }
 
 function code(pureTextParser){
-    return P.char('`')
+    return C.char('`')
         .thenRight(pureTextParser)
-        .thenLeft(P.char('`'))
+        .thenLeft(C.char('`'))
         .map(string => ({code:string})  )
 }
 

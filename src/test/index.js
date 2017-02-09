@@ -32,8 +32,8 @@ import parserResponseTest from './parsec/response_test';
 export {
     optionTest, tryTest, streamsTest, bufferedStreamsTest,
     genlexTest, tokenTest, tokenizerTest,
-    /*standardTokenTest,
-    jsonParseTest, jsonSampleTest,
+    standardTokenTest,
+    /*jsonParseTest, jsonSampleTest,
     titleTest, textTest, bulletParser,codeLineParser, combinedParser, documentParserTest,
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
     parserStreamTest, parserResponseTest
