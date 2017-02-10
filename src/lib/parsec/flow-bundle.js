@@ -8,7 +8,7 @@
 
 import unit from '../data/unit.js';
 import Parser from './parser';
-import response from "./response";
+import response from './response';
 
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
@@ -89,11 +89,9 @@ function sequence() {
     const args = [];
 
     function getParser(x) {
-        if (typeof (x) === 'string') {
-            return C.string(x).thenReturns([x]);
-        } else {
+
             return x.map(val=>[val]);
-        }
+        
     }
 
     for (let key in arguments) {

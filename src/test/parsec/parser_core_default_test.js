@@ -1,5 +1,5 @@
 import stream from '../../lib/stream/index';
-import parser from '../../lib/parsec/parser';
+import {F,C,N} from '../../lib/parsec/index';
 
 /*
   ======== A Handy Little Nodeunit Reference ========

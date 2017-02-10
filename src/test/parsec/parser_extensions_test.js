@@ -1,5 +1,5 @@
 import stream from '../../lib/stream/index';
-import parser from '../../lib/parsec/parser';
+import {F,C,N} from '../../lib/parsec/index';
 
 /*
  ======== A Handy Little Nodeunit Reference ========
@@ -107,7 +107,7 @@ export default {
     'expect (eos) to be accepted': function (test) {
         test.expect(1);
         // tests here
-        test.equal(F.returns.parse(stream.ofString(""), 0).isAccepted(),
+        test.equal(F.eos.parse(stream.ofString(""), 0).isAccepted(),
             true,
             'should be accepted.');
         test.done();
@@ -116,7 +116,7 @@ export default {
     'expect (eos) to be rejected': function (test) {
         test.expect(1);
         // tests here
-        test.equal(F.returns.parse(stream.ofString("a"), 0).isAccepted(),
+        test.equal(F.eos.parse(stream.ofString("a"), 0).isAccepted(),
             false,
             'should be rejected.');
         test.done();
@@ -280,7 +280,7 @@ export default {
     'expect (letters) to be accepted': function (test) {
         test.expect(2);
         // tests here
-        const parsing = C.letters.thenLeft(F.returns).parse(stream.ofString("someLetters"), 0);
+        const parsing = C.letters.thenLeft(F.eos).parse(stream.ofString("someLetters"), 0);
         test.equal(parsing.isAccepted(), true, 'should be accepted.');
         test.deepEqual(parsing.value, 'someLetters', 'should be equal.');
         test.done();
@@ -289,7 +289,7 @@ export default {
     'expect (letters) with space to be rejected': function (test) {
         test.expect(2);
         // tests here
-        const parsing = C.letters.then(F.returns).parse(stream.ofString("some Letters"), 0);
+        const parsing = C.letters.then(F.eos).parse(stream.ofString("some Letters"), 0);
         test.equal(parsing.isAccepted(), false, 'should be rejected.');
         test.notDeepEqual(parsing.value, 'some Letters', 'should be equal.');
         test.done();
@@ -298,7 +298,7 @@ export default {
     'expect (letters) with number to be rejected': function (test) {
         test.expect(1);
         // tests here
-        const parsing = C.letters.then(F.returns).parse(stream.ofString("some2Letters"), 0);
+        const parsing = C.letters.then(F.eos).parse(stream.ofString("some2Letters"), 0);
         test.equal(parsing.isAccepted(), false, 'should be accepted.');
         test.done();
     },
@@ -627,8 +627,12 @@ export default {
         const string = '(Hello)';
         const expected = ['(', 'Hello', ')'];
 
-        const parsing = parser
-            .sequence('(', C.charNotIn(')').rep().map(v=>v.join('')), ')')
+        const parsing = F
+            .sequence(
+                C.char('('),
+                C.charNotIn(')').rep().map(v=>v.join('')),
+                C.char(')')
+            )
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
@@ -640,8 +644,10 @@ export default {
         const string = '2+2';
         const expected = [2, '+', 2];
 
-        const parsing = parser
-            .sequence(N.numberLiteral, '+', N.numberLiteral)
+        const parsing = F.sequence(
+                N.numberLiteral,
+                C.char('+'),
+                N.numberLiteral)
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
@@ -690,7 +696,7 @@ export default {
         const string = 'hello';
         const expected = ['h','e','l','l'];
 
-        const parsing = parser.subStream(4)
+        const parsing = F.subStream(4)
                 .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
@@ -704,7 +710,7 @@ export default {
         const string = 'hello';
         const expected = 'hell';
 
-        const parsing = parser.subString(4)
+        const parsing = C.subString(4)
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
