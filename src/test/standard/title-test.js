@@ -13,7 +13,6 @@ function testLine(line){
     let parsing = parser.parse(line);
     value = parsing.value;
     accepted = parsing.isAccepted();
-    console.info('parsing', parsing, '\n');
 }
 
 export default {

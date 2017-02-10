@@ -46,8 +46,8 @@ function email(){
     let illegalCharSet1=' @\u00A0\n\t'
     let illegalCharSet2=' @\u00A0\n\t.'
 
-    return inQuote().debug("inQuote")
-        .or(C.charNotIn(illegalCharSet1).debug("normalChar")).rep()  // this mean:   repeat(inQuote or anyCharacter)
+    return inQuote()
+        .or(C.charNotIn(illegalCharSet1)).rep()  // this mean:   repeat(inQuote or anyCharacter)
         .then(C.char('@'))
         .then(C.charNotIn(illegalCharSet2).rep() )
         .then(C.char('.'))

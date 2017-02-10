@@ -1,6 +1,6 @@
 import Token from '../../lib/standard/token';
 import stream from '../../lib/stream/index';
-import P from '../../lib/parsec/parser';
+import {F,C,N} from '../../lib/parsec/index';
 
 let value = undefined;
 let accepted = undefined;
@@ -12,7 +12,7 @@ function testAParser(parser, string){
     value = parsing.value;
     accepted = parsing.isAccepted();
 
-    console.info('parsing', parsing, '\n');
+    
 }
 
 export default {

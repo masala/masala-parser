@@ -12,7 +12,6 @@ function testLine(line) {
     const parsing = Parser.parse(line);
     value = parsing.value;
     accepted = parsing.isAccepted();
-    console.info('parsing', parsing, '\n\n');
 }
 
 
