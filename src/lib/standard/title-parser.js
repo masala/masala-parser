@@ -8,7 +8,7 @@
  * Limits and axiomes
  * A \n in the markdown source ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar}
  */
-import P from '../parsec/parser';
+import {F,C} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 import T from './token';
 

@@ -7,7 +7,7 @@
  * text can be "simple" text; bold, italic or a mix (sequence) of those
  * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (F.eos())
  */
-import P from '../parsec/parser';
+import {F,C} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 import T from './token';
 

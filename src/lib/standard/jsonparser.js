@@ -6,10 +6,9 @@
  * Licensed under the LGPL2 license.
  */
 
-import parser from '../parsec/parser';
 import genlex from '../genlex/genlex.js';
 import token from '../genlex/token';
-
+import {F} from '../../lib/parsec/index';
 
 //
 // Facilities
@@ -62,7 +61,7 @@ export default {
         var keywords = ["null", "false", "true", "{", "}", "[", "]", ":", ","],
             tokenizer = genlex.generator(keywords).tokenBetweenSpaces(token.builder);
 
-        return tokenizer.chain(expr().thenLeft(F.returns)).parse(source, 0);
+        return tokenizer.chain(expr().thenLeft(F.eos)).parse(source, 0);
     }
 };
 

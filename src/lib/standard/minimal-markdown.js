@@ -6,8 +6,8 @@
  * Licensed under the LGPL2 license.
  */
 
-import P from '../parsec/parser';
 
+import {F,C} from '../../lib/parsec/index';
 //
 // Facilities
 //

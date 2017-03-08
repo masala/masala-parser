@@ -2,7 +2,7 @@
  * Created by Simon on 03/01/2017.
  */
 
-import P from '../parsec/parser';
+import {F,C,N} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';
 

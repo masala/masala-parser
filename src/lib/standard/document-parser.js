@@ -5,7 +5,6 @@
 import Stream from '../../lib/stream/index';
 import CombinedParser from '../../lib/standard/combined-parser';
 
-import fs from 'fs'
 
 function document(){
     return CombinedParser.validLine()

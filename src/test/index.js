@@ -34,9 +34,9 @@ export {
     genlexTest, tokenTest, tokenizerTest,
     standardTokenTest,
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
-    parserStreamTest, parserResponseTest
-    /*jsonParseTest, jsonSampleTest,
-    titleTest, textTest, bulletParser,codeLineParser, combinedParser, documentParserTest,
+    parserStreamTest, parserResponseTest,
+    jsonParseTest, jsonSampleTest,
+    titleTest, textTest, bulletParser,codeLineParser, combinedParser, documentParserTest
     
-    */
+    
 }
