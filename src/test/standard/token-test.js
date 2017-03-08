@@ -1,6 +1,6 @@
 import Token from '../../lib/standard/token';
 import stream from '../../lib/stream/index';
-import P from '../../lib/parsec/parser';
+import {F,C,N} from '../../lib/parsec/index';
 
 let value = undefined;
 let accepted = undefined;
@@ -12,7 +12,7 @@ function testAParser(parser, string){
     value = parsing.value;
     accepted = parsing.isAccepted();
 
-    console.info('parsing', parsing, '\n');
+    
 }
 
 export default {
@@ -73,10 +73,10 @@ export default {
 
         // tests here
         let parser = Token.rawTextUntilChar('*')
-            .thenLeft(P.char('*'))
+            .thenLeft(C.char('*'))
             .thenLeft(Token.blank())
             .then(Token.rawTextUntilChar('-'))
-            .thenLeft(P.char('-'))
+            .thenLeft(C.char('-'))
             .then(Token.eol())
             .flattenDeep()
         testAParser(parser, 'toto* tata-\n');
@@ -155,7 +155,7 @@ export default {
 
     'test email chain': function (test) {
         const testString = 'simon@holy-python.com δοκιμή@παράδειγμα.δοκιμή'
-        testAParser(Token.email().thenLeft(P.char(' ')).then(Token.email()) , testString);
+        testAParser(Token.email().thenLeft(C.char(' ')).then(Token.email()) , testString);
         let expected = [{email:'simon@holy-python.com'}, {email:'δοκιμή@παράδειγμα.δοκιμή'}]
         test.deepEqual(value, expected, 'error parsing email chain' )
         test.done();

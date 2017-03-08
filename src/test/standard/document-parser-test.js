@@ -11,7 +11,6 @@ let value = undefined;
 function testBlock(block) {
     const parsing = Parser.parse(block);
     value = parsing.value;
-    console.info('parsing', parsing, '\n\n');
 }
 
 const standardParagraph = `Their job is to destroy

@@ -2,7 +2,7 @@
  * Created by Simon on 03/01/2017.
  */
 
-import P from '../parsec/parser';
+import {F,C,N} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 import T from '../../lib/standard/token';
 
@@ -10,7 +10,7 @@ import T from '../../lib/standard/token';
  known issue: non-breakable spaces are not recognised
   */
 function codeLine(){
-    return P.char('\n').optrep()
+    return C.char('\n').optrep()
         .thenRight(T.fourSpacesBlock())
         .thenRight(T.fourSpacesBlock())
         .thenRight(T.rawTextUntilChar('\n', true))

@@ -15,6 +15,7 @@ import standard from './standard/index'
 import stream from './stream/index';
 
 export {
-data, genlex, parsec, standard, stream, parser
+    data, genlex, parsec, standard, stream, parser
 }
+
 

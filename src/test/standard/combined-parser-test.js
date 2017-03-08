@@ -12,7 +12,6 @@ let value = undefined;
 function testLine(line){
     let parsing = Parser.parse(line);
     value = parsing.value;
-    console.info('parsing', parsing, '\n\n');
 }
 
 export default {

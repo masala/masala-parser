@@ -2,7 +2,7 @@
  * Created by Simon on 24/12/2016.
  */
 
-import P from '../parsec/parser';
+import {F,C} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 import textParser from './text-parser';
 import T from '../../lib/standard/token';
@@ -11,11 +11,11 @@ import T from '../../lib/standard/token';
 
 
 function stop(){
-    return P.eos.or(P.charIn('\n*`'));
+    return F.eos.or(C.charIn('\n*`'));
 }
 
 function pureText(){
-    return P.not(stop()).rep()
+    return F.not(stop()).rep()
         .map(characters=>characters.join(''))
 }
 
@@ -24,25 +24,25 @@ function formattedSequence(){
 }
 
 function bulletLv1(){
-    return P.char('\n').optrep()
-        .then(P.charIn('*-'))  //first character of a bullet is  * or -
-        .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
+    return C.char('\n').optrep()
+        .then(C.charIn('*-'))  //first character of a bullet is  * or -
+        .then(C.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
         .map(someText => ({bullet:{level:1, content: someText }}  ))
 }
 
 function bulletLv2(){
-    return P.char('\n').optrep()
+    return C.char('\n').optrep()
         .then(T.fourSpacesBlock())
-        .then(P.char(' ').optrep())  //careful. This will accept 8 space. therefore the code-parser must have higher priority
-        .then(P.charIn('*-'))       //first character of a bullet is  * or -
-        .then(P.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
+        .then(C.char(' ').optrep())  //careful. This will accept 8 space. therefore the code-parser must have higher priority
+        .then(C.charIn('*-'))       //first character of a bullet is  * or -
+        .then(C.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
         .map(someText => ({bullet:{level:2, content: someText }}  ))
 }
 
 function bullet(){
-    return P.try(bulletLv2())
+    return F.try(bulletLv2())
         .or(bulletLv1())
 }
 

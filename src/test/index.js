@@ -33,9 +33,10 @@ export {
     optionTest, tryTest, streamsTest, bufferedStreamsTest,
     genlexTest, tokenTest, tokenizerTest,
     standardTokenTest,
-    jsonParseTest, jsonSampleTest,
-    titleTest, textTest, bulletParser,codeLineParser, combinedParser, documentParserTest,
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
-    parserStreamTest, parserResponseTest
+    parserStreamTest, parserResponseTest,
+    jsonParseTest, jsonSampleTest,
+    titleTest, textTest, bulletParser,codeLineParser, combinedParser, documentParserTest
+    
+    
 }
- 

@@ -1,5 +1,6 @@
 import stream from '../../lib/stream/index';
-import parser from '../../lib/parsec/parser';
+import C from '../../lib/parsec/chars-bundle';
+import N from '../../lib/parsec/numbers-bundle';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -29,7 +30,7 @@ export default {
   'endOfStream for empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
+    var p = C.char(' ').optrep().thenRight(N.numberLiteral);
     test.ok(stream.ofParser(p, stream.ofString("")).endOfStream(0), 
             'should be endOfStream.');
     test.done();
@@ -38,7 +39,7 @@ export default {
   'endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
+    var p = C.char(' ').optrep().thenRight(N.numberLiteral);
     test.ok(stream.ofParser(p, stream.ofString("1")).endOfStream(1), 
             'should be endOfStream.');
     test.done();
@@ -47,7 +48,7 @@ export default {
   'no endOfStream for non empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
+    var p = C.char(' ').optrep().thenRight(N.numberLiteral);
     test.equal(stream.ofParser(p, stream.ofString("1")).endOfStream(0),
                false,
                'should be endOfStream.');
@@ -57,7 +58,7 @@ export default {
   'get from stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
+    var p = C.char(' ').optrep().thenRight(N.numberLiteral);
     test.equal(stream.ofParser(p, stream.ofString("1")).get(0).isSuccess(), 
                true,
                'should be a success.');
@@ -67,7 +68,7 @@ export default {
   'do not get from empty stream': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
+    var p = C.char(' ').optrep().thenRight(N.numberLiteral);
     test.equal(stream.ofParser(p, stream.ofString("1")).get(1).isSuccess(), 
                false,
                'should be a failure.');
@@ -77,7 +78,7 @@ export default {
   'get from stream numberLiteral 123': function(test) {
     test.expect(1);
     // tests here  
-    var p = parser.char(' ').optrep().thenRight(parser.numberLiteral);
+    var p = C.char(' ').optrep().thenRight(N.numberLiteral);
     test.equal(stream.ofParser(p, stream.ofString("123")).get(0).success(), 
                123,
                'should be a 123.');
