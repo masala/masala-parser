@@ -4,7 +4,7 @@
  */
 
 
-import mdParser from '../../lib/standard/markdown/markdown-parser';
+import mdParser from '../../../lib/standard/markdown/markdown-parser';
 
 
 let value = undefined;

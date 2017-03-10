@@ -2,7 +2,7 @@
  * Created by Simon on 25/12/2016.
  */
 
-import Parser from '../../lib/standard/markdown/bullet-parser';
+import Parser from '../../../lib/standard/markdown/bullet-parser';
 
 let value = undefined;
 let accepted = undefined;

@@ -1,6 +1,6 @@
-import Token from '../../lib/standard/markdown/token';
-import stream from '../../lib/stream/index';
-import {F,C,N} from '../../lib/parsec/index';
+import Token from '../../../lib/standard/markdown/token';
+import stream from '../../../lib/stream/index';
+import {F,C,N} from '../../../lib/parsec/index';
 
 let value = undefined;
 let accepted = undefined;

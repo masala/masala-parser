@@ -2,7 +2,7 @@
  * Created by Simon on 03/01/2017.
  */
 
-import Parser from '../../lib/standard/markdown/code-line-parser';
+import Parser from '../../../lib/standard/markdown/code-line-parser';
 
 let value = undefined;
 let accepted = undefined;

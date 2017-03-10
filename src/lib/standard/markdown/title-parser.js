@@ -72,8 +72,10 @@ function parseTitle( line, offset=0){
 
 
 export default {
+    
+    titleLine,
+    titleSharp,
     title,
-
     parse(line){
         return parseTitle(line,0);
     }

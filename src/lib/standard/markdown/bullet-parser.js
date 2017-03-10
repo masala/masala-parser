@@ -51,6 +51,8 @@ function parseBullet( line, offset=0){
 }
 
 export default {
+    bulletLv1,
+    bulletLv2,
     bullet,
 
     parse(line){

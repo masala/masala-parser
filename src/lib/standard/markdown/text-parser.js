@@ -17,7 +17,8 @@ function stop(){
 
 function pureText(){
     return F.not(stop()).rep()
-        .map(characters=>characters.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
+        //  ['a','\n','b'] -> 'a b'
+        .map(characters=>characters.join('').replace(/\n/g, " "));
 }
 
 function italic(pureTextParser){
@@ -70,6 +71,12 @@ function parseText( line, offset=0){
 
 
 export default {
+    stop,
+    pureText,
+    italic,
+    bold,
+    code,
+    text,
     formattedSequence,
     formattedParagraph,
     parse(line){

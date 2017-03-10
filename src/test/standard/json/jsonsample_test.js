@@ -1,6 +1,6 @@
 import  fs from 'fs';
-import jsonparser from '../../lib/standard/json/jsonparser'
-import stream from '../../lib/stream/index';
+import jsonparser from '../../../lib/standard/json/jsonparser'
+import stream from '../../../lib/stream/index';
 
 /*
   ======== A Handy Little Nodeunit Reference ========

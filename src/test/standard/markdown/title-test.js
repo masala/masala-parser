@@ -2,7 +2,7 @@
  * Created by Simon on 14/12/2016.
  */
 
-import Parser from '../../lib/standard/markdown/title-parser';
+import Parser from '../../../lib/standard/markdown/title-parser';
 
 
 let value = undefined;
