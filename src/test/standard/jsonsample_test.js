@@ -1,5 +1,5 @@
 import  fs from 'fs';
-import jsonparser from '../../lib/standard/jsonparser'
+import jsonparser from '../../lib/standard/json/jsonparser'
 import stream from '../../lib/stream/index';
 
 /*

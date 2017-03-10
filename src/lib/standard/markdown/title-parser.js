@@ -8,8 +8,8 @@
  * Limits and axiomes
  * A \n in the markdown source ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar}
  */
-import {F,C} from '../../lib/parsec/index';
-import stream from '../../lib/stream/index';
+import {F,C} from '../../parsec/index';
+import stream from '../../stream/index';
 import T from './token';
 
 function sharps(){
@@ -35,7 +35,7 @@ function minuses(){
         .thenReturns(2); // this mean a level 2 title
 }
 
-function titleStyle1(){
+function titleSharp(){
     return sharps()
         .thenLeft(white())
         .then(T.rawTextUntilChar('\n'))
@@ -48,7 +48,7 @@ function titleStyle1(){
         }))
 }
 
-function titleAlt(){
+function titleLine(){
     return T.blank()
         .thenRight( T.rawTextUntilChar('\n')
         .thenLeft(T.eol())
@@ -63,7 +63,7 @@ function titleAlt(){
 
 
 function title(){
-    return titleStyle1().or(titleAlt())
+    return titleSharp().or(titleLine())
 }
 
 function parseTitle( line, offset=0){

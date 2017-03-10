@@ -2,7 +2,7 @@
  * Created by Simon on 14/12/2016.
  */
 
-import Parser from '../../lib/standard/text-parser';
+import Parser from '../../lib/standard/markdown/text-parser';
 
 let value = undefined;
 let accepted = undefined;

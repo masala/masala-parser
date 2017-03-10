@@ -6,11 +6,9 @@
  * Licensed under the LGPL2 license.
  */
 
-import jsonParser from './jsonparser';
-import minimalMarkdown from './minimal-markdown';
-import markdownDocument from './document-parser';
-import token from './token';
+import jsonParser from './json/jsonparser';
+import markdownDocument from './markdown/markdown-parser';
 
 export default{
-    jsonParser, minimalMarkdown, markdownDocument, token
+    jsonParser,  markdownDocument
 }

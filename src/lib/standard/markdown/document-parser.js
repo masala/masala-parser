@@ -2,14 +2,11 @@
  * Created by Simon on 15/12/2016.
  */
 
-import Stream from '../../lib/stream/index';
-import CombinedParser from '../../lib/standard/combined-parser';
+import Stream from '../../stream/index';
 
 
-function document(){
-    return CombinedParser.validLine()
-        .rep()
-}
+
+
 
 function parseDocument( string, offset=0){
     return document().parse(Stream.ofString(string), offset)
@@ -17,8 +14,9 @@ function parseDocument( string, offset=0){
 
 
 export default {
-    document,
+  //  document,
 
+    // TODO: not exact, because we always need a stream here
     parse(stream){
         return parseDocument(stream,0);
     }

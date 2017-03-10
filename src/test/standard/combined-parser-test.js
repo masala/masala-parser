@@ -4,13 +4,14 @@
  */
 
 
-import Parser from '../../lib/standard/combined-parser';
+import mdParser from '../../lib/standard/markdown/markdown-parser';
+
 
 let value = undefined;
 
 
 function testLine(line){
-    let parsing = Parser.parse(line);
+    let parsing = mdParser.parseLine(line);
     value = parsing.value;
 }
 
@@ -130,7 +131,7 @@ export default {
     'single \\n must be translated as space': function (test) {
         testLine('  *italic* text\n**then bold** ');
         let expected={paragraph:[{italic:'italic'},{text:' text '}
-            ,{bold:'then bold'}, {text:' '} ]}
+            ,{bold:'then bold'}, {text:' '} ]};
         test.deepEqual(expected, value );
         test.done();
     },
@@ -139,14 +140,14 @@ export default {
     'test normal bullet': function (test) {
         const line = `* This is a bullet`;
         testLine(line);
-        test.deepEqual({ bullet: { level: 1, content: [{text:'This is a bullet'}] } }, value,'probleme test:test normal bullet');
+        test.deepEqual({ bullet: { level: 1, content: [{text:'This is a bullet'}] } }, value,'problem test:test normal bullet');
         test.done();
     },
 
-    'test bullet tordue': function (test) {
+    'test complex bullet': function (test) {
         const line = "*    This is a bullet \n  ";
         testLine(line);
-        test.deepEqual({ bullet: { level: 1, content: [{text:'   This is a bullet '}] } }, value,'probleme test:test bullet tortue');
+        test.deepEqual({ bullet: { level: 1, content: [{text:'   This is a bullet '}] } }, value,'problem test:test complex bullet ');
         test.done();
     },
 

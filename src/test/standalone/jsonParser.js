@@ -7,7 +7,7 @@ function main(process) {
         }
 
         var stream = require('../../lib/stream/index.js'),
-            jsonparser = require('../../lib/standard/jsonparser.js'),
+            jsonparser = require('../../lib/standard/json/jsonparser.js'),
             result = jsonparser.parse(stream.ofString(data.toString()));
         
         

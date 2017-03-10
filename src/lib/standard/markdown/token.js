@@ -1,4 +1,4 @@
-import C from '../../lib/parsec/chars-bundle';
+import C from '../../parsec/chars-bundle';
 
 
 // resolve meanningles characters as an empty string
@@ -41,6 +41,8 @@ function inQuote(){
         .then(C.char('"'))
 }
 
+
+// TODO move to a ExtractorBundle or EmailBundle
 // accept simon@gmail.com, but also  simon"le gr@nd"@gmail.com
 function email(){
     let illegalCharSet1=' @\u00A0\n\t'

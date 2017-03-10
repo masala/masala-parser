@@ -2,14 +2,15 @@
  * Created by Nicolas Zozol on 15/12/2016.
  */
 
-import Parser from '../../lib/standard/document-parser';
+import mdParser from '../../lib/standard/markdown/markdown-parser';
+import stream from '../../lib/stream/index';
 import path from 'path';
 
 let value = undefined;
 
 
 function testBlock(block) {
-    const parsing = Parser.parse(block);
+    const parsing = mdParser.parse(stream.ofString(block));
     value = parsing.value;
 }
 

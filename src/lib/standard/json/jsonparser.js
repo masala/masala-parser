@@ -6,9 +6,9 @@
  * Licensed under the LGPL2 license.
  */
 
-import genlex from '../genlex/genlex.js';
-import token from '../genlex/token';
-import {F} from '../../lib/parsec/index';
+import genlex from '../../genlex/genlex.js';
+import token from '../../genlex/token';
+import {F} from '../../parsec/index';
 
 //
 // Facilities
