@@ -2,7 +2,7 @@
  * Created by Simon on 25/12/2016.
  */
 
-import Parser from '../../lib/standard/bullet-parser';
+import Parser from '../../../lib/standard/markdown/bullet-parser';
 
 let value = undefined;
 let accepted = undefined;
@@ -35,11 +35,11 @@ export default {
                 level: 1,
                 content: [{text: 'This is a bullet'}]
             }
-        }, value, 'probleme test:test normal bullet');
+        }, value, 'problem test:test normal bullet');
         test.done();
     },
 
-    'test bullet niveau 2': function (test) {
+    'test bullet level 2': function (test) {
         const line = "      * This is a lvl2 bullet \n  ";
         testLine(line);
         test.deepEqual({
@@ -47,11 +47,11 @@ export default {
                 level: 2,
                 content: [{text: 'This is a lvl2 bullet '}]
             }
-        }, value, 'probleme test:test bullet Lvl2');
+        }, value, 'problem test:test bullet Lvl2');
         test.done();
     },
 
-    'test bullet niveau 2': function (test) {
+    'test bullet level 2 mix tab spaces': function (test) {
         const line = "\t  * This is another lvl2 bullet \n  ";
         testLine(line);
         test.deepEqual({
@@ -59,7 +59,7 @@ export default {
                 level: 2,
                 content: [{text: 'This is another lvl2 bullet '}]
             }
-        }, value, 'probleme test:test bullet Lvl2');
+        }, value, 'problem test:test bullet Lvl2');
         test.done();
     },
 
@@ -74,9 +74,9 @@ export default {
                         , {bold: "bold characters"}]
                 }
             }
-            , value, 'probleme test:test bullet et format');
+            , value, 'problem test:test bullet et format');
         test.done();
-    },
+    }
 
 
 }

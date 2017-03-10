@@ -2,9 +2,9 @@
  * Created by Simon on 03/01/2017.
  */
 
-import {F,C,N} from '../../lib/parsec/index';
-import stream from '../../lib/stream/index';
-import T from '../../lib/standard/token';
+import {F,C,N} from '../../parsec/index';
+import stream from '../../stream/index';
+import T from './token';
 
 /* TODO mix spaces &  tab bug  "  \t  " will not be accepted
  known issue: non-breakable spaces are not recognised

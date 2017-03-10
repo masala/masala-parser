@@ -7,8 +7,8 @@
  * text can be "simple" text; bold, italic or a mix (sequence) of those
  * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (F.eos())
  */
-import {F,C} from '../../lib/parsec/index';
-import stream from '../../lib/stream/index';
+import {F,C} from '../../parsec/index';
+import stream from '../../stream/index';
 import T from './token';
 
 function stop(){
@@ -17,7 +17,8 @@ function stop(){
 
 function pureText(){
     return F.not(stop()).rep()
-        .map(characters=>characters.join('').replace(/\n/g, " "));//  ['a','\n','b'] -> 'a b'
+        //  ['a','\n','b'] -> 'a b'
+        .map(characters=>characters.join('').replace(/\n/g, " "));
 }
 
 function italic(pureTextParser){
@@ -70,6 +71,12 @@ function parseText( line, offset=0){
 
 
 export default {
+    stop,
+    pureText,
+    italic,
+    bold,
+    code,
+    text,
     formattedSequence,
     formattedParagraph,
     parse(line){

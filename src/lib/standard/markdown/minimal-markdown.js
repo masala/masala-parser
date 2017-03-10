@@ -6,8 +6,8 @@
  * Licensed under the LGPL2 license.
  */
 
-
-import {F,C} from '../../lib/parsec/index';
+// TODO  Delete it: old stuff
+import {F,C} from '../../parsec/index';
 //
 // Facilities
 //

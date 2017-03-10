@@ -2,7 +2,7 @@
  * Created by Simon on 14/12/2016.
  */
 
-import Parser from '../../lib/standard/title-parser';
+import Parser from '../../../lib/standard/markdown/title-parser';
 
 
 let value = undefined;
@@ -101,12 +101,12 @@ export default {
         test.done();
     },
 
-    'Sharps not folowed by space': function(test) {
+    'Sharps not followed by space': function(test) {
         test.expect(1);
 
         testLine('#Not tile');
 
-        test.ok(!accepted, 'Sharp not folloed by space shall not be parsed');
+        test.ok(!accepted, 'Sharp not followed by space shall not be parsed');
         test.done();
     },
 

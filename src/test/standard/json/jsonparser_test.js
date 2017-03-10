@@ -1,5 +1,5 @@
-import stream from '../../lib/stream/index';
-import jsonparser from '../../lib/standard/jsonparser';
+import stream from '../../../lib/stream/index';
+import jsonparser from '../../../lib/standard/json/jsonparser';
 
 
 /*
