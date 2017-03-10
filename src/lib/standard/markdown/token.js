@@ -1,5 +1,4 @@
-import C from '../../parsec/chars-bundle';
-
+import {F,C} from '../../parsec/index';
 
 // resolve meanningles characters as an empty string
 // also accept an empty string
@@ -19,8 +18,18 @@ function rawTextUntilChar(charList, allowVoid = false) {
     }
 }
 
+function rawTextUntil(stop) {
+
+        return F.not(stop).rep()
+            .map(characters => characters.join(''))
+
+}
+
+
+
+
 function eol() {
-    return C.char('\n');
+    return C.char('\n').or(C.string('\r\n'));
 }
 
 //A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
@@ -61,6 +70,7 @@ function email(){
 export default {
     blank,
     rawTextUntilChar,
+    rawTextUntil,
     eol,
     lineFeed,
     fourSpacesBlock,
