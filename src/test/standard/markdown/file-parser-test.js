@@ -13,8 +13,7 @@ function testFile(sample) {
     const expectedFileName = path.join(__dirname, `samples/${sample}-expected.json`);
     var sampleContent = fs.readFileSync(sampleFileName).toString();
     var sampleExpected = fs.readFileSync(expectedFileName).toString();
-
-    console.info('sample: ', sampleContent, sampleExpected);
+        
     const parsing = mdParser.parse(stream.ofString(sampleContent));
     value = parsing.value;
     expected = JSON.parse(sampleExpected);
@@ -28,8 +27,14 @@ export default {
         done();
     },
         
-    'parseFile test': function (test) {
+    'parseTrivial test': function (test) {
         testFile('trivial');
+        test.deepEqual(value, expected, 'bad value for file "trivial-test.md"');
+        test.done();
+    },
+
+    'parseParagraph test': function (test) {
+        testFile('paragraph');
         test.deepEqual(value, expected, 'bad value for file "trivial-test.md"');
         test.done();
     }
