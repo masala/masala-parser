@@ -14,4 +14,8 @@ const parsing = numberParser.parse(stream);
 // If the parser reached the end of stream (P.eos) without rejection, parsing is accepted
 console.info(parsing.isAccepted());
 // The parser has a 12 value inside the monoid
-console.log(parsing.value===12);
+if (parsing.value !== 12){
+    throw "Illegal value parsed in postpublish integration test";
+}else{
+    console.log('Post publish Integration SUCCESS ! :)');
+}
