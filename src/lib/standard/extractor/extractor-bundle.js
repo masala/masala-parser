@@ -72,8 +72,9 @@ export default class ExtractorBundle {
             initial)
     }
 
-    wordsIn(array){
-        // words and spaces
+    wordsIn(array, keepSpaces=true){
+        return F.try(this.stringIn(array).or(this._wordSeparators()))
+            .rep();
     }
 
 

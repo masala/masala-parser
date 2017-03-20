@@ -98,6 +98,18 @@ export default {
         test.ok(typeof value==='string');
         test.ok(value==='James');
         test.done();
+    },
+
+    'test wordsIn' : function(test){
+        let line = stream.ofString('James Bond by Ian Fleming');
+
+        const x = new X();
+        const combinator = x.
+                wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming']);
+        const value = combinator.parse(line).value;
+        console.log(value);
+        test.ok(value==='James');
+        test.done();
     }
 
 
