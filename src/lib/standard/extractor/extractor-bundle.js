@@ -7,17 +7,21 @@ import {stream, F, C, N} from '../../index';
 export default class ExtractorBundle {
 
     constructor(options) {
-        this.spacesCharacters=' \n';
-        this.letters=C.letters;
-        if (options){
-            Object.assign(this, options);
+        this.options ={
+            spacesCharacters:' \n',
+            wordSeparators:C.charIn(' \n:-,;'),
+            letters : C.letters
+        };
+
+        if (options && typeof options ==='object'){
+            Object.assign(this.options, options);
         }
         
     }
 
 
     spaces() {
-        return C.charIn(this.spacesCharacters).rep();
+        return C.charIn(this.options.spacesCharacters).rep();
     }
 
 
@@ -38,19 +42,17 @@ export default class ExtractorBundle {
             // thenReturns word
             // or fail
         }
-        return this.letters.rep();
+        return this.options.letters.rep();
     }
 
-    wordSeparators(moreSeparators) {
+    _wordSeparators(moreSeparators) {
         //TODO : replace second element by moreSeparators
-        return this.spaces().or(C.charIn(' \n:-,;'));
+        return this.spaces().or(this.options.wordSeparators);
     }
-    
+
     words() {
-        return F.try(this.letters.or(this.wordSeparators())).rep();
+        return F.try(this.options.letters.or(this._wordSeparators())).rep();
     }
-
-
 
     stringIn(array) {
 
