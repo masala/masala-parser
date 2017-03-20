@@ -8,6 +8,7 @@ export default class ExtractorBundle {
 
     constructor(options) {
         this.spacesCharacters=' \n';
+        this.letters=C.letters;
         if (options){
             Object.assign(this, options);
         }
@@ -20,23 +21,36 @@ export default class ExtractorBundle {
     }
 
 
-    wordSeparators(moreSeparators) {
-        //TODO : replace second element by moreSeparators
-        return this.spaces().or(C.charIn(' \n:-,;'));
-    }
 
+
+    // returns a types number
     number() {
         return N.digit.rep().map(v=>parseInt(v.join('')));
     }
 
-    // avoid to join numbers
-    dateDigits() {
+    // returns a string representing numbers
+    digits() {
         return N.digit.rep().map(v=>v.join(''));
     }
 
-    simpleWords() {
-        return F.try(C.letters.or(this.wordSeparators())).rep();
+    word(which){ //parser, string or array of string
+        if (which && typeof which ==='string'){
+            // thenReturns word
+            // or fail
+        }
+        return this.letters.rep();
     }
+
+    wordSeparators(moreSeparators) {
+        //TODO : replace second element by moreSeparators
+        return this.spaces().or(C.charIn(' \n:-,;'));
+    }
+    
+    words() {
+        return F.try(this.letters.or(this.wordSeparators())).rep();
+    }
+
+
 
     stringIn(array) {
 
@@ -56,7 +70,7 @@ export default class ExtractorBundle {
     }
 
 
-    wordSequence(stop) {
+    _wordSequence(stop) {
         //return P.any.rep();
         return F.not(stop);
     }
@@ -64,9 +78,9 @@ export default class ExtractorBundle {
 
     wordsUntil(stop) {
         return F.try(
-            this.wordSequence(stop).rep().then(F.eos).thenReturns(undefined)
+            this._wordSequence(stop).rep().then(F.eos).thenReturns(undefined)
         ).or(
-            this.wordSequence(stop).rep().map(chars=>chars.join(''))
+            this._wordSequence(stop).rep().map(chars=>chars.join(''))
             )
             .filter(v=> v !== undefined);
     }
