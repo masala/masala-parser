@@ -21,7 +21,8 @@ export default class ExtractorBundle {
 
 
     spaces() {
-        return C.charIn(this.options.spacesCharacters).rep();
+        return C.charIn(this.options.spacesCharacters).rep()
+            .map(spaces => spaces.join(''));
     }
 
 
@@ -69,6 +70,10 @@ export default class ExtractorBundle {
         const workArray = array.slice(1);
         return workArray.reduce((accu, next)=>accu.or(tryString(next)),
             initial)
+    }
+
+    wordsIn(array){
+        // words and spaces
     }
 
 

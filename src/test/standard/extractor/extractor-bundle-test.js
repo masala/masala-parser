@@ -76,6 +76,28 @@ export default {
         const value = combinator.parse(line).value[0];
         test.equals(value, 4351);
         test.done();
+    },
+
+    'test words' : function(test){
+        let line = stream.ofString('The James Bond series, by writer Ian Fleming');
+
+        const x = new X();
+        const combinator = x.words();
+        const value = combinator.parse(line).value;
+        test.ok(value[1]===' ');
+        test.ok(value.includes('Bond'));
+        test.done();
+    },
+
+    'test stringIn' : function(test){
+        let line = stream.ofString('James Bond');
+
+        const x = new X();
+        const combinator = x.stringIn(['The', 'James', 'Bond', 'series']);
+        const value = combinator.parse(line).value;
+        test.ok(typeof value==='string');
+        test.ok(value==='James');
+        test.done();
     }
 
 
