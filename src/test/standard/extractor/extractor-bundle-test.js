@@ -65,11 +65,11 @@ export default {
     'test single word': function (test) {
 
         let line = stream.ofString('10FF-hexadecimal');
-        const hexadecimal=C.charIn('0123456789ABCDEF')
+        const hexadecimal = C.charIn('0123456789ABCDEF')
             .rep().map(values=>values.join(''))
             .map(x => parseInt(x, 16));
 
-        const x = new X({letters:hexadecimal});
+        const x = new X({letters: hexadecimal});
         const combinator = x.word()
             .thenLeft(C.char('-'))
             .thenLeft(C.string('hexadecimal'));
@@ -80,11 +80,11 @@ export default {
     'single word with bad letters should fail': function (test) {
 
         let line = stream.ofString('classicWord-notHexadecimal');
-        const hexadecimal=C.charIn('0123456789ABCDEF')
+        const hexadecimal = C.charIn('0123456789ABCDEF')
             .rep().map(values=>values.join(''))
             .map(x => parseInt(x, 16));
 
-        const x = new X({letters:hexadecimal});
+        const x = new X({letters: hexadecimal});
         const combinator = x.word()
             .thenLeft(C.char('-'))
             .thenLeft(C.string('notHexadecimal'));
@@ -93,34 +93,33 @@ export default {
         test.done();
     },
 
-    'test words' : function(test){
+    'test words': function (test) {
         let line = stream.ofString('The James Bond series, by writer Ian Fleming');
 
         const x = new X();
         const combinator = x.words();
         const value = combinator.parse(line).value;
-        test.ok(value[1]===' ');
+        test.ok(value[1] === ' ');
         test.ok(value.includes('Bond'));
         test.done();
     },
 
-    'test stringIn' : function(test){
+    'test stringIn': function (test) {
         let line = stream.ofString('James Bond');
 
         const x = new X();
         const combinator = x.stringIn(['The', 'James', 'Bond', 'series']);
         const value = combinator.parse(line).value;
-        test.ok(typeof value==='string');
-        test.ok(value==='James');
+        test.ok(typeof value === 'string');
+        test.ok(value === 'James');
         test.done();
     },
 
-    'test wordsIn' : function(test){
+    'test wordsIn': function (test) {
         let line = stream.ofString('James Bond by Ian Fleming');
 
         const x = new X();
-        const combinator = x.
-                wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], true);
+        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], true);
         const value = combinator.parse(line).value;
         test.ok(value.length === 9);
         test.ok(value.includes('James'));
@@ -129,12 +128,11 @@ export default {
         test.done();
     },
 
-    'test wordsIn keeping spaces' : function(test){
+    'test wordsIn keeping spaces': function (test) {
         let line = stream.ofString('James Bond by Ian Fleming');
 
         const x = new X();
-        const combinator = x.
-        wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
+        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
         test.ok(value.length === 5);
         test.ok(value.includes('James'));
@@ -143,12 +141,11 @@ export default {
         test.done();
     },
 
-    'test wordsIn keeping spaces with alt spaces' : function(test){
+    'test wordsIn keeping spaces with alt spaces': function (test) {
         let line = stream.ofString('James%Bond%by Ian=Fleming');
 
-        const x = new X({moreSeparators:'%='});
-        const combinator = x.
-        wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
+        const x = new X({moreSeparators: '%='});
+        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
         test.ok(value.length === 5);
         test.ok(value.includes('James'));
@@ -157,13 +154,12 @@ export default {
         test.done();
     },
 
-    'test wordsIn with custom spaces' : function(test){
+    'test wordsIn with custom spaces': function (test) {
         const str = 'JamesSPACEBondSPACEbySPACEIanSPACEFlemingSPACESPACE';
         let line = stream.ofString(str);
 
-        const x = new X({wordSeparators:C.string('SPACE')});
-        const combinator = x.
-        wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
+        const x = new X({wordSeparators: C.string('SPACE')});
+        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
         test.ok(value.length === 5);
         test.ok(value.includes('James'));
@@ -171,20 +167,22 @@ export default {
         test.ok(value.includes('Fleming'));
         test.done();
     },
-    'test wordsIn with both custom spaces and more Sep' : function(test){
+    'test wordsIn with both custom spaces and more Sep': function (test) {
         const str = 'James=BondSPACEbySPACEIanSPACEFlemingSPACESPACE';
         let line = stream.ofString(str);
 
         let found = false;
-        const original =console.warn;
-        console.warn = ()=>{found=true};
+        const original = console.warn;
+        console.warn = ()=> {
+            found = true
+        };
         const x = new X({
-            wordSeparators:C.string('SPACE'),
-            moreSeparators:'%='});
+            wordSeparators: C.string('SPACE'),
+            moreSeparators: '%='
+        });
 
 
-        const combinator = x.
-            wordsIn(['James=Bond', 'by', 'Ian', 'Fleming'], false);
+        const combinator = x.wordsIn(['James=Bond', 'by', 'Ian', 'Fleming'], false);
 
 
         const value = combinator.parse(line).value;
@@ -195,26 +193,17 @@ export default {
         test.ok(value.includes('Fleming'));
         test.done();
     },
+    'test wordsUntil': function (test) {
 
+        const line = stream.ofString('I write until James appears');
 
+        const x = new X();
+        const combinator = x.wordsUntil(C.string('James')).thenLeft(F.any);
+        const value = combinator.parse(line).value;
 
-
-
-
-    /*,
-     'test wordsUntil': function (test) {
-
-     const line = stream.ofString('I write until James appears');
-
-     const x = new X();
-     const combinator = x.spaces().thenLeft(F.any);
-     const value = combinator.parse(line).value;
-     console.log('value spaces', value);
-     test.equals(value.length,4 );
-     test.done();
-     }
-
-     */
+        test.equals(value, 'I write until ');
+        test.done();
+    }
 
 }
 
