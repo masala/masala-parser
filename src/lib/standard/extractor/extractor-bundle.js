@@ -10,13 +10,29 @@ export default class ExtractorBundle {
         this.options ={
             spacesCharacters:' \n',
             wordSeparators:C.charIn(' \n:-,;'),
-            letters : C.letters
+            letters : C.letters,
+            moreSeparator: null
         };
 
+        Object.assign(this.options, this._handleOptions(options));
+    }
+
+    _handleOptions(options){
         if (options && typeof options ==='object'){
-            Object.assign(this.options, options);
+
+            if (options.moreSeparator){
+                if(options.wordSeparators){
+                    console.warn('WARNING: You cannot set both options ' +
+                        'wordSeparators & options.moreSeparator ; moreSeparator is ignored');
+                    delete options.moreSeparator;
+                }else{
+                    options.wordSeparators = C.charIn(' \n:-,;'+options.moreSeparator);
+                }
+            }
+            return options;
+        }else{
+            return {};
         }
-        
     }
 
 

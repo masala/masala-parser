@@ -126,7 +126,37 @@ export default {
         test.ok(value.includes('Bond'));
         test.ok(value.includes('Fleming'));
         test.done();
+    },
+
+    'test wordsIn keeping spaces with alt spaces' : function(test){
+        let line = stream.ofString('James%Bond%by Ian=Fleming');
+
+        const x = new X({moreSeparator:'%='});
+        const combinator = x.
+        wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
+        const value = combinator.parse(line).value;
+        test.ok(value.length === 5);
+        test.ok(value.includes('James'));
+        test.ok(value.includes('Bond'));
+        test.ok(value.includes('Fleming'));
+        test.done();
+    },
+
+    'test wordsIn with custom spaces' : function(test){
+        const str = 'JamesSPACEBondSPACEbySPACEIanSPACEFlemingSPACESPACE';
+        let line = stream.ofString(str);
+
+        const x = new X({wordSeparators:C.string('SPACE')});
+        const combinator = x.
+        wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
+        const value = combinator.parse(line).value;
+        test.ok(value.length === 5);
+        test.ok(value.includes('James'));
+        test.ok(value.includes('Bond'));
+        test.ok(value.includes('Fleming'));
+        test.done();
     }
+
 
 
 
