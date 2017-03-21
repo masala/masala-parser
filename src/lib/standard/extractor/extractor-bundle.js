@@ -11,7 +11,7 @@ export default class ExtractorBundle {
             spacesCharacters:' \n',
             wordSeparators:C.charIn(' \n:-,;'),
             letters : C.letters,
-            moreSeparator: null
+            moreSeparators: null
         };
 
         Object.assign(this.options, this._handleOptions(options));
@@ -20,13 +20,13 @@ export default class ExtractorBundle {
     _handleOptions(options){
         if (options && typeof options ==='object'){
 
-            if (options.moreSeparator){
+            if (options.moreSeparators){
                 if(options.wordSeparators){
-                    console.warn('WARNING: You cannot set both options ' +
+                    console.warn('Parsec WARNING: You cannot set both options ' +
                         'wordSeparators & options.moreSeparator ; moreSeparator is ignored');
                     delete options.moreSeparator;
                 }else{
-                    options.wordSeparators = C.charIn(' \n:-,;'+options.moreSeparator);
+                    options.wordSeparators = C.charIn(' \n:-,;'+options.moreSeparators);
                 }
             }
             return options;

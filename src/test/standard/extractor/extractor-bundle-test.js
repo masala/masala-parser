@@ -77,6 +77,21 @@ export default {
         test.equals(value, 4351);
         test.done();
     },
+    'single word with bad letters should fail': function (test) {
+
+        let line = stream.ofString('classicWord-notHexadecimal');
+        const hexadecimal=C.charIn('0123456789ABCDEF')
+            .rep().map(values=>values.join(''))
+            .map(x => parseInt(x, 16));
+
+        const x = new X({letters:hexadecimal});
+        const combinator = x.word()
+            .thenLeft(C.char('-'))
+            .thenLeft(C.string('notHexadecimal'));
+        const accepted = combinator.parse(line).isAccepted();
+        test.ok(!accepted);
+        test.done();
+    },
 
     'test words' : function(test){
         let line = stream.ofString('The James Bond series, by writer Ian Fleming');
@@ -131,7 +146,7 @@ export default {
     'test wordsIn keeping spaces with alt spaces' : function(test){
         let line = stream.ofString('James%Bond%by Ian=Fleming');
 
-        const x = new X({moreSeparator:'%='});
+        const x = new X({moreSeparators:'%='});
         const combinator = x.
         wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
@@ -155,7 +170,33 @@ export default {
         test.ok(value.includes('Bond'));
         test.ok(value.includes('Fleming'));
         test.done();
-    }
+    },
+    'test wordsIn with both custom spaces and more Sep' : function(test){
+        const str = 'James=BondSPACEbySPACEIanSPACEFlemingSPACESPACE';
+        let line = stream.ofString(str);
+
+        let found = false;
+        const original =console.warn;
+        console.warn = ()=>{found=true};
+        const x = new X({
+            wordSeparators:C.string('SPACE'),
+            moreSeparators:'%='});
+
+
+        const combinator = x.
+            wordsIn(['James=Bond', 'by', 'Ian', 'Fleming'], false);
+
+
+        const value = combinator.parse(line).value;
+
+        test.ok(found);
+        test.ok(value.length === 4);
+        test.ok(value.includes('James=Bond'));
+        test.ok(value.includes('Fleming'));
+        test.done();
+    },
+
+
 
 
 
