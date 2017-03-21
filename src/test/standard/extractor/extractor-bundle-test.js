@@ -105,12 +105,29 @@ export default {
 
         const x = new X();
         const combinator = x.
-                wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming']);
+                wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], true);
         const value = combinator.parse(line).value;
-        console.log(value);
-        test.ok(value==='James');
+        test.ok(value.length === 9);
+        test.ok(value.includes('James'));
+        test.ok(value.includes('Bond'));
+        test.ok(value.includes('Fleming'));
+        test.done();
+    },
+
+    'test wordsIn keeping spaces' : function(test){
+        let line = stream.ofString('James Bond by Ian Fleming');
+
+        const x = new X();
+        const combinator = x.
+        wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
+        const value = combinator.parse(line).value;
+        test.ok(value.length === 5);
+        test.ok(value.includes('James'));
+        test.ok(value.includes('Bond'));
+        test.ok(value.includes('Fleming'));
         test.done();
     }
+
 
 
     /*,
