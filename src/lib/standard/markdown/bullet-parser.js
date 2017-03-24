@@ -11,7 +11,7 @@ import T from './token';
 
 
 function stop(){
-    return F.eos.or(C.charIn('\n*`'));
+    return F.eos.or(C.charIn('\r\n*`'));
 }
 
 function pureText(){

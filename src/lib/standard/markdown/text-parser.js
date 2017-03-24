@@ -11,6 +11,14 @@ import {F,C} from '../../parsec/index';
 import stream from '../../stream/index';
 import T from './token';
 
+function trimStartingLineFeed(str){
+    return str.replace(/^[\s]*/,'');
+}
+
+function trimEndingLineFeed(str){
+    return str.replace(/[\s]*$/,'');
+}
+
 function stop(){
     return F.eos.or(T.lineFeed()).or(C.charIn('*`'));
 }
@@ -18,7 +26,12 @@ function stop(){
 function pureText(){
     return F.not(stop()).rep()
         //  ['a','\n','b'] -> 'a b'
-        .map(characters=>characters.join('').replace(/\n/g, " "));
+        // But on Windows, we will ignore the \r
+        // inside line break will be put as space, but we clear initial or final \n
+        .map(characters=>{
+            let allChars = characters.join('');
+            return allChars.replace(/\n/g, " ").replace(/\r/g, "");
+        });
 }
 
 function italic(pureTextParser){
@@ -62,7 +75,16 @@ function formattedSequence(pureTextParser, stopParser) {
 function formattedParagraph(){
     return T.blank()
         .thenRight(formattedSequence(pureText(), stop()))
-        .map(array =>({paragraph:array}))
+        .map(array =>{
+            // We trim the first and last element of the paragraph
+            if (array.length>0 && typeof array[0]==='object'&& array[0].text){
+                array[0].text = trimStartingLineFeed(array[0].text);
+                const last = array.length-1;
+                array[last].text = trimEndingLineFeed(array[last].text);
+            }
+
+            return {paragraph:array};
+        })
 }
 
 function parseText( line, offset=0){

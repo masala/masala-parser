@@ -25,7 +25,7 @@ function sampleTest(sample, test) {
     test.expect(1);
     
     // tests here  
-    fs.readFile('./src/test/standard/samples/' + sample, function (err,data) {
+    fs.readFile('./src/test/standard/json/samples/' + sample, function (err,data) {
         if (err) {
             throw err;
         }

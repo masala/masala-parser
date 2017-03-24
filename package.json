@@ -45,16 +45,17 @@
     "node": ">= 5.7.0"
   },
   "scripts": {
-    "prepublish": "echo '--- Prepublishing ---\n' && npm run dist",
     "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
-    "lint": "eslint src/**",
+    "lint": "eslint src/**/*.js",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rm -rf ./coverage && mkdir coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
-    "check": "npm run lint && npm run test && npm run cover && npm run coveralls",
+    "check": "npm run lint && npm run test && npm run cover",
     "concat": "rm -rf dist/ && mkdir dist && npm run compile && browserify build/lib/index.js --standalone parsec -o dist/parser-combinator.js",
-    "dist": "rm -rf dist/ && mkdir dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone parsec -o dist/parser-combinator.min.js"
+    "dist": "rm -rf dist/ && mkdir dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone parsec -o dist/parser-combinator.min.js",
+    "prepublish": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
+    "postpublish": "cd integration-npm && rm -rf node_modules && npm install && node integrate.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

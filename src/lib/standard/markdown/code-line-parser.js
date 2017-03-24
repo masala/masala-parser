@@ -2,7 +2,7 @@
  * Created by Simon on 03/01/2017.
  */
 
-import {F,C,N} from '../../parsec/index';
+import {C} from '../../parsec/index';
 import stream from '../../stream/index';
 import T from './token';
 

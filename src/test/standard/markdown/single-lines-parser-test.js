@@ -102,7 +102,7 @@ export default {
 
     'test simple text2': function (test) {
         testLine('  text ');
-        test.deepEqual({paragraph:[{text:'text '} ]}, value );
+        test.deepEqual({paragraph:[{text:'text'} ]}, value );
         test.done();
     },
 
@@ -149,6 +149,6 @@ export default {
         testLine(line);
         test.deepEqual({ bullet: { level: 1, content: [{text:'   This is a bullet '}] } }, value,'problem test:test complex bullet ');
         test.done();
-    },
+    }
 
 }

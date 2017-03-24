@@ -42,10 +42,10 @@ export default {
             test.expect(2);
     
             testLine('text');
-            test.deepEqual({paragraph:[{text:'text'} ]}, value );
+            test.deepEqual(value,{paragraph:[{text:'text'} ]}  );
     
             testLine('  text ');
-            test.deepEqual({paragraph:[{text:'text '} ]}, value );
+            test.deepEqual(value, {paragraph:[{text:'text'} ]});
     
             test.done();
         },
@@ -54,7 +54,7 @@ export default {
             test.expect(1);
     
             testLine('*text*');
-            test.deepEqual({paragraph:[{italic:'text'}]}, value );
+            test.deepEqual(value, {paragraph:[{italic:'text'}]} );
     
             test.done();
         },
@@ -63,7 +63,7 @@ export default {
             test.expect(1);
     
             testLine('**text**');
-            test.deepEqual({paragraph:[{bold:'text'} ]}, value );
+            test.deepEqual(value, {paragraph:[{bold:'text'} ]} );
     
             test.done();
         },
@@ -74,8 +74,8 @@ export default {
     
             testLine('  *italic* text **then bold** ');
             let expected={paragraph:[{italic:'italic'},{text:' text '}
-                ,{bold:'then bold'}, {text:' '} ]}
-            test.deepEqual(expected, value );
+                ,{bold:'then bold'}, {text:' '} ]};
+            test.deepEqual(value, expected);
     
             test.done();
         },
@@ -87,7 +87,7 @@ export default {
         testLine('  *italic* text\n**then bold** ');
         let expected={paragraph:[{italic:'italic'},{text:' text '}
             ,{bold:'then bold'}, {text:' '} ]}
-        test.deepEqual(expected, value );
+        test.deepEqual(value, expected);
 
         test.done();
     },
