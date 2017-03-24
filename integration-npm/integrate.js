@@ -17,5 +17,5 @@ console.info(parsing.isAccepted());
 if (parsing.value !== 12){
     throw "Illegal value parsed in postpublish integration test";
 }else{
-    console.log('Post publish Integration SUCCESS ! :)');
+    console.log('=== Post publish Integration SUCCESS ! :) ===');
 }

@@ -10,11 +10,11 @@ correct ssh key
         
 then level-up the version number in package.json
 
-        "version": "0.2.0-prerelease",
+        "version": "0.4.0-prerelease",
         
 then publish
 
-        npm publish --tag pre
+        npm publish --tag beta
         
         
 Check then with integration-npm
@@ -25,6 +25,7 @@ Check then with integration-npm
         # it must load the new published parsec
         node integrate.js
         # >>> should write 'true'
+        # and: === Post publish Integration SUCCESS ! :) ===
 
 If fail : 
 
@@ -32,7 +33,7 @@ If fail :
         cd ..
         npm unpublish --force # oups !
         # change what is wrong
-        # change version to 0.2.0-prerelease2
+        # change version to 0.4.0-prerelease2
         npm publish
         # test again integration
         
@@ -40,9 +41,9 @@ If work :
 
         # careful, especially for major release
         # YOU CANNOT UNPUBLISH easily !!!!
-        
+        npm unpublish --force  # it would remove a beta, no big deal
         # go back to main parsec project
         cd ..
-        # change version to to 0.2.0-prerelease
+        # change version to to 0.4.0
         npm publish
         
