@@ -5,4 +5,6 @@ const parsing = N.numberLiteral.thenLeft(F.eos).parse(st);
 
 if (parsing.value !== 12){
     throw "Illegal value parsed in prepublish integration test";
+}else{
+    console.log("=== Prepublish integration test ok ===")
 }
