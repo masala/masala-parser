@@ -191,6 +191,7 @@ export default {
         test.ok(value.length === 4);
         test.ok(value.includes('James=Bond'));
         test.ok(value.includes('Fleming'));
+        console.warn = original;
         test.done();
     },
     'test wordsUntil': function (test) {

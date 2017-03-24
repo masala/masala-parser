@@ -1,4 +1,4 @@
-function main(process) {
+/*function main(process) {
     var fs = require('fs');        
     
     fs.readFile(process.argv[2], function (err,data) {
@@ -14,4 +14,4 @@ function main(process) {
     });    
 }
 
-main(process);
+main(process);*/

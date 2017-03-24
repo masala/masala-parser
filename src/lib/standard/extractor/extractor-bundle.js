@@ -1,4 +1,4 @@
-import {stream, F, C, N} from '../../index';
+import {F, C, N} from '../../index';
 
 /**
  * Created by nicorama on 10/01/2017.
@@ -62,7 +62,7 @@ export default class ExtractorBundle {
         return this.options.letters.rep();
     }
 
-    _wordSeparators(moreSeparators) {
+    _wordSeparators() {
         //TODO : replace second element by moreSeparators
         return this.spaces().or(this.options.wordSeparators);
     }
@@ -122,76 +122,4 @@ export default class ExtractorBundle {
 }
 
 
-function spaces() {
-    return C.charIn(' \n').rep();
-}
 
-
-function wordSeparators(moreSeparators) {
-    //TODO : replace second element by moreSeparators
-    return spaces().or(C.charIn(' \n:-,;'));
-}
-
-function number() {
-    return N.digit.rep().map(v=>parseInt(v.join('')));
-}
-
-// avoid to join numbers
-
-function simpleWords() {
-    return F.try(C.letters.or(wordSeparators())).rep();
-}
-
-// Don't panic, it will be part of standard Parsec
-function stringIn(array) {
-
-    const tryString = s => F.try(C.string(s));
-
-    if (array.length === 0) {
-        return tryString("").thenReturns(undefined);
-    }
-    if (array.length === 1) {
-        return F.try(C.string(array[0]));
-    }
-
-    const initial = tryString(array[0]);
-    const workArray = array.slice(1);
-    return workArray.reduce((accu, next)=>accu.or(tryString(next)),
-        initial)
-}
-
-
-function wordSequence(stop) {
-    //return P.any.rep();
-    return F.not(stop);
-
-}
-
-// Don't panic, it will be part of standard Parsec
-function wordsUntil(stop) {
-    return F.try(
-        wordSequence(stop).rep().then(F.eos).thenReturns(undefined)
-    ).or(
-        wordSequence(stop).rep().map(chars=>chars.join(''))
-        )
-        .filter(v=> v !== undefined);
-}
-
-
-function canonicalDateSearch() {
-    return C.string("Du ").or(C.string("du "))
-        .thenRight(date())
-        .thenLeft(C.string(" au "))
-        .then(date());
-}
-
-function extract(combinator, msgToParse) {
-    try {
-        const parsing = combinator.parse(stream.ofString(msgToParse, 0));
-        // console.log(parsing.value);
-        return parsing.value;
-    } catch (e) {
-        console.info('EXCEPTION', e);
-        throw e;
-    }
-}

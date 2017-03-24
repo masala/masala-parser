@@ -47,7 +47,7 @@
   "scripts": {
     "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
-    "lint": "eslint src/**",
+    "lint": "eslint src/**/*.js",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rm -rf ./coverage && mkdir coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",

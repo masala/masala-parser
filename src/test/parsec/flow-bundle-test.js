@@ -1,5 +1,5 @@
 import stream from '../../lib/stream/index';
-import {F, C, N} from '../../lib/parsec/index';
+import {F, C} from '../../lib/parsec/index';
 
 let value = undefined;
 let accepted = undefined;
@@ -40,13 +40,10 @@ export default  {
         // tests here
         const parser = F.any.rep()
             .then(F.eos)
-            .debug('eos')
             .thenReturns([])
-            .debug('return')
-            .map(F.flattenDeep)
-            .debug('end');
-        console.log('value', value);
+            .map(F.flattenDeep);
         testParser(parser, string);
+        test.ok(accepted);
         test.deepEqual(value, [], 'flattenDeep not ok');
         test.done();
     },

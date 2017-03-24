@@ -24,6 +24,7 @@ import standardToken from './standard/token-test';
 import markdown from './standard/markdown/index';
 import jsonParseTest from './standard/json/jsonparser_test'
 import jsonSampleTest from './standard/json/jsonsample_test';
+import extractorBundleTest from './standard/extractor/extractor-bundle-test'
 
 export {
     optionTest, tryTest, streamsTest, bufferedStreamsTest,
@@ -31,5 +32,5 @@ export {
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
     parserStreamTest, parserResponseTest,flowBundleTest,
     standardToken,jsonParseTest, jsonSampleTest,
-    markdown
+    markdown, extractorBundleTest
 }
