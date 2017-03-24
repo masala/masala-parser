@@ -100,7 +100,7 @@ export default {
         const combinator = x.words();
         const value = combinator.parse(line).value;
         test.ok(value[1] === ' ');
-        test.ok(value.includes('Bond'));
+        test.ok(_includes(value,'Bond'));
         test.done();
     },
 
@@ -122,9 +122,9 @@ export default {
         const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], true);
         const value = combinator.parse(line).value;
         test.ok(value.length === 9);
-        test.ok(value.includes('James'));
-        test.ok(value.includes('Bond'));
-        test.ok(value.includes('Fleming'));
+        test.ok(_includes(value,'James'));
+        test.ok(_includes(value,'Bond'));
+        test.ok(_includes(value,'Fleming'));
         test.done();
     },
 
@@ -135,9 +135,9 @@ export default {
         const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
         test.ok(value.length === 5);
-        test.ok(value.includes('James'));
-        test.ok(value.includes('Bond'));
-        test.ok(value.includes('Fleming'));
+        test.ok(_includes(value,'James'));
+        test.ok(_includes(value,'Bond'));
+        test.ok(_includes(value,'Fleming'));
         test.done();
     },
 
@@ -148,9 +148,9 @@ export default {
         const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
         test.ok(value.length === 5);
-        test.ok(value.includes('James'));
-        test.ok(value.includes('Bond'));
-        test.ok(value.includes('Fleming'));
+        test.ok(_includes(value,'James'));
+        test.ok(_includes(value,'Bond'));
+        test.ok(_includes(value,'Fleming'));
         test.done();
     },
 
@@ -162,9 +162,9 @@ export default {
         const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
         const value = combinator.parse(line).value;
         test.ok(value.length === 5);
-        test.ok(value.includes('James'));
-        test.ok(value.includes('Bond'));
-        test.ok(value.includes('Fleming'));
+        test.ok(_includes(value,'James'));
+        test.ok(_includes(value,'Bond'));
+        test.ok(_includes(value,'Fleming'));
         test.done();
     },
     'test wordsIn with both custom spaces and more Sep': function (test) {
@@ -189,8 +189,8 @@ export default {
 
         test.ok(found);
         test.ok(value.length === 4);
-        test.ok(value.includes('James=Bond'));
-        test.ok(value.includes('Fleming'));
+        test.ok(_includes(value,'James=Bond'));
+        test.ok(_includes(value,'Fleming'));
         console.warn = original;
         test.done();
     },
@@ -208,5 +208,14 @@ export default {
 
 }
 
+
+function _includes(array, value){
+    for (let i=0 ; i < array.length;i++){
+        if (array[i] === value){
+            return true;
+        }
+    }
+    return false;
+}
 
 
