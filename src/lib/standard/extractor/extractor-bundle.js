@@ -137,9 +137,6 @@ function number() {
 }
 
 // avoid to join numbers
-function dateDigits() {
-    return N.digit.rep().map(v=>v.join(''));
-}
 
 function simpleWords() {
     return F.try(C.letters.or(wordSeparators())).rep();
@@ -180,16 +177,6 @@ function wordsUntil(stop) {
         .filter(v=> v !== undefined);
 }
 
-function date() {
-    return dateDigits()
-        .then(C.charIn('-/').thenReturns('-'))
-        .then(dateDigits())
-        .then(C.charIn('-/').thenReturns('-'))
-        .then(dateDigits())
-        .flattenDeep()
-        .map(dateValues=>dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
-        .map(dateArray=>dateArray.join(''));
-}
 
 function canonicalDateSearch() {
     return C.string("Du ").or(C.string("du "))

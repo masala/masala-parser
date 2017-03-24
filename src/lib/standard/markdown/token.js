@@ -66,6 +66,23 @@ function email(){
         .flattenDeep().map(characters => ({email:characters.join('') }) )
 }
 
+function dateDigits() {
+    return N.digit.rep().map(v=>v.join(''));
+}
+
+function date() {
+    return dateDigits()
+        .then(C.charIn('-/').thenReturns('-'))
+        .then(dateDigits())
+        .then(C.charIn('-/').thenReturns('-'))
+        .then(dateDigits())
+        .map(F.flattenDeep)
+        // TODO: test with 4 chars ?
+        .map(dateValues=>dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
+        .map(dateArray=>dateArray.join(''));
+}
+
+
 
 export default {
     blank,
@@ -74,7 +91,8 @@ export default {
     eol,
     lineFeed,
     fourSpacesBlock,
-    email
+    email,
+    date
 }
 
 
