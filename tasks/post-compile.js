@@ -1,5 +1,6 @@
 var ncp = require('ncp');
 
-console.log('==== building compile with node ===');
-ncp('./src/test/standard/samples/', './build/test/standard/samples/');
+console.log('\n\n==== Copying samples for tests===');
+ncp('./src/test/standard/json/samples/', './build/test/standard/json/samples/');
+ncp('./src/test/standard/markdown/samples/', './build/test/standard/markdown/samples/');
 console.log('\n');
