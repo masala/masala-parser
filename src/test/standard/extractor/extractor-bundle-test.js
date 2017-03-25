@@ -225,6 +225,30 @@ export default {
 
         test.equals(value, 'I write until ');
         test.done();
+    },
+    'test first': function (test) {
+
+        const line = stream.ofString("Hello 'World'");
+        const x = new X({wordSeparators: C.charIn(" '")});
+
+        const helloParser = x.words().map(x.first);
+
+        const value = helloParser.parse(line).value;
+
+        test.equals(value, 'Hello');
+        test.done();
+    },
+    'test last': function (test) {
+
+        const line = stream.ofString("Hello 'World'");
+        const x = new X({moreSeparators: "'"});
+
+        const helloParser = x.words(false).map(x.last);
+
+        const value = helloParser.parse(line).value;
+
+        test.equals(value, 'World');
+        test.done();
     }
 
 }

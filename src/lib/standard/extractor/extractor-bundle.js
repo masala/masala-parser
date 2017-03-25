@@ -15,6 +15,9 @@ export default class ExtractorBundle {
         };
 
         Object.assign(this.options, this._handleOptions(options));
+
+        this.last = _last;
+        this.first = _first;
     }
 
     _handleOptions(options){
@@ -67,10 +70,31 @@ export default class ExtractorBundle {
         return this.spaces().or(this.options.wordSeparators);
     }
 
-    words() {
-        return F.try(this.options.letters.or(this._wordSeparators())).rep();
+    words(keepSpaces=true) {
+        if (keepSpaces){
+            return F.try(this.options.letters.or(this._wordSeparators())).rep();    
+        }else{
+            const parser =F.try(this._wordSeparators().optrep().
+            thenRight(this.options.letters));
+            return parser.rep().thenLeft(this._wordSeparators().optrep());
+        }
+        
     }
 
+    wordsIn(array, keepSpaces=true){
+
+        if (keepSpaces){
+            return F.try(this.stringIn(array).or(this._wordSeparators()))
+                .rep();
+
+        }else{
+            const parser =F.try(this._wordSeparators().optrep().
+            thenRight(this.stringIn(array)));
+            return parser.rep().thenLeft(this._wordSeparators().optrep());
+        }
+
+    }
+    
     stringIn(array) {
 
         const tryString = s => F.try(C.string(s));
@@ -90,19 +114,7 @@ export default class ExtractorBundle {
             initial)
     }
 
-    wordsIn(array, keepSpaces=true){
-
-        if (keepSpaces){
-            return F.try(this.stringIn(array).or(this._wordSeparators()))
-                .rep();
-
-        }else{
-            const parser =F.try(this._wordSeparators().optrep().
-                thenRight(this.stringIn(array)));
-            return parser.rep().thenLeft(this._wordSeparators().optrep());
-        }
-
-    }
+    
 
 
     _wordSequence(stop) {
@@ -121,5 +133,11 @@ export default class ExtractorBundle {
     
 }
 
+function _last(values){
+    return values[values.length-1];
+}
 
+function _first(values){
+    return values[0];
+}
 
