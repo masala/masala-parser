@@ -1,5 +1,5 @@
 import stream from '../../lib/stream/index';
-import {F,C} from '../../lib/parsec/index';
+import {F,C,N} from '../../lib/parsec/index';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -52,6 +52,21 @@ export default  {
                'should be accepted.');
     test.done();
   },
+
+    'expect (map) to be return 5x8': function(test) {
+        test.expect(1);
+
+        const st = stream.ofString("5x8");
+        const combinator = N.integer
+            .thenLeft(C.char('x'))
+            .then(N.integer)
+            .map(values => values[0]*values[1]);
+
+        test.equal(combinator.parse(st).value,
+            40,
+            'should be accepted.');
+        test.done();
+    },
        
   'expect (flatmap) to be accepted': function(test) {
     test.expect(1);
@@ -216,12 +231,21 @@ export default  {
     test.done();
   },
         
-  'expect (thenRight) to return b': function(test) {
+  'expect (thenReturns) to return b': function(test) {
     test.expect(1);
     // tests here  
     test.equal(C.char("a").thenReturns("b").parse(stream.ofString("ab"),0).value,
                'b',
                'should be accepted.');
+    test.done();
+  },
+
+  'expect (thenReturns) not to eat char': function(test) {
+    test.expect(1);
+    // tests here
+    test.deepEqual(C.char("a").thenReturns("X").then(C.char('b')).parse(stream.ofString("ab"),0).value,
+        ['X', 'b'],
+        'should be accepted.');
     test.done();
   },
             

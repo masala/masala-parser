@@ -31,8 +31,13 @@ function digit() {
     return F.satisfy((v) => '0' <= v && v <= '9');
 }
 
+function integer() {
+    return digit().rep().map(v=>parseInt(v.join('')));
+}
+
 
 export default {
     numberLiteral:numberLiteral(),
-    digit: digit()
+    digit: digit(),
+    integer:integer()
 }
