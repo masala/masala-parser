@@ -62,7 +62,7 @@ export default {
         test.done();
     },
 
-    'test single word': function (test) {
+    'test single word hexadecimal': function (test) {
 
         let line = stream.ofString('10FF-hexadecimal');
         const hexadecimal = C.charIn('0123456789ABCDEF')
@@ -112,6 +112,27 @@ export default {
         const value = combinator.parse(line).value;
         test.ok(typeof value === 'string');
         test.ok(value === 'James');
+        test.done();
+    },
+
+    'test stringIn one string sidecase': function (test) {
+        let line = stream.ofString('James');
+
+        const x = new X();
+        const combinator = x.stringIn(['James']);
+        const value = combinator.parse(line).value;
+        test.ok(typeof value === 'string');
+        test.ok(value === 'James');
+        test.done();
+    },
+
+    'test stringIn empty sidecase': function (test) {
+        let line = stream.ofString('James');
+
+        const x = new X();
+        const combinator = x.stringIn([]).then(F.eos);
+        const parsing = combinator.parse(line);
+        test.ok(!parsing.isAccepted());
         test.done();
     },
 
