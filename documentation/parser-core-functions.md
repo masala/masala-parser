@@ -28,13 +28,81 @@ TODO : link explanations with parser_stream_test.js
 
 ###  constructor (parse)
  
-* difficulty : 2
+Usually, you should **NOT** create a Parser from its constructor. You will combine **existing parsers** to create a
+ new one
+ 
+* difficulty : 3
 * construct a Parser object
 * `parse` is a streaming function
     - reads characters at a given index
     - can end the stream
 * the `parse()` function will determine the behaviour of the Parser
 
+
+
+### then
+
+* Essential !
+* difficulty : 1
+* Construct an array of values from **two** previous success values
+* If more than two are needed, use `flatmap()`
+* `then()` uses internally `flatmap()`
+
+        'expect (then) to be build [a,b]': function(test) {
+            const stream = stream.ofString("ab");
+            test.deepEqual(
+                 
+                C.char("a").then(C.char("b")).parse(stream).value,
+                ['a', 'b']
+                );
+        }
+
+
+### p1.thenLeft(p2), p1.thenRight(p2)
+
+* difficulty : 1
+* Essential !
+* Uses `then()` and returns only the left or right value
+
+
+        'expect (thenLeft) to returns 'a' from ['a','b']': function(test) {
+            test.deepEqual(
+                const stream = stream.ofString('ab'); 
+                C.char('a').thenLeft(C.char('b')).parse(stream).value,
+                'a'
+                );
+        }
+        // thenRight will return 'b'
+
+`thenLeft` and `thenRight` will often be used to find the right value in your data.
+ 
+ A real life example with an addition : `x+y`.
+You don't need the value of '+', but you want the value at its left (`x`) and its right (`y`);
+
+
+        function sum() {
+            // there are 3 tokens : x, +, and y 
+             return N.number().thenLeft(plusOperator())
+                // thenLeft has removed one token
+                .then(N.number())
+                // then has kept the y token: we have x and y in values
+                // because we know there was a plusOperator(), we can make a sum
+                .map(values=>values[0] + values[1]);
+                
+        }
+ 
+
+### thenReturns(value)
+
+* difficulty : 1
+* Forces the value at a given point **and consumes a character**
+
+        const P = parser;
+        const forceValue = 'X'
+        // given 'abc', value should be ['X' , 'c']
+        P.char('a').thenReturns(forceValue).then(P.char('c') )
+        
+TODO : Verify this with a test
 
 ### flatmap (f )
  
@@ -93,49 +161,6 @@ TODO : link explanations with parser_stream_test.js
         //given 123
         P.number().match(123)
 
-### then
-
-* Essential !
-* difficulty : 1
-* Construct an array of values from **two** previous success values
-* If more than two are needed, use `flatmap()`
-* `then()` uses internally `flatmap()`
-
-        'expect (then) to be build [a,b]': function(test) {
-            test.deepEqual(
-                const stream = stream.ofString("ab"); 
-                parser.char("a").then(parser.char("b")).parse(stream).value,
-                ['a', 'b'],
-                'should be accepted.');
-        },
-
-
-### p1.thenLeft(p2), p1.thenRight(p2)
-
-* difficulty : 1
-* Uses `then()` and returns only the left or right value
-
-
-        'expect (thenLeft) to returns 'a' from ['a','b']': function(test) {
-            test.deepEqual(
-                const stream = stream.ofString('ab'); 
-                P.char('a').thenLeft(parser.char('b')).parse(stream).value,
-                'a',
-                'should be accepted.');
-        },
-        // thenRight will return 'b'
-
-### thenReturns(value)
-
-* difficulty : 1
-* Forces the value at a given point **and consumes a character**
-
-        const P = parser;
-        const forceValue = 'X'
-        // given 'abc', value should be ['X' , 'c']
-        P.char('a').thenReturns(forceValue).then(P.char('c') )
-        
-TODO : Verify this with a test
 
 ### error()
 
