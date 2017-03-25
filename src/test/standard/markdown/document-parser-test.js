@@ -4,7 +4,6 @@
 
 import mdParser from '../../../lib/standard/markdown/markdown-parser';
 import stream from '../../../lib/stream/index';
-import path from 'path';
 
 let value = undefined;
 
@@ -25,7 +24,6 @@ const expectedStandardParagraph = {
 const lev1Title = '# Star Wars Rocks';
 const otherLev1Title = '# Star Trek also Rocks';
 const lev1AltTitle = 'Star Wars Rocks\n======';
-const lev2Title = '## C3PO and R2D2';
 const lev2AltTitle = 'C3PO and R2D2\n----';
 const expectedLev1Title = { title: { level: 1, text: 'Star Wars Rocks' } };
 const expectedOtherLev1Title = { title: { level: 1, text: 'Star Trek also Rocks' } };

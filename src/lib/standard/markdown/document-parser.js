@@ -1,7 +1,7 @@
 /**
  * Created by Simon on 15/12/2016.
  */
-
+/*
 import Stream from '../../stream/index';
 
 
@@ -20,4 +20,4 @@ export default {
     parse(stream){
         return parseDocument(stream,0);
     }
-}
+}*/

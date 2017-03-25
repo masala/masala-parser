@@ -23,14 +23,14 @@ function white() {
 
 function equals(){
     return C.string('===')
-        .then(T.rawTextUntilChar('\n'))
+        .then(T.rawTextUntil(T.eol()))
         .then(T.eol())
         .thenReturns(1);  // this mean a level 1 title
 }
 
 function minuses(){
     return C.string('---')
-        .then(T.rawTextUntilChar('\n'))
+        .then(T.rawTextUntil(T.eol()))
         .then(T.eol())
         .thenReturns(2); // this mean a level 2 title
 }
@@ -38,7 +38,7 @@ function minuses(){
 function titleSharp(){
     return sharps()
         .thenLeft(white())
-        .then(T.rawTextUntilChar('\n'))
+        .then(T.rawTextUntil(T.eol()))
         .thenLeft(T.eol().or(F.eos))
         .map(array => ({
                         title:{
@@ -50,7 +50,7 @@ function titleSharp(){
 
 function titleLine(){
     return T.blank()
-        .thenRight( T.rawTextUntilChar('\n')
+        .thenRight( T.rawTextUntilChar('\r\n')
         .thenLeft(T.eol())
         .then(equals().or(minuses()))
         .map(array => ({
