@@ -2,7 +2,7 @@
   "name": "parser-combinator",
   "description": "Parser combinators",
   "license": "LGPL-2.1",
-  "version": "0.3.0",
+  "version": "0.3.0-prerelease2",
   "keywords": [
     "parser",
     "ll",

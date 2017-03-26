@@ -15,8 +15,12 @@ import {F,C,N} from './parsec/index';
 import standard from './standard/index'
 import stream from './stream/index';
 
+const JSON = standard.jsonParser;
+const MD=standard.markdownBundle;
+const X = standard.extractorBundle;
+
 export {
-    data, genlex, parsec, standard, stream, parser, F,C,N
+    data, genlex, parsec, standard, stream, parser, F,C,N, JSON, MD, X
 }
 
 

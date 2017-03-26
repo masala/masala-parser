@@ -16,67 +16,64 @@ Javascript parser combinator implementation inspired by the paper titled:
 ## Floor notation
 
 ```js
-const parsec = require('parser-combinator');
-const N = parsec.N;
-const C = parsec.C;
+// N: Number Bundle, C: Chars Bundle
+const {stream, N,C}= require('parser-combinator');
+const document = '|4.6|';
+
+const floorCombinator= C.char('|')
+                        .thenRight(N.numberLiteral)    // we had [ '|' , 4.6], we keep 4.6
+                        .thenLeft(C.char('|'))   // we had [ 4.6 , '|' ], we keep 4.6
+                        .map(x =>Math.floor(x));
 
 // Parsec needs a stream of characters
-const document = '|4.6|';
-const stream = parsec.stream.ofString(document);
+const parsing = floorCombinator.parse(stream.ofString(document));
 
-const floorCombinator = C.char('|')
-  .thenRight(N.numberLiteral)    // we had [ '|' , 4.6 ], we keep 4.6
-  .thenLeft(C.char('|'))   // we had [ 4.6 , '|' ], we keep 4.6
-  .map(x =>Math.floor(x));
-
-const parsing = floorCombinator.parse(stream);
-// If the parser reached the end of stream (F.eos) without rejection, parsing is accepted
-console.info(parsing.isAccepted());
-// The parser has a
 console.log(parsing.value===4);
 ```
 
 ## Hello World
 
-       // Plain old ES
-       var parsec = require('parser-combinator');
-       var S = require('parser-combinator').stream;
-       var P = parsec.parser;
-       
-       // The goal is check that we have Hello 'something', then to grab that something
-       // With P.string("Hello").then(P.char(' ').rep()), we expect 'Hello' then some spaces
-       // With P.letter.rep(), we expect an array of letters, that we'll join to form a string
-       // We use thenRight, because we keep only the right value : the one we say hello 
-       var helloParser = P.string("Hello").then(P.char(' ').rep()).thenRight(P.letter.rep());
-       
-       var assertWorld = helloParser.parse(S.ofString("Hello World")).value.toString() == ['W','o','r','l','d'].toString();
-       console.info('assertWorld', assertWorld);
-       
-       // Note that helloParser will not reach the end of the stream; it will stop at the space after People
-       var peopleParsing = helloParser.parse(S.ofString("Hello People in 2017"));
-       var peopleAssert = peopleParsing.value.join('') === "People";
-       
-       console.info('assert: ', peopleAssert);
-       console.info('assert: ', peopleParsing.offset < "Hello People in 2017".length);
+```js
+// Plain old ES
+var parsec = require('parser-combinator');
+var S = require('parser-combinator').stream;
+var C = parsec.C;
 
+// The goal is check that we have Hello 'something', then to grab that something
 
-### Improvement with Combination
+var helloParser = C.string("Hello")
+                    .then(C.char(' ').rep())
+                    .then(C.char("'"))
+                    .thenRight(C.letter.rep()) // keeping repeated ascii letters
+                    .thenLeft(C.char("'"));    // keeping previous letters
 
-We have used above a given parser named `P.letter`. Using `P.letter.rep()`, we create a new parser that works when it
- meets several letters. Its value is an array of letters, which is not easy to use : we must use `join()` later.
+var parsing = helloParser.parse(S.ofString("Hello 'World'"));
+// C.letter.rep() will giv a array of letters
+console.log(parsing.value.toString() == ['W','o','r','l','d'].toString());
+```
+
+### Improvement with Extractor Bundle
+
+We have used a complex combinator that shows us how to parse characters by characters. But you can build or use 
+ higher level parsers to do the same job. **Parser combinator JS** offers an Extractor Bundle that could replace
+  all of your regexp extractions. 
  
 So we can create a `letters` parser that will seek many letters and directly return the string value.
 
-        var parsec = require('parser-combinator');
-        var S = require('parser-combinator').stream;
-        var P = parsec.parser;
-        
-        const letters = P.letter.rep().map(letterArray => letterArray.join(''));
-        
-        var helloParser = P.string("Hello").then(P.char(' ').rep()).thenRight(letters);
-        
-        var assertWorld = helloParser.parse(S.ofString("Hello World")).value === "World";
-        console.info('assertWorld', assertWorld);
+
+import {stream, X} from 'parser-combinator'
+
+const line = stream.ofString("Hello 'World'");
+
+// Adding a ' as a word separator;  
+const x = new X({moreSeparators: "'"});
+
+const helloParser = x.words(false) // false because we don't keep separators
+                     .map(x.last); // We had "Hello" and "World"
+
+const value = helloParser.parse(line).value;
+
+test.equals(value, 'World');
 
 
  Hopefully, the Parser object, often imported as `P` has already a `letters` parser.

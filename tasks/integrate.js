@@ -1,8 +1,13 @@
 //{stream,F,C,N,}
+
+// Other integration tests
+require('./integration/extractor');
+
 const parsec = require('../dist/parser-combinator.min');
 const stream = parsec.stream;
 const F = parsec.F;
 const N=parsec.N;
+
 
 
 const st = stream.ofString('12');
@@ -13,3 +18,5 @@ if (parsing.value !== 12){
 }else{
     console.log("=== Prepublish integration test ok ===")
 }
+
+

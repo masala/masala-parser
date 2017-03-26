@@ -9,7 +9,8 @@
 import jsonParser from './json/jsonparser';
 import markdownDocument from './markdown/markdown-parser';
 import markdownBundle from './markdown/markdown-bundle';
+import extractorBundle from './extractor/extractor-bundle';
 
 export default{
-    jsonParser,  markdownDocument, markdownBundle
+    jsonParser,  markdownDocument, markdownBundle, extractorBundle
 }
