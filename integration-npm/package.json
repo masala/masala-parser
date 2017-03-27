@@ -4,7 +4,7 @@
   "description": "used to test npm publications",
   "main": "index.js",
   "dependencies": {
-    "parser-combinator": "0.2.0"
+    "parser-combinator": "0.3.0"
   },
   "devDependencies": {},
   "scripts": {

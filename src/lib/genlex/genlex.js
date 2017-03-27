@@ -6,7 +6,9 @@
  * Licensed under the LGPL2 license.
  */
 
-import parser from  '../parsec/parser.js';
+import F from '../parsec/flow-bundle';
+import C from '../../lib/parsec/chars-bundle';
+import N from '../../lib/parsec/numbers-bundle';
 import unit from  '../data/unit.js';
 
 // (string -> 'a,string -> 'a,number -> 'a,string -> 'a,char -> 'a) -> GenlexFactory 'a
@@ -23,14 +25,14 @@ class Genlex {
 
     // [String] -> Genlex
     constructor(keywords=[]) {
-        var idletter = parser.letter.or(parser.char('_')).or(parser.digit);
-        this.identParser = parser.letter.then(idletter.optrep()).map((r) => [r[0]].concat(r[1]).join(''));
-        this.keywordParser = keywords.reduce((p, s) => parser.string(s).or(p),parser.error);
+        var idletter = C.letter.or(C.char('_')).or(N.digit);
+        this.identParser = C.letter.then(idletter.optrep()).map((r) => [r[0]].concat(r[1]).join(''));
+        this.keywordParser = keywords.reduce((p, s) => C.string(s).or(p),F.error);
     }
 
     // unit -> Parser char char
     space() {           
-        return parser.charIn(" \r\n\f\t");
+        return C.charIn(" \r\n\f\t");
     }
 
     // unit -> Parser unit char
@@ -50,17 +52,17 @@ class Genlex {
 
     // GenLexFactory 'a -> Parser 'a char
     number(f) {
-        return parser.numberLiteral.map(f.number);
+        return N.numberLiteral.map(f.number);
     }
 
     // GenLexFactory 'a -> Parser 'a char
     string(f) {
-        return parser.stringLiteral.map(f.string);
+        return C.stringLiteral.map(f.string);
     }
 
     // GenLexFactory 'a -> Parser 'a char
     char(f) {
-        return parser.charLiteral.map(f.char);
+        return C.charLiteral.map(f.char);
     }
 
     // GenLexFactory 'a -> Parser 'a char
@@ -79,7 +81,7 @@ class Genlex {
 
     // GenLexFactory 'a -> Parser ['a] char
     tokens(f) {
-        return this.tokenBetweenSpaces(f).optrep().thenLeft(parser.eos);
+        return this.tokenBetweenSpaces(f).optrep().thenLeft(F.eos);
     }
 }
 
