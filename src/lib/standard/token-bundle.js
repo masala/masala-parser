@@ -41,10 +41,30 @@ function date() {
         .map(dateArray=>dateArray.join(''));
 }
 
+function blank(charsOrParser) {
+
+    if (charsOrParser){
+        if (typeof  charsOrParser === 'string'){
+            return C.charIn(charsOrParser).optrep().thenReturns('');
+        }else{
+            return charsOrParser.optrep().thenReturns('');
+        }
+    }
+    return C.charIn(' \t').optrep().thenReturns('');
+}
+
+
+
+function eol() {
+    return C.char('\n').or(C.string('\r\n'));
+}
+
 
 
 export default {
     email,
-    date
+    date,
+    blank,
+    eol:eol()
 }
 
