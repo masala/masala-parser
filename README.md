@@ -206,7 +206,10 @@ Suppose we do not `try()` but use `or()` directly:
 
 ## Core Parser Functions
 
-Here is a link for [Core functions documentation](./documentation/parser-core-functions.md). 
+Here is a link for [Core functions documentation](./documentation/parser-core-functions.md).
+ 
+It will explain `then()`, `thenLeft()`, `thenRight()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
+with code examples.
 
 ## The Flow Bundle
  
@@ -333,25 +336,25 @@ The Markdown bundle offers a series of Markdown tokens to build your own **meta-
  
 Tokens are:
 
-* blank: blanks in paragraphs, including single end of line
-* eol: `\n` or `\r\n` 
-* lineFeed: At least two EOL
-* fourSpacesBlock: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
-* stop: End of pure text
-* pureText: Pure text, which is inside italic or bold characters 
-* italic: italic text between *pureText* or _pureText_ 
-* bold: bold text between **pureText**
-* code: code text between ```pureText``` (double backticks for escape not yet supported)
-* text (pureTextParser): higher level of pureText, if you need to redefine what is pureText
-* formattedSequence (pureText, stop): combination of pureText, italic, bold and code
-* formattedParagraph: formattedSequence separated by a lineFeed 
-* titleLine: `title\n===` or `title\n---` variant of title
-* titleSharp: `### title` variant of title
-* title: titleLine or titleSharp
-* bulletLv1: Level one bullet
-* bulletLv2: Level two bullet
-* bullet: Level one or two bullets
-* codeLine: Four spaces indented code block line
+* `blank`: blanks in paragraphs, including single end of line
+* `eol`: `\n` or `\r\n` 
+* `lineFeed`: At least two EOL
+* `fourSpacesBlock`: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
+* `stop`: End of pure text
+* `pureText`: Pure text, which is inside italic or bold characters 
+* `italic`: italic text between `*pureText*` or `_pureText_` 
+* `bold`: bold text between `**pureText**`
+* `code`: code text between `` `pureText` `` (double backticks for escape not yet supported)
+* `text (pureTextParser)`: higher level of pureText, if you need to redefine what is pureText
+* `formattedSequence (pureText, stop)`: combination of pureText, italic, bold and code
+* `formattedParagraph`: formattedSequence separated by a lineFeed 
+* `titleLine`: `title\n===` or `title\n---` variant of title
+* `titleSharp`: `### title` variant of title
+* `title`: titleLine or titleSharp
+* `bulletLv1`: Level one bullet
+* `bulletLv2`: Level two bullet
+* `bullet`: Level one or two bullets
+* `codeLine`: Four spaces indented code block line
 
 
 <!---
