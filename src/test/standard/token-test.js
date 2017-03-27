@@ -97,6 +97,12 @@ export default {
         testParser(C.string('Hello').then(T.blank(blankAcceptor)).then(C.string('World')).then(F.eos) , testString);
         test.ok(accepted);
         test.done();
+    },
+    'test date': function(test){
+        const testString = '2012-10-12';
+        testParser(T.date().then(F.eos) , testString);
+        test.ok(accepted);
+        test.done();
     }
 
 

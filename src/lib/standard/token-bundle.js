@@ -24,18 +24,15 @@ function email(){
         .flattenDeep().map(characters => ({email:characters.join('') }) )
 }
 
-function dateDigits() {
-    return N.digit.rep().map(v=>v.join(''));
-}
+
 
 function date() {
-    return dateDigits()
+    return N.digits
         .then(C.charIn('-/').thenReturns('-'))
-        .then(dateDigits())
+        .then(N.digits)
         .then(C.charIn('-/').thenReturns('-'))
-        .then(dateDigits())
+        .then(N.digits)
         .map(F.flattenDeep)
-        // TODO: test with 4 chars ?
         .map(dateValues=>dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
         .map(dateArray=>dateArray.join(''));
 }

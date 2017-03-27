@@ -279,7 +279,7 @@ and incomplete markdown parser.
 ## The Token Bundle
 
 
-* `email`: accept a very large number of emails,
+* `email`: accept a very large number of emails
 * `date`: accept a very small number of dates (2017-03-27 or 27/03/2017)
 * `blank(nothing|string|parser)`: accept standard blanks (space, tab), or defined characters, or a combined Parser
 * `eol`: accept **E**nd **O**f **L**ine `\n` or `\r\n`
