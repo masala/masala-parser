@@ -303,6 +303,14 @@ export default {
         test.done();
     },
 
+    'expect (letters) to return a string, not an array of letters': function (test) {
+        test.expect(1);
+        // tests here
+        const parsing = C.letters.thenLeft(F.eos).parse(stream.ofString("someLetters"), 0);
+        test.equal(parsing.value, 'someLetters', 'not a string');
+        test.done();
+    },
+
 
     'expect (char) to be accepted': function (test) {
         test.expect(1);

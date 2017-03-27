@@ -190,8 +190,8 @@ Suppose we do not `try()` but use `or()` directly:
         sum().or(multiplication()).or(scalar())
         // testing sum()
         2         *2
-        ..ok..ok  ↑oups: not going back. Having now to test '*2' ;
-                                         Is it (multiplication())? No ; or(scalar()) ? neither
+        ..ok..ok  ↑oups: cursor is not going back. Having now to test '*2' ;
+                                                   Is it (multiplication())? No ; or(scalar()) ? neither
 
 `try()` has some benefits, but costs more in memory and CPU, as you test things twice.
  You should avoid long sequences of `try()` if memory is constrained. If possible, you can use `or()` without `try()`
@@ -217,10 +217,10 @@ that does not satisfy `p`
 
 All of these functions will return a brand new Parser that you can combine with others.
 
-Most importants:
+Most important:
 
 * `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed 
-* `F.any`: Accept any character
+* `F.any`: Accept any character (and so moves the cursor)
 * `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
 * `F.eos`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
 
@@ -241,6 +241,23 @@ Utility function:
 
 
 ## The Char Bundle
+
+
+* `letter`: accept an ascii letter ([opened issue for other languages](https://github.com/d-plaindoux/parsec/issues/43))
+    (and so moves the cursor)
+* `letters`: accepts many letters and returns a string
+* `notChar(x)`: accept if next input is not x
+* `char(x)`: accept if next input is x
+* `charIn('xyz')`: accept if next input is x, y or z
+* `charNotIn('xyz')`: accept if next input is not x, y or z
+* `subString(length)`: accept any next *length* characters and returns the equivalent string
+* `string(word)`: accept if next input is the given word  
+* `notString(word)`: accept if next input is *not* the given word
+* `charLiteral`: single quoted char element in C/Java : `'a'` is accepted
+* `stringLiteral`: double quoted string element in java/json: `"hello world"` is accepted
+* `lowerCase`: accept any next lower case inputs
+* `upperCase`: accept any next uppercase inputs
+
 
 
 
