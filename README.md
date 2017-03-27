@@ -1,15 +1,14 @@
-# Javascript Parser Combinators
+# Masala Parser: Javascript Parser Combinators
 
 [![npm version](https://badge.fury.io/js/parser-combinator.svg)](https://badge.fury.io/js/parser-combinator)
 [![Build Status](https://travis-ci.org/d-plaindoux/parsec.svg)](https://travis-ci.org/d-plaindoux/parsec) 
 [![Coverage Status](https://coveralls.io/repos/d-plaindoux/parsec/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parsec?branch=master) 
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-Javascript parser combinator implementation inspired by the paper titled:
+Masala Parser is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf).
 
-It's a Javascript implementation of the Haskell Parsec, or an alternative
-for Lex & Yacc.
+It's a Javascript implementation of the Haskell **Parsec**, or an **alternative for Lex & Yacc**.
 
 
 # Quick Examples
@@ -19,7 +18,7 @@ for Lex & Yacc.
 
 ```js
 // N: Number Bundle, C: Chars Bundle
-const {stream, N,C}= require('parser-combinator');
+import {stream, N,C} from 'parser-combinator';
 const document = '|4.6|';
 
 const floorCombinator= C.char('|')
@@ -30,59 +29,13 @@ const floorCombinator= C.char('|')
 // Parsec needs a stream of characters
 const parsing = floorCombinator.parse(stream.ofString(document));
 
-console.log(parsing.value===4);
+console.log( parsing.value === 4 );
 ```
 
-## Hello World
 
-```js
-// Plain old ES
-var parsec = require('parser-combinator');
-var S = require('parser-combinator').stream;
-var C = parsec.C;
 
-// The goal is check that we have Hello 'something', then to grab that something
 
-var helloParser = C.string("Hello")
-                    .then(C.char(' ').rep())
-                    .then(C.char(`'`))
-                    .thenRight(C.letter.rep()) // keeping repeated ascii letters
-                    .thenLeft(C.char(`'`));    // keeping previous letters
-
-var parsing = helloParser.parse(S.ofString("Hello 'World'"));
-// C.letter.rep() will giv a array of letters
-console.log(parsing.value.toString() == ['W','o','r','l','d'].toString());
-```
-
-## Improvement with Extractor Bundle
-
-We have used a complex combinator that shows us how to parse characters by characters. But you can build or use 
- higher level parsers to do the same job. **Parser combinator JS** offers an Extractor Bundle that could replace
-  all of your regexp extractions. 
- 
-
-```js
-import {stream, X} from 'parser-combinator'
-
-const line = stream.ofString("Hello 'World'");
-
-// Adding a `'` as a word separator;  
-const x = new X({moreSeparators: `'`});
-
-const helloParser = x.words(false) // false because we don't keep separators
-                     .map(x.last); // We had "Hello" and "World"
-
-const value = helloParser.parse(line).value;
-
-test.equals(value, 'World');
-```
-
- Hopefully, the Parser object, often imported as `P` has already a `letters` parser.
- 
-
- 
-
-# Explanations
+## Explanations
 
 According to Wikipedia *"in functional programming, a parser combinator is a 
 higher-order function that accepts several parsers as input and returns a new 
@@ -110,6 +63,142 @@ The parser will read through the document and aggregate values. The single value
 ![](./documentation/parsec-monoid.png)
  
 
+## Hello World
+
+```js
+// Plain old ES
+var parsec = require('parser-combinator');
+var stream = parsec.stream;
+var C = parsec.C;
+
+// The goal is check that we have Hello 'something', then to grab that something
+
+var helloParser = C.string("Hello")
+                    .then(C.char(' ').rep())
+                    .then(C.char(`'`))
+                    .thenRight(C.letter.rep()) // keeping repeated ascii letters
+                    .thenLeft(C.char(`'`));    // keeping previous letters
+
+var parsing = helloParser.parse(stream.ofString("Hello 'World'"));
+// C.letter.rep() will give an array of letters
+console.log(parsing.value.toString() == ['W','o','r','l','d'].toString());
+```
+
+## Improvement with Extractor Bundle
+
+We have used a complex combinator that shows us how to parse character by character. But you can build or use 
+ higher level parsers to do the same job. **Parser combinator JS** offers an Extractor Bundle that could replace
+  all of your regexp extractions. 
+ 
+
+```js
+import {stream, X} from 'parser-combinator'
+
+const line = stream.ofString("Hello 'World'");
+
+// Adding a `'` as a word separator;  
+const x = new X({moreSeparators: `'`});
+
+const helloParser = x.words(false) // false because we don't keep separators
+                     .map(x.last); // We had "Hello" and "World"
+
+const value = helloParser.parse(line).value;
+
+test.equals(value, 'World');
+```
+ 
+
+
+# Parser Combinations
+
+Let's use a real example. We combine many functions that returns a new Parser. And each new Parser
+is a combination of Parsers given by the standard bundles or previous functions.
+
+```js
+import  {stream, N,C, F, T} from '../../dist/parser-combinator.min';
+
+function operator(symbol) {
+    return T.blank().thenRight(C.char(symbol)).thenLeft(T.blank());
+}
+
+function sum() {
+    return N.integer.thenLeft(operator('+')).then(N.integer)  // thenLeft will avoid symbol in resulting values
+        .map(values=>values[0] + values[1]);
+}
+
+function multiplication() {
+    return N.integer.thenLeft(operator('*')).then(N.integer)
+        .map(values=>values[0] * values[1]);
+}
+
+function scalar(){
+    return N.integer;
+}
+
+function combinator() {
+    return F.try(sum())
+        .or(F.try(multiplication()))    // or() will often work with try()
+        .or(scalar());;
+}
+
+function parseOperation(line) {
+    return combinator().parse(stream.ofString(line), 0);
+}
+
+console.info('sum: ',parseOperation('2   +2').value);  // 4
+console.info('multiplication: ',parseOperation('2 * 3').value); //6
+console.info('scalar: ',parseOperation('8').value);  // 8
+```
+
+A curry paste is an higher order ingredient made from a good combination of spices.
+
+![]('./documentation/images/curry-paste.jpg')
+
+## Precedence
+
+Precedence is a technical term for priority. Using:
+
+```js
+function combinator() {
+    return F.try(sum())
+        .or(F.try(multiplication()))    // or() will often work with try()
+        .or(scalar());
+}
+
+console.info('sum: ',parseOperation('2+2').value);
+```
+
+We will give priority to sum, then multiplication, then scalar. If we had put scalar() first, we would have first 
+accept '2', then what could we do with '+2' ? It's not a valid sum.
+
+## try(x).or(y)
+
+`or()` will often be used with `try()`. Like Parsec, Masala-Parser  It can parse  infinite look-ahead grammars but
+ it performs best on predictive (LL[1]) grammars.
+ 
+With `try()`, we can look a bit ahead of next characters, then go back
+ 
+        F.try(sum()).or(F.try(multiplication())).or(scalar())
+        // try(sum()) parser in action
+        2         *2
+        ..ok..ok  ↑oups: go back and try multiplication. Should be OK.
+
+
+Suppose we do not try:
+
+        sum().or(multiplication()).or(scalar())
+        // try(sum()) parser in action
+        2         *2
+        ..ok..ok  ↑oups: no goBack. Testing '*2' ; So testing or(multiplication())? No ; or(scalar()) ? neither
+
+`try()` has some benefits, but costs more in memory, and CPU as you test things twice.
+ You should avoid long sequences of `try()` if memory is constrained. If possible, you can use `or()` without `try()`
+  when there is no *starting ambiguity*.
+ 
+`N.integer.or(C.letter())` doesn't require a `try()`.
+  
+
+
 
 # Deep documentation
 
@@ -124,24 +213,33 @@ The flow bundle will mix ingredients together.
 For example if you have a Parser `p`, `F.not(p)` will accept anything
 that does not satisfy `p`
 
-`F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed 
-`F.any`: Accept any character
-`F.not(parser)`: Accept anything that is not a parser. Often to test a *stop*  
+All of these functions will return a brand new Parser that you can combine with others.
+
+Most importants:
+
+* `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed 
+* `F.any`: Accept any character
+* `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
+* `F.eos`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
+
+Others:
+
+* `F.lazy`: Makes a lazy evaluation. May be used for Left recursion (difficult) 
+* `F.parse(parserFunction)`: Create a new Parser from a function. Usually, you won't start here.
+* `F.subStream(length)`: accept any next characters  
+* `F.returns`: forces a returned value 
+* `F.error`: returns an error. Parser will never be accepted
+* `F.satisfy`: check if condition is satisfied
+* `F.sequence`:  Shorcut method. accept a given sequence or parsers.
+
+Utility function:
+
+* `F.flattenDeep`: Used with `map(F.flattenDeep)`  will result in a simple 
+        [flattened array](https://lodash.com/docs/#flattenDeep) of values 
 
 
+## The Char Bundle
 
-`F.parse`: 
-
- 
-`F.subStream`: 
-
-`F.lazy`: 
-`F.returns`: 
-`F.error`: 
-`F.eos`: 
-`F.satisfy`: 
-`F.sequence`: 
-`F.flattenDeep`: 
 
 
 ### Extension Parser functions
