@@ -303,6 +303,14 @@ export default {
         test.done();
     },
 
+    'expect (letters) to return a string, not an array of letters': function (test) {
+        test.expect(1);
+        // tests here
+        const parsing = C.letters.thenLeft(F.eos).parse(stream.ofString("someLetters"), 0);
+        test.equal(parsing.value, 'someLetters', 'not a string');
+        test.done();
+    },
+
 
     'expect (char) to be accepted': function (test) {
         test.expect(1);
@@ -690,7 +698,6 @@ export default {
     },
 
     "export subStream(4) to return [h,e,l,l]": function (test) {
-        // Main difference with sequence, is that a sequence element could be an array
         test.expect(1);
         // tests here
         const string = 'hello';
@@ -704,7 +711,6 @@ export default {
     },
 
     "export subString(4) to return hell": function (test) {
-        // Main difference with sequence, is that a sequence element could be an array
         test.expect(1);
         // tests here
         const string = 'hello';

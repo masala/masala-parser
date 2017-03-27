@@ -18,9 +18,10 @@ import stream from './stream/index';
 const JSON = standard.jsonParser;
 const MD=standard.markdownBundle;
 const X = standard.extractorBundle;
+const T=standard.tokenBundle;
 
 export {
-    data, genlex, parsec, standard, stream, parser, F,C,N, JSON, MD, X
+    data, genlex, parsec, standard, stream, parser, F,C,N, JSON, MD, X, T
 }
 
 

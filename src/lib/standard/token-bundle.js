@@ -7,7 +7,6 @@ function _inQuote(){
         .then(C.char('"'))
 }
 
-// TODO move to a ExtractorBundle or EmailBundle
 // accept simon@gmail.com, but also  simon"le gr@nd"@gmail.com
 function email(){
 
@@ -25,26 +24,43 @@ function email(){
         .flattenDeep().map(characters => ({email:characters.join('') }) )
 }
 
-function dateDigits() {
-    return N.digit.rep().map(v=>v.join(''));
-}
+
 
 function date() {
-    return dateDigits()
+    return N.digits
         .then(C.charIn('-/').thenReturns('-'))
-        .then(dateDigits())
+        .then(N.digits)
         .then(C.charIn('-/').thenReturns('-'))
-        .then(dateDigits())
+        .then(N.digits)
         .map(F.flattenDeep)
-        // TODO: test with 4 chars ?
         .map(dateValues=>dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
         .map(dateArray=>dateArray.join(''));
+}
+
+function blank(charsOrParser) {
+
+    if (charsOrParser){
+        if (typeof  charsOrParser === 'string'){
+            return C.charIn(charsOrParser).optrep().thenReturns('');
+        }else{
+            return charsOrParser.optrep().thenReturns('');
+        }
+    }
+    return C.charIn(' \t').optrep().thenReturns('');
+}
+
+
+
+function eol() {
+    return C.char('\n').or(C.string('\r\n'));
 }
 
 
 
 export default {
     email,
-    date
+    date,
+    blank,
+    eol:eol()
 }
 
