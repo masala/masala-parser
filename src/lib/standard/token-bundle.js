@@ -7,7 +7,6 @@ function _inQuote(){
         .then(C.char('"'))
 }
 
-// TODO move to a ExtractorBundle or EmailBundle
 // accept simon@gmail.com, but also  simon"le gr@nd"@gmail.com
 function email(){
 

@@ -32,7 +32,12 @@ function digit() {
 }
 
 function integer() {
-    return digit().rep().map(v=>parseInt(v.join('')));
+    // [-+]?\d+([.]\d+)?([eE][+-]?\d+)?
+    var join = (r) => r.join(''),
+        digits = digit().rep().map(join),
+        integer = C.charIn("+-").opt().then(digits).map((r) => r[0].orElse('') + r[1]);
+
+    return integer.map((i) => parseInt(i, 10));
 }
 
 

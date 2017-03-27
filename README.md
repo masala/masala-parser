@@ -202,7 +202,7 @@ Suppose we do not `try()` but use `or()` directly:
 
 
 
-# Deep documentation
+# Simple documentation of Core bundles
 
 ## Core Parser Functions
 
@@ -240,23 +240,48 @@ Utility function:
         [flattened array](https://lodash.com/docs/#flattenDeep) of values 
 
 
-## The Char Bundle
+## The Chars Bundle
 
 
 * `letter`: accept an ascii letter ([opened issue for other languages](https://github.com/d-plaindoux/parsec/issues/43))
     (and so moves the cursor)
 * `letters`: accepts many letters and returns a string
-* `notChar(x)`: accept if next input is not x
-* `char(x)`: accept if next input is x
-* `charIn('xyz')`: accept if next input is x, y or z
-* `charNotIn('xyz')`: accept if next input is not x, y or z
+* `notChar(x)`: accept if next input is not `x`
+* `char(x)`: accept if next input is `x`
+* `charIn('xyz')`: accept if next input is `x`, `y` or `z`
+* `charNotIn('xyz')`: accept if next input is not `x`, `y` or `z`
 * `subString(length)`: accept any next *length* characters and returns the equivalent string
-* `string(word)`: accept if next input is the given word  
-* `notString(word)`: accept if next input is *not* the given word
+* `string(word)`: accept if next input is the given `word`  
+* `notString(word)`: accept if next input is *not* the given `word`
 * `charLiteral`: single quoted char element in C/Java : `'a'` is accepted
 * `stringLiteral`: double quoted string element in java/json: `"hello world"` is accepted
 * `lowerCase`: accept any next lower case inputs
 * `upperCase`: accept any next uppercase inputs
+
+
+## The Numbers Bundle
+
+
+* `numberLiteral`: accept any float number, such as -2.3E+24, and returns a float (and so moves the cursor)    
+* `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript) 
+* `integer`: accept any positive or negative integer
+
+
+# The Standard bundles
+
+The standard bundles offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental 
+and incomplete markdown parser. 
+
+## The Token Bundle
+
+
+* `email`: accept a very large number of emails,
+* `date`: accept a very small number of dates (2017-03-27 or 27/03/2017)
+* `blank(nothing|string|parser)`: accept standard blanks (space, tab), or defined characters, or a combined Parser
+* `eol`: accept **E**nd **O**f **L**ine `\n` or `\r\n`
+
+## The Extractor Bundle
+
 
 
 
