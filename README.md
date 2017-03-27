@@ -290,26 +290,71 @@ class to make customization easy. So you can extend it to override methods, or u
 
 ### X constructor
 
-const x = new X(options) with default options to:
+`const x = new X(options)` with default options to:
 
         {
             spacesCharacters:' \n',
             wordSeparators:C.charIn(' \n:-,;'),
-            letters : C.letters,
+            letter : C.letter,
             moreSeparators: null
         }
 
 * `spacesCharacters`: series of chars. Use `x.spaces()` to accept given spaces
 * `wordSeparators`: Parser. Use `x.words()` to select words separated with `wordSeparators`
-* `letters`: Parser. Original `C.letters` are only ascii letters. See [opened issue](https://github.com/d-plaindoux/parsec/issues/43).
+* `letter`: Parser. Original `C.letter` are only ascii letters. See [opened issue](https://github.com/d-plaindoux/parsec/issues/43).
 * `moreSeparator`: series of chars. You don't have to redefine `wordSeparators` when using `{moreSeparator:'$£€'}`
 
 ### X functions
 
-* x.spaces(): accept spaces
-* x.digits(): accept many digits and returns a string
-* x.word(): accept a word that satisfies series of options.letters  
+* `x.spaces()`: accept spaces defined in `options.spacesCharacters`
+* `x.digits()`: accept many digits and returns a string
+* `x.word()`: accept a word that satisfies repetition of `options.letter`. Returns the word as a string
+* `x.words(keepSpaces=true)`: accept repetition of previous words. Set `keepSpaces=false` to removes spaces from result
+* `x.wordsIn(arrayOfStrings, keepSpaces = true)`: accept given words, separated by previously defined `wordSeparators`
+* `x.stringIn(arrayOfStrings)`: lower level parser. Accept one string that could be found in given `arrayOfStrings`
+* `x.wordsUntil(stopParser)`: Probably the most valuable method. Will traverse the document until the **stop combinator**
+    - returns `undefined` if *stop* is not found
+    - returns all characters if *stop* is found, and set the cursor at the spot of the stop
+    - Use `x.wordsUntil(valueStuffParser).thenRight(valueStuffParser)` to extract *valueStuff*
+* `x.first`, `x.last`: mappers to pick first or last word  
+    - example: `x.words().map(x.first)` will pick the first word of the document
 
+
+
+## JSON Bundle and Markdown Bundle
+
+The JSON bundle offers an easy to use JSON parser. Obviously you could use native `JSON.parse()` function. So it's more
+  a source of examples to deal with array structure.
+
+**Warning: The Markdown bundle is under active development and will move a lot !**
+
+The Markdown parser will not compile Markdown in HTML, but it will gives you a Javascript object (aka JSON structure).
+The Markdown bundle offers a series of Markdown tokens to build your own **meta-markdown** parser.
+ 
+Tokens are:
+
+* blank: blanks in paragraphs, including single end of line
+* eol: `\n` or `\r\n` 
+* lineFeed: At least two EOL
+* fourSpacesBlock: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
+* stop: End of pure text
+* pureText: Pure text, which is inside italic or bold characters 
+* italic: italic text between *pureText* or _pureText_ 
+* bold: bold text between **pureText**
+* code: code text between ```pureText``` (double backticks for escape not yet supported)
+* text (pureTextParser): higher level of pureText, if you need to redefine what is pureText
+* formattedSequence (pureText, stop): combination of pureText, italic, bold and code
+* formattedParagraph: formattedSequence separated by a lineFeed 
+* titleLine: `title\n===` or `title\n---` variant of title
+* titleSharp: `### title` variant of title
+* title: titleLine or titleSharp
+* bulletLv1: Level one bullet
+* bulletLv2: Level two bullet
+* bullet: Level one or two bullets
+* codeLine: Four spaces indented code block line
+
+
+<!---
 
 ### Extension Parser functions
 
@@ -460,6 +505,8 @@ P.digit.rep().map(toInteger)        (1)
 
 #### Tokenizer [String]
 - *tokenize* : **Tokenizer [String]** &odot; Stream char &rarr; Try [Token]
+
+-->
 
 ## License
 

@@ -70,7 +70,7 @@ export default {
 
         const x = new X();
         const combinator = x.word().thenLeft(C.char('-'));
-        const value = combinator.parse(line).value[0];
+        const value = combinator.parse(line).value;
         test.ok(value === 'Parsec');
         test.done();
     },
@@ -78,27 +78,23 @@ export default {
     'test single word hexadecimal': function (test) {
 
         let line = stream.ofString('10FF-hexadecimal');
-        const hexadecimal = C.charIn('0123456789ABCDEF')
-            .rep().map(values=>values.join(''))
-            .map(x => parseInt(x, 16));
+        const hexadecimal = C.charIn('0123456789ABCDEF');
 
-        const x = new X({letters: hexadecimal});
-        const combinator = x.word()
+        const x = new X({letter: hexadecimal});
+        const combinator = x.word().map(x => parseInt(x, 16))
             .thenLeft(C.char('-'))
             .thenLeft(C.string('hexadecimal'));
-        const value = combinator.parse(line).value[0];
+        const value = combinator.parse(line).value;
         test.equals(value, 4351);
         test.done();
     },
     'single word with bad letters should fail': function (test) {
 
         let line = stream.ofString('classicWord-notHexadecimal');
-        const hexadecimal = C.charIn('0123456789ABCDEF')
-            .rep().map(values=>values.join(''))
-            .map(x => parseInt(x, 16));
+        const hexadecimal = C.charIn('0123456789ABCDEF');
 
-        const x = new X({letters: hexadecimal});
-        const combinator = x.word()
+        const x = new X({letter: hexadecimal});
+        const combinator = x.word().map(x => parseInt(x, 16))
             .thenLeft(C.char('-'))
             .thenLeft(C.string('notHexadecimal'));
         const accepted = combinator.parse(line).isAccepted();
