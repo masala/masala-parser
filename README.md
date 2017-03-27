@@ -8,7 +8,8 @@
 Masala Parser is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf).
 
-It's a Javascript implementation of the Haskell **Parsec**, or an **alternative for Lex & Yacc**.
+Masala Parser is a Javascript implementation of the Haskell **Parsec**, or an **alternative for Lex & Yacc**.
+ It is plain Javascript that works in the browser, is tested with more than 400 unit tests, covering 100% of code lines.
 
 
 # Quick Examples
@@ -22,9 +23,9 @@ import {stream, N,C} from 'parser-combinator';
 const document = '|4.6|';
 
 const floorCombinator= C.char('|')
-                        .thenRight(N.numberLiteral)    // we had [ '|' , 4.6], we keep 4.6
-                        .thenLeft(C.char('|'))   // we had [ 4.6 , '|' ], we keep 4.6
-                        .map(x =>Math.floor(x));
+                        .thenRight( N.numberLiteral )    // we had [ '|' , 4.6], we keep 4.6
+                        .thenLeft( C.char('|') )   // we had [ 4.6 , '|' ], we keep 4.6
+                        .map(x => Math.floor(x)); // we transform selected value in meaningful value
 
 // Parsec needs a stream of characters
 const parsing = floorCombinator.parse(stream.ofString(document));
@@ -63,15 +64,15 @@ The parser will read through the document and aggregate values. The single value
 ![](./documentation/parsec-monoid.png)
  
 
-## Hello World
+## Hello 'X'
+
+The goal is check that we have Hello 'something', then to grab that *something*
 
 ```js
-// Plain old ES
+// Plain old javascript
 var parsec = require('parser-combinator');
 var stream = parsec.stream;
 var C = parsec.C;
-
-// The goal is check that we have Hello 'something', then to grab that something
 
 var helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
@@ -152,7 +153,7 @@ console.info('scalar: ',parseOperation('8').value);  // 8
 
 A curry paste is an higher order ingredient made from a good combination of spices.
 
-![]('./documentation/images/curry-paste.jpg')
+![](./documentation/images/curry-paste.jpg)
 
 ## Precedence
 
@@ -168,15 +169,15 @@ function combinator() {
 console.info('sum: ',parseOperation('2+2').value);
 ```
 
-We will give priority to sum, then multiplication, then scalar. If we had put scalar() first, we would have first 
-accept '2', then what could we do with '+2' ? It's not a valid sum.
+We will give priority to sum, then multiplication, then scalar. If we had put `scalar()` first, we would have first 
+accepted `2`, then what could we do with `+2` alone ? It's not a valid sum !
 
 ## try(x).or(y)
 
-`or()` will often be used with `try()`. Like Parsec, Masala-Parser  It can parse  infinite look-ahead grammars but
- it performs best on predictive (LL[1]) grammars.
+`or()` will often be used with `try()`. Like Haskell's Parsec, Masala-Parser can parse infinite look-ahead grammars but
+ performs best on predictive (LL[1]) grammars.
  
-With `try()`, we can look a bit ahead of next characters, then go back
+With `try()`, we can look a bit ahead of next characters, then go back:
  
         F.try(sum()).or(F.try(multiplication())).or(scalar())
         // try(sum()) parser in action
@@ -184,14 +185,15 @@ With `try()`, we can look a bit ahead of next characters, then go back
         ..ok..ok  ↑oups: go back and try multiplication. Should be OK.
 
 
-Suppose we do not try:
+Suppose we do not `try()` but use `or()` directly:
 
         sum().or(multiplication()).or(scalar())
-        // try(sum()) parser in action
+        // testing sum()
         2         *2
-        ..ok..ok  ↑oups: no goBack. Testing '*2' ; So testing or(multiplication())? No ; or(scalar()) ? neither
+        ..ok..ok  ↑oups: not going back. Having now to test '*2' ;
+                                         Is it (multiplication())? No ; or(scalar()) ? neither
 
-`try()` has some benefits, but costs more in memory, and CPU as you test things twice.
+`try()` has some benefits, but costs more in memory and CPU, as you test things twice.
  You should avoid long sequences of `try()` if memory is constrained. If possible, you can use `or()` without `try()`
   when there is no *starting ambiguity*.
  
