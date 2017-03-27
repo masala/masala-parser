@@ -88,7 +88,7 @@ console.log(parsing.value.toString() == ['W','o','r','l','d'].toString());
 ## Improvement with Extractor Bundle
 
 We have used a complex combinator that shows us how to parse character by character. But you can build or use 
- higher level parsers to do the same job. **Parser combinator JS** offers an Extractor Bundle that could replace
+ higher level parsers to do the same job. **Masala Parser** offers an Extractor Bundle that could replace
   all of your regexp extractions. 
  
 
@@ -116,7 +116,7 @@ Let's use a real example. We combine many functions that returns a new Parser. A
 is a combination of Parsers given by the standard bundles or previous functions.
 
 ```js
-import  {stream, N,C, F, T} from '../../dist/parser-combinator.min';
+import  {stream, N,C, F, T} from 'parser-combinator';
 
 function operator(symbol) {
     return T.blank().thenRight(C.char(symbol)).thenLeft(T.blank());
@@ -236,7 +236,7 @@ Others:
 
 Utility function:
 
-* `F.flattenDeep`: Used with `map(F.flattenDeep)`  will result in a simple 
+* `F.flattenDeep`: Used with `parser.map(F.flattenDeep)`  will result in a simple 
         [flattened array](https://lodash.com/docs/#flattenDeep) of values 
 
 
@@ -262,14 +262,15 @@ Utility function:
 ## The Numbers Bundle
 
 
-* `numberLiteral`: accept any float number, such as -2.3E+24, and returns a float (and so moves the cursor)    
+* `numberLiteral`: accept any float number, such as -2.3E+24, and returns a float    
 * `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript) 
+* `digits`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
 * `integer`: accept any positive or negative integer
 
 
 # The Standard bundles
 
-The standard bundles offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental 
+Masala Parser offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental 
 and incomplete markdown parser. 
 
 ## The Token Bundle
@@ -282,8 +283,32 @@ and incomplete markdown parser.
 
 ## The Extractor Bundle
 
+The Extractor will help you to find valuable data in complex text (emails sent by platforms, website crawling...)
 
+`Parser` is a `class`, but you never use `new Parser()`. Other bundles are simple JS objects. The `X` extractor is a
+class to make customization easy. So you can extend it to override methods, or use its constructor to change options.
 
+### X constructor
+
+const x = new X(options) with default options to:
+
+        {
+            spacesCharacters:' \n',
+            wordSeparators:C.charIn(' \n:-,;'),
+            letters : C.letters,
+            moreSeparators: null
+        }
+
+* `spacesCharacters`: series of chars. Use `x.spaces()` to accept given spaces
+* `wordSeparators`: Parser. Use `x.words()` to select words separated with `wordSeparators`
+* `letters`: Parser. Original `C.letters` are only ascii letters. See [opened issue](https://github.com/d-plaindoux/parsec/issues/43).
+* `moreSeparator`: series of chars. You don't have to redefine `wordSeparators` when using `{moreSeparator:'$£€'}`
+
+### X functions
+
+* x.spaces(): accept spaces
+* x.digits(): accept many digits and returns a string
+* x.word(): accept a word that satisfies series of options.letters  
 
 
 ### Extension Parser functions

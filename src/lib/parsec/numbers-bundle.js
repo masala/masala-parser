@@ -31,6 +31,10 @@ function digit() {
     return F.satisfy((v) => '0' <= v && v <= '9');
 }
 
+function digits() {
+    return digit().rep().map(v=>v.join(''));
+}
+
 function integer() {
     // [-+]?\d+([.]\d+)?([eE][+-]?\d+)?
     var join = (r) => r.join(''),
@@ -44,5 +48,6 @@ function integer() {
 export default {
     numberLiteral:numberLiteral(),
     digit: digit(),
+    digits: digits(),
     integer:integer()
 }

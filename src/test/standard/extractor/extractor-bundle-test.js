@@ -31,6 +31,19 @@ export default {
         test.equals(value.length, 3);
         test.done();
     },
+    'test spaces, tabs and line feed': function (test) {
+
+        const line = stream.ofString('    this \n \t contains line feed');
+
+        const x = new X();
+        const combinator = x.spaces()
+            .then(x.word())
+            .thenRight(x.spaces())
+            .thenLeft(F.any);
+        const value = combinator.parse(line).value;
+        test.equals(value.length, 5);
+        test.done();
+    },
     'test numbers': function (test) {
 
         const line = stream.ofString('98');

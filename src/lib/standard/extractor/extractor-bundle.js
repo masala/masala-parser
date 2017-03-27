@@ -8,7 +8,7 @@ export default class ExtractorBundle {
 
     constructor(options) {
         this.options ={
-            spacesCharacters:' \n',
+            spacesCharacters:' \t\n',
             wordSeparators:C.charIn(' \n:-,;'),
             letters : C.letters,
             moreSeparators: null
@@ -57,11 +57,7 @@ export default class ExtractorBundle {
         return N.digit.rep().map(v=>v.join(''));
     }
 
-    word(which){ //parser, string or array of string
-        if (which && typeof which ==='string'){
-            // thenReturns word
-            // or fail
-        }
+    word(){        
         return this.options.letters.rep();
     }
 
