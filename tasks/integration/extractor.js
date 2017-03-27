@@ -6,7 +6,7 @@ var X = parsec.X;
 
 const line = parsec.stream.ofString("Hello 'World'");
 
-var x = new X({moreSeparators: "'"});
+var x = new X({moreSeparators: `'`});
 const helloParser = x.words(false) // false because we don't keep spaces
                     .map(x.last);
 

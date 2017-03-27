@@ -8,6 +8,8 @@
 Javascript parser combinator implementation inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf).
 
+It's a Javascript implementation of the Haskell Parsec, or an alternative
+for Lex & Yacc.
 
 
 # Quick Examples
@@ -43,30 +45,29 @@ var C = parsec.C;
 
 var helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
-                    .then(C.char("'"))
+                    .then(C.char(`'`))
                     .thenRight(C.letter.rep()) // keeping repeated ascii letters
-                    .thenLeft(C.char("'"));    // keeping previous letters
+                    .thenLeft(C.char(`'`));    // keeping previous letters
 
 var parsing = helloParser.parse(S.ofString("Hello 'World'"));
 // C.letter.rep() will giv a array of letters
 console.log(parsing.value.toString() == ['W','o','r','l','d'].toString());
 ```
 
-### Improvement with Extractor Bundle
+## Improvement with Extractor Bundle
 
 We have used a complex combinator that shows us how to parse characters by characters. But you can build or use 
  higher level parsers to do the same job. **Parser combinator JS** offers an Extractor Bundle that could replace
   all of your regexp extractions. 
  
-So we can create a `letters` parser that will seek many letters and directly return the string value.
 
-
+```js
 import {stream, X} from 'parser-combinator'
 
 const line = stream.ofString("Hello 'World'");
 
-// Adding a ' as a word separator;  
-const x = new X({moreSeparators: "'"});
+// Adding a `'` as a word separator;  
+const x = new X({moreSeparators: `'`});
 
 const helloParser = x.words(false) // false because we don't keep separators
                      .map(x.last); // We had "Hello" and "World"
@@ -74,19 +75,20 @@ const helloParser = x.words(false) // false because we don't keep separators
 const value = helloParser.parse(line).value;
 
 test.equals(value, 'World');
-
+```
 
  Hopefully, the Parser object, often imported as `P` has already a `letters` parser.
  
-  
 
-## Tutorial
+ 
+
+# Explanations
 
 According to Wikipedia *"in functional programming, a parser combinator is a 
 higher-order function that accepts several parsers as input and returns a new 
 parser as its output."* 
 
-### The Parser
+## The Parser
 
 Let's say we have a document : 
 
@@ -98,7 +100,7 @@ There are many way to analyze this document, for example finding names inside. B
  
 The goal of a parser is to find out. The goal of Parsec is to make this easy.
 
-### The Monoid structure
+## The Monoid structure
 
 A monoid is an object with functions and one single encapsulated value. Have you heard of jQuery ? The `$` object is a monoid, where
  the value is the DOM selection.
@@ -109,11 +111,38 @@ The parser will read through the document and aggregate values. The single value
  
 
 
-## Deep documentation
+# Deep documentation
 
-### Core Parser Functions
+## Core Parser Functions
 
 Here is a link for [Core functions documentation](./documentation/parser-core-functions.md). 
+
+## The Flow Bundle
+ 
+The flow bundle will mix ingredients together.
+
+For example if you have a Parser `p`, `F.not(p)` will accept anything
+that does not satisfy `p`
+
+`F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed 
+`F.any`: Accept any character
+`F.not(parser)`: Accept anything that is not a parser. Often to test a *stop*  
+
+
+
+`F.parse`: 
+
+ 
+`F.subStream`: 
+
+`F.lazy`: 
+`F.returns`: 
+`F.error`: 
+`F.eos`: 
+`F.satisfy`: 
+`F.sequence`: 
+`F.flattenDeep`: 
+
 
 ### Extension Parser functions
 
