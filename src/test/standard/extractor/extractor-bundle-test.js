@@ -158,7 +158,7 @@ export default {
         test.done();
     },
 
-    'test wordsIn keeping spaces': function (test) {
+    'test wordsIn without keeping spaces': function (test) {
         let line = stream.ofString('James Bond by Ian Fleming');
 
         const x = new X();

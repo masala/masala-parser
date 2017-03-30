@@ -12,6 +12,17 @@ function letter() {
     return F.satisfy((v) => ('a' <= v && v <= 'z') || ('A' <= v && v <= 'Z'));
 }
 
+function isUtf8Letter(char){
+    var firstLetter = char.toUpperCase();
+    return firstLetter.toLowerCase() != firstLetter;
+}
+
+function utf8Letter(){
+
+    return F.satisfy((v) => isUtf8Letter(v));
+
+}
+
 function letters() {
     return letter().rep().map(values=>values.join(''));
 }
@@ -84,6 +95,7 @@ function upperCase() {
 }
 
 export default {
+    utf8Letter:utf8Letter(),
     letter: letter(),
     letters: letters(),
     notChar: notChar,
