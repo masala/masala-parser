@@ -28,8 +28,8 @@ function pureText(){
         //  ['a','\n','b'] -> 'a b'
         // But on Windows, we will ignore the \r
         // inside line break will be put as space, but we clear initial or final \n
-        .map(characters=>{
-            let allChars = characters.join('');
+        .map(chars=>{
+            let allChars = chars.join('');
             return allChars.replace(/\n/g, " ").replace(/\r/g, "");
         });
 }
@@ -75,7 +75,8 @@ function formattedSequence(pureTextParser, stopParser) {
 function formattedParagraph(){
     return T.blank()
         .thenRight(formattedSequence(pureText(), stop()))
-        .map(array =>{
+        .map(list =>{
+            var array = list.array();
             // We trim the first and last element of the paragraph
             if (array.length>0 && typeof array[0]==='object'&& array[0].text){
                 array[0].text = trimStartingLineFeed(array[0].text);

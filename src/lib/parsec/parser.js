@@ -13,9 +13,11 @@
  */
 
 
-import  stream from '../stream/index.js';
+import  stream from '../stream/index';
 
-import option from '../data/option.js';
+import option from '../data/option';
+import list from '../data/list';
+
 import response from "./response";
 
 
@@ -55,12 +57,19 @@ export default class Parser{
 
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
-        return this.flatmap((a) => p.map((b) => [a, b]));
+        return this.flatmap((a) => p.map((b) => {
+            let result = list(a).append(list(b)).array();
+            if (result.length == 1) {
+                return result[0];
+            } else {
+                return result;
+            }
+        }));
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c
     thenLeft(p) {
-        return this.then(p).map((r) => r[0]);
+        return this.then(p.map((r) => []));
     }
 
     // Parser 'a 'c => 'b -> Parser 'b 'c
@@ -70,7 +79,7 @@ export default class Parser{
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'b 'c
     thenRight(p) {
-        return this.then(p).map((r) => r[1]);
+        return this.map((r) => []).then(p);
     }
 
     // Parser 'a 'c -> Parser 'a 'c
@@ -82,7 +91,6 @@ export default class Parser{
     opt() {
         return this.map(option.some).or(returns(option.none()));
     }
-
 
     // Parser 'a 'c => unit -> Parser (List 'a) 'c
     rep() {
@@ -129,8 +137,6 @@ export default class Parser{
     flattenDeep() {
         return this.map(self => flattenDeep(self))
     }
-
-
 }
 
 
@@ -177,19 +183,20 @@ function choice(self, f) {
 function repeatable(self, occurrences, accept) {
     return new Parser((input, index=0) => {
         var consumed = false,
-            value = [],
+            value = list(),
             offset = index,
-            current = self.parse(input, index);
+            current = self.parse(input, index),
+            occurrence = 0;
 
-        while (current.isAccepted() && occurrences(value.length)) {
-            value.push(current.value);
+        while (current.isAccepted() && occurrences(occurrence)) {
+            occurrence += 1;
+            value = value.append(list(current.value));
             consumed = consumed || current.consumed;
             offset = current.offset;
-
-            current = self.parse(input, offset);
+            current = self.parse(input, current.offset);
         }
 
-        if (accept(value.length)) {
+        if (accept(occurrence)) {
             return response.accept(value, input, offset, consumed);
         }
 
@@ -221,7 +228,6 @@ function flattenDeep(array) {
     let nodes =  array.slice();
     let node;
 
-
     if (!array.length) {
         return result;
     }
@@ -239,6 +245,3 @@ function flattenDeep(array) {
     result.reverse(); // we reverse result to restore the original order
     return result;
 }
-
-
-

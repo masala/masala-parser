@@ -4,7 +4,7 @@
  /*
  * This module try parse a title. The folowing will be recognised as titles:
  * "#foo\n"  "##foo\n"  "foo\n==="  "foo\n---"  "##########     foo     \n"
- * 
+ *
  * Limits and axiomes
  * A \n in the markdown source ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar}
  */
@@ -13,7 +13,7 @@ import stream from '../../stream/index';
 import T from './token';
 
 function sharps(){
-    return C.char('#').rep().map(string => string.length)
+    return C.char('#').rep().map(string => string.array().length)
 }
 
 // a white is a sequence of at least one space, tab or non-breakable space
@@ -72,7 +72,7 @@ function parseTitle( line, offset=0){
 
 
 export default {
-    
+
     titleLine,
     titleSharp,
     title,

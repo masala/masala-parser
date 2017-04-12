@@ -9,24 +9,16 @@ function blank() {
 //todo: escape characters
 function rawTextUntilChar(charList, allowVoid = false) {
     if (allowVoid) {
-        return C.charNotIn(charList).optrep()
-            .map(characters => characters.join(''))
+        return C.charNotIn(charList).optrep().map(chars => chars.join(''))
     }
     else {
-        return C.charNotIn(charList).rep()
-            .map(characters => characters.join(''))
+        return C.charNotIn(charList).rep().map(chars => chars.join(''))
     }
 }
 
 function rawTextUntil(stop) {
-
-        return F.not(stop).rep()
-            .map(characters => characters.join(''))
-
+    return F.not(stop).rep().map(chars => chars.join(''))
 }
-
-
-
 
 function eol() {
     return C.char('\n').or(C.string('\r\n'));
@@ -44,11 +36,6 @@ function fourSpacesBlock() {
     return C.char('\t').or(C.charIn(' \u00A0').occurrence(4));
 }
 
-
-
-
-
-
 export default {
     blank,
     rawTextUntilChar,
@@ -57,6 +44,3 @@ export default {
     lineFeed,
     fourSpacesBlock
 }
-
-
-

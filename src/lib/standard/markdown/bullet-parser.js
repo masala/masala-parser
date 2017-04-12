@@ -15,8 +15,7 @@ function stop(){
 }
 
 function pureText(){
-    return F.not(stop()).rep()
-        .map(characters=>characters.join(''))
+    return F.not(stop()).rep().map(chars=>chars.join(''))
 }
 
 function formattedSequence(){
@@ -28,7 +27,7 @@ function bulletLv1(){
         .then(C.charIn('*-'))  //first character of a bullet is  * or -
         .then(C.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
-        .map(someText => ({bullet:{level:1, content: someText }}  ))
+        .map(someText => ({bullet:{level:1, content: someText.array() }}  ))
 }
 
 function bulletLv2(){
@@ -38,7 +37,7 @@ function bulletLv2(){
         .then(C.charIn('*-'))       //first character of a bullet is  * or -
         .then(C.charIn(' \u00A0'))  // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
-        .map(someText => ({bullet:{level:2, content: someText }}  ))
+        .map(someText => ({bullet:{level:2, content: someText.array() }}  ))
 }
 
 function bullet(){

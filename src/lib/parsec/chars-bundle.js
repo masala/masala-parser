@@ -44,7 +44,7 @@ function charIn(c) {
 function charNotIn(c) {
     return F.satisfy((v) => c.indexOf(v) === -1);
 }
-    
+
 // int -> Parser string char
 function subString(length) {
     return F.subStream(length).map((s) => s.join(""));

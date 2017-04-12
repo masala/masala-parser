@@ -271,5 +271,3 @@ function _includes(array, value){
     }
     return false;
 }
-
-

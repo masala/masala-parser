@@ -15,6 +15,5 @@ import numbers from './numbers-bundle';
 export const C = chars;
 export const F = flow;
 export const N = numbers;
-export default{
-parser, response
-}
+
+export default { parser, response }

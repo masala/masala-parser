@@ -577,7 +577,7 @@ export default {
     'expect (occurence 1) to return [a]': function (test) {
         test.expect(1);
         // tests here
-        test.deepEqual(F.any.occurrence(1).parse(stream.ofString('a'), 0).value,
+        test.deepEqual(F.any.occurrence(1).parse(stream.ofString('a'), 0).value.array(),
             ['a'],
             'should be accepted.');
         test.done();
@@ -595,16 +595,16 @@ export default {
     'expect (occurence 2) to return [a,a]': function (test) {
         test.expect(1);
         // tests here
-        test.deepEqual(F.any.occurrence(2).parse(stream.ofString('aa'), 0).value,
+        test.deepEqual(F.any.occurrence(2).parse(stream.ofString('aa'), 0).value.array(),
             ['a', 'a'],
             'should be accepted.');
         test.done();
     },
 
-    'expect (occurence 2) to return [a,a,a]': function (test) {
+    'expect (occurence 3) to return [a,a,a]': function (test) {
         test.expect(1);
         // tests here
-        test.deepEqual(F.any.occurrence(3).parse(stream.ofString('aaa'), 0).value,
+        test.deepEqual(F.any.occurrence(3).parse(stream.ofString('aaa'), 0).value.array(),
             ['a', 'a', 'a'],
             'should be accepted.');
         test.done();
@@ -623,7 +623,7 @@ export default {
     'expect (occurence 0) to return []': function (test) {
         test.expect(1);
         // tests here
-        test.deepEqual(F.any.occurrence(0).parse(stream.ofString('aa'), 0).value,
+        test.deepEqual(F.any.occurrence(0).parse(stream.ofString('aa'), 0).value.array(),
             [],
             'should be accepter.');
         test.done();
@@ -679,7 +679,7 @@ export default {
         test.done();
     },
 
-    "expect flattenDeep ( 2+2) to return []": function (test) {
+    "expect flattenDeep (2+2) to return []": function (test) {
         // Main difference with sequence, is that a sequence element could be an array
         test.expect(1);
         // tests here
@@ -706,7 +706,7 @@ export default {
         const parsing = F.subStream(4)
                 .parse(stream.ofString(string), 0);
 
-        test.deepEqual(parsing.value, expected, 'should be equal');
+        test.deepEqual(parsing.value.array(), expected, 'should be equal');
         test.done();
     },
 

@@ -26,12 +26,12 @@ class Genlex {
     // [String] -> Genlex
     constructor(keywords=[]) {
         var idletter = C.letter.or(C.char('_')).or(N.digit);
-        this.identParser = C.letter.then(idletter.optrep()).map((r) => [r[0]].concat(r[1]).join(''));
+        this.identParser = C.letter.then(idletter.optrep()).map((r) => [r[0]].concat(r[1].array()).join(''));
         this.keywordParser = keywords.reduce((p, s) => C.string(s).or(p),F.error);
     }
 
     // unit -> Parser char char
-    space() {           
+    space() {
         return C.charIn(" \r\n\f\t");
     }
 
@@ -81,7 +81,7 @@ class Genlex {
 
     // GenLexFactory 'a -> Parser ['a] char
     tokens(f) {
-        return this.tokenBetweenSpaces(f).optrep().thenLeft(F.eos);
+        return this.tokenBetweenSpaces(f).optrep().thenLeft(F.eos).map(r => r.array());
     }
 }
 

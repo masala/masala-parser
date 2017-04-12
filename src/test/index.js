@@ -8,6 +8,7 @@
 
 import optionTest from './data/option_test';
 import tryTest from './data/try_test';
+import listTest from './data/list_test';
 import streamsTest from './stream/stream_test';
 import bufferedStreamsTest from './stream/buffered_stream_test';
 import genlexTest from './genlex/genlex_test';
@@ -27,7 +28,7 @@ import jsonSampleTest from './standard/json/jsonsample_test';
 import extractorBundleTest from './standard/extractor/extractor-bundle-test'
 
 export {
-    optionTest, tryTest, streamsTest, bufferedStreamsTest,
+    optionTest, tryTest, listTest, streamsTest, bufferedStreamsTest,
     genlexTest, tokenTest, tokenizerTest,
     parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
     parserStreamTest, parserResponseTest,flowBundleTest,

@@ -47,9 +47,10 @@ function eos() {
 // ('a -> boolean) -> Parser a 'c
 function satisfy(predicate) {
     return new Parser((input, index=0) =>
-        input.get(index).filter(predicate).
-        map((value) => response.accept(value, input, index + 1, true)).
-        lazyRecoverWith(() => response.reject(input.location(index), false))
+        input.get(index).
+            filter(predicate).
+            map((value) => response.accept(value, input, index + 1, true)).
+            lazyRecoverWith(() => response.reject(input.location(index), false))
     );
 }
 
@@ -70,38 +71,25 @@ function any() {
     return satisfy(() => true);
 }
 
+// unit -> Parser 'a 'c
+function nop() {
+    return new Parser((input, index=0) => response.accept([], input, index, true));
+}
+
 // Parser 'a ? -> Parser 'a 'a
 function not(p) {
     return doTry(p).then(error()).or(any());
 }
-
-
-
 
 // int -> Parser (List 'a') a'
 function subStream(length) {
     return any().occurrence(length);
 }
 
-
-
 function sequence() {
-    const args = [];
-
-    function getParser(x) {
-
-            return x.map(val=>[val]);
-        
-    }
-
-    for (let key in arguments) {
-        args.push(arguments[key]);
-    }
-    let current = getParser(args[0]);
-    for (var i = 1; i < args.length; i++) {
-        const next = getParser(args[i]);
-        current = current.then(next)
-            .map(values=> values[0].concat( values[1]));
+    var current = nop();
+    for (let v in arguments) {
+        current = current.then(arguments[v]);
     }
     return current;
 }

@@ -66,29 +66,23 @@ export default class ExtractorBundle {
 
     words(keepSpaces = true) {
         if (keepSpaces) {
-            return F.try(this.word().or(this._wordSeparators())).rep();
+            return F.try(this.word().or(this._wordSeparators())).rep().map((item) => item.array());
         } else {
             const parser = F.try(this._wordSeparators().optrep().thenRight(this.word()));
-            return parser.rep().thenLeft(this._wordSeparators().optrep());
+            return parser.rep().thenLeft(this._wordSeparators().optrep()).map((item) => item.array());
         }
-
     }
 
     wordsIn(array, keepSpaces = true) {
-
         if (keepSpaces) {
-            return F.try(this.stringIn(array).or(this._wordSeparators()))
-                .rep();
-
+            return F.try(this.stringIn(array).or(this._wordSeparators())).rep().map((item) => item.array());
         } else {
             const parser = F.try(this._wordSeparators().optrep().thenRight(this.stringIn(array)));
-            return parser.rep().thenLeft(this._wordSeparators().optrep());
+            return parser.rep().thenLeft(this._wordSeparators().optrep()).map((item) => item.array());
         }
-
     }
-    
-    stringIn(array) {
 
+    stringIn(array) {
         const tryString = s => F.try(C.string(s));
 
         if (array.length === 0) {
@@ -102,15 +96,12 @@ export default class ExtractorBundle {
         // TODO: Comment reduce use
         const initial = tryString(array[0]);
         const workArray = array.slice(1);
-        return workArray.reduce((accu, next)=>accu.or(tryString(next)),
-            initial)
+        return workArray.reduce((accu, next)=>accu.or(tryString(next)), initial);
     }
-
 
     _wordSequence(stop) {
         return F.not(stop);
     }
-
 
     wordsUntil(stop) {
         return F.try(
@@ -130,4 +121,3 @@ function _last(values) {
 function _first(values) {
     return values[0];
 }
-

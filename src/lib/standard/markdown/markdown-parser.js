@@ -20,7 +20,7 @@ function mdLine() {
 }
 
 function document(){
-    return mdLine().rep();
+    return mdLine().rep().map((item) => item.array());
 }
 
 function parseLine(line) {
@@ -39,11 +39,3 @@ export default {
         return document().parse(stream, offset)
     }
 }
-
-
-
-
-
-
-
-

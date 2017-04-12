@@ -17,9 +17,9 @@ function numberLiteral() {
         digits = digit().rep().map(join),
         integer = C.charIn("+-").opt().then(digits).map((r) => r[0].orElse('') + r[1]),
         float = integer.
-        then(C.char('.').then(digits).opt().map(joinOrEmpty)).
-        then(C.charIn('eE').then(integer).opt().map(joinOrEmpty)).
-        map((r) => r[0][0] + r[0][1] + r[1]);
+                then(C.char('.').then(digits).opt().map(joinOrEmpty)).
+                then(C.charIn('eE').then(integer).opt().map(joinOrEmpty)).
+                map((r) => r[0] + r[1] + r[2]);
 
     return float.map((r) => parseFloat(r, 10));
 }
@@ -32,7 +32,7 @@ function digit() {
 }
 
 function digits() {
-    return digit().rep().map(v=>v.join(''));
+    return digit().rep().map((v) => v.join(''));
 }
 
 function integer() {
