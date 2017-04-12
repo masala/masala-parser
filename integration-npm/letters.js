@@ -1,10 +1,10 @@
 var parsec = require('parser-combinator');
-var S = require('parser-combinator').stream;
-var P = parsec.parser;
+var S = parsec.stream;
+var C = parsec.C;
 
-const letters = P.letter.rep().map(letterArray => letterArray.join(''));
+const letters = C.letter.rep().map(letterArray => letterArray.join(''));
 
-var helloParser = P.string("Hello").then(P.char(' ').rep()).thenRight(letters);
+var helloParser = C.string("Hello").then(C.char(' ').rep()).thenRight(letters);
 
 var assertWorld = helloParser.parse(S.ofString("Hello World")).value === "World";
 console.info('assertWorld', assertWorld);
