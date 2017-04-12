@@ -662,7 +662,7 @@ export default {
         test.done();
     },
 
-    "expect flattenDeep ( 2+2) to return [2,'+' ,2]": function (test) {
+    "expect chained then (2+2) to return [2,'+' ,2]": function (test) {
         // Main difference with sequence, is that a sequence element could be an array
         test.expect(1);
         // tests here
@@ -672,14 +672,13 @@ export default {
         const parsing = N.numberLiteral
             .then (C.char('+'))
             .then(N.numberLiteral)
-            .flattenDeep()
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
         test.done();
     },
 
-    "expect flattenDeep (2+2) to return []": function (test) {
+    "expect chained then (2+2) to return []": function (test) {
         // Main difference with sequence, is that a sequence element could be an array
         test.expect(1);
         // tests here
@@ -690,7 +689,6 @@ export default {
             .then (C.char('+'))
             .then(N.numberLiteral)
             .thenReturns([])
-            .flattenDeep()
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');

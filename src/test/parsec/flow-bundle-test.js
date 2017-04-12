@@ -19,7 +19,7 @@ export default  {
         done();
     },
 
-    'expect map(F.flattenDeep) to be ok': function (test) {
+    'expect flatten result to be ok': function (test) {
 
         const string = 'foobar';
         // tests here
@@ -27,24 +27,22 @@ export default  {
             .char('f')
             .then(C.char('o'))
             .then(C.char('o'))
-            .then(C.string('bar'))
-            .map(F.flattenDeep);
+            .then(C.string('bar'));
         testParser(parser, string);
-        test.deepEqual(value, ['f', 'o', 'o', 'bar'], 'flattenDeep not ok');
+        test.deepEqual(value, ['f', 'o', 'o', 'bar'], 'flatten result not ok');
         test.done();
     },
 
-    'expect map(F.flattenDeep) to be ok when empty': function (test) {
+    'expect flatten result to be ok when empty': function (test) {
 
         const string = 'some';
         // tests here
         const parser = F.any.rep()
             .then(F.eos)
-            .thenReturns([])
-            .map(F.flattenDeep);
+            .thenReturns([]);
         testParser(parser, string);
         test.ok(accepted);
-        test.deepEqual(value, [], 'flattenDeep not ok');
+        test.deepEqual(value, [], 'flatten result not ok');
         test.done();
     },
 

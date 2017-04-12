@@ -212,36 +212,3 @@ function repeatable(self, occurrences, accept) {
 function returns(v) {
     return new Parser((input, index=0) => response.accept(v, input, index, false));
 }
-
-
-
-
-
-/**
- * utility function for flattenDeep()
- */
-
-function flattenDeep(array) {
-    let toString = Object.prototype.toString;
-    let arrayTypeStr = '[object Array]';
-    let result = [];
-    let nodes =  array.slice();
-    let node;
-
-    if (!array.length) {
-        return result;
-    }
-
-    node = nodes.pop();
-
-    do {
-        if (toString.call(node) === arrayTypeStr) {
-            nodes.push.apply(nodes, node);
-        } else {
-            result.push(node);
-        }
-    } while (nodes.length && (node = nodes.pop()) !== undefined);
-
-    result.reverse(); // we reverse result to restore the original order
-    return result;
-}
