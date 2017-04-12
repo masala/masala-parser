@@ -32,7 +32,7 @@ a standard text
         }
 
 Important : Parsec is a streaming parser.
- [Your parser can NOT be left recursive.](https://github.com/d-plaindoux/parsec/issues/13)
+ [The grammar you make a parser for can NOT be left recursive.](https://github.com/d-plaindoux/parsec/issues/13) The good news is that any left recursive grammar can be rewritten to a form that parsec can handle.
    
 
 
