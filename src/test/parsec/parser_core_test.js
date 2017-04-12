@@ -53,20 +53,20 @@ export default  {
     test.done();
   },
 
-    'expect (map) to be return 5x8': function(test) {
-        test.expect(1);
+  'expect (map) to be return 5x8': function(test) {
+    test.expect(1);
 
-        const st = stream.ofString("5x8");
-        const combinator = N.integer
+    const st = stream.ofString("5x8");
+    const combinator = N.integer
             .thenLeft(C.char('x'))
             .then(N.integer)
             .map(values => values[0]*values[1]);
 
-        test.equal(combinator.parse(st).value,
+    test.equal(combinator.parse(st).value,
             40,
             'should be accepted.');
-        test.done();
-    },
+    test.done();
+  },
 
   'expect (flatmap) to be accepted': function(test) {
     test.expect(1);
@@ -218,7 +218,43 @@ export default  {
     // tests here
     test.equal(C.char("a").thenRight(C.char("b")).parse(stream.ofString("b"),0).isAccepted(),
                false,
-               'should be accepted.');
+               'should be rejected.');
+    test.done();
+  },
+
+  'expect (drop/then) to be accepted': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(C.char("a").drop().then(C.char("b")).parse(stream.ofString("ab"),0).isAccepted(),
+                 true,
+                 'should be accepted.');
+    test.done();
+  },
+
+  'expect (drop/then) to be return b': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(C.char("a").drop().then(C.char("b")).parse(stream.ofString("ab"),0).value,
+                 'b',
+                 'should be accepted.');
+    test.done();
+  },
+
+  'expect (then/drop) to be accepted': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(C.char("a").then(C.char("b").drop()).parse(stream.ofString("ab"),0).isAccepted(),
+                   true,
+                   'should be accepted.');
+    test.done();
+  },
+
+  'expect (drop/then) to be return a': function(test) {
+    test.expect(1);
+    // tests here
+    test.equal(C.char("a").then(C.char("b").drop()).parse(stream.ofString("ab"),0).value,
+                 'a',
+                 'should be accepted.');
     test.done();
   },
 

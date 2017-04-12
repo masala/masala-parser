@@ -50,7 +50,7 @@ class List {
     }
 
     array() {
-        return this.value;
+        return this.value.slice();
     }
 
     join(sep) {

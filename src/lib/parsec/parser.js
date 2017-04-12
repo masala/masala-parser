@@ -67,19 +67,23 @@ export default class Parser{
         }));
     }
 
+    drop() {
+        return this.map((item) => []);
+    }
+
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c
     thenLeft(p) {
-        return this.then(p.map((r) => []));
+        return this.then(p.drop());
+    }
+
+    // Parser 'a 'c => Parser 'b 'c -> Parser 'b 'c
+    thenRight(p) {
+        return this.drop().then(p);
     }
 
     // Parser 'a 'c => 'b -> Parser 'b 'c
     thenReturns(v) {
         return this.thenRight(returns(v));
-    }
-
-    // Parser 'a 'c => Parser 'b 'c -> Parser 'b 'c
-    thenRight(p) {
-        return this.map((r) => []).then(p);
     }
 
     // Parser 'a 'c -> Parser 'a 'c
@@ -132,10 +136,6 @@ export default class Parser{
             return p;
         };
         return this.map(f);
-    }
-
-    flattenDeep() {
-        return this.map(self => flattenDeep(self))
     }
 }
 
