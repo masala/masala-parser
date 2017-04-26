@@ -1,4 +1,6 @@
 import { F, C, N } from '../../index';
+import response from './../../parsec/response';
+import Parser from './../../parsec/parser';
 
 /**
  * Created by nicorama on 10/01/2017.
@@ -103,6 +105,7 @@ export default class ExtractorBundle {
         return F.not(stop);
     }
 
+
     wordsUntil(stop) {
         return F.try(
             this._wordSequence(stop).rep().then(F.eos).thenReturns(undefined)
@@ -113,6 +116,17 @@ export default class ExtractorBundle {
     }
 
 }
+function factory( index){
+    const parser = new Parser( (input, index)=> {
+        console.log('>>>',input, index);
+        const accept = response.accept(input, input, index, true);
+        console.log('accept:', accept, accept.parse);
+        return accept
+    });
+    console.log('parse, ', parser.parse);
+    return parser;
+}
+
 
 function _last(values) {
     return values[values.length - 1];
