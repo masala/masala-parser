@@ -66,6 +66,10 @@ export default class Parser{
             }
         }));
     }
+    
+    concat(p){
+        return this.then(p);
+    }
 
     drop() {
         return this.map((item) => []);

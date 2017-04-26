@@ -168,6 +168,43 @@ export default  {
     test.done();
   },
 
+  'expect (then) to return [a,b,d]': function(test) {
+    test.expect(1);
+    // tests here
+    // const stream = stream.ofString("ab");
+    test.deepEqual(
+        C.char("a").then(C.char("b").then(C.char("c").drop()).then(C.char("d"))
+        ).parse(stream.ofString("abcd"),0).value,
+        ['a','b', 'd'],
+        'should be accepted.');
+    test.done();
+  },
+
+  'expect (then) to be associative ': function(test) {
+    test.expect(1);
+    // tests here
+    // const stream = stream.ofString("ab");
+    test.deepEqual(
+        C.char("a").then(C.char("b")).then(C.char("c").drop()).then(C.char("d"))
+            .parse(stream.ofString("abcd"),0).value,
+        ['a','b', 'd'],
+        'should be accepted.');
+    test.done();
+  },
+
+    'expect (then) to be replaced by concat ': function(test) {
+        test.expect(1);
+        // tests here
+        // const stream = stream.ofString("ab");
+        test.deepEqual(
+            C.char("a").concat(C.char("b")).then(C.char("c").drop()).concat(C.char("d"))
+                .parse(stream.ofString("abcd"),0).value,
+            ['a','b', 'd'],
+            'should be accepted.');
+        test.done();
+    },
+
+
   'expect (thenLeft) to be accepted': function(test) {
     test.expect(1);
     // tests here
