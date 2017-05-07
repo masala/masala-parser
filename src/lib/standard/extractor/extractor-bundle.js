@@ -58,7 +58,7 @@ export default class ExtractorBundle {
     }
 
     word() {
-        return this.options.letter.rep().map( v => v.join('') );
+        return this.options.letter.rep().map(v => v.join(''));
     }
 
     _wordSeparators() {
@@ -107,25 +107,20 @@ export default class ExtractorBundle {
 
 
     wordsUntil(stop) {
+        if (typeof stop === 'string') {
+            return satisfyStringFast(stop);
+        }
+        
         return F.try(
             this._wordSequence(stop).rep().then(F.eos).thenReturns(undefined)
         ).or(
             this._wordSequence(stop).rep().map(chars=>chars.join(''))
-        )
+            )
             .filter(v=> v !== undefined);
     }
 
 }
-function factory( index){
-    const parser = new Parser( (input, index)=> {
-        console.log('>>>',input, index);
-        const accept = response.accept(input, input, index, true);
-        console.log('accept:', accept, accept.parse);
-        return accept
-    });
-    console.log('parse, ', parser.parse);
-    return parser;
-}
+
 
 
 function _last(values) {
@@ -134,4 +129,28 @@ function _last(values) {
 
 function _first(values) {
     return values[0];
+}
+
+/**
+ * Will work only if input.source is a String
+ * Needs to be tested with ReactJS
+ * @param string
+ * @returns {Parser}
+ */
+function satisfyStringFast(string) {
+
+    return new Parser((input, index = 0) => {
+
+        if (typeof input.source != 'string'){
+            throw 'Input source must be a String';
+        }
+
+        const sourceIndex = input.source.indexOf(string, index)
+        if( sourceIndex > 0){
+            return response.accept(input.source.substring(index,sourceIndex), input, sourceIndex, true)
+        }else{
+            return response.reject(input.location(index), false)
+        }
+
+    });
 }
