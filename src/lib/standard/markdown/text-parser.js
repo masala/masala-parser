@@ -25,13 +25,14 @@ function stop() {
 
 function pureText() {
   return (
-    F.not(stop()).rep()//  ['a','\n','b'] -> 'a b'
-    // But on Windows, we will ignore the \r
-    // inside line break will be put as space, but we clear initial or final \n
-    .map(chars => {
-      let allChars = chars.join('');
-      return allChars.replace(/\n/g, ' ').replace(/\r/g, '');
-    })
+    F.not(stop())
+      .rep() //  ['a','\n','b'] -> 'a b'
+      // But on Windows, we will ignore the \r
+      // inside line break will be put as space, but we clear initial or final \n
+      .map(chars => {
+        let allChars = chars.join('');
+        return allChars.replace(/\n/g, ' ').replace(/\r/g, '');
+      })
   );
 }
 
