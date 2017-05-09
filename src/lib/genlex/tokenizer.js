@@ -9,21 +9,18 @@
 import genlex from './genlex';
 import token from './token';
 
-
 class Tokenizer {
+  // [String] -> Tokenizer
+  constructor(keywords) {
+    this.parser = genlex.generator(keywords).tokens(token.builder);
+  }
 
-    // [String] -> Tokenizer
-    constructor(keywords) {
-        this.parser = genlex.generator(keywords).tokens(token.builder);
-    }
-
-    // Stream char -> Try [Token]
-    tokenize(charstream) {
-        return this.parser.parse(charstream, 0).toTry();
-    }
+  // Stream char -> Try [Token]
+  tokenize(charstream) {
+    return this.parser.parse(charstream, 0).toTry();
+  }
 }
 
-
-export default function (keywords) {
-    return new Tokenizer(keywords);
+export default function(keywords) {
+  return new Tokenizer(keywords);
 }

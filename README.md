@@ -1,8 +1,8 @@
 # Masala Parser: Javascript Parser Combinators
 
 [![npm version](https://badge.fury.io/js/parser-combinator.svg)](https://badge.fury.io/js/parser-combinator)
-[![Build Status](https://travis-ci.org/d-plaindoux/parsec.svg)](https://travis-ci.org/d-plaindoux/parsec) 
-[![Coverage Status](https://coveralls.io/repos/d-plaindoux/parsec/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parsec?branch=master) 
+[![Build Status](https://travis-ci.org/d-plaindoux/parsec.svg)](https://travis-ci.org/d-plaindoux/parsec)
+[![Coverage Status](https://coveralls.io/repos/d-plaindoux/parsec/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parsec?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
 Masala Parser is inspired by the paper titled:
@@ -32,9 +32,9 @@ need theoretical bases on languages for extraction or validation use cases.
 import {stream, N,C} from 'parser-combinator';
 const document = '|4.6|';
 
-const floorCombinator= C.char('|')
-                        .thenRight( N.numberLiteral )    // we had [ '|' , 4.6], we keep 4.6
-                        .thenLeft( C.char('|') )   // we had [ 4.6 , '|' ], we keep 4.6
+const floorCombinator= C.char('|').drop()
+                        .then( N.numberLiteral )    // we had [ '|' , 4.6], we keep 4.6
+                        .then( C.char('|').drop() )   // we had [ 4.6 , '|' ], we keep 4.6
                         .map(x => Math.floor(x)); // we transform selected value in meaningful value
 
 // Parsec needs a stream of characters
@@ -48,20 +48,20 @@ console.log( parsing.value === 4 );
 
 ## Explanations
 
-According to Wikipedia *"in functional programming, a parser combinator is a 
-higher-order function that accepts several parsers as input and returns a new 
-parser as its output."* 
+According to Wikipedia *"in functional programming, a parser combinator is a
+higher-order function that accepts several parsers as input and returns a new
+parser as its output."*
 
 ## The Parser
 
-Let's say we have a document : 
+Let's say we have a document :
 
->>> The James Bond series, by writer Ian Fleming, focuses on a fictional British Secret Service agent created in 1953, who featured him in twelve novels and two short-story collections. Since Fleming's death in 1964, eight other authors have written authorised Bond novels or novelizations: Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz. 
+>>> The James Bond series, by writer Ian Fleming, focuses on a fictional British Secret Service agent created in 1953, who featured him in twelve novels and two short-story collections. Since Fleming's death in 1964, eight other authors have written authorised Bond novels or novelizations: Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz.
 
-There are many way to analyze this document, for example finding names inside. But what is a name ? We can say that it 
+There are many way to analyze this document, for example finding names inside. But what is a name ? We can say that it
  is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
   What is a starting uppercase word ?
- 
+
 The goal of a parser is to find out. The goal of Parsec is to make this easy.
 
 ## The Monoid structure
@@ -70,9 +70,9 @@ A monoid is an object with functions and one single encapsulated value. Have you
  the value is the DOM selection.
 The parser will read through the document and aggregate values. The single value of the monoid will be modified by the document stream,
   but can also be modified by function calls, such as the `map()` function.
-  
+
 ![](./documentation/parsec-monoid.png)
- 
+
 
 ## Hello 'X'
 
@@ -86,21 +86,21 @@ var C = parsec.C;
 
 var helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
-                    .then(C.char(`'`))
-                    .thenRight(C.letter.rep()) // keeping repeated ascii letters
-                    .thenLeft(C.char(`'`));    // keeping previous letters
+                    .then(C.char(`'`)).drop()
+                    .then(C.letter.rep()) // keeping repeated ascii letters
+                    .then(C.char(`'`).drop());    // keeping previous letters
 
 var parsing = helloParser.parse(stream.ofString("Hello 'World'"));
 // C.letter.rep() will give an array of letters
-console.log(parsing.value.toString() == ['W','o','r','l','d'].toString());
+console.log(parsing.value.array().toString() == ['W','o','r','l','d'].toString());
 ```
 
 ## Improvement with Extractor Bundle
 
-We have used a complex combinator that shows us how to parse character by character. But you can build or use 
+We have used a complex combinator that shows us how to parse character by character. But you can build or use
  higher level parsers to do the same job. **Masala Parser** offers an Extractor Bundle that could replace
-  all of your regexp extractions. 
- 
+  all of your regexp extractions.
+
 
 ```js
 import {stream, X} from 'parser-combinator'
@@ -117,7 +117,7 @@ const value = helloParser.parse(line).value;
 
 test.equals(value, 'World');
 ```
- 
+
 
 
 # Parser Combinations
@@ -179,16 +179,16 @@ function combinator() {
 console.info('sum: ',parseOperation('2+2').value);
 ```
 
-We will give priority to sum, then multiplication, then scalar. If we had put `scalar()` first, we would have first 
+We will give priority to sum, then multiplication, then scalar. If we had put `scalar()` first, we would have first
 accepted `2`, then what could we do with `+2` alone ? It's not a valid sum !
 
 ## try(x).or(y)
 
 `or()` will often be used with `try()`. Like Haskell's Parsec, Masala-Parser can parse infinite look-ahead grammars but
  performs best on predictive (LL[1]) grammars.
- 
+
 With `try()`, we can look a bit ahead of next characters, then go back:
- 
+
         F.try(sum()).or(F.try(multiplication())).or(scalar())
         // try(sum()) parser in action
         2         *2
@@ -206,9 +206,9 @@ Suppose we do not `try()` but use `or()` directly:
 `try()` has some benefits, but costs more in memory and CPU, as you test things twice.
  You should avoid long sequences of `try()` if memory is constrained. If possible, you can use `or()` without `try()`
   when there is no *starting ambiguity*.
- 
+
 `N.integer.or(C.letter())` doesn't require a `try()`.
-  
+
 
 
 
@@ -217,12 +217,12 @@ Suppose we do not `try()` but use `or()` directly:
 ## Core Parser Functions
 
 Here is a link for [Core functions documentation](./documentation/parser-core-functions.md).
- 
-It will explain `then()`, `thenLeft()`, `thenRight()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
+
+It will explain `then()`, `drop()`, `thenLeft()`, `thenRight()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
 with code examples.
 
 ## The Flow Bundle
- 
+
 The flow bundle will mix ingredients together.
 
 For example if you have a Parser `p`, `F.not(p)` will accept anything
@@ -232,29 +232,22 @@ All of these functions will return a brand new Parser that you can combine with 
 
 Most important:
 
-* `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed 
+* `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed
 * `F.any`: Accept any character (and so moves the cursor)
 * `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
 * `F.eos`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
 
 Others:
 
-* `F.lazy`: Makes a lazy evaluation. May be used for Left recursion (difficult) 
+* `F.lazy`: Makes a lazy evaluation. May be used for Left recursion (difficult)
 * `F.parse(parserFunction)`: Create a new Parser from a function. Usually, you won't start here.
 * `F.subStream(length)`: accept any next characters  
-* `F.returns`: forces a returned value 
+* `F.returns`: forces a returned value
 * `F.error`: returns an error. Parser will never be accepted
 * `F.satisfy`: check if condition is satisfied
 * `F.sequence`:  Shorcut method. accept a given sequence or parsers.
 
-Utility function:
-
-* `F.flattenDeep`: Used with `parser.map(F.flattenDeep)`  will result in a simple 
-        [flattened array](https://lodash.com/docs/#flattenDeep) of values 
-
-
 ## The Chars Bundle
-
 
 * `letter`: accept an ascii letter ([opened issue for other languages](https://github.com/d-plaindoux/parsec/issues/43))
     (and so moves the cursor)
@@ -276,15 +269,15 @@ Utility function:
 
 
 * `numberLiteral`: accept any float number, such as -2.3E+24, and returns a float    
-* `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript) 
+* `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
 * `digits`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
 * `integer`: accept any positive or negative integer
 
 
 # The Standard bundles
 
-Masala Parser offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental 
-and incomplete markdown parser. 
+Masala Parser offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental
+and incomplete markdown parser.
 
 ## The Token Bundle
 
@@ -343,21 +336,21 @@ The JSON bundle offers an easy to use JSON parser. Obviously you could use nativ
 
 The Markdown parser will not compile Markdown in HTML, but it will gives you a Javascript object (aka JSON structure).
 The Markdown bundle offers a series of Markdown tokens to build your own **meta-markdown** parser.
- 
+
 Tokens are:
 
 * `blank`: blanks in paragraphs, including single end of line
-* `eol`: `\n` or `\r\n` 
+* `eol`: `\n` or `\r\n`
 * `lineFeed`: At least two EOL
 * `fourSpacesBlock`: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
 * `stop`: End of pure text
-* `pureText`: Pure text, which is inside italic or bold characters 
-* `italic`: italic text between `*pureText*` or `_pureText_` 
+* `pureText`: Pure text, which is inside italic or bold characters
+* `italic`: italic text between `*pureText*` or `_pureText_`
 * `bold`: bold text between `**pureText**`
 * `code`: code text between `` `pureText` `` (double backticks for escape not yet supported)
 * `text (pureTextParser)`: higher level of pureText, if you need to redefine what is pureText
 * `formattedSequence (pureText, stop)`: combination of pureText, italic, bold and code
-* `formattedParagraph`: formattedSequence separated by a lineFeed 
+* `formattedParagraph`: formattedSequence separated by a lineFeed
 * `titleLine`: `title\n===` or `title\n---` variant of title
 * `titleSharp`: `### title` variant of title
 * `title`: titleLine or titleSharp
@@ -406,15 +399,15 @@ P.lowerCase.then(P.letter.optrep()) (5)
 ```
 
 1. Recognize a letter i.e. `'a'` ... `'z'` **or** `'A'` ... `'Z'`
-4. Recognize a number with at least one digit 
+4. Recognize a number with at least one digit
 3. Recognize the character `'-'` or nothing
 4. Recognize a least zero white space
 5. Recognize a lowercase then may be letters like `aAaA`
 
 ### Transformations
 
-During a parsing process each parsed and captured data can be transformed 
-an aggregated with other transformed data. For this purpose the `map` 
+During a parsing process each parsed and captured data can be transformed
+an aggregated with other transformed data. For this purpose the `map`
 function is available.
 
 ```
@@ -483,17 +476,17 @@ P.digit.rep().map(toInteger)        (1)
 ### Token
 
 #### Token builder:
-- *keyword* : string &rarr; Token 
-- *ident* : string &rarr; Token 
-- *number* : string &rarr; Token 
-- *string* : string &rarr; Token 
-- *char* : string &rarr; Token 
+- *keyword* : string &rarr; Token
+- *ident* : string &rarr; Token
+- *number* : string &rarr; Token
+- *string* : string &rarr; Token
+- *char* : string &rarr; Token
 
 #### Token parser:
 - *keyword* : Parser Token Token
 - *ident* : Parser Token Token
-- *number* : Parser Token Token 
-- *string* : Parser Token Token 
+- *number* : Parser Token Token
+- *string* : Parser Token Token
 - *char* : Parser Token Token
 
 ### Generic Lexer
@@ -539,7 +532,3 @@ You  should have  received a  copy of  the GNU  Lesser General  Public
 License along with  this program; see the file COPYING.  If not, write
 to the  Free Software Foundation,  675 Mass Ave, Cambridge,  MA 02139,
 USA.
-
-
-
-

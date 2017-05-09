@@ -6,9 +6,6 @@
  * Licensed under the LGPL2 license.
  */
 
-class Unit{
-
-}
+class Unit {}
 
 export default new Unit();
-

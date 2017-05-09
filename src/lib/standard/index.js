@@ -12,6 +12,10 @@ import markdownBundle from './markdown/markdown-bundle';
 import extractorBundle from './extractor/extractor-bundle';
 import tokenBundle from './token-bundle';
 
-export default{
-    jsonParser,  markdownDocument, markdownBundle, extractorBundle, tokenBundle
-}
+export default {
+  jsonParser,
+  markdownDocument,
+  markdownBundle,
+  extractorBundle,
+  tokenBundle,
+};

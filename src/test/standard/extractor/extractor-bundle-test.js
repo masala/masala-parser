@@ -2,274 +2,425 @@ import X from '../../../lib/standard/extractor/extractor-bundle';
 import {F, C} from '../../../lib/parsec/index';
 import stream from '../../../lib/stream/index';
 
-
 export default {
-    setUp: function (done) {
-        done();
-    },
+  setUp: function(done) {
+    done();
+  },
 
-    'test spaces': function (test) {
+  'test spaces': function(test) {
+    const line = stream.ofString('    this starts with 4 spaces');
 
-        const line = stream.ofString('    this starts with 4 spaces');
+    const x = new X();
+    const combinator = x.spaces().thenLeft(F.any.rep());
+    const value = combinator.parse(line).value;
+    test.equals(value.length, 4);
+    test.done();
+  },
+  'test spaces and line feed': function(test) {
+    const line = stream.ofString('    this \n contains line feed');
 
-        const x = new X();
-        const combinator = x.spaces().thenLeft(F.any.rep());
-        const value = combinator.parse(line).value;
-        test.equals(value.length, 4);
-        test.done();
-    },
-    'test spaces and line feed': function (test) {
+    const x = new X();
+    const combinator = x
+      .spaces()
+      .then(x.word())
+      .thenRight(x.spaces())
+      .thenLeft(F.any);
+    const value = combinator.parse(line).value;
+    test.equals(value.length, 3);
+    test.done();
+  },
+  'test spaces, tabs and line feed': function(test) {
+    const line = stream.ofString('    this \n \t contains line feed');
 
-        const line = stream.ofString('    this \n contains line feed');
+    const x = new X();
+    const combinator = x
+      .spaces()
+      .then(x.word())
+      .thenRight(x.spaces())
+      .thenLeft(F.any);
+    const value = combinator.parse(line).value;
+    test.equals(value.length, 5);
+    test.done();
+  },
+  'test numbers': function(test) {
+    const line = stream.ofString('98');
 
-        const x = new X();
-        const combinator = x.spaces()
-            .then(x.word())
-            .thenRight(x.spaces())
-            .thenLeft(F.any);
-        const value = combinator.parse(line).value;
-        test.equals(value.length, 3);
-        test.done();
-    },
-    'test spaces, tabs and line feed': function (test) {
+    const x = new X();
+    const combinator = x.number();
+    const value = combinator.parse(line).value;
+    test.ok(value === 98);
+    test.done();
+  },
+  'test digits': function(test) {
+    const line = stream.ofString('98');
 
-        const line = stream.ofString('    this \n \t contains line feed');
+    const x = new X();
+    const combinator = x.digits();
+    const value = combinator.parse(line).value;
+    test.ok(value === '98');
+    test.done();
+  },
+  'test single word': function(test) {
+    let line = stream.ofString('Parsec-');
 
-        const x = new X();
-        const combinator = x.spaces()
-            .then(x.word())
-            .thenRight(x.spaces())
-            .thenLeft(F.any);
-        const value = combinator.parse(line).value;
-        test.equals(value.length, 5);
-        test.done();
-    },
-    'test numbers': function (test) {
+    const x = new X();
+    const combinator = x.word().thenLeft(C.char('-'));
+    const value = combinator.parse(line).value;
+    test.ok(value === 'Parsec');
+    test.done();
+  },
 
-        const line = stream.ofString('98');
+  'test single word hexadecimal': function(test) {
+    let line = stream.ofString('10FF-hexadecimal');
+    const hexadecimal = C.charIn('0123456789ABCDEF');
 
-        const x = new X();
-        const combinator = x.number();
-        const value = combinator.parse(line).value;
-        test.ok(value === 98);
-        test.done();
-    },
-    'test digits': function (test) {
+    const x = new X({letter: hexadecimal});
+    const combinator = x
+      .word()
+      .map(x => parseInt(x, 16))
+      .thenLeft(C.char('-'))
+      .thenLeft(C.string('hexadecimal'));
+    const value = combinator.parse(line).value;
+    test.equals(value, 4351);
+    test.done();
+  },
+  'single word with bad letters should fail': function(test) {
+    let line = stream.ofString('classicWord-notHexadecimal');
+    const hexadecimal = C.charIn('0123456789ABCDEF');
 
-        const line = stream.ofString('98');
+    const x = new X({letter: hexadecimal});
+    const combinator = x
+      .word()
+      .map(x => parseInt(x, 16))
+      .thenLeft(C.char('-'))
+      .thenLeft(C.string('notHexadecimal'));
+    const accepted = combinator.parse(line).isAccepted();
+    test.ok(!accepted);
+    test.done();
+  },
 
-        const x = new X();
-        const combinator = x.digits();
-        const value = combinator.parse(line).value;
-        test.ok(value === '98');
-        test.done();
-    },
-    'test single word': function (test) {
+  'test words': function(test) {
+    let line = stream.ofString('The James Bond series, by writer Ian Fleming');
 
-        let line = stream.ofString('Parsec-');
+    const x = new X();
+    const combinator = x.words();
+    const value = combinator.parse(line).value;
+    test.ok(value[1] === ' ');
+    test.ok(_includes(value, 'Bond'));
+    test.done();
+  },
 
-        const x = new X();
-        const combinator = x.word().thenLeft(C.char('-'));
-        const value = combinator.parse(line).value;
-        test.ok(value === 'Parsec');
-        test.done();
-    },
+  'test stringIn': function(test) {
+    let line = stream.ofString('James Bond');
 
-    'test single word hexadecimal': function (test) {
+    const x = new X();
+    const combinator = x.stringIn(['The', 'James', 'Bond', 'series']);
+    const value = combinator.parse(line).value;
+    test.ok(typeof value === 'string');
+    test.ok(value === 'James');
+    test.done();
+  },
 
-        let line = stream.ofString('10FF-hexadecimal');
-        const hexadecimal = C.charIn('0123456789ABCDEF');
+  'test stringIn one string sidecase': function(test) {
+    let line = stream.ofString('James');
 
-        const x = new X({letter: hexadecimal});
-        const combinator = x.word().map(x => parseInt(x, 16))
-            .thenLeft(C.char('-'))
-            .thenLeft(C.string('hexadecimal'));
-        const value = combinator.parse(line).value;
-        test.equals(value, 4351);
-        test.done();
-    },
-    'single word with bad letters should fail': function (test) {
+    const x = new X();
+    const combinator = x.stringIn(['James']);
+    const value = combinator.parse(line).value;
+    test.ok(typeof value === 'string');
+    test.ok(value === 'James');
+    test.done();
+  },
 
-        let line = stream.ofString('classicWord-notHexadecimal');
-        const hexadecimal = C.charIn('0123456789ABCDEF');
+  'test stringIn empty sidecase': function(test) {
+    let line = stream.ofString('James');
 
-        const x = new X({letter: hexadecimal});
-        const combinator = x.word().map(x => parseInt(x, 16))
-            .thenLeft(C.char('-'))
-            .thenLeft(C.string('notHexadecimal'));
-        const accepted = combinator.parse(line).isAccepted();
-        test.ok(!accepted);
-        test.done();
-    },
+    const x = new X();
+    const combinator = x.stringIn([]).then(F.eos);
+    const parsing = combinator.parse(line);
+    test.ok(!parsing.isAccepted());
+    test.done();
+  },
 
-    'test words': function (test) {
-        let line = stream.ofString('The James Bond series, by writer Ian Fleming');
+  'test wordsIn': function(test) {
+    let line = stream.ofString('James Bond by Ian Fleming');
 
-        const x = new X();
-        const combinator = x.words();
-        const value = combinator.parse(line).value;
-        test.ok(value[1] === ' ');
-        test.ok(_includes(value,'Bond'));
-        test.done();
-    },
+    const x = new X();
+    const combinator = x.wordsIn(
+      ['James', 'Bond', 'by', 'Ian', 'Fleming'],
+      true
+    );
+    const value = combinator.parse(line).value;
+    test.ok(value.length === 9);
+    test.ok(_includes(value, 'James'));
+    test.ok(_includes(value, 'Bond'));
+    test.ok(_includes(value, 'Fleming'));
+    test.done();
+  },
 
-    'test stringIn': function (test) {
-        let line = stream.ofString('James Bond');
+  'test wordsIn without keeping spaces': function(test) {
+    let line = stream.ofString('James Bond by Ian Fleming');
 
-        const x = new X();
-        const combinator = x.stringIn(['The', 'James', 'Bond', 'series']);
-        const value = combinator.parse(line).value;
-        test.ok(typeof value === 'string');
-        test.ok(value === 'James');
-        test.done();
-    },
+    const x = new X();
+    const combinator = x.wordsIn(
+      ['James', 'Bond', 'by', 'Ian', 'Fleming'],
+      false
+    );
+    const value = combinator.parse(line).value;
+    test.ok(value.length === 5);
+    test.ok(_includes(value, 'James'));
+    test.ok(_includes(value, 'Bond'));
+    test.ok(_includes(value, 'Fleming'));
+    test.done();
+  },
 
-    'test stringIn one string sidecase': function (test) {
-        let line = stream.ofString('James');
+  'test wordsIn keeping spaces with alt spaces': function(test) {
+    let line = stream.ofString('James%Bond%by Ian=Fleming');
 
-        const x = new X();
-        const combinator = x.stringIn(['James']);
-        const value = combinator.parse(line).value;
-        test.ok(typeof value === 'string');
-        test.ok(value === 'James');
-        test.done();
-    },
+    const x = new X({moreSeparators: '%='});
+    const combinator = x.wordsIn(
+      ['James', 'Bond', 'by', 'Ian', 'Fleming'],
+      false
+    );
+    const value = combinator.parse(line).value;
+    test.ok(value.length === 5);
+    test.ok(_includes(value, 'James'));
+    test.ok(_includes(value, 'Bond'));
+    test.ok(_includes(value, 'Fleming'));
+    test.done();
+  },
 
-    'test stringIn empty sidecase': function (test) {
-        let line = stream.ofString('James');
+  'test wordsIn with custom spaces': function(test) {
+    const str = 'JamesSPACEBondSPACEbySPACEIanSPACEFlemingSPACESPACE';
+    let line = stream.ofString(str);
 
-        const x = new X();
-        const combinator = x.stringIn([]).then(F.eos);
-        const parsing = combinator.parse(line);
-        test.ok(!parsing.isAccepted());
-        test.done();
-    },
+    const x = new X({wordSeparators: C.string('SPACE')});
+    const combinator = x.wordsIn(
+      ['James', 'Bond', 'by', 'Ian', 'Fleming'],
+      false
+    );
+    const value = combinator.parse(line).value;
+    test.ok(value.length === 5);
+    test.ok(_includes(value, 'James'));
+    test.ok(_includes(value, 'Bond'));
+    test.ok(_includes(value, 'Fleming'));
+    test.done();
+  },
+  'test wordsIn with both custom spaces and more Sep': function(test) {
+    const str = 'James=BondSPACEbySPACEIanSPACEFlemingSPACESPACE';
+    let line = stream.ofString(str);
 
-    'test wordsIn': function (test) {
-        let line = stream.ofString('James Bond by Ian Fleming');
+    let found = false;
+    const original = console.warn;
+    console.warn = () => {
+      found = true;
+    };
+    const x = new X({
+      wordSeparators: C.string('SPACE'),
+      moreSeparators: '%=',
+    });
 
-        const x = new X();
-        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], true);
-        const value = combinator.parse(line).value;
-        test.ok(value.length === 9);
-        test.ok(_includes(value,'James'));
-        test.ok(_includes(value,'Bond'));
-        test.ok(_includes(value,'Fleming'));
-        test.done();
-    },
+    const combinator = x.wordsIn(['James=Bond', 'by', 'Ian', 'Fleming'], false);
 
-    'test wordsIn keeping spaces': function (test) {
-        let line = stream.ofString('James Bond by Ian Fleming');
+    const value = combinator.parse(line).value;
 
-        const x = new X();
-        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
-        const value = combinator.parse(line).value;
-        test.ok(value.length === 5);
-        test.ok(_includes(value,'James'));
-        test.ok(_includes(value,'Bond'));
-        test.ok(_includes(value,'Fleming'));
-        test.done();
-    },
+    test.ok(found);
+    test.ok(value.length === 4);
+    test.ok(_includes(value, 'James=Bond'));
+    test.ok(_includes(value, 'Fleming'));
+    console.warn = original;
+    test.done();
+  },
+  'test wordsUntil': function(test) {
+    const line = stream.ofString('I write until James appears');
 
-    'test wordsIn keeping spaces with alt spaces': function (test) {
-        let line = stream.ofString('James%Bond%by Ian=Fleming');
+    const x = new X();
+    const combinator = x.wordsUntil(C.string('James')).thenLeft(F.any);
+    const value = combinator.parse(line).value;
 
-        const x = new X({moreSeparators: '%='});
-        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
-        const value = combinator.parse(line).value;
-        test.ok(value.length === 5);
-        test.ok(_includes(value,'James'));
-        test.ok(_includes(value,'Bond'));
-        test.ok(_includes(value,'Fleming'));
-        test.done();
-    },
+    test.equals(value, 'I write until ');
+    test.done();
+  },
+  'test wordsUntil Not found': function(test) {
+    const line = stream.ofString('I write until James appears');
 
-    'test wordsIn with custom spaces': function (test) {
-        const str = 'JamesSPACEBondSPACEbySPACEIanSPACEFlemingSPACESPACE';
-        let line = stream.ofString(str);
+    const x = new X();
+    const combinator = x
+      .wordsUntil(C.string('Indiana'))
+      .then(C.string('I'))
+      .thenLeft(F.any);
+    const accepted = combinator.parse(line).isAccepted();
 
-        const x = new X({wordSeparators: C.string('SPACE')});
-        const combinator = x.wordsIn(['James', 'Bond', 'by', 'Ian', 'Fleming'], false);
-        const value = combinator.parse(line).value;
-        test.ok(value.length === 5);
-        test.ok(_includes(value,'James'));
-        test.ok(_includes(value,'Bond'));
-        test.ok(_includes(value,'Fleming'));
-        test.done();
-    },
-    'test wordsIn with both custom spaces and more Sep': function (test) {
-        const str = 'James=BondSPACEbySPACEIanSPACEFlemingSPACESPACE';
-        let line = stream.ofString(str);
+    test.ok(!accepted);
+    test.done();
+  },
+  'test wordsUntil found with more parsers': function(test) {
+    const line = stream.ofString('I write until James Bond appears');
 
-        let found = false;
-        const original = console.warn;
-        console.warn = ()=> {
-            found = true
-        };
-        const x = new X({
-            wordSeparators: C.string('SPACE'),
-            moreSeparators: '%='
-        });
+    const x = new X();
+    const combinator = x
+      .wordsUntil(C.string('James'))
+      .thenLeft(C.string('James Bond'))
+      .thenLeft(F.any);
+    const value = combinator.parse(line).value;
 
+    test.equals(value, 'I write until ');
+    test.done();
+  },
+  'test wordsUntil  found with failing parser': function(test) {
+    const line = stream.ofString('I write until James Bond appears');
 
-        const combinator = x.wordsIn(['James=Bond', 'by', 'Ian', 'Fleming'], false);
+    const x = new X();
+    const combinator = x
+      .wordsUntil(C.string('James'))
+      .thenLeft(C.string('Indiana jones'))
+      .thenLeft(F.any);
+    const accepted = combinator.parse(line).isAccepted();
 
+    test.ok(!accepted);
+    test.done();
+  },
+  'test first': function(test) {
+    const line = stream.ofString("Hello 'World'");
+    const x = new X({wordSeparators: C.charIn(" '")});
 
-        const value = combinator.parse(line).value;
+    const helloParser = x.words().map(x.first);
 
-        test.ok(found);
-        test.ok(value.length === 4);
-        test.ok(_includes(value,'James=Bond'));
-        test.ok(_includes(value,'Fleming'));
-        console.warn = original;
-        test.done();
-    },
-    'test wordsUntil': function (test) {
+    const value = helloParser.parse(line).value;
 
-        const line = stream.ofString('I write until James appears');
+    test.equals(value, 'Hello');
+    test.done();
+  },
+  'test last': function(test) {
+    const line = stream.ofString("Hello 'World'");
+    const x = new X({moreSeparators: "'"});
 
-        const x = new X();
-        const combinator = x.wordsUntil(C.string('James')).thenLeft(F.any);
-        const value = combinator.parse(line).value;
+    const helloParser = x.words(false).map(x.last);
 
-        test.equals(value, 'I write until ');
-        test.done();
-    },
-    'test first': function (test) {
+    const value = helloParser.parse(line).value;
 
-        const line = stream.ofString("Hello 'World'");
-        const x = new X({wordSeparators: C.charIn(" '")});
+    test.equals(value, 'World');
+    test.done();
+  },
 
-        const helloParser = x.words().map(x.first);
+  'test wordsUntilFast string': function(test) {
+    const line = stream.ofString('soXYZso');
 
-        const value = helloParser.parse(line).value;
+    const x = new X();
+    const combinator = x.wordsUntil('XYZ');
+    const parser = combinator.parse(line);
+    const value = parser.value;
+    const offset = parser.offset;
 
-        test.equals(value, 'Hello');
-        test.done();
-    },
-    'test last': function (test) {
+    test.equals(value, 'so');
+    test.equals(offset, 2);
+    test.done();
+  },
+  'test wordsUntilFast string with continuation': function(test) {
+    const document = 'start-detect-XYZ-continues';
+    const line = stream.ofString(document);
 
-        const line = stream.ofString("Hello 'World'");
-        const x = new X({moreSeparators: "'"});
+    const start = C.string('start-');
+    const x = new X();
+    const combinator = start.thenRight(
+      x.wordsUntil('XYZ').thenLeft(C.string('XYZ-continues'))
+    );
+    const parser = combinator.parse(line);
+    const value = parser.value;
+    const offset = parser.offset;
 
-        const helloParser = x.words(false).map(x.last);
+    test.equals(value, 'detect-');
+    test.equals(offset, document.length);
+    test.done();
+  },
+  'test wordsUntilFast array of string with continuation': function(test) {
+    const document = 'start-detect-XYZ-continues';
+    const line = stream.ofString(document);
 
-        const value = helloParser.parse(line).value;
+    const start = C.string('start-');
+    const x = new X();
+    const combinator = start.thenRight(
+      x.wordsUntil(['ABC', 'ZE', 'XYZ']).thenLeft(C.string('XYZ-continues'))
+    );
+    const parser = combinator.parse(line);
+    const value = parser.value;
+    const offset = parser.offset;
 
-        test.equals(value, 'World');
-        test.done();
+    test.equals(value, 'detect-');
+    test.equals(offset, document.length);
+    test.done();
+  },
+  'test wordsUntilFast string fails': function(test) {
+    const document = 'start-detect-XYZ-continues';
+    const line = stream.ofString(document);
+
+    const start = C.string('start-');
+    const x = new X();
+    const combinator = start.thenRight(
+      x.wordsUntil('EEE').thenLeft(C.string('XYZ-continues'))
+    );
+    const parsing = combinator.parse(line);
+
+    test.ok(!parsing.isAccepted());
+    test.done();
+  },
+  'test wordsUntilFast array of string fails': function(test) {
+    const document = 'start-detect-XYZ-continues';
+    const line = stream.ofString(document);
+
+    const start = C.string('start-');
+    const x = new X();
+    const combinator = start.thenRight(
+      x.wordsUntil(['ABC', 'ZE', 'EEE']).thenLeft(C.string('XYZ-continues'))
+    );
+    const parsing = combinator.parse(line);
+
+    test.ok(!parsing.isAccepted());
+    test.done();
+  },
+  'test wordsUntilFast fails if array stream': function(test) {
+    const document = ['More', 'XYZ'];
+    const line = stream.ofArray(document);
+
+    const x = new X();
+    const combinator = x.wordsUntil(['ABC', 'ZE', 'XYZ']);
+    let found = false;
+    try {
+      const parsing = combinator.parse(line);
+    } catch (e) {
+      if (e === 'Input source must be a String') {
+        found = true;
+      }
     }
 
-}
+    test.ok(found);
+    test.done();
+  },
+  'test wordsUntilFastString fails if array stream': function(test) {
+    const document = ['More', 'XYZ'];
+    const line = stream.ofArray(document);
 
-
-function _includes(array, value){
-    for (let i=0 ; i < array.length;i++){
-        if (array[i] === value){
-            return true;
-        }
+    const x = new X();
+    const combinator = x.wordsUntil('XYZ');
+    let found = false;
+    try {
+      const parsing = combinator.parse(line);
+    } catch (e) {
+      if (e === 'Input source must be a String') {
+        found = true;
+      }
     }
-    return false;
+
+    test.ok(found);
+    test.done();
+  },
+};
+
+function _includes(array, value) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] === value) {
+      return true;
+    }
+  }
+  return false;
 }
-
-
