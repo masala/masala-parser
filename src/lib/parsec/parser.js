@@ -119,7 +119,7 @@ export default class Parser{
     chain(p) {
         var self = this;
 
-        return new Parser((input, index=0) =>
+        return new Parser((input, index=0) => 
             p.parse(stream.buffered(stream.ofParser(self, input)), index)
         );
     }
@@ -154,7 +154,7 @@ function bindAccepted(accept_a, f) {
                 accept_b.offset,
                 accept_a.consumed || accept_b.consumed
             ),
-        (reject_b) =>
+        (reject_b) => 
             response.reject(
                 accept_a.input.location(reject_b.offset),
                 accept_a.consumed || reject_b.consumed
@@ -164,7 +164,7 @@ function bindAccepted(accept_a, f) {
 
 // Parser 'a 'c -> ('a -> Parser 'b 'c) -> Parser 'b 'c
 function bind(self, f) {
-    return new Parser((input, index=0) =>
+    return new Parser((input, index=0) => 
         self.parse(input, index).fold(
             (accept_a) => bindAccepted(accept_a, f),
             (reject_a) => reject_a
@@ -177,7 +177,7 @@ function choice(self, f) {
     return new Parser((input, index=0) =>
         self.parse(input, index).fold(
             (accept) => accept,
-            (reject) => reject.consumed ? reject : f.parse(input, index)
+            (reject) => reject.consumed ? reject : f.parse(input, index)        
         )
     );
 }

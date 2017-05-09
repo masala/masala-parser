@@ -32,6 +32,18 @@ class Stream{
             return atry.failure(e);
         }
     }
+
+    // Stream 'a => [Comparable 'a] -> number -> boolean
+    subStreamAt(s, index){
+        for (var i = 0; i < s.length; i++) {
+            var value = this.get(i + index);
+            if (!value.isSuccess() || value.success() !== s[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 export default Stream;

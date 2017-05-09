@@ -6,6 +6,8 @@
  * Licensed under the LGPL2 license.
  */
 import F from './flow-bundle';
+import Parser from "./parser";
+import response from "./response";
 
 // unit -> Parser char char
 function letter() {
@@ -63,7 +65,13 @@ function subString(length) {
 
 // string -> Parser string char
 function string(s) {
-    return F.try(subString(s.length).filter((r) => r === s));
+    return new Parser((input, index=0) => {
+        if (input.subStreamAt(s.split(''), index)) {
+            return response.accept(s, input, index + s.length, true);
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
 }
 
 // string -> Parser string char
