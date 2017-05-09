@@ -7,119 +7,117 @@
  */
 
 import response from '../parsec/response';
-import option  from '../data/option';
+import option from '../data/option';
 import F from '../parsec/flow-bundle';
 
 class Token {
+  constructor() {}
 
-    constructor(){
-    }
+  keyword() {
+    return option.none();
+  }
 
-    keyword() {
-        return option.none();
-    }
+  ident() {
+    return option.none();
+  }
 
-    ident() {
-        return option.none();
-    }
+  number() {
+    return option.none();
+  }
 
-    number() {
-        return option.none();
-    }
+  string() {
+    return option.none();
+  }
 
-    string() {
-        return option.none();
-    }
-
-    char() {
-        return option.none();
-    }
+  char() {
+    return option.none();
+  }
 }
 
-class TKKeyword extends Token{
+class TKKeyword extends Token {
+  constructor(value) {
+    super();
+    this.value = value;
+  }
 
-    constructor(value) {
-        super();
-        this.value = value;
-    }
-
-    keyword() {
-        return option.some(this.value);
-    }
+  keyword() {
+    return option.some(this.value);
+  }
 }
 
-class TKIdent extends Token{
-    constructor(value) {
-        super();
-        this.value = value;
-    }
+class TKIdent extends Token {
+  constructor(value) {
+    super();
+    this.value = value;
+  }
 
-    ident() {
-        return option.some(this.value);
-    }
+  ident() {
+    return option.some(this.value);
+  }
 }
 
-class TKNumber extends Token{
+class TKNumber extends Token {
+  constructor(value) {
+    super();
+    this.value = value;
+  }
 
-    constructor (value) {
-        super();
-        this.value = value;
-    }
-
-    number() {
-        return option.some(this.value);
-    }
+  number() {
+    return option.some(this.value);
+  }
 }
 
-class TKString extends Token{
+class TKString extends Token {
+  constructor(value) {
+    super();
+    this.value = value;
+  }
 
-    constructor(value) {
-        super();
-        this.value = value;
-    }
-
-    string() {
-        return option.some(this.value);
-    }
+  string() {
+    return option.some(this.value);
+  }
 }
 
-class TKChar extends Token{
+class TKChar extends Token {
+  constructor(value) {
+    super();
+    this.value = value;
+  }
 
-    constructor(value) {
-        super();
-        this.value = value;
-    }
-
-    char() {
-        return option.some(this.value);
-    }
+  char() {
+    return option.some(this.value);
+  }
 }
 
 // (Token -> Option 'a) -> Parser 'a Token
 function literal(tokenise) {
-    return F.parse((input, index) =>
-        input.get(index).map((value) => 
-            tokenise(value).map((token) => response.accept(token, input, index+1, true))
-                           .orLazyElse(() => response.reject(input.location(index), false))
-        ).lazyRecoverWith(() => response.reject(input.location(index), false))
-    );
+  return F.parse((input, index) =>
+    input
+      .get(index)
+      .map(value =>
+        tokenise(value)
+          .map(token => response.accept(token, input, index + 1, true))
+          .orLazyElse(() => response.reject(input.location(index), false))
+      )
+      .lazyRecoverWith(() => response.reject(input.location(index), false))
+  );
 }
 
 const token = {
-    builder: {
-        keyword: (value) => new TKKeyword(value),
-        ident: (value) => new TKIdent(value),
-        number: (value) => new TKNumber(value),
-        string: (value) => new TKString(value),
-        char: (value) => new TKChar(value)
-    },
-    parser: {
-        keyword : literal((token) => token.keyword()),
-        ident : literal((token) => token.ident()),
-        number : literal((token) => token.number()),
-        string : literal((token) => token.string()),
-        char : literal((token) => token.char())
-    }
+  builder: {
+    keyword: value => new TKKeyword(value),
+    ident: value => new TKIdent(value),
+    number: value => new TKNumber(value),
+    string: value => new TKString(value),
+    char: value => new TKChar(value),
+  },
+  parser: {
+    keyword: literal(token => token.keyword()),
+    ident: literal(token => token.ident()),
+    number: literal(token => token.number()),
+    string: literal(token => token.string()),
+    char: literal(token => token.char()),
+  },
 };
 
 export default token;

@@ -10,32 +10,30 @@ import TitleParser from './title-parser';
 import BulletParser from './bullet-parser';
 import codeBlockParser from './code-line-parser';
 
-
 function mdLine() {
-    return F.try(TitleParser.title())
-        .or(F.try(codeBlockParser.codeLine()))
-        .or(F.try(BulletParser.bullet()))
-        .or(F.try(TextParser.formattedParagraph()))
-        .or(T.lineFeed())
+  return F.try(TitleParser.title())
+    .or(F.try(codeBlockParser.codeLine()))
+    .or(F.try(BulletParser.bullet()))
+    .or(F.try(TextParser.formattedParagraph()))
+    .or(T.lineFeed());
 }
 
-function document(){
-    return mdLine().rep().map((item) => item.array());
+function document() {
+  return mdLine().rep().map(item => item.array());
 }
 
 function parseLine(line) {
-    return mdLine().parse(stream.ofString(line), 0);
+  return mdLine().parse(stream.ofString(line), 0);
 }
-
 
 export default {
-    mdLine,
+  mdLine,
 
-    parseLine(line){
-        return parseLine(line, 0);
-    },
+  parseLine(line) {
+    return parseLine(line, 0);
+  },
 
-    parse(stream, offset){
-        return document().parse(stream, offset)
-    }
-}
+  parse(stream, offset) {
+    return document().parse(stream, offset);
+  },
+};

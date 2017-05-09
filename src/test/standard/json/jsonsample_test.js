@@ -1,5 +1,5 @@
-import  fs from 'fs';
-import jsonparser from '../../../lib/standard/json/jsonparser'
+import fs from 'fs';
+import jsonparser from '../../../lib/standard/json/jsonparser';
 import stream from '../../../lib/stream/index';
 
 /*
@@ -22,42 +22,48 @@ import stream from '../../../lib/stream/index';
 */
 
 function sampleTest(sample, test) {
-    test.expect(1);
-    
-    // tests here  
-    fs.readFile('./src/test/standard/json/samples/' + sample, function (err,data) {
-        if (err) {
-            throw err;
-        }
-        
-        var result = { isAccepted : function() { return false; } };
-        
-        try {
-            result = jsonparser.parse(stream.ofString(data.toString()));
-        } catch (e) {
-            console.log(e.stack); 
-        }
-        
-        if (!result.isAccepted()) {        
-            console.log(result);
-        }  
+  test.expect(1);
 
-        test.ok(result.isAccepted(), "Well formed JSON");
-        test.done();                
-    });    
+  // tests here
+  fs.readFile('./src/test/standard/json/samples/' + sample, function(
+    err,
+    data
+  ) {
+    if (err) {
+      throw err;
+    }
+
+    var result = {
+      isAccepted: function() {
+        return false;
+      },
+    };
+
+    try {
+      result = jsonparser.parse(stream.ofString(data.toString()));
+    } catch (e) {
+      console.log(e.stack);
+    }
+
+    if (!result.isAccepted()) {
+      console.log(result);
+    }
+
+    test.ok(result.isAccepted(), 'Well formed JSON');
+    test.done();
+  });
 }
 
-export default  {
+export default {
   setUp: function(done) {
     done();
   },
 
   'test 1k': function(test) {
-    sampleTest("1k.json", test);    
+    sampleTest('1k.json', test);
   },
-    
+
   'test 100k': function(test) {
-    sampleTest("100k.json", test);    
-  }
-  
+    sampleTest('100k.json', test);
+  },
 };

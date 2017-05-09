@@ -1,6 +1,6 @@
 import stream from '../../lib/stream/index';
 import tokenizer from '../../lib/genlex/tokenizer';
-import token from '../../lib/genlex/token'
+import token from '../../lib/genlex/token';
 
 const tkBuilder = token.builder;
 
@@ -28,28 +28,36 @@ export default {
   setUp: function(done) {
     done();
   },
-    
+
   'tokeniser is a success': function(test) {
     test.expect(1);
-    // tests here  
-    test.ok(tokenizer([":","->"]).tokenize(stream.ofString("type f : a -> b")).isSuccess(), 
-            'should be a success.');
+    // tests here
+    test.ok(
+      tokenizer([':', '->'])
+        .tokenize(stream.ofString('type f : a -> b'))
+        .isSuccess(),
+      'should be a success.'
+    );
     test.done();
   },
-    
+
   'tokeniser return a list of tokens': function(test) {
     test.expect(1);
-    // tests here  
-    test.deepEqual(tokenizer(["let","in","=","->"]).tokenize(stream.ofString("let f = 'a' in \"aa\"")).success(), 
-                   [tkBuilder.keyword("let"),
-                    tkBuilder.ident("f"),
-                    tkBuilder.keyword("="),
-                    tkBuilder.char("a"),
-                    tkBuilder.keyword("in"),
-                    tkBuilder.string("aa")
-                   ],
-                   'should be a a list of tokens.');
+    // tests here
+    test.deepEqual(
+      tokenizer(['let', 'in', '=', '->'])
+        .tokenize(stream.ofString('let f = \'a\' in "aa"'))
+        .success(),
+      [
+        tkBuilder.keyword('let'),
+        tkBuilder.ident('f'),
+        tkBuilder.keyword('='),
+        tkBuilder.char('a'),
+        tkBuilder.keyword('in'),
+        tkBuilder.string('aa'),
+      ],
+      'should be a a list of tokens.'
+    );
     test.done();
-  }
-
+  },
 };

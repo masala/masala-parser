@@ -10,7 +10,8 @@ import F from './parsec/flow-bundle';
 import C from './parsec/chars-bundle';
 import N from './parsec/numbers-bundle';
 
-
 export default {
-    F,C,N
-}
+  F,
+  C,
+  N,
+};

@@ -24,15 +24,30 @@ import flowBundleTest from './parsec/flow-bundle-test';
 import charsBundleTest from './parsec/chars-bundle-test';
 import standardToken from './standard/token-test';
 import markdown from './standard/markdown/index';
-import jsonParseTest from './standard/json/jsonparser_test'
+import jsonParseTest from './standard/json/jsonparser_test';
 import jsonSampleTest from './standard/json/jsonsample_test';
-import extractorBundleTest from './standard/extractor/extractor-bundle-test'
+import extractorBundleTest from './standard/extractor/extractor-bundle-test';
 
 export {
-    optionTest, tryTest, listTest, streamsTest, bufferedStreamsTest,
-    genlexTest, tokenTest, tokenizerTest,
-    parserChainTest, parserCoreTest, parserCoreDefaultTest, parserExtensionTest,
-    parserStreamTest, parserResponseTest,flowBundleTest, charsBundleTest,
-    standardToken,jsonParseTest, jsonSampleTest,
-    markdown, extractorBundleTest
-}
+  optionTest,
+  tryTest,
+  listTest,
+  streamsTest,
+  bufferedStreamsTest,
+  genlexTest,
+  tokenTest,
+  tokenizerTest,
+  parserChainTest,
+  parserCoreTest,
+  parserCoreDefaultTest,
+  parserExtensionTest,
+  parserStreamTest,
+  parserResponseTest,
+  flowBundleTest,
+  charsBundleTest,
+  standardToken,
+  jsonParseTest,
+  jsonSampleTest,
+  markdown,
+  extractorBundleTest,
+};
