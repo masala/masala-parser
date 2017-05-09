@@ -110,7 +110,12 @@ export default class ExtractorBundle {
         if (typeof stop === 'string') {
             return satisfyStringFast(stop);
         }
-        
+
+        if (Array.isArray(stop)) {
+            return satisfyArrayStringFast(stop);
+        }
+
+
         return F.try(
             this._wordSequence(stop).rep().then(F.eos).thenReturns(undefined)
         ).or(
@@ -133,7 +138,6 @@ function _first(values) {
 
 /**
  * Will work only if input.source is a String
- * Needs to be tested with ReactJS
  * @param string
  * @returns {Parser}
  */
@@ -146,6 +150,44 @@ function satisfyStringFast(string) {
         }
 
         const sourceIndex = input.source.indexOf(string, index)
+        if( sourceIndex > 0){
+            return response.accept(input.source.substring(index,sourceIndex), input, sourceIndex, true)
+        }else{
+            return response.reject(input.location(index), false)
+        }
+
+    });
+}
+
+/**
+ * Will work only if input.source is a String
+ * Needs to be tested with ReactJS
+ * @param string
+ * @returns {Parser}
+ */
+function satisfyArrayStringFast(array) {
+
+    return new Parser((input, index = 0) => {
+
+        if (typeof input.source != 'string'){
+            throw 'Input source must be a String';
+        }
+
+        let sourceIndex = -1;
+
+        let i =0;
+        while (sourceIndex<0 && i<array.length){
+            const needle = array[i]; 
+            sourceIndex = input.source.indexOf(needle, index);
+            i++;
+            if( sourceIndex > 0){
+                break;
+            }
+        }
+        
+        
+        //const sourceIndex = input.source.indexOf(string, index)
+
         if( sourceIndex > 0){
             return response.accept(input.source.substring(index,sourceIndex), input, sourceIndex, true)
         }else{
