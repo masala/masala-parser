@@ -7,11 +7,11 @@ import documentParserTest from './document-parser-test';
 import fileParserTest from './file-parser-test';
 
 export default {
-  titleTest,
-  textTest,
-  bulletParser,
-  codeLineParser,
-  singleLinesParser,
-  documentParserTest,
-  fileParserTest,
+    titleTest,
+    textTest,
+    bulletParser,
+    codeLineParser,
+    singleLinesParser,
+    documentParserTest,
+    fileParserTest,
 };

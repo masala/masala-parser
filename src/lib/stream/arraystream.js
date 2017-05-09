@@ -11,24 +11,24 @@ import Stream from './stream';
  * Array stream class
  */
 class ArrayStream extends Stream {
-  constructor(source) {
-    super();
-    this.source = source;
-  }
+    constructor(source) {
+        super();
+        this.source = source;
+    }
 
-  // ArrayStream 'a => unit -> boolean
-  endOfStream(index) {
-    return this.source.length <= index;
-  }
+    // ArrayStream 'a => unit -> boolean
+    endOfStream(index) {
+        return this.source.length <= index;
+    }
 
-  // ArrayStream 'a => number -> 'a <+> error
-  unsafeGet(index) {
-    return this.source[index];
-  }
+    // ArrayStream 'a => number -> 'a <+> error
+    unsafeGet(index) {
+        return this.source[index];
+    }
 }
 
 function factory(source) {
-  return new ArrayStream(source);
+    return new ArrayStream(source);
 }
 
 export default factory;

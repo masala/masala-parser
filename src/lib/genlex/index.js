@@ -11,7 +11,7 @@ import token from './token';
 import tokenizer from './tokenizer';
 
 export default {
-  genlex,
-  token,
-  tokenizer,
+    genlex,
+    token,
+    tokenizer,
 };

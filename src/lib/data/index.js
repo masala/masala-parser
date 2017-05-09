@@ -11,7 +11,7 @@ import atry from './try';
 import unit from './unit';
 
 export default {
-  option,
-  atry,
-  unit,
+    option,
+    atry,
+    unit,
 };

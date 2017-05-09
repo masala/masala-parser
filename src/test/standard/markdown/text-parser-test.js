@@ -9,90 +9,90 @@ let accepted = undefined;
 let parser = null;
 
 function testLine(line) {
-  let parsing = parser.parse(line);
-  value = parsing.value;
-  accepted = parsing.isAccepted();
+    let parsing = parser.parse(line);
+    value = parsing.value;
+    accepted = parsing.isAccepted();
 }
 
 export default {
-  setUp: function(done) {
-    parser = Parser;
-    done();
-  },
+    setUp: function(done) {
+        parser = Parser;
+        done();
+    },
 
-  'test empty text': function(test) {
-    test.expect(2);
+    'test empty text': function(test) {
+        test.expect(2);
 
-    testLine('');
-    test.ok(!accepted, 'empty line are to be rejected');
+        testLine('');
+        test.ok(!accepted, 'empty line are to be rejected');
 
-    testLine('   ');
-    test.ok(!accepted, 'blank line are to be rejected');
+        testLine('   ');
+        test.ok(!accepted, 'blank line are to be rejected');
 
-    test.done();
-  },
+        test.done();
+    },
 
-  'test simple text': function(test) {
-    test.expect(2);
+    'test simple text': function(test) {
+        test.expect(2);
 
-    testLine('text');
-    test.deepEqual(value, {paragraph: [{text: 'text'}]});
+        testLine('text');
+        test.deepEqual(value, {paragraph: [{text: 'text'}]});
 
-    testLine('  text ');
-    test.deepEqual(value, {paragraph: [{text: 'text'}]});
+        testLine('  text ');
+        test.deepEqual(value, {paragraph: [{text: 'text'}]});
 
-    test.done();
-  },
+        test.done();
+    },
 
-  'test italic': function(test) {
-    test.expect(1);
+    'test italic': function(test) {
+        test.expect(1);
 
-    testLine('*text*');
-    test.deepEqual(value, {paragraph: [{italic: 'text'}]});
+        testLine('*text*');
+        test.deepEqual(value, {paragraph: [{italic: 'text'}]});
 
-    test.done();
-  },
+        test.done();
+    },
 
-  'test bold': function(test) {
-    test.expect(1);
+    'test bold': function(test) {
+        test.expect(1);
 
-    testLine('**text**');
-    test.deepEqual(value, {paragraph: [{bold: 'text'}]});
+        testLine('**text**');
+        test.deepEqual(value, {paragraph: [{bold: 'text'}]});
 
-    test.done();
-  },
+        test.done();
+    },
 
-  'test combined format': function(test) {
-    test.expect(1);
+    'test combined format': function(test) {
+        test.expect(1);
 
-    testLine('  *italic* text **then bold** ');
-    let expected = {
-      paragraph: [
-        {italic: 'italic'},
-        {text: ' text '},
-        {bold: 'then bold'},
-        {text: ' '},
-      ],
-    };
-    test.deepEqual(value, expected);
+        testLine('  *italic* text **then bold** ');
+        let expected = {
+            paragraph: [
+                {italic: 'italic'},
+                {text: ' text '},
+                {bold: 'then bold'},
+                {text: ' '},
+            ],
+        };
+        test.deepEqual(value, expected);
 
-    test.done();
-  },
+        test.done();
+    },
 
-  'single \\n must be translated as space': function(test) {
-    test.expect(1);
+    'single \\n must be translated as space': function(test) {
+        test.expect(1);
 
-    testLine('  *italic* text\n**then bold** ');
-    let expected = {
-      paragraph: [
-        {italic: 'italic'},
-        {text: ' text '},
-        {bold: 'then bold'},
-        {text: ' '},
-      ],
-    };
-    test.deepEqual(value, expected);
+        testLine('  *italic* text\n**then bold** ');
+        let expected = {
+            paragraph: [
+                {italic: 'italic'},
+                {text: ' text '},
+                {bold: 'then bold'},
+                {text: ' '},
+            ],
+        };
+        test.deepEqual(value, expected);
 
-    test.done();
-  },
+        test.done();
+    },
 };

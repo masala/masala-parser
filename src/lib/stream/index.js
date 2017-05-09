@@ -12,8 +12,8 @@ import parserStreamFactory from './parserstream';
 import bufferedStreamFactory from './bufferedstream';
 
 export default {
-  ofString: stringStreamFactory,
-  ofArray: arrayStreamFactory,
-  ofParser: parserStreamFactory,
-  buffered: bufferedStreamFactory,
+    ofString: stringStreamFactory,
+    ofArray: arrayStreamFactory,
+    ofParser: parserStreamFactory,
+    buffered: bufferedStreamFactory,
 };
