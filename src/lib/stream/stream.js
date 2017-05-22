@@ -9,37 +9,37 @@
 import atry from '../data/try';
 
 class Stream {
-  constructor() {}
+    constructor() {}
 
-  // Stream 'a => number -> number
-  location(index) {
-    return index;
-  }
-
-  // Stream 'a => number -> Try 'a
-  get(index) {
-    try {
-      if (this.endOfStream(index)) {
-        return atry.failure(new Error('End of stream reached'));
-      } else {
-        return atry.success(this.unsafeGet(index));
-      }
-    } catch (e) {
-      return atry.failure(e);
-    }
-  }
-
-  // Stream 'a => [Comparable 'a] -> number -> boolean
-  subStreamAt(s, index) {
-    for (var i = 0; i < s.length; i++) {
-      var value = this.get(i + index);
-      if (!value.isSuccess() || value.success() !== s[i]) {
-        return false;
-      }
+    // Stream 'a => number -> number
+    location(index) {
+        return index;
     }
 
-    return true;
-  }
+    // Stream 'a => number -> Try 'a
+    get(index) {
+        try {
+            if (this.endOfStream(index)) {
+                return atry.failure(new Error('End of stream reached'));
+            } else {
+                return atry.success(this.unsafeGet(index));
+            }
+        } catch (e) {
+            return atry.failure(e);
+        }
+    }
+
+    // Stream 'a => [Comparable 'a] -> number -> boolean
+    subStreamAt(s, index) {
+        for (var i = 0; i < s.length; i++) {
+            var value = this.get(i + index);
+            if (!value.isSuccess() || value.success() !== s[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 export default Stream;

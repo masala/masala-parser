@@ -47,7 +47,7 @@
   "scripts": {
     "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
-    "format": "prettier-eslint --write \"src/**/*.js\"",
+    "format": "prettier-eslint --prettier.tab-width 4 --write \"src/**/*.js\"",
     "lint": "eslint src/**/*.js",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rm -rf ./coverage && mkdir coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",

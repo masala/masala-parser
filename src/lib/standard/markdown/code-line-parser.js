@@ -10,22 +10,22 @@ import T from './token';
  known issue: non-breakable spaces are not recognised
   */
 function codeLine() {
-  return C.char('\n')
-    .optrep()
-    .thenRight(T.fourSpacesBlock())
-    .thenRight(T.fourSpacesBlock())
-    .thenRight(T.rawTextUntilChar('\n', true))
-    .map(text => ({code: text}));
+    return C.char('\n')
+        .optrep()
+        .thenRight(T.fourSpacesBlock())
+        .thenRight(T.fourSpacesBlock())
+        .thenRight(T.rawTextUntilChar('\n', true))
+        .map(text => ({code: text}));
 }
 
 function parseCodeLine(line, offset = 0) {
-  return codeLine().parse(stream.ofString(line), offset);
+    return codeLine().parse(stream.ofString(line), offset);
 }
 
 export default {
-  codeLine,
+    codeLine,
 
-  parse(line) {
-    return parseCodeLine(line, 0);
-  },
+    parse(line) {
+        return parseCodeLine(line, 0);
+    },
 };
