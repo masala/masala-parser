@@ -7,6 +7,6 @@ site
 npm-debug.log
 coverage
 .idea
-**/zztest.*
+*.iml
 **/parser-combinator.js
 **/parser-combinator.min.js
