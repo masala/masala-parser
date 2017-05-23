@@ -1,3 +1,4 @@
+#Good read: https://booker.codes/how-to-build-and-publish-es6-npm-modules-today-with-babel/
 # from http://stackoverflow.com/a/29932318/968988
 # Blacklist files/folders in same directory as the .gitignore file
 /*
@@ -7,7 +8,8 @@
 !README.md
 !documentation
 !dist
-
+!src
+!build
 # Ignore all files named .DS_Store or ending with .log
 **/.DS_Store
 **.log

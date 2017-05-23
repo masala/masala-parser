@@ -2,7 +2,7 @@
   "name": "parser-combinator",
   "description": "Parser combinators",
   "license": "LGPL-2.1",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "keywords": [
     "parser",
     "ll",
@@ -40,21 +40,21 @@
       "url": "https://github.com/d-plaindoux/parsec/blob/master/LICENSE-LGPL2"
     }
   ],
-  "main": "dist/parser-combinator.min.js",
+  "main": "build/lib/index.js",
   "engines": {
     "node": ">= 5.7.0"
   },
   "scripts": {
-    "compile": "rm -rf build/ && mkdir build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
+    "compile": "rimraf build/ && mkdirp build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
     "format": "prettier-eslint --prettier.tab-width 4 --write \"src/**/*.js\"",
     "lint": "eslint src/**/*.js",
     "test": "npm run compile && nodeunit build/test/index.js",
-    "cover": "rm -rf ./coverage && mkdir coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
+    "cover": "rimraf ./coverage && mkdirp coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover",
-    "concat": "rm -rf dist/ && mkdir dist && npm run compile && browserify build/lib/index.js --standalone parsec -o dist/parser-combinator.js",
-    "dist": "rm -rf dist/ && mkdir dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone parsec -o dist/parser-combinator.min.js",
+    "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/parser-combinator.js",
+    "dist": "rimraf dist/ && mkdirp dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone masala -o dist/parser-combinator.min.js",
     "prepublish": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
     "postpublish": "cd integration-npm && rm -rf node_modules && npm install && node integrate.js"
   },
@@ -67,10 +67,12 @@
     "browserify": "~9.0.3",
     "coveralls": "~2.11.2",
     "eslint": "^3.3.0",
+    "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
     "nodeunit": "~0.9.0",
     "prettier": "^1.3.1",
     "prettier-eslint-cli": "^3.4.3",
+    "rimraf": "^2.6.1",
     "uglifyify": "^3.0.2"
   }
 }
