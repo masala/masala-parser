@@ -1,17 +1,15 @@
-const parsec = require('parser-combinator');
-const F = parsec.F;
-const N=parsec.N;
+const {F,N, stream} = require('parser-combinator');
 
 
 // Parsec needs a stream of characters
 const document = '12';
-const stream = parsec.stream.ofString(document);
+const s = stream.ofString(document);
 
 // numberLitteral defines any int or float number
 // We expect a number, then eos: End Of Stream
 // We use thenLeft because we don't need the value of P.eos, we only want 12
 const numberParser = N.numberLiteral.thenLeft(F.eos);
-const parsing = numberParser.parse(stream);
+const parsing = numberParser.parse(s);
 
 // If the parser reached the end of stream (P.eos) without rejection, parsing is accepted
 console.info(parsing.isAccepted());
@@ -21,3 +19,9 @@ if (parsing.value !== 12){
 }else{
     console.log('=== Post publish Integration SUCCESS ! :) ===');
 }
+
+
+
+
+
+
