@@ -3,7 +3,7 @@ import {F, C} from '../../parsec/index';
 // resolve meanningles characters as an empty string
 // also accept an empty string
 function blank() {
-    return C.charIn(' \t').optrep().thenReturns('');
+    return C.charIn(' \t').rep().thenReturns(' ');
 }
 
 //todo: escape characters
