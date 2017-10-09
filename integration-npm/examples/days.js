@@ -13,29 +13,47 @@ function terminal() {
     return day();
 }
 
-function subexpr() {
-    return terminal()//.or(expr());
+
+
+function operation(){
+        return F.try(C.string(' AND ')).or(C.string(' OR '))
 }
+
+
+
+function parenthesis(par){
+    return C.char(' ').optrep().drop().then(C.char(par)).then(C.char(' ').optrep().drop());
+}
+
+function parenthesisExpr(){
+    return parenthesis('(').drop().then(expr()).then(parenthesis(')').drop());
+}
+
+
+// Implementing basic solution :
+//exp   = sexp (op exp)?
+//sexp = number | '(' exp ')'
+
+function subexpr(){
+    return terminal().or(parenthesisExpr());
+}
+
+function operationThenExpression(){
+    return operation().then(expr());
+}
+
+
 
 function expr() {
 
-    return C.char('(').then(subexpr()).then(')').or(subexpr())//.or(expr());
+    return subexpr().then(operationThenExpression().opt());
 
 }
 
-function AND() {
-    return expr().debug('here').then(C.string(' AND ').debug('and').drop()).then(expr()).map(([day1, day2]) => day1 + day2);
-}
 
-function OR() {
-    return expr().then(C.string(' OR ').drop()).then(expr()).debug('there').map( ([day1, day2]) => day1);
-}
-
-const tryAnd = () => F.try(AND());
-const tryOr = () => F.try(OR());
 
 function combinator() {
-    return tryAnd().or(tryOr()).or(expr());
+    return expr();
 }
 
 
