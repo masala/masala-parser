@@ -19,39 +19,44 @@ const {stream, F, N, C, X} = require('parser-combinator');
  expr -> terminal subExpr.opt()
  subExpr -> F.try(operator terminal subExpr )
  terminal -> DAY | ( expr )
-
  */
 
 
+
 function day() {
-    const x = new X()
-    return x.stringIn(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']);
+    return new X().stringIn(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']);
 }
 
+function blank(){
+    return C.char(' ').rep().thenReturns(' ');
+}
 
 function operation() {
-    return F.try(C.string(' AND ')).or(C.string(' OR '))
+    return blank().then(C.string('AND').or(C.string('OR'))).then(blank());
 }
 
-
 function parenthesis(par) {
-    return C.char(' ').optrep().drop().then(C.char(par)).then(C.char(' ').optrep().drop());
+    return C.char(' ').optrep().drop().then(C.char(par));
 }
 
 function parenthesisExpr() {
-    return parenthesis('(').drop().then(expr()).then(parenthesis(')').drop());
+    return parenthesis('(').drop()
+        .then(expr())
+        .then(parenthesis(')').drop());
 }
-
 
 
 function expr() {
-    return terminal().then(subExpr().opt())
+    return terminal().then(optionalSubExpr())
 }
 
 function subExpr() {
-    return F.try(operation().then(terminal()).then(F.lazy(subExpr).opt()));
+    return   operation().then(terminal()).then(F.lazy(optionalSubExpr));
 }
 
+function optionalSubExpr(){
+    return subExpr().opt();
+}
 
 function terminal() {
     return day().or(F.lazy(parenthesisExpr));
@@ -59,14 +64,15 @@ function terminal() {
 
 
 function combinator() {
-    return expr();
+    return expr().then(F.eos);
 }
 
 
-const string = '(TUESDAY OR THURSDAY) AND (WEDNESDAY OR (FRIDAY))';
+const string = '(TUESDAY OR THURSDAY OR TUESDAY)    OR (WEDNESDAY OR (FRIDAY))';
+
 let myStream = stream.ofString(string);
 let parsing = combinator().parse(myStream);
-
+console.log('length', string.length);
 console.log(parsing);
 
 
