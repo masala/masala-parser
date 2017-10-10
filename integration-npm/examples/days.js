@@ -30,7 +30,7 @@ function day() {
 
 
 function operation() {
-    return F.try(C.string(' AND ').debug('AND operator')).or(C.string(' OR ').debug('OR operator'))
+    return F.try(C.string(' AND ')).or(C.string(' OR '))
 }
 
 
@@ -39,32 +39,31 @@ function parenthesis(par) {
 }
 
 function parenthesisExpr() {
-    return parenthesis('(').debug('(').drop().then(expr().debug('inside parenthesis expression')).then(parenthesis(')').drop());
+    return parenthesis('(').drop().then(expr()).then(parenthesis(')').drop());
 }
 
 
 
 function expr() {
-    return terminal().debug('expr terminal').then(subExpr().opt())
+    return terminal().then(subExpr().opt())
 }
 
 function subExpr() {
-    return F.try(operation().then(terminal()).debug('terminal after operation').then(F.lazy(subExpr).opt().debug('optionnel subExpr')));
+    return F.try(operation().then(terminal()).then(F.lazy(subExpr).opt()));
 }
 
 
 function terminal() {
-    return day().debug('day').or(F.lazy(parenthesisExpr).debug('parenthesis expression')).debug('after terminal OR');
+    return day().or(F.lazy(parenthesisExpr));
 }
 
 
 function combinator() {
-    return expr().debug('expr');
+    return expr();
 }
 
 
-const string = 'TUESDAY AND (WEDNESDAY OR FRIDAY)';
-
+const string = '(TUESDAY OR THURSDAY) AND (WEDNESDAY OR (FRIDAY))';
 let myStream = stream.ofString(string);
 let parsing = combinator().parse(myStream);
 
