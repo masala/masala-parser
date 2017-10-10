@@ -77,8 +77,8 @@ Using only one level of operator, we simplify to:
 
 Which can be translated in *pseudo masala*:
 
-        expr -> terminal subExpr.opt()
-        subExpr -> F.try(operator terminal subExpr )
+        expr -> terminal subExpr
+        subExpr -> (operator terminal subExpr ).opt()
         terminal -> DAY | ( F.lazy(expr) )
  
  
