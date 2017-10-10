@@ -11,7 +11,7 @@ const {stream, F, N, C, X} = require('parser-combinator');
  Using only one operator, simplified to:
 
  T -> F T'
- T' -> * FT'  |  eps
+ T' -> operator FT'  |  eps
  F -> NUMBER | ID | ( T )
 
 
