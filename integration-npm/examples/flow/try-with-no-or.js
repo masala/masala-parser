@@ -1,5 +1,5 @@
-const {stream, F, N, C, X} = require('parser-combinator');
-
+const {Stream, F, C, X} = require('parser-combinator');
+const {assertFalse} = require('../../assert');
 
 function day() {
     const x = new X()
@@ -24,19 +24,19 @@ function combinator() {
 
     return day()
         .then(blank()).rep()
-        .then(separator()
-        .then(optAlternative().debug('we pass the option'))
-        .then(emptyTry().debug('we pass the try')))
+        .then(separator())
+        .then(optAlternative())//.debug('we pass the option', false)
+        .then(emptyTry())//.debug('we pass the try', false)
         .then(day());
 
 }
 
 const string = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY';
 
-let myStream = stream.ofString(string);
+let myStream = Stream.ofString(string);
 let parsing = combinator().parse(myStream);
-console.log('length', string.length);
-console.log(parsing);
+
+assertFalse(parsing.isAccepted());
 
 /**
  Conclusion:

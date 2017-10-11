@@ -1,4 +1,5 @@
-const {stream, N, C}= require('parser-combinator');
+const {Stream, N, C}= require('parser-combinator');
+const {assertEquals} = require('../../assert');
 const document = '|4.6|';
 
 const floorCombinator = C.char('|').drop()
@@ -7,6 +8,5 @@ const floorCombinator = C.char('|').drop()
     .map(x =>Math.floor(x));
 
 // Parsec needs a stream of characters
-const parsing = floorCombinator.parse(stream.ofString(document));
-
-console.log(parsing.value === 4);
+const parsing = floorCombinator.parse(Stream.ofString(document));
+assertEquals( 4, parsing.value, 'Floor parsing');

@@ -132,6 +132,7 @@ export default class Parser {
      * @param hint
      * @returns the equivalent Parser
      */
+    // TODO: set details default at false; check tests
     debug(hint, details = true) {
         var f = p => {
             if (details) {

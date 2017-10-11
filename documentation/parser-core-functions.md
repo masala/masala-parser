@@ -116,11 +116,11 @@ test.equal(combinator.parse(stream).value, 40)
 
         
 ```js
-const stream = parsec.stream.ofString("ab"));
+const stream = parsec.stream.ofString("ab");
 // given 'ac', value should be ['X' , 'c']
 const combinator = C.char('a')
                     .thenReturns('X')
-                    .then(C.char('c'); 
+                    .then(C.char('c')); 
 test.deepEquals().parse(stream)
 ```
 
@@ -129,7 +129,7 @@ It could be done using `map()`:
 ```js
 const combinator = C.char('a')
                     .map(anyVal => 'X')
-                    .then(C.char('c');
+                    .then(C.char('c'));
 ```
         
 
@@ -166,9 +166,13 @@ TODO : There is no explicit test for `any()`
 * difficulty : 0
 * Ensure a parser is repeated **at least** one time
 
-         const stream = stream.ofString("aaa");
-         const accepted = parser.char("a").rep().parse(stream,0).isAccepted()
-            test.deepEqual(accepted,true);
+         const stream = Stream.ofString('aaa');
+         const parsing = C.char('a').rep().parse(stream);
+         test.ok(parsings.isAccepted);
+         // We need to call list.array()
+         test.deepEqual(parsing.value.array(),['a', 'a', 'a']); 
+
+`rep()` will produce a `List` of values. You can get the more standard array value by calling `list.array()` 
 
 
 ### optrep

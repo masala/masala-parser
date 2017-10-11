@@ -1,10 +1,9 @@
 // Plain old ES
-var parsec = require('../../dist/parser-combinator.min');
-var X = parsec.X;
 
+const {Stream,  X}= require('../../build/lib/index');
 // The goal is check that we have Hello 'something', then to grab that something
 
-const line = parsec.stream.ofString("Hello 'World'");
+const line = Stream.ofString("Hello 'World'");
 
 var x = new X({moreSeparators: `'`});
 const helloParser = x.words(false) // false because we don't keep spaces

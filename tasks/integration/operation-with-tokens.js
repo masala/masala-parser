@@ -1,4 +1,8 @@
-import  {stream, N,C, F, T} from '../../dist/parser-combinator.min';
+const {Stream, N, C, F, T} = require('../../build/lib/index');
+
+const test = require('./test');
+
+
 
 function operator(symbol) {
     return T.blank().thenRight(C.char(symbol)).thenLeft(T.blank());
@@ -6,15 +10,15 @@ function operator(symbol) {
 
 function sum() {
     return N.integer.thenLeft(operator('+')).then(N.integer)
-        .map(values=>values[0] + values[1]);
+        .map(values => values[0] + values[1]);
 }
 
 function multiplication() {
     return N.integer.thenLeft(operator('*')).then(N.integer)
-        .map(values=>values[0] * values[1]);
+        .map(values => values[0] * values[1]);
 }
 
-function scalar(){
+function scalar() {
     return N.integer;
 }
 
@@ -24,12 +28,17 @@ function combinator() {
         .or(scalar());
 }
 
+
+
 function parseOperation(line) {
-    return combinator().parse(stream.ofString(line), 0);
+    return combinator().parse(Stream.ofString(line), 0);
 }
 
-console.info('sum: ',parseOperation('2   +2').value);  // 4
-console.info('multiplication: ',parseOperation('2 * 3').value); //6
-console.info('scalar: ',parseOperation('8').value);  // 8
+
+
+
+test('sum: ', 4, parseOperation('2   +2').value);
+test('multiplication: ', 6, parseOperation('2 * 3').value);
+test('scalar: ', 8, parseOperation('8').value);
 
 

@@ -3,6 +3,9 @@ Parser Combinator: Flow Bundle
 
 
 
+### List
+
+rep() will produce a List of values. You can get the more standard array value by calling `list.array()` 
 
 
 ### Repeat Danger
@@ -17,3 +20,7 @@ Then `    )    OR    ` will fail because ')' will take `    )    `, leaving the 
 which needs at least a space before.
 
 So it logically fails, and unfortunately these types of failures are pretty hard to debug.
+
+
+
+Moreover, it can cause neverending running code: https://github.com/d-plaindoux/masala-parser/issues/81
