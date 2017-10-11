@@ -1,24 +1,25 @@
-const {stream, F, N, C, X} = require('parser-combinator');
-
+const {Stream, F, N, C, X} = require('parser-combinator');
+const {assertTrue} = require('../../assert');
 /*
  Implementing stack solution :
  E -> T E'
  E' -> + TE'  |  eps
  T -> F T'
  T' -> * FT'  |  eps
- F -> NUMBER | ID | ( E )
+ F -> DAY | ( E )
 
  Using only one operator, simplified to:
 
  T -> F T'
  T' -> operator FT'  |  eps
- F -> NUMBER | ID | ( T )
+ F -> DAY | ( T )
 
 
- Translated to :
- expr -> terminal subExpr.opt()
- subExpr -> F.try(operator terminal subExpr )
- terminal -> DAY | ( expr )
+ Translated as pseudo-masala:
+
+ expr -> terminal subExpr
+ subExpr -> (operator terminal F.lazy(subExpr) ).opt()
+ terminal -> DAY | ( F.lazy(expr) )
  */
 
 
@@ -70,9 +71,9 @@ function combinator() {
 
 const string = '(TUESDAY OR THURSDAY OR TUESDAY)    OR (WEDNESDAY OR (FRIDAY))';
 
-let myStream = stream.ofString(string);
+let myStream = Stream.ofString(string);
 let parsing = combinator().parse(myStream);
-console.log('length', string.length);
-console.log(parsing);
+
+assertTrue(parsing.isAccepted());
 
 

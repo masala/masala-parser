@@ -12,7 +12,7 @@ import parsec from './parsec/index';
 import parser from './parsec/parser';
 import {F, C, N} from './parsec/index';
 import standard from './standard/index';
-import stream from './stream/index';
+import Stream from './stream/index';
 
 const JSON = standard.jsonParser;
 const MD = standard.markdownBundle;
@@ -24,7 +24,7 @@ export {
     genlex,
     parsec,
     standard,
-    stream,
+    Stream,
     parser,
     F,
     C,
