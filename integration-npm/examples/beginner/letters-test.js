@@ -23,4 +23,10 @@ assertFalse(/^(?![\u00F7\u00D7])[A-Za-z\u00C0-\u017F^\u00F7]+$/.test('×aeARáü
 
 
 
+assertTrue(/^(?![\u00F7\u00D7])[\u00C0-\u017F^\u00F7]+$/.test('áüñœÿ'));
+
+
+assertTrue(/(?![\u00F7\u00D7])[\u00C0-\u017F^\u00F7]/.test('œ'));
+assertFalse(/(?![\u00F7\u00D7])[\u00C0-\u017F^\u00F7]/.test('a'));
+
 

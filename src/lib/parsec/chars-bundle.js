@@ -9,22 +9,55 @@ import F from './flow-bundle';
 import Parser from './parser';
 import response from './response';
 
-// unit -> Parser char char
-function letter() {
-    return F.satisfy(v => ('a' <= v && v <= 'z') || ('A' <= v && v <= 'Z'));
-}
+const ASCII_LETTER = Symbol('ASCII');
+const OCCIDENTAL_LETTER = Symbol('OCCIDENTAL');
+const UTF8_LETTER = Symbol('UTF8');
 
 function isUtf8Letter(char) {
     var firstLetter = char.toUpperCase();
     return firstLetter.toLowerCase() != firstLetter;
 }
 
+
+function isExtendedOccidental(v) {
+    return /(?![\u00F7\u00D7])[\u00C0-\u017F^\u00F7]/.test(v);
+}
+
+// unit -> Parser char char
+function letter(symbolOrTestFunctionOrRegex = null) {
+
+    // For performance, we do not factorize mainstream letters in function
+    if (symbolOrTestFunctionOrRegex === null || symbolOrTestFunctionOrRegex === OCCIDENTAL_LETTER) {
+        return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || isExtendedOccidental(c));
+    }
+
+    if (symbolOrTestFunctionOrRegex === ASCII_LETTER) {
+        return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'));
+    }
+
+    if (symbolOrTestFunctionOrRegex === UTF8_LETTER) {
+        return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || isUtf8Letter(c));
+    }
+
+
+    if (typeof symbolOrTestFunctionOrRegex === 'function') {
+        return F.satisfy(c => symbolOrTestFunctionOrRegex(c));
+    }
+
+    if (typeof symbolOrTestFunctionOrRegex instanceof RegExp) {
+        return F.satisfy(c => symbolOrTestFunctionOrRegex.test(c));
+    }
+
+    throw 'Parameter ' + symbolOrTestFunctionOrRegex + ' has wrong type : Should be null, function or Regexp';
+}
+
+
 function utf8Letter() {
     return F.satisfy(v => isUtf8Letter(v));
 }
 
-function letters() {
-    return letter().rep().map(values => values.join(''));
+function letters(symbolOrTestFunctionOrRegex) {
+    return letter(symbolOrTestFunctionOrRegex).rep().map(values => values.join(''));
 }
 
 // char -> Parser char char
