@@ -15,7 +15,7 @@ const UTF8_LETTER = Symbol('UTF8');
 
 function isUtf8Letter(char) {
     var firstLetter = char.toUpperCase();
-    return firstLetter.toLowerCase() != firstLetter;
+    return firstLetter.toLowerCase() !== firstLetter;
 }
 
 
@@ -24,31 +24,22 @@ function isExtendedOccidental(v) {
 }
 
 // unit -> Parser char char
-function letter(symbolOrTestFunctionOrRegex = null) {
+function letter(symbol = null) {
 
     // For performance, we do not factorize mainstream letters in function
-    if (symbolOrTestFunctionOrRegex === null || symbolOrTestFunctionOrRegex === OCCIDENTAL_LETTER) {
+    if (symbol === null || symbol === OCCIDENTAL_LETTER) {
         return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || isExtendedOccidental(c));
     }
 
-    if (symbolOrTestFunctionOrRegex === ASCII_LETTER) {
+    if (symbol === ASCII_LETTER) {
         return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'));
     }
 
-    if (symbolOrTestFunctionOrRegex === UTF8_LETTER) {
+    if (symbol === UTF8_LETTER) {
         return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || isUtf8Letter(c));
     }
 
-
-    if (typeof symbolOrTestFunctionOrRegex === 'function') {
-        return F.satisfy(c => symbolOrTestFunctionOrRegex(c));
-    }
-
-    if (typeof symbolOrTestFunctionOrRegex instanceof RegExp) {
-        return F.satisfy(c => symbolOrTestFunctionOrRegex.test(c));
-    }
-
-    throw 'Parameter ' + symbolOrTestFunctionOrRegex + ' has wrong type : Should be null, function or Regexp';
+    throw 'Parameter ' + symbol + ' has wrong type : Should be C.OCCIDENTAL_LETTER, C.ASCII_LETTER or C.UTF8_LETTER';
 }
 
 
@@ -138,7 +129,9 @@ function upperCase() {
 export default {
     utf8Letter: utf8Letter(),
     letter: letter(),
+    letterAs:letter,
     letters: letters(),
+    lettersAs:letters,
     notChar: notChar,
     char: char,
     charIn: charIn,
@@ -150,4 +143,7 @@ export default {
     stringLiteral: stringLiteral(),
     lowerCase: lowerCase(),
     upperCase: upperCase(),
+    UTF8_LETTER,
+    OCCIDENTAL_LETTER,
+    ASCII_LETTER
 };
