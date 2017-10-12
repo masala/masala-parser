@@ -1,3 +1,4 @@
+Deprecate in docs thenLeft, thenRight
 Create npm repo by publishing
 -> release
 

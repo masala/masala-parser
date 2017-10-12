@@ -49,47 +49,36 @@ Usually, you should **NOT** create a Parser from its constructor. You will combi
 * If more than two are needed, use `flatmap()`
 * `then()` uses internally `flatmap()`
 
-        'expect (then) to be build [a,b]': function(test) {
-            const stream = stream.ofString("ab");
-            test.deepEqual(
-                 
-                C.char("a").then(C.char("b")).parse(stream).value,
-                ['a', 'b']
-                );
-        }
+```js
 
+let stream = Stream.ofString('abc');
+const charsParser = C.char('a')
+    .then(C.char('b'))
+    .then(C.char('c'))
+    .then(F.eos.drop()); // End Of Stream ; droping its value, just checking it's here
+let parsing = charsParser.parse(stream);
+console.log(parsing.value);
+```        
 
-### p1.thenLeft(p2), p1.thenRight(p2)
+### drop()
 
 * difficulty : 1
 * Uses `then()` and returns only the left or right value
 
+```js
+const stream = Stream.ofString('|4.6|');
+const floorCombinator = C.char('|').drop()
+    .then(N.numberLiteral)    // we have ['|',4.6], we keep 4.6
+    .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
+    .map(x =>Math.floor(x));
 
-        'expect (thenLeft) to returns 'a' from ['a','b']': function(test) {
-            test.deepEqual(
-                const stream = stream.ofString('ab'); 
-                C.char('a').thenLeft(C.char('b')).parse(stream).value,
-                'a'
-                );
-        }
-        // thenRight will return 'b'
+// Parsec needs a stream of characters
+const parsing = floorCombinator.parse(stream);
+assertEquals( 4, parsing.value, 'Floor parsing');
+```     
 
-`thenLeft` and `thenRight` will often be used to find the right value in your data.
+`then()` and `drop()` will often be used to find the right value in your data.
  
- A real life example with an addition : `x+y`.
-You don't need the value of '+', but you want the value at its left (`x`) and its right (`y`);
-
-
-        function sum() {
-            // there are 3 tokens : x, +, and y 
-             return N.number().thenLeft(plusOperator())
-                // thenLeft has removed one token
-                .then(N.number())
-                // then has kept the y token: we have x and y in values
-                // because we know there was a plusOperator(), we can make a sum
-                .map(values=>values[0] + values[1]);
-                
-        }
  
 
 ### map(f)
@@ -101,11 +90,11 @@ You don't need the value of '+', but you want the value at its left (`x`) and it
 ```js
 const stream = parsec.stream.ofString("5x8");
 const combinator = N.integer
-                    .thenLeft(C.char('x'))
+                    .then(C.charIn('x*').drop())
                     .then(N.integer)
                     // values are [5,8] : we map to its multiplication
-                    .map(values => values[0]*values[1]);
-test.equal(combinator.parse(stream).value, 40)
+                    .map(values => values[0] * values[1]);
+assertEquals(combinator.parse(stream).value, 40)
 ```
 
 ### thenReturns(value)
@@ -120,8 +109,8 @@ const stream = parsec.stream.ofString("ab");
 // given 'ac', value should be ['X' , 'c']
 const combinator = C.char('a')
                     .thenReturns('X')
-                    .then(C.char('c')); 
-test.deepEquals().parse(stream)
+                    .then(C.char('b')); 
+assertEquals(combinator.parse(stream).value, ['X', 'b'])
 ```
 
 It could be done using `map()`:
@@ -157,20 +146,26 @@ TODO : There is no explicit test for `any()`
 * Allows optional use of a Parser 
 * Internally used for `optrep()` function
 
+```js
         const P = parser;
         // ok for 'ac' but also 'abc'    
-        P.char('a').opt( P.char('b') ).char('P.c')
+        C.char('a').opt( C.char('b') ).char('c')
+```
 
 ### rep()
 
 * difficulty : 0
 * Ensure a parser is repeated **at least** one time
 
-         const stream = Stream.ofString('aaa');
-         const parsing = C.char('a').rep().parse(stream);
-         test.ok(parsings.isAccepted);
-         // We need to call list.array()
-         test.deepEqual(parsing.value.array(),['a', 'a', 'a']); 
+```js
+
+const stream = Stream.ofString('aaa');
+const parsing = C.char('a').rep().parse(stream);
+test.ok(parsings.isAccepted);
+// We need to call list.array()
+test.deepEqual(parsing.value.array(),['a', 'a', 'a']);
+
+```
 
 `rep()` will produce a `List` of values. You can get the more standard array value by calling `list.array()` 
 
@@ -180,10 +175,12 @@ TODO : There is no explicit test for `any()`
 * difficulty : 0
 * A Parser can be repeated zero or many times  
 
-        const P = parser;
-        // ok for 'ac' but also 'abbbbbc'    
-        P.char('a').optrep( P.char('b') ).char('P.c')
+```js        
 
+// ok for 'ac' but also 'abbbbbc'    
+C.char('a').optrep( C.char('b') ).char('c')
+
+```
 
 
 # Useful but touchy
@@ -252,7 +249,7 @@ TODO : missing a pertinent test for using try()
  
  
         //given 123
-        P.number().match(123)
+        N.number().match(123)
 
 
 ### error()
