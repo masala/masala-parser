@@ -14,8 +14,7 @@ const OCCIDENTAL_LETTER = Symbol('OCCIDENTAL');
 const UTF8_LETTER = Symbol('UTF8');
 
 function isUtf8Letter(char) {
-    var firstLetter = char.toUpperCase();
-    return firstLetter.toLowerCase() !== firstLetter;
+    return char.toLowerCase() !== char.toUpperCase();
 }
 
 
@@ -128,7 +127,7 @@ function notString(s) {
 
 // unit -> Parser string char
 function stringLiteral() {
-    var anyChar = string('\\"').or(notChar('"'));
+    const anyChar = string('\\"').or(notChar('"'));
     return char('"')
         .thenRight(anyChar.optrep())
         .thenLeft(char('"'))
@@ -137,7 +136,7 @@ function stringLiteral() {
 
 // unit -> Parser char char
 function charLiteral() {
-    var anyChar = string("\\'").or(notChar("'"));
+    const anyChar = string("\\'").or(notChar("'"));
     return char("'").thenRight(anyChar).thenLeft(char("'"));
 }
 
@@ -158,14 +157,14 @@ export default {
     letters: letters(),
     lettersAs: letters,
     emoji:emoji(),
-    notChar: notChar,
-    char: char,
-    charIn: charIn,
-    charNotIn: charNotIn,
-    subString: subString,
-    string: string,
+    notChar,
+    char,
+    charIn,
+    charNotIn,
+    subString,
+    string,
     stringIn,
-    notString: notString,
+    notString,
     charLiteral: charLiteral(),
     stringLiteral: stringLiteral(),
     lowerCase: lowerCase(),
