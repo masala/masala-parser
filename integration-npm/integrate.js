@@ -2,7 +2,7 @@ require('./examples/beginner/floor');
 require('./examples/beginner/hello-something');
 require('./examples/beginner/number');
 require('./examples/beginner/then');
-require('./examples/beginner/letters');
+require('./examples/beginner/chars');
 
 require('./examples/flow/try-with-no-or');
 
