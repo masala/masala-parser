@@ -241,7 +241,7 @@ export default {
 
     'expect ascii letters to be accepted': function (test) {
 
-        test.ok(C.lettersAs(C.ASCII_LETTER).parse(stream.ofString('a')).isAccepted());
+        test.ok(C.lettersAs(C.ASCII_LETTER).then(F.eos).parse(stream.ofString('a')).isAccepted());
         test.ok(!C.lettersAs(C.ASCII_LETTER).then(F.eos).parse(stream.ofString('éA')).isAccepted());
         test.ok(!C.lettersAs(C.ASCII_LETTER).then(F.eos).parse(stream.ofString('БAs')).isAccepted());
         test.done();
@@ -413,11 +413,15 @@ export default {
     },
 
     'expect emoji to be accepted': function (test) {
-        test.ok(C.emoji.parse(stream.ofString('a'), 0).isAccepted());
-        test.ok(C.emoji.parse(stream.ofString('🐵'), 0).isAccepted());
-        test.ok(C.emoji.parse(stream.ofString('✈️'), 0).isAccepted());
+        // It's super important for emoji to test there is EOS just after,
+        // because some emoji takes two \uWXYZ codes, where utf_8 does not
+        test.ok(! C.emoji.then(F.eos).parse(stream.ofString('б'), 0).isAccepted());
+        test.ok(! C.emoji.then(F.eos).parse(stream.ofString('a'), 0).isAccepted());
+        // multiple emojis are also accepted as one
+        test.ok(C.emoji.then(F.eos).parse(stream.ofString('🐵🐵✈️'), 0).isAccepted());
+        test.ok(C.emoji.then(F.eos).parse(stream.ofString('✈️'), 0).isAccepted());
         // Emoji 5.0 released in June 2017.
-        test.ok(C.emoji.parse(stream.ofString('🥪')).isAccepted());
+        test.ok(C.emoji.then(F.eos).parse(stream.ofString('🥪')).isAccepted());
         test.done();
     }
 
