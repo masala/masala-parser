@@ -242,7 +242,7 @@ export default {
     'expect ascii letters to be accepted': function (test) {
 
         test.ok(C.lettersAs(C.ASCII_LETTER).parse(stream.ofString('a')).isAccepted());
-        test.ok(! C.lettersAs(C.ASCII_LETTER).then(F.eos).parse(stream.ofString('éA')).isAccepted());
+        test.ok(!C.lettersAs(C.ASCII_LETTER).then(F.eos).parse(stream.ofString('éA')).isAccepted());
         test.ok(!C.lettersAs(C.ASCII_LETTER).then(F.eos).parse(stream.ofString('БAs')).isAccepted());
         test.done();
     },
@@ -260,7 +260,7 @@ export default {
         test.ok(C.lettersAs(C.UTF8_LETTER).then(F.eos).parse(stream.ofString('a')).isAccepted());
         test.ok(C.lettersAs(C.UTF8_LETTER).then(F.eos).parse(stream.ofString('éA')).isAccepted());
         test.ok(C.lettersAs(C.UTF8_LETTER).then(F.eos).parse(stream.ofString('БAs')).isAccepted());
-        test.ok(! C.letterAs(C.UTF8_LETTER).then(F.eos).parse(stream.ofString('Б÷As')).isAccepted());
+        test.ok(!C.letterAs(C.UTF8_LETTER).then(F.eos).parse(stream.ofString('Б÷As')).isAccepted());
         test.done();
     },
 
@@ -401,7 +401,7 @@ export default {
         );
         test.done();
     },
-    'expect "nothing" to be accepted': function (test) {
+    'expect "nothing" to be rejected': function (test) {
         test.expect(1);
         // tests here
         test.equal(
@@ -411,4 +411,15 @@ export default {
         );
         test.done();
     },
+
+    'expect emoji to be accepted': function (test) {
+        test.ok(C.emoji.parse(stream.ofString('a'), 0).isAccepted());
+        test.ok(C.emoji.parse(stream.ofString('🐵'), 0).isAccepted());
+        test.ok(C.emoji.parse(stream.ofString('✈️'), 0).isAccepted());
+        // Emoji 5.0 released in June 2017.
+        test.ok(C.emoji.parse(stream.ofString('🥪')).isAccepted());
+        test.done();
+    }
+
+
 };
