@@ -101,6 +101,26 @@ function string(s) {
     });
 }
 
+function stringIn(array) {
+    const tryString = s => F.try(string(s));
+
+    if (array.length === 0) {
+        return F.nop();
+    }
+    if (array.length === 1) {
+        return tryString(array[0]);
+    }
+
+    // Try the first string
+    const initial = tryString(array[0]);
+    const workArray = array.slice(1);
+    return workArray.reduce(
+        // Then try again and again the next one, coming always back to start
+        (accu, next) => accu.or(tryString(next)),
+        initial
+    );
+}
+
 // string -> Parser string char
 function notString(s) {
     return F.not(string(s));
@@ -144,6 +164,7 @@ export default {
     charNotIn: charNotIn,
     subString: subString,
     string: string,
+    stringIn,
     notString: notString,
     charLiteral: charLiteral(),
     stringLiteral: stringLiteral(),

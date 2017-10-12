@@ -85,12 +85,12 @@ export default class ExtractorBundle {
 
     wordsIn(array, keepSpaces = true) {
         if (keepSpaces) {
-            return F.try(this.stringIn(array).or(this._wordSeparators()))
+            return F.try(C.stringIn(array).or(this._wordSeparators()))
                 .rep()
                 .map(item => item.array());
         } else {
             const parser = F.try(
-                this._wordSeparators().optrep().thenRight(this.stringIn(array))
+                this._wordSeparators().optrep().thenRight(C.stringIn(array))
             );
             return parser
                 .rep()
@@ -99,26 +99,7 @@ export default class ExtractorBundle {
         }
     }
 
-    stringIn(array) {
-        const tryString = s => F.try(C.string(s));
 
-        // TODO use a noop
-        if (array.length === 0) {
-            return tryString('').thenReturns(undefined);
-        }
-        if (array.length === 1) {
-            // TODO : use tryString
-            return F.try(C.string(array[0]));
-        }
-
-        // TODO: Comment reduce use
-        const initial = tryString(array[0]);
-        const workArray = array.slice(1);
-        return workArray.reduce(
-            (accu, next) => accu.or(tryString(next)),
-            initial
-        );
-    }
 
     _wordSequence(stop) {
         return F.not(stop);
