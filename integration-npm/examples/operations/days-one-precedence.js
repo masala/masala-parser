@@ -1,4 +1,4 @@
-const {Stream, F, N, C, X} = require('parser-combinator');
+const {Stream, F, N, C} = require('parser-combinator');
 const {assertTrue} = require('../../assert');
 /*
  Implementing stack solution :
@@ -25,7 +25,7 @@ const {assertTrue} = require('../../assert');
 
 
 function day() {
-    return new X().stringIn(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']);
+    return C.stringIn(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']);
 }
 
 function blank(){
