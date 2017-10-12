@@ -102,6 +102,7 @@ export default class ExtractorBundle {
     stringIn(array) {
         const tryString = s => F.try(C.string(s));
 
+        // TODO use a noop
         if (array.length === 0) {
             return tryString('').thenReturns(undefined);
         }

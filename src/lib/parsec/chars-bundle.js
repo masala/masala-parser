@@ -61,6 +61,7 @@ function subString(length) {
 }
 
 // string -> Parser string char
+// index is forwarded at the length of the string
 function string(s) {
     return new Parser((input, index = 0) => {
         if (input.subStreamAt(s.split(''), index)) {

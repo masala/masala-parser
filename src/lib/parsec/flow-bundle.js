@@ -49,6 +49,7 @@ function eos() {
 }
 
 // ('a -> boolean) -> Parser a 'c
+// index is forwarded at index +1
 function satisfy(predicate) {
     return new Parser((input, index = 0) =>
         input
@@ -105,6 +106,7 @@ function sequence() {
 
 export default {
     parse,
+    nop:nop,
     try: doTry,
     any: any(),
     subStream: subStream,
