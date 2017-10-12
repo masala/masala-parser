@@ -112,37 +112,7 @@ export default {
         test.done();
     },
 
-    'test stringIn': function(test) {
-        let line = stream.ofString('James Bond');
 
-        const x = new X();
-        const combinator = x.stringIn(['The', 'James', 'Bond', 'series']);
-        const value = combinator.parse(line).value;
-        test.ok(typeof value === 'string');
-        test.ok(value === 'James');
-        test.done();
-    },
-
-    'test stringIn one string sidecase': function(test) {
-        let line = stream.ofString('James');
-
-        const x = new X();
-        const combinator = x.stringIn(['James']);
-        const value = combinator.parse(line).value;
-        test.ok(typeof value === 'string');
-        test.ok(value === 'James');
-        test.done();
-    },
-
-    'test stringIn empty sidecase': function(test) {
-        let line = stream.ofString('James');
-
-        const x = new X();
-        const combinator = x.stringIn([]).then(F.eos);
-        const parsing = combinator.parse(line);
-        test.ok(!parsing.isAccepted());
-        test.done();
-    },
 
     'test wordsIn': function(test) {
         let line = stream.ofString('James Bond by Ian Fleming');

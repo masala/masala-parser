@@ -330,6 +330,57 @@ export default {
         test.done();
     },
 
+    'test stringIn': function(test) {
+        let line = stream.ofString('James Bond');
+
+        const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
+        const value = combinator.parse(line).value;
+        test.ok(typeof value === 'string');
+        test.ok(value === 'James');
+        test.done();
+    },
+
+    'test stringIn Similar': function(test) {
+        // Checks the search comes back after each search
+        let line = stream.ofString('Jack James Jane');
+
+        const combinator = C.stringIn(['Jamie', 'Jacko', 'Jack']);
+        const parsing = combinator.parse(line);
+        const value = parsing.value;
+        test.equal(typeof  value , 'string');
+        test.equal(value , 'Jack');
+        test.equal(parsing.offset, 'Jack'.length)
+        test.done();
+    },
+
+    'test stringIn one string sidecase': function(test) {
+        let line = stream.ofString('James');
+
+        const combinator = C.stringIn(['James']);
+        const value = combinator.parse(line).value;
+        test.ok(typeof value === 'string');
+        test.ok(value === 'James');
+        test.done();
+    },
+
+    'test stringIn empty sidecase': function(test) {
+        let line = stream.ofString('James');
+
+        const combinator = C.stringIn([]).then(F.eos);
+        const parsing = combinator.parse(line);
+        test.ok(!parsing.isAccepted());
+        test.done();
+    },
+
+    'test stringIn empty accept nothing sidecase': function(test) {
+        let line = stream.ofString('');
+
+        const combinator = C.stringIn([]).then(F.eos);
+        const parsing = combinator.parse(line);
+        test.ok(parsing.isAccepted());
+        test.done();
+    },
+
     'expect (notString) to be accepted': function (test) {
         test.expect(1);
         // tests here
