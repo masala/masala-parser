@@ -149,7 +149,7 @@ function scalar(){
 function combinator() {
     return F.try(sum())
         .or(F.try(multiplication()))    // or() will often work with try()
-        .or(scalar());;
+        .or(scalar());
 }
 
 function parseOperation(line) {
@@ -249,15 +249,20 @@ Others:
 
 ## The Chars Bundle
 
-* `letter`: accept an ascii letter ([opened issue for other languages](https://github.com/d-plaindoux/parsec/issues/43))
-    (and so moves the cursor)
+[General use](./documentation/chars-bundle.md)
+
+* `letter`: accept a european letter (and moves the cursor)
 * `letters`: accepts many letters and returns a string
+* `letterAs(symbol)`: accepts a european(default), ascii, or utf8 Letter. [More here](./documentation/chars-bundle.md)
+* `lettersAs(symbol)`: accepts many letters and returns a string
+* `emoji`: accept any emoji sequence. [Opened Issue](https://github.com/d-plaindoux/masala-parser/issues/86).
 * `notChar(x)`: accept if next input is not `x`
 * `char(x)`: accept if next input is `x`
 * `charIn('xyz')`: accept if next input is `x`, `y` or `z`
 * `charNotIn('xyz')`: accept if next input is not `x`, `y` or `z`
 * `subString(length)`: accept any next *length* characters and returns the equivalent string
 * `string(word)`: accept if next input is the given `word`  
+* `stringIn(words)`: accept if next input is the given `words` [More here](./documentation/chars-bundle.md)
 * `notString(word)`: accept if next input is *not* the given `word`
 * `charLiteral`: single quoted char element in C/Java : `'a'` is accepted
 * `stringLiteral`: double quoted string element in java/json: `"hello world"` is accepted
