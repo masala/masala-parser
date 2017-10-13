@@ -39,7 +39,7 @@ function letter(symbol = null) {
         return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || isUtf8Letter(c));
     }
 
-    throw 'Parameter ' + symbol + ' has wrong type : Should be C.OCCIDENTAL_LETTER, C.ASCII_LETTER or C.UTF8_LETTER';
+    throw 'Parameter ' + symbol.toString() + ' has wrong type : Should be C.OCCIDENTAL_LETTER, C.ASCII_LETTER or C.UTF8_LETTER';
 }
 
 

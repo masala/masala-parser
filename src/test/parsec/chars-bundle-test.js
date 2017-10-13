@@ -264,6 +264,20 @@ export default {
         test.done();
     },
 
+    'expect unknown letters to be rejected': function (test) {
+
+        const line = stream.ofString('a')
+        let errorFound = false;
+        try {
+            const combinator = C.lettersAs(Symbol('UNKNOWN')).then(F.eos);
+            combinator.parse(line);
+        } catch (error) {
+            errorFound = true;
+        }
+        test.ok(errorFound);
+        test.done();
+    },
+
 
     'expect (letters) to be accepted': function (test) {
         test.expect(2);
@@ -330,7 +344,7 @@ export default {
         test.done();
     },
 
-    'test stringIn': function(test) {
+    'test stringIn': function (test) {
         let line = stream.ofString('James Bond');
 
         const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
@@ -340,20 +354,20 @@ export default {
         test.done();
     },
 
-    'test stringIn Similar': function(test) {
+    'test stringIn Similar': function (test) {
         // Checks the search comes back after each search
         let line = stream.ofString('Jack James Jane');
 
         const combinator = C.stringIn(['Jamie', 'Jacko', 'Jack']);
         const parsing = combinator.parse(line);
         const value = parsing.value;
-        test.equal(typeof  value , 'string');
-        test.equal(value , 'Jack');
+        test.equal(typeof  value, 'string');
+        test.equal(value, 'Jack');
         test.equal(parsing.offset, 'Jack'.length)
         test.done();
     },
 
-    'test stringIn one string sidecase': function(test) {
+    'test stringIn one string sidecase': function (test) {
         let line = stream.ofString('James');
 
         const combinator = C.stringIn(['James']);
@@ -363,7 +377,7 @@ export default {
         test.done();
     },
 
-    'test stringIn empty sidecase': function(test) {
+    'test stringIn empty sidecase': function (test) {
         let line = stream.ofString('James');
 
         const combinator = C.stringIn([]).then(F.eos);
@@ -372,7 +386,7 @@ export default {
         test.done();
     },
 
-    'test stringIn empty accept nothing sidecase': function(test) {
+    'test stringIn empty accept nothing sidecase': function (test) {
         let line = stream.ofString('');
 
         const combinator = C.stringIn([]).then(F.eos);
@@ -466,8 +480,8 @@ export default {
     'expect emoji to be accepted': function (test) {
         // It's super important for emoji to test there is EOS just after,
         // because some emoji takes two \uWXYZ codes, where utf_8 does not
-        test.ok(! C.emoji.then(F.eos).parse(stream.ofString('б'), 0).isAccepted());
-        test.ok(! C.emoji.then(F.eos).parse(stream.ofString('a'), 0).isAccepted());
+        test.ok(!C.emoji.then(F.eos).parse(stream.ofString('б'), 0).isAccepted());
+        test.ok(!C.emoji.then(F.eos).parse(stream.ofString('a'), 0).isAccepted());
         // multiple emojis are also accepted as one
         test.ok(C.emoji.then(F.eos).parse(stream.ofString('🐵🐵✈️'), 0).isAccepted());
         test.ok(C.emoji.then(F.eos).parse(stream.ofString('✈️'), 0).isAccepted());
