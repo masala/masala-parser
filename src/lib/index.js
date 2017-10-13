@@ -19,6 +19,22 @@ const MD = standard.markdownBundle;
 const X = standard.extractorBundle;
 const T = standard.tokenBundle;
 
+export const bundle =  {
+    data,
+    genlex,
+    parsec,
+    standard,
+    Stream,
+    parser,
+    F,
+    C,
+    N,
+    JSON,
+    MD,
+    X,
+    T,
+};
+
 export {
     data,
     genlex,
@@ -34,3 +50,5 @@ export {
     X,
     T,
 };
+
+export default bundle;
