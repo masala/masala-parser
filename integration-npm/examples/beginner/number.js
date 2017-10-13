@@ -1,4 +1,4 @@
-const {F,N, Stream} = require('parser-combinator');
+const {F,N, Stream} = require('@masala/parser');
 const {assertEquals, assertTrue} = require('../../assert');
 
 // Parsec needs a stream of characters

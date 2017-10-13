@@ -1,4 +1,4 @@
-const {Stream, F, C} = require('parser-combinator');
+const {Stream, F, C} = require('@masala/parser');
 const {assertFalse} = require('../../assert');
 
 function day() {

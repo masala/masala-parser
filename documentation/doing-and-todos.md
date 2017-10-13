@@ -1,9 +1,9 @@
-Deprecate in docs thenLeft, thenRight
-Create npm repo by publishing
+
 -> release
 
 typescript
 -> release
+
 
 
 lotech
@@ -14,3 +14,9 @@ remove thenLeft, thenRight
 StackOverflow Regex
 https://stackoverflow.com/questions/5436824/matching-accented-characters-with-javascript-regexes
 >>>> Make a response with next Masala version
+
+
+Questions Didier
+
+- perdu lien coveralls
+- flatmap or flatMap ?
