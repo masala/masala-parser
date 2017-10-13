@@ -1,6 +1,6 @@
 /**
  * Written by Nicolas Zozol
- * Based on https://github.com/jon-hanson/parsecj
+ * Inspired by https://github.com/jon-hanson/parsecj
  */
 
 // Not needed
@@ -46,7 +46,7 @@ export interface Stream<Data>{
 }
 
 export interface StreamFactory{
-    ofString():Stream<string>;
+    ofString(string:string):Stream<string>;
     ofArray<X>():Stream<Array<X>>;
 }
 
@@ -63,7 +63,7 @@ export interface Response<T> extends Monoid<T>{
 }
 
 export interface Parser<T>{
-    then<Y>(p:Parser<Y>):Parser<T>;
+    then<Y>(p:Parser<Y>):Parser<T|Y>;
     parse<X>(stream:Stream<X>, index?:number):Response<T>;
     flatmap<Y> (f: ()=>Y): Parser<Y>;
     map<Y> (f: ()=>Y): Parser<Y>;
@@ -87,3 +87,14 @@ export interface Response<T> extends Monoid<T>{
     flatmap(f):Response<T>;
     filter(f:(value)=>boolean):Response<T>;
 }
+
+export interface CharBundle{}
+export interface FlowBundle{}
+
+export interface Bundle{
+    Stream:StreamFactory;
+    C:CharBundle;
+    F:FlowBundle
+}
+
+//export default Bundle;
