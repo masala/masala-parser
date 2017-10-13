@@ -1,5 +1,5 @@
 // Plain old ES
-const {Stream,  C}= require('parser-combinator');
+const {Stream,  C}= require('@masala/parser');
 const {assertArrayEquals,assertEquals, assertTrue} = require('../../assert');
 
 // The goal is check that we have Hello 'something', then to grab that something

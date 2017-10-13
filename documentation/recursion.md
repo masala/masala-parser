@@ -8,7 +8,7 @@ combinator parser with recursion would make a stack overflow before parsing
 Recursion fail
 ----
 
-        const {stream, F, N, C, X} = require('parser-combinator');
+        const {stream, F, N, C, X} = require('@masala/parser');
         
         function A(){
             return C.char('A').then(B());
