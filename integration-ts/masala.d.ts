@@ -1,3 +1,8 @@
+/**
+ * Written by Nicolas Zozol
+ * Based on https://github.com/jon-hanson/parsecj
+ */
+
 // Not needed
 export interface Option<Type>{
     isPresent():boolean;
@@ -31,38 +36,54 @@ export interface List<E>{
     array: Array<E>
 }
 
+
+
 export interface Stream<Data>{
     location(index:number):number;
-    get():Data;
+    get(index:number):Try<Data,void>;
     subStreamAt(index:number, stream:Stream<Data>)
 
 }
 
-export interface Parser{
-    flatmap (f: ()=>any): Parser;
-    map (f: ()=>any): Parser;
-    filter(f :()=>boolean):Parser
-    match(value:any):Parser;
-    then(p:Parser):Parser;
-    concat: Parser;
-    drop:Parser;
-    thenLeft: Parser;
-    thenRight:Parser;
-    thenReturns(value:any): Parser;
-    or(p:Parser):Parser;
-    opt():Parser;
-    rep():Parser;
-    occurrence(n:number):Parser;
-    optrep():Parser;
-    chain():Parser;
-    debug(hint?:string, details?:boolean);
-    parse(stream:Stream<any>, index:number):Response;
+export interface StreamFactory{
+    ofString():Stream<string>;
+    ofArray<X>():Stream<Array<X>>;
 }
 
-export interface Response{
+export interface Monoid<T>{
+    value:T|Array<T>
+}
+
+export interface Response<T> extends Monoid<T>{
     isAccepted():boolean
-    fold(accept, reject?):Response;
-    map(f):Response;
-    flatmap(f):Response;
-    filter(f:(value)=>boolean):Response;
+    fold(accept, reject?):Response<T>;
+    map(f):Response<T>;
+    flatmap(f):Response<T>;
+    filter(f:(value)=>boolean):Response<T>;
+}
+
+export interface Parser<T>{
+    then<Y>(p:Parser<Y>):Parser<T>;
+    parse<X>(stream:Stream<X>, index?:number):Response<T>;
+    flatmap<Y> (f: ()=>Y): Parser<Y>;
+    map<Y> (f: ()=>Y): Parser<Y>;
+    filter(f :()=>boolean):Parser<T>
+    match(value:T):Parser<T>;
+    drop():Parser<void>;
+    thenReturns<Y>(value:Y): Parser<Y>;
+    or<Y>(p:Parser<Y>):Parser<T|Y>;
+    opt():Parser<T>;
+    rep():Parser<List<T>>;
+    occurrence(n:number):Parser<List<T>>;
+    optrep():Parser<List<T>>;
+    chain<Y>():Parser<Y>;
+    debug(hint?:string, details?:boolean):Parser<T>;
+}
+
+export interface Response<T> extends Monoid<T>{
+    isAccepted():boolean
+    fold(accept, reject?):Response<T>;
+    map(f):Response<T>;
+    flatmap(f):Response<T>;
+    filter(f:(value)=>boolean):Response<T>;
 }
