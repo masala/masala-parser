@@ -106,7 +106,7 @@ function sequence() {
 
 export default {
     parse,
-    nop:nop,
+    nop: nop,
     try: doTry,
     any: any(),
     subStream: subStream,

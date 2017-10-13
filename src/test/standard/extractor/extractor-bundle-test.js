@@ -112,8 +112,6 @@ export default {
         test.done();
     },
 
-
-
     'test wordsIn': function(test) {
         let line = stream.ofString('James Bond by Ian Fleming');
 
