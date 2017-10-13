@@ -1,23 +1,14 @@
-const parsec = require('parser-combinator');
-const F = parsec.F;
-const N=parsec.N;
+require('./examples/beginner/floor');
+require('./examples/beginner/hello-something');
+require('./examples/beginner/number');
+require('./examples/beginner/then');
+require('./examples/beginner/chars');
 
+require('./examples/flow/try-with-no-or');
 
-// Parsec needs a stream of characters
-const document = '12';
-const stream = parsec.stream.ofString(document);
+require('./examples/operations/days-one-precedence');
 
-// numberLitteral defines any int or float number
-// We expect a number, then eos: End Of Stream
-// We use thenLeft because we don't need the value of P.eos, we only want 12
-const numberParser = N.numberLiteral.thenLeft(F.eos);
-const parsing = numberParser.parse(stream);
+require('./examples/parser/debug');
 
-// If the parser reached the end of stream (P.eos) without rejection, parsing is accepted
-console.info(parsing.isAccepted());
-// The parser has a 12 value inside the monoid
-if (parsing.value !== 12){
-    throw "Illegal value parsed in postpublish integration test";
-}else{
-    console.log('=== Post publish Integration SUCCESS ! :) ===');
-}
+require('./examples/recursion/aaab-fail-recursion');
+require('./examples/recursion/aaab-lazy-recursion');

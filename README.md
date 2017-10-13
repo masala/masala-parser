@@ -9,17 +9,28 @@ Masala Parser is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf).
 
 Masala Parser is a Javascript implementation of the Haskell **Parsec**.
- It is plain Javascript that works in the browser, is tested with more than 400 unit tests, covering 100% of code lines.
+ It is plain Javascript that works in the browser, is tested with more than 450 unit tests, covering 100% of code lines.
 
 ### Use cases
 
 * It can create a full parser from scratch as an alternative for Lex & yacc
 * It can extract data from a big text and replace complex regexp
 * It can validate complete structure with variations
+* It can parse and execute custom operations
 
 Masala Parser keywords are **variations** and **maintainability**. You won't
 need theoretical bases on languages for extraction or validation use cases.
 
+# Usage
+
+With Node Js or modern build        
+        
+        npm install -S @masala/parser
+
+Or in the browser 
+
+* [download Release](https://github.com/d-plaindoux/masala-parser/releases)
+* `<script src="masala-parser.min.js"/>`
 
 
 # Quick Examples
@@ -129,16 +140,19 @@ is a combination of Parsers given by the standard bundles or previous functions.
 import  {stream, N,C, F, T} from 'parser-combinator';
 
 function operator(symbol) {
-    return T.blank().thenRight(C.char(symbol)).thenLeft(T.blank());
+    return T.blank().drop()
+            .then(C.char(symbol))
+            .then(T.blank().drop());
 }
 
 function sum() {
-    return N.integer.thenLeft(operator('+')).then(N.integer)  // thenLeft will avoid symbol in resulting values
+    return N.integer.then(operator('+').drop()).then(N.integer)  // drop() will remove symbol from resulting values
         .map(values=>values[0] + values[1]);
+        //.map([v1, v2] => v1 + v2); for advanced ES2015
 }
 
 function multiplication() {
-    return N.integer.thenLeft(operator('*')).then(N.integer)
+    return N.integer.then(operator('*').drop()).then(N.integer)
         .map(values=>values[0] * values[1]);
 }
 
@@ -148,12 +162,12 @@ function scalar(){
 
 function combinator() {
     return F.try(sum())
-        .or(F.try(multiplication()))    // or() will often work with try()
-        .or(scalar());;
+        .or(F.try(multiplication()))    // or() will often work with try() ; see below
+        .or(scalar());
 }
 
 function parseOperation(line) {
-    return combinator().parse(stream.ofString(line), 0);
+    return combinator().parse(stream.ofString(line));
 }
 
 console.info('sum: ',parseOperation('2   +2').value);  // 4
@@ -218,7 +232,7 @@ Suppose we do not `try()` but use `or()` directly:
 
 Here is a link for [Core functions documentation](./documentation/parser-core-functions.md).
 
-It will explain `then()`, `drop()`, `thenLeft()`, `thenRight()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
+It will explain `then()`, `drop()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
 with code examples.
 
 ## The Flow Bundle
@@ -249,15 +263,20 @@ Others:
 
 ## The Chars Bundle
 
-* `letter`: accept an ascii letter ([opened issue for other languages](https://github.com/d-plaindoux/parsec/issues/43))
-    (and so moves the cursor)
+[General use](./documentation/chars-bundle.md)
+
+* `letter`: accept a european letter (and moves the cursor)
 * `letters`: accepts many letters and returns a string
+* `letterAs(symbol)`: accepts a european(default), ascii, or utf8 Letter. [More here](./documentation/chars-bundle.md)
+* `lettersAs(symbol)`: accepts many letters and returns a string
+* `emoji`: accept any emoji sequence. [Opened Issue](https://github.com/d-plaindoux/masala-parser/issues/86).
 * `notChar(x)`: accept if next input is not `x`
 * `char(x)`: accept if next input is `x`
 * `charIn('xyz')`: accept if next input is `x`, `y` or `z`
 * `charNotIn('xyz')`: accept if next input is not `x`, `y` or `z`
 * `subString(length)`: accept any next *length* characters and returns the equivalent string
 * `string(word)`: accept if next input is the given `word`  
+* `stringIn(words)`: accept if next input is the given `words` [More here](./documentation/chars-bundle.md)
 * `notString(word)`: accept if next input is *not* the given `word`
 * `charLiteral`: single quoted char element in C/Java : `'a'` is accepted
 * `stringLiteral`: double quoted string element in java/json: `"hello world"` is accepted
@@ -321,7 +340,7 @@ class to make customization easy. So you can extend it to override methods, or u
 * `x.wordsUntil(stopParser)`: Probably the most valuable method. Will traverse the document until the **stop combinator**
     - returns `undefined` if *stop* is not found
     - returns all characters if *stop* is found, and set the cursor at the spot of the stop
-    - Use `x.wordsUntil(valueStuffParser).thenRight(valueStuffParser)` to extract *valueStuff*
+    - Use `x.wordsUntil(valueStuffParser).drop().then(valueStuffParser)` to extract *valueStuff*
 * `x.first`, `x.last`: mappers to pick first or last word  
     - example: `x.words().map(x.first)` will pick the first word of the document
 
@@ -360,159 +379,6 @@ Tokens are:
 * `codeLine`: Four spaces indented code block line
 
 
-<!---
-
-### Extension Parser functions
-
-Here is a link for [Extension functions documentation](./documentation/parser-extension-functions.md) of the parser.
-
-### Character based parsers
-
-Let `P` be the parser library.
-
-```
-P.digit                             (1)
-P.lowerCase                         (2)
-P.upperCase                         (3)
-P.char('h')                         (4)
-P.notChar('h')                      (5)
-P.string("hello")                   (6)
-```
-
-1. Recognize a digit i.e. `'0'` ... `'9'`.
-2. Recognize a lower case letter i.e. `'a'` ... `'z'`
-3. Recognize a upper case letter i.e. `'A'` ... `'Z'`
-4. Recognize the character 'h'
-5. Recognize any character except 'h'
-6. Recognize the string `"hello"`
-
-### Combinators
-
-Let `P` be the parser library.
-
-```
-P.lowerCase.or(P.upperCase)         (1)
-P.digit.rep()                       (2)
-P.char('-').opt()                   (3)
-P.char(' ').optrep()                (4)
-P.lowerCase.then(P.letter.optrep()) (5)
-```
-
-1. Recognize a letter i.e. `'a'` ... `'z'` **or** `'A'` ... `'Z'`
-4. Recognize a number with at least one digit
-3. Recognize the character `'-'` or nothing
-4. Recognize a least zero white space
-5. Recognize a lowercase then may be letters like `aAaA`
-
-### Transformations
-
-During a parsing process each parsed and captured data can be transformed
-an aggregated with other transformed data. For this purpose the `map`
-function is available.
-
-```
-// [ char in {'0'..'9'} ] -> number
-function toInteger(digits) {
-    return parseInt(digits.join(''));
-}
-
-P.digit.rep().map(toInteger)        (1)
-```
-
-1. Recognize a sequence of digits and transform it to a number.
-
-## Specifications
-
-### Stream constructors
-- *ofString* : string -> Stream char
-- *ofArray* : &forall; a . [a] &rarr; Stream a
-- *ofParser* : &forall; a c .(Parse a c, Stream c) &rarr; Stream a
-- *buffered* : &forall; a .Stream a &rarr; Stream a
-
-### Parser
-
-#### Basic constructors:
-- *lazy* : &forall; a c . (unit &rarr; Parser a c) &rarr; Parser a c
-- *returns* : &forall; a c . a &rarr; Parser a c
-- *error* : &forall; a c . unit &rarr; Parser a c
-- *eos* : &forall; c . unit &rarr; Parser unit c
-- *satisfy* : &forall; a . (a &rarr; bool) &rarr; Parser a a
-- *try* : &forall; a c . Parser a c &rarr; Parser a c
-- *not* : &forall; a c . Parser a c &rarr; Parser a c
-
-#### Char sequence constructors:
-- *digit* : Parser char char
-- *lowerCase* : Parser char char
-- *upperCase* : Parser char char
-- *letter* : Parser char char
-- *notChar* : char &rarr; Parser char char
-- *aChar* : char &rarr; Parser char char
-- *charLitteral* : Parser char char
-- *stringLitteral* : Parser string char
-- *numberLitteral* : Parser number char
-- *aString* : string &rarr; Parser string char
-
-#### Parser Combinators:
-- *then* : &forall; a b c . **Parser a c** &odot; Parser b c &rarr; Parser [a,b] c
-- *thenLeft* : &forall; a b c . **Parser a c** &odot; Parser b c &rarr; Parser a c
-- *thenRight* : &forall; a b c . **Parser a c** &odot; Parser b c &rarr; Parser b c
-- *or* : &forall; a c . **Parser a c** &odot; Parser a c &rarr; Parser a c
-- *opt* : &forall; a c . **Parser a c** &odot; unit &rarr; Parser (Option a) c
-- *rep* : &forall; a c . **Parser a c** &odot; unit &rarr; Parser (List a) c
-- *optrep* : &forall; a c . **Parser a c** &odot; unit &rarr; Parser (List a) c
-- *match* : &forall; a c . **Parser a c** &odot; Comparable a &rarr; Parser a c
-
-#### Parser manipulation:
-- *map* : &forall; a b c . **Parser a c** &odot; (a &rarr; b) &rarr; Parser b c
-- *flatmap* : &forall; a b c . **Parser a c** &odot; (a &rarr; Parser b c) &rarr; Parser b c
-- *filter* : &forall; a b c . **Parser a c** &odot; (a &rarr; bool) &rarr; Parser a c
-
-#### Chaining parsers by composition:
-- *chain* : &forall; a b c . **Parser a c** &odot; Parser b a &rarr; Parser b c
-
-#### Parser Main Function:
-- *parse* : &forall; a c . **Parser a c** &odot; Stream c &rarr; number &rarr; Response a
-
-### Token
-
-#### Token builder:
-- *keyword* : string &rarr; Token
-- *ident* : string &rarr; Token
-- *number* : string &rarr; Token
-- *string* : string &rarr; Token
-- *char* : string &rarr; Token
-
-#### Token parser:
-- *keyword* : Parser Token Token
-- *ident* : Parser Token Token
-- *number* : Parser Token Token
-- *string* : Parser Token Token
-- *char* : Parser Token Token
-
-### Generic Lexer
-
-#### GenlexFactory data type:
-- *keyword* : &forall; a . string &rarr; a
-- *ident* : &forall; a .string &rarr; a
-- *number* : &forall; a .number &rarr; a
-- *string* : &forall; a .string &rarr; a
-- *char* : &forall; a .char &rarr; a
-
-#### Genlex generator:
-- *keyword* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
-- *ident* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
-- *number* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
-- *string* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
-- *char* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
-- *token* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser a char
-- *tokens* : &forall; a . **Genlex [String]** &odot; GenlexFactory a &rarr; Parser [a] char
-
-### Tokenizer
-
-#### Tokenizer [String]
-- *tokenize* : **Tokenizer [String]** &odot; Stream char &rarr; Try [Token]
-
--->
 
 ## License
 

@@ -61,7 +61,7 @@ export default class Parser {
         return this.flatmap(a =>
             p.map(b => {
                 let result = list(a).append(list(b)).array();
-                if (result.length == 1) {
+                if (result.length === 1) {
                     return result[0];
                 } else {
                     return result;
@@ -75,7 +75,7 @@ export default class Parser {
     }
 
     drop() {
-        return this.map(item => []);
+        return this.map(() => []);
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c
@@ -132,6 +132,7 @@ export default class Parser {
      * @param hint
      * @returns the equivalent Parser
      */
+    // TODO: set details default at false; check tests
     debug(hint, details = true) {
         var f = p => {
             if (details) {

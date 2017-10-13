@@ -1,20 +1,20 @@
 This document is for contributors who want to publish. You must have
 correct ssh key
 
-`npm run dist` will create the distributed file. This file
- is referred in package.json :
+`npm run dist` will create the browserified distributed file, thought it's not
+the main file
  
-        "main": "dist/parser-combinator.min.js",
+        "main": "build/index.js",
 
 ### Make a pre-release to test stuff
         
 then level-up the version number in package.json
 
-        "version": "0.4.0-prerelease",
+        "version": "0.5.0-alpha1",
         
 then publish
 
-        npm publish --tag beta
+        npm publish  --access=public --tag alpha1
         
         
 Check then with integration-npm

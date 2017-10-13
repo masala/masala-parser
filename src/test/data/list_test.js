@@ -43,7 +43,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            list(1).filter(i => i != 1).isEmpty(),
+            list(1).filter(i => i !== 1).isEmpty(),
             true,
             'should be empty.'
         );
@@ -54,7 +54,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            list(1).filter(i => i == 1).isEmpty(),
+            list(1).filter(i => i === 1).isEmpty(),
             false,
             'should not be empty.'
         );
