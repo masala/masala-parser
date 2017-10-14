@@ -39,11 +39,20 @@ If fail :
         
 If work : 
 
+* Set tag on github. On branch master :
+* Change version on package.json
+* commit & push 
+* `git tag v0.5.0 master`
+* `git push origin v0.5.0` 
+* `npm publish  --access=public`
+
+
+
         # careful, especially for major release
         # YOU CANNOT UNPUBLISH easily !!!!
         npm unpublish --force  # it would remove a beta, no big deal
         # go back to main parsec project
         cd ..
         # change version to to 0.4.0
-        npm publish
+        npm publish  --access=public
         
