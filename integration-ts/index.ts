@@ -3,10 +3,10 @@
  */
 
 import * as masala from './masala';
-import Bundle from '../src/lib/index'
+import Bundles from '@masala/parser';
 
 // Can I get rid of this line ?
-let {Stream, F, C}:masala.Bundle = Bundle;
+let {Stream, F, C}:masala.Bundles = Bundles;
 
 let stream = Stream.ofString('abc');
 let parser= C.char('a');

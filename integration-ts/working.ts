@@ -1,14 +1,14 @@
 import * as masala from './masala';
-import {Stream, F, C} from '../src/lib/index'
+import {Stream, F, C} from '@masala/parser'
 
-import{ assertTrue} from '../integration-npm/assert';
+import{assertArrayEquals, assertEquals, assertTrue} from './assert';
 
-let stream: masala.Stream<string> = Stream.ofString('abc');
+let stream: masala.Stream<string> = Stream.ofString('ab');
 let parser: masala.SingleParser<string> = C.char('a');
 let arrayParser = parser.then(C.char('b'))//.map(x=>x+'yop');
 let parsing = arrayParser.parse(stream);
 
-assertTrue(['a', 2] === parsing.value[0]) ; //compiling, types are almost OK
+assertArrayEquals(['a', 'b'], parsing.value) ; //compiling, types are almost OK
 
 
 parser = C.char('a');
@@ -24,4 +24,4 @@ assertTrue( 'a' === singleParsing.value); //compiling, types are almost OK
 
 parser = C.char('a');
 singleParsing = parser.parse(stream);
-assertTrue( ['a', 'b', 'c'] === parsing.value); //compiling, types are almost OK
+assertEquals( 'a' , singleParsing.value); //compiling, types are almost OK
