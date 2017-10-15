@@ -41,6 +41,7 @@
     }
   ],
   "main": "build/lib/index.js",
+  "types": "./masala-parser.d.ts",
   "engines": {
     "node": ">= 5.7.0"
   },
