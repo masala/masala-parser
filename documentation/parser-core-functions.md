@@ -51,7 +51,7 @@ Usually, you should **NOT** create a Parser from its constructor. You will combi
 
 ```js
 
-let stream = Stream.ofString('abc');
+let stream = Streams.ofString('abc');
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -66,13 +66,13 @@ console.log(parsing.value);
 * Uses `then()` and returns only the left or right value
 
 ```js
-const stream = Stream.ofString('|4.6|');
+const stream = Streams.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
     .then(N.numberLiteral)    // we have ['|',4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
     .map(x =>Math.floor(x));
 
-// Parsec needs a stream of characters
+// Masala needs a stream of characters
 const parsing = floorCombinator.parse(stream);
 assertEquals( 4, parsing.value, 'Floor parsing');
 ```     
@@ -88,7 +88,7 @@ assertEquals( 4, parsing.value, 'Floor parsing');
 
 
 ```js
-const stream = parsec.stream.ofString("5x8");
+const stream = Streams.ofString("5x8");
 const combinator = N.integer
                     .then(C.charIn('x*').drop())
                     .then(N.integer)
@@ -105,7 +105,7 @@ assertEquals(combinator.parse(stream).value, 40)
 
         
 ```js
-const stream = parsec.stream.ofString("ab");
+const stream = Streams.ofString("ab");
 // given 'ac', value should be ['X' , 'c']
 const combinator = C.char('a')
                     .thenReturns('X')
@@ -159,7 +159,7 @@ TODO : There is no explicit test for `any()`
 
 ```js
 
-const stream = Stream.ofString('aaa');
+const stream = Streams.ofString('aaa');
 const parsing = C.char('a').rep().parse(stream);
 test.ok(parsings.isAccepted);
 // We need to call list.array()
