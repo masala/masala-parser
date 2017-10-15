@@ -1,12 +1,12 @@
-import stream from '../../lib/stream/index';
+import Streams from '../../lib/stream/index';
 import {F, C} from '../../lib/parsec/index';
 
 let value = undefined;
 let accepted = undefined;
 
 function testParser(parser, string) {
-    let myStream = stream.ofString(string);
-    let parsing = parser.parse(myStream);
+    let stream = Streams.ofString(string);
+    let parsing = parser.parse(stream);
 
     value = parsing.value;
     accepted = parsing.isAccepted();

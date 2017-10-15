@@ -2,14 +2,14 @@
  * Created by Simon on 15/12/2016.
  */
 /*
-import Stream from '../../stream/index';
+import Streams from '../../stream/index';
 
 
 
 
 
 function parseDocument( string, offset=0){
-    return document().parse(Stream.ofString(string), offset)
+    return document().parse(Streams.ofString(string), offset)
 }
 
 
