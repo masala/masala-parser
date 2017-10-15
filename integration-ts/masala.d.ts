@@ -139,10 +139,14 @@ export interface CharBundle {
 export interface FlowBundle {
 }
 
-export interface Bundle {
-    Stream: StreamFactory;
-    C: CharBundle;
-    F: FlowBundle
+export interface NumberBundle {
+}
+
+export interface Bundles {
+    Stream?: StreamFactory;
+    C?: CharBundle;
+    F?: FlowBundle;
+    N?:NumberBundle;
 }
 
 //export default Bundle;
