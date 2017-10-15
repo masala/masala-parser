@@ -142,11 +142,11 @@ export interface FlowBundle {
 export interface NumberBundle {
 }
 
-export interface Bundles {
-    Stream?: StreamFactory;
-    C?: CharBundle;
-    F?: FlowBundle;
-    N?:NumberBundle;
-}
+declare const MasalaBundles : {
+    Stream?: StreamFactory,
+    C?: CharBundle,
+    F?: FlowBundle,
+    N?:NumberBundle,
+};
 
-//export default Bundle;
+export default MasalaBundles;
