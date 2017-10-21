@@ -12,9 +12,15 @@ const {Stream, F, N, C, X} = require('@masala/parser');
 
  E== expr
  T == subExpr
- E'== plusExpr
- T' == multExpr
+ E'== optPlusExpr
+ T' == optMultExpr
  F == terminal
+
+ expr -> subExpr optPlusExpr'
+ optPlusExpr -> ( + then subExpr then F.lazy(optPlusExpr) ).opt()
+ subExpr -> terminal then optMultExpr
+ optMultExpr -> ( * then terminal then F.lazy(optMultExpr) ).opt()
+ F -> F.try( '(' then expr then ')' ).or(N.litteral)
 
  */
 
@@ -109,8 +115,5 @@ const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
 
 let myStream = Stream.ofString(string);
 let parsing = combinator().parse(myStream);
-console.log(parsing.isAccepted());
-console.log(parsing.offset)
-console.log(parsing.offset === string.length);
 console.log(string+'='+parsing.value);
 
