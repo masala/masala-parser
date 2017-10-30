@@ -4,7 +4,8 @@
   "description": "used to test npm publications",
   "main": "index.js",
   "dependencies": {
-    "parser-combinator": "0.4.1"
+    "parser-combinator": "0.4.1",
+    "@masala/parser":"^0.5.0"
   },
   "devDependencies": {},
   "scripts": {
