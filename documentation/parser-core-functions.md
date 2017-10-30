@@ -225,6 +225,29 @@ TODO : missing a pertinent test for using try()
           },
 
 
+It can help you to read your document knowing what happen previously
+
+```js
+/* We need to parse this:
+        name: Nicolas
+        hotel: SuperMarriot
+        Nicolas: nz@robusta.io
+ */
+function combinator() {
+    return readNextTag('name').map( name =>  {name})
+        .then(readNextTag('hotel')).map(([context, hotel]) => Object.assign(context, {hotel}))
+        // we don't know that tag is Nicolas. It depends on running context 
+        .flatmap(userEmail);
+        // now parsing value has name, hotel and email keys
+}
+
+
+// We have Nicolas: nz@robusta.io
+function userEmail(context){// context injected is the running value of the parsing
+    return readNextTag(context.name).map(email => Object.assign(context, {email}))
+}
+```
+
  
 ### filter (predicate)
 
