@@ -67,13 +67,13 @@ export default {
         test.done();
     },
 
-    'response accepted flatmap to accepted': function(test) {
+    'response accepted flatMap to accepted': function(test) {
         test.expect(1);
         // tests here
         test.ok(
             response
                 .accept('a')
-                .flatmap(function(a) {
+                .flatMap(function(a) {
                     return response.accept(a);
                 })
                 .isAccepted(),
@@ -82,13 +82,13 @@ export default {
         test.done();
     },
 
-    'response accepted flatmap to return the value': function(test) {
+    'response accepted flatMap to return the value': function(test) {
         test.expect(1);
         // tests here
         test.ok(
             response
                 .accept('a')
-                .flatmap(function(a) {
+                .flatMap(function(a) {
                     return response.accept(a);
                 })
                 .isAccepted(),
@@ -98,13 +98,13 @@ export default {
         test.done();
     },
 
-    'response accepted flatmap to reject': function(test) {
+    'response accepted flatMap to reject': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             response
                 .accept()
-                .flatmap(function() {
+                .flatMap(function() {
                     return response.reject();
                 })
                 .isAccepted(),
@@ -130,13 +130,13 @@ export default {
         test.done();
     },
 
-    'response rejected flatmap to rejected': function(test) {
+    'response rejected flatMap to rejected': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             response
                 .reject()
-                .flatmap(function() {
+                .flatMap(function() {
                     return response.accept();
                 })
                 .isAccepted(),

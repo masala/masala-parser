@@ -56,7 +56,7 @@ class Reject extends Response {
     }
 
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
-    flatmap() {
+    flatMap() {
         return this;
     }
 
@@ -94,7 +94,7 @@ class Accept extends Response {
     }
 
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
-    flatmap(callback) {
+    flatMap(callback) {
         return callback(this.value);
     }
 

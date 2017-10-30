@@ -41,7 +41,7 @@ class List {
         return new List(this.value.map(funcall));
     }
 
-    flatmap(funcall) {
+    flatMap(funcall) {
         var result = new List([]);
         this.value.forEach(value => {
             result = result.append(funcall(value));

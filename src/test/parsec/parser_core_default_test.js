@@ -73,12 +73,12 @@ export default {
         test.done();
     },
 
-    'expect (flatmap) to be accepted': function(test) {
+    'expect (flatMap) to be accepted': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .flatmap(function() {
+                .flatMap(function() {
                     return F.returns('b');
                 })
                 .parse(stream.ofString('a'))
@@ -89,12 +89,12 @@ export default {
         test.done();
     },
 
-    'expect (flatmap) to be rejected ': function(test) {
+    'expect (flatMap) to be rejected ': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .flatmap(function() {
+                .flatMap(function() {
                     return F.returns('b');
                 })
                 .parse(stream.ofString('b'))
@@ -105,12 +105,12 @@ export default {
         test.done();
     },
 
-    'expect (flatmap) to be return ab': function(test) {
+    'expect (flatMap) to be return ab': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .flatmap(function() {
+                .flatMap(function() {
                     return C.char('b');
                 })
                 .parse(stream.ofString('ab')).value,
@@ -120,12 +120,12 @@ export default {
         test.done();
     },
 
-    'expect (flatmap) to be return a-b-c': function(test) {
+    'expect (flatMap) to be return a-b-c': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .flatmap(aVal =>
+                .flatMap(aVal =>
                     C.char('b')
                         .then(C.char('c'))
                         .map(bcVal => aVal + '-' + bcVal.join('-'))

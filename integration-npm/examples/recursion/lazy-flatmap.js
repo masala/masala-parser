@@ -3,7 +3,7 @@ const {assertFalse} = require('../../assert');
 
 
 function A() {
-    return C.char('A').map(x=>{console.log(x);return x;}).flatmap(B);
+    return C.char('A').map(x=>{console.log(x);return x;}).flatMap(B);
 }
 
 function B(aVal) {

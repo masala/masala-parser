@@ -1,4 +1,4 @@
-const {Stream, N, C, F, T} = require('../../build/lib/index');
+const {Streams, N, C, F, T} = require('../../build/lib/index');
 
 const test = require('./test');
 
@@ -31,7 +31,7 @@ function combinator() {
 
 
 function parseOperation(line) {
-    return combinator().parse(Stream.ofString(line), 0);
+    return combinator().parse(Streams.ofString(line), 0);
 }
 
 

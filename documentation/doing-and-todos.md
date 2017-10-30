@@ -1,4 +1,14 @@
 
+flatMap()
+F.startsWith()
+F.dropTo()
+F.moveUntil()
+rename F.nop() to F.nop
+parsing.isCompleted()
+Deprecate really thenLeft and thenRight
+
+
+
 -> release
 
 typescript

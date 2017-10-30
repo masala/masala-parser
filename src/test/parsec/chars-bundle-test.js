@@ -345,7 +345,7 @@ export default {
     },
 
     'expect unknown letters to be rejected': function(test) {
-        const line = stream.ofString('a');
+        const line = Streams.ofString('a');
         let errorFound = false;
         try {
             const combinator = C.lettersAs(Symbol('UNKNOWN')).then(F.eos);

@@ -6,7 +6,7 @@ const {assertTrue} = require('../../assert');
  * A gives its VALUE to B using flatMap
  */
 function A(char) {
-    return C.char(char.toUpperCase()).rep().flatmap(B);
+    return C.char(char.toUpperCase()).rep().flatMap(B);
 }
 
 

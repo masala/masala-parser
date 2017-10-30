@@ -46,8 +46,8 @@ Usually, you should **NOT** create a Parser from its constructor. You will combi
 
 * difficulty : 1
 * Construct an array of values from **two** previous success values
-* If more than two are needed, use `flatmap()`
-* `then()` uses internally `flatmap()`
+* If more than two are needed, use `flatMap()`
+* `then()` uses internally `flatMap()`
 
 ```js
 
@@ -206,16 +206,16 @@ TODO : missing a pertinent test for using try()
 
 
 
-### flatmap (f )
+### flatMap (f )
  
 * difficulty : 3
 * parameter f is a function
 * pass parser.value to `f` function (TODO : better explain)
 * f can combine parsers to continue to read the stream, knowing the previous value
 
-        'expect (flatmap) to be return a-b-c': function(test) {
+        'expect (flatMap) to be return a-b-c': function(test) {
             test.equal(parser.char("a")
-                .flatmap(
+                .flatMap(
                     aVal=> parser.char('b').then(parser.char('c'))
                     .map(bcVal=>aVal+'-'+bcVal.join('-')) //--> join 3 letters
                 ) 
@@ -237,7 +237,7 @@ function combinator() {
     return readNextTag('name').map( name =>  {name})
         .then(readNextTag('hotel')).map(([context, hotel]) => Object.assign(context, {hotel}))
         // we don't know that tag is Nicolas. It depends on running context 
-        .flatmap(userEmail);
+        .flatMap(userEmail);
         // now parsing value has name, hotel and email keys
 }
 

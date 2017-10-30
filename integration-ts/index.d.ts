@@ -6,7 +6,7 @@
 export interface Option<Type> {
     isPresent(): boolean;
     map(bindCall: () => any): any;
-    flatmap (bindCall: () => any): Type;
+    flatMap (bindCall: () => any): Type;
     filter (f: (value: Type) => boolean): Type | Option<Type>
     get(): Type
     orElse<X>(v: X): Type | X;
@@ -20,7 +20,7 @@ export interface Try<V, E> {
     onSuccess(f: () => any): Try<V, E>;
     onFailure(f: () => any): Try<V, E>;
     map(bindCall: () => any): Try<V, E>;
-    flatmap (bindCall: () => any): Try<V, E>;
+    flatMap (bindCall: () => any): Try<V, E>;
     success(): V;
     failure(): E;
     recoverWith<X>(X): V | X;
@@ -74,7 +74,7 @@ export interface Response<T> {
     isAccepted(): boolean
     fold(accept, reject?): Response<T>;
     map<Y>(f): Response<Y>;
-    flatmap<Y>(f): Response<Y>;
+    flatMap<Y>(f): Response<Y>;
     filter(f: (value) => boolean): Response<T>;
     //value:any
 }
@@ -84,7 +84,7 @@ export interface ArrayParser<T> extends Parser<T> {
     parse<X>(stream: Stream<X>, index?: number): ArrayResponse<T>;
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
     map<Y> (f: (T) => Y): ArrayParser<T>;
-    flatmap<Z> (f: () => Z): ArrayParser<T>;
+    flatMap<Z> (f: () => Z): ArrayParser<T>;
     filter(f: (T) => boolean): ArrayParser<T>
 }
 
@@ -108,7 +108,7 @@ interface VoidParser extends Parser<void> {
 interface Parser<T> {
     // Needed because opt() won(t know if we have void, array or single
     then<Y>(p:Parser<Y>):Parser<any>;
-    flatmap<Y> (f: () => Y): Parser<Y>;
+    flatMap<Y> (f: () => Y): Parser<Y>;
     map<Y> (f: (T) => Y): Parser<Y>;
     filter(f: (T) => boolean): Parser<T>
     match(value: T): Parser<T>;
@@ -128,7 +128,7 @@ export interface Response<T> {
     isAccepted(): boolean
     fold(accept, reject?): Response<T>;
     map(f): Response<T>;
-    flatmap(f): Response<T>;
+    flatMap(f): Response<T>;
     filter(f: (value) => boolean): Response<T>;
 }
 
