@@ -9,17 +9,28 @@ Masala Parser is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf).
 
 Masala Parser is a Javascript implementation of the Haskell **Parsec**.
- It is plain Javascript that works in the browser, is tested with more than 400 unit tests, covering 100% of code lines.
+ It is plain Javascript that works in the browser, is tested with more than 450 unit tests, covering 100% of code lines.
 
 ### Use cases
 
 * It can create a full parser from scratch as an alternative for Lex & yacc
 * It can extract data from a big text and replace complex regexp
 * It can validate complete structure with variations
+* It can parse and execute custom operations
 
 Masala Parser keywords are **variations** and **maintainability**. You won't
 need theoretical bases on languages for extraction or validation use cases.
 
+# Usage
+
+With Node Js or modern build        
+        
+        npm install -S @masala/parser
+
+Or in the browser 
+
+* [download Release](https://github.com/d-plaindoux/masala-parser/releases)
+* `<script src="masala-parser.min.js"/>`
 
 
 # Quick Examples

@@ -1,16 +1,17 @@
 {
-  "name": "parser-combinator",
-  "description": "Parser combinators",
+  "name": "@masala/parser",
+  "description": "Masala Parser",
   "license": "LGPL-2.1",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "keywords": [
     "parser",
+    "javascript",
     "ll",
     "combinator",
     "functional",
     "composable"
   ],
-  "homepage": "https://github.com/d-plaindoux/parsec",
+  "homepage": "https://github.com/d-plaindoux/masala-parser",
   "author": {
     "name": "Didier Plaindoux",
     "email": "d.plaindoux@free.fr",
@@ -29,35 +30,36 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/d-plaindoux/parsec"
+    "url": "https://github.com/d-plaindoux/masala-parser"
   },
   "bugs": {
-    "url": "https://github.com/d-plaindoux/parsec/issues"
+    "url": "https://github.com/d-plaindoux/masala-parser/issues"
   },
   "licenses": [
     {
       "type": "LGPL2",
-      "url": "https://github.com/d-plaindoux/parsec/blob/master/LICENSE-LGPL2"
+      "url": "https://github.com/d-plaindoux/masala-parser/blob/master/LICENSE-LGPL2"
     }
   ],
   "main": "build/lib/index.js",
   "types": "./masala-parser.d.ts",
   "engines": {
-    "node": ">= 5.7.0"
+    "node": ">= 6.11.4"
   },
   "scripts": {
     "compile": "rimraf build/ && mkdirp build && babel src --out-dir build  --source-maps && node tasks/post-compile.js ",
     "dev": "babel --watch src --out-dir dist",
     "format": "prettier-eslint --prettier.tab-width 4 --write \"src/**/*.js\"",
-    "lint": "eslint src/**/*.js",
+    "safeformat": "prettier-eslint --prettier.tab-width 4 \"src/**/*.js\"",
+    "lint": "eslint \"src/**/*.js\"",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rimraf ./coverage && mkdirp coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover",
-    "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/parser-combinator.js",
-    "dist": "rimraf dist/ && mkdirp dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone masala -o dist/parser-combinator.min.js",
+    "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",
+    "dist": "rimraf dist/ && mkdirp dist && npm run compile && browserify -t uglifyify build/lib/index.js --standalone masala-parser -o dist/masala-parser.min.js",
     "prepublish": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
-    "postpublish": "cd integration-npm && rm -rf node_modules && npm install && node integrate.js"
+    "postpublish": "cd integration-npm && rimraf node_modules && sleep 5 && npm install && node integrate.js"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

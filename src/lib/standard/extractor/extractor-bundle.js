@@ -99,8 +99,6 @@ export default class ExtractorBundle {
         }
     }
 
-
-
     _wordSequence(stop) {
         return F.not(stop);
     }

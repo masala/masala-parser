@@ -112,8 +112,6 @@ export default {
         test.done();
     },
 
-
-
     'test wordsIn': function(test) {
         let line = stream.ofString('James Bond by Ian Fleming');
 
@@ -365,7 +363,7 @@ export default {
         const combinator = x.wordsUntil(['ABC', 'ZE', 'XYZ']);
         let found = false;
         try {
-            const parsing = combinator.parse(line);
+            combinator.parse(line);
         } catch (e) {
             if (e === 'Input source must be a String') {
                 found = true;
@@ -383,7 +381,7 @@ export default {
         const combinator = x.wordsUntil('XYZ');
         let found = false;
         try {
-            const parsing = combinator.parse(line);
+            combinator.parse(line);
         } catch (e) {
             if (e === 'Input source must be a String') {
                 found = true;

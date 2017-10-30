@@ -1,4 +1,4 @@
-import {F, C, N} from '../parsec/index';
+import {C, N} from '../parsec/index';
 
 function _inQuote() {
     return C.char('"')
