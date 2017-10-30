@@ -219,7 +219,7 @@ TODO : missing a pertinent test for using try()
                     aVal=> parser.char('b').then(parser.char('c'))
                     .map(bcVal=>aVal+'-'+bcVal.join('-')) //--> join 3 letters
                 ) 
-                .parse(stream.ofString("abc")).value,
+                .parse(Streams.ofString("abc")).value,
                 'a-b-c',
                 'should be accepted.');
           },
@@ -259,7 +259,7 @@ function userEmail(context){// context injected is the running value of the pars
  
         'expect (filter) to be accepted': function(test) {
             test.equal(parser.char("a").filter(a => a === 'a')
-                  .parse(stream.ofString("a")).isAccepted(),
+                  .parse(Streams.ofString("a")).isAccepted(),
                    true,
                    'should be accepted.');
         }
