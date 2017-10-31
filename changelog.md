@@ -5,5 +5,6 @@ Changelog
 ----
 
 * `flatmap()` renamed to `flatMap()`
-
+* `F.sequence()` is deprecated
+* Added `F.startsWith(value)`; 
 

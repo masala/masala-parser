@@ -259,7 +259,8 @@ Others:
 * `F.returns`: forces a returned value
 * `F.error`: returns an error. Parser will never be accepted
 * `F.satisfy`: check if condition is satisfied
-* `F.sequence`:  Shorcut method. accept a given sequence or parsers.
+* `F.startsWith(value)`: create a no-op parser with initial value 
+
 
 ## The Chars Bundle
 

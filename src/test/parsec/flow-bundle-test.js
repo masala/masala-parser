@@ -29,13 +29,24 @@ export default {
         test.done();
     },
 
-    'expect flatten result to be ok when empty': function(test) {
+    'expect thenReturns to be ok when empty': function(test) {
         const string = 'some';
         // tests here
         const parser = F.any.rep().then(F.eos).thenReturns([]);
         testParser(parser, string);
         test.ok(accepted);
         test.deepEqual(value, [], 'flatten result not ok');
+        test.done();
+    },
+
+    'expect startsWith to start': function(test) {
+        const string = ' world';
+        const object='hello';
+        // tests here
+        const parser = F.startsWith(object).then(C.string(' world')).then(F.eos.drop());
+        testParser(parser, string);
+        test.ok(accepted);
+        test.equals(value.join(''), 'hello world');
         test.done();
     },
 };

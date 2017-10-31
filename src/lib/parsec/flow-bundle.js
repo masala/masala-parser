@@ -104,6 +104,10 @@ function sequence() {
     return current;
 }
 
+function startsWith(value){
+    return nop().thenReturns(value);
+}
+
 export default {
     parse,
     nop: nop,
@@ -117,4 +121,5 @@ export default {
     eos: eos(),
     satisfy: satisfy,
     sequence,
+    startsWith
 };
