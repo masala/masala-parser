@@ -6,5 +6,14 @@ Changelog
 
 * `flatmap()` renamed to `flatMap()`
 * `F.sequence()` is deprecated
-* Added `F.startsWith(value)`; 
+
+Added  to the FlowBundle
+
+* `F.startsWith(value)`
+* `F.moveUntil(string|stopParser)`
+* `F.dropTo(string|stopParser)`
+
+
+
+
 

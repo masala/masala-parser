@@ -19,7 +19,7 @@ const MD = standard.markdownBundle;
 const X = standard.extractorBundle;
 const T = standard.tokenBundle;
 
-export const bundle =  {
+export const bundle = {
     data,
     genlex,
     parsec,

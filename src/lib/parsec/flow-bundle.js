@@ -104,24 +104,30 @@ function sequence() {
     return current;
 }
 
-function startsWith(value){
+function startsWith(value) {
     return nop().thenReturns(value);
 }
 
 function moveUntil(stop) {
     if (typeof stop === 'string') {
-        return satisfyStringFast(stop);
+        return searchStringStart(stop);
     }
 
     if (Array.isArray(stop)) {
-        return satisfyArrayStringFast(stop);
+        return searchArrayStringStart(stop);
     }
 
-    return doTry(
-        not(stop).rep().then(eos()).thenReturns(undefined)
-    )
+    return doTry(not(stop).rep().then(eos()).thenReturns(undefined))
         .or(not(stop).rep().map(chars => chars.join('')))
         .filter(v => v !== undefined);
+}
+
+function dropTo(stop) {
+    if (typeof stop === 'string') {
+        return moveUntil(stop).then(string(stop)).drop();
+    } else {
+        return moveUntil(stop).then(stop).drop();
+    }
 }
 
 export default {
@@ -138,29 +144,26 @@ export default {
     satisfy: satisfy,
     sequence,
     startsWith,
-    moveUntil
+    moveUntil,
+    dropTo,
 };
 
-
-
-
-
-
 /**Optimization functions */
-
 
 /**
  * Will work only if input.source is a String
  * @param string
  * @returns {Parser}
  */
-function satisfyStringFast(string) {
+function searchStringStart(string) {
     return new Parser((input, index = 0) => {
         if (typeof input.source !== 'string') {
             throw 'Input source must be a String';
         }
 
+        console.log('string: ', string);
         const sourceIndex = input.source.indexOf(string, index);
+        console.log('start => sourceIndex: ',index, sourceIndex);
         if (sourceIndex > 0) {
             return response.accept(
                 input.source.substring(index, sourceIndex),
@@ -180,7 +183,7 @@ function satisfyStringFast(string) {
  * @param string
  * @returns {Parser}
  */
-function satisfyArrayStringFast(array) {
+function searchArrayStringStart(array) {
     return new Parser((input, index = 0) => {
         if (typeof input.source !== 'string') {
             throw 'Input source must be a String';
@@ -207,6 +210,18 @@ function satisfyArrayStringFast(array) {
                 sourceIndex,
                 true
             );
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
+}
+
+// string -> Parser string char
+// index is forwarded at the length of the string
+function string(s) {
+    return new Parser((input, index = 0) => {
+        if (input.subStreamAt(s.split(''), index)) {
+            return response.accept(s, input, index + s.length, true);
         } else {
             return response.reject(input.location(index), false);
         }

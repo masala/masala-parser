@@ -250,6 +250,11 @@ Most important:
 * `F.any`: Accept any character (and so moves the cursor)
 * `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
 * `F.eos`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
+* `F.moveUntil(string|stopParser)`: Alternative for **regex**. Will traverse the document **until** the *stop parser*
+    - returns `undefined` if *stop* is not found
+    - returns all characters if *stop* is found, and set the cursor at the spot of the stop
+* `F.dropTo(string|stopParser)`: Will traverse the document **including** the *stop parser*
+    
 
 Others:
 
@@ -327,7 +332,7 @@ class to make customization easy. So you can extend it to override methods, or u
 
 * `spacesCharacters`: series of chars. Use `x.spaces()` to accept given spaces
 * `wordSeparators`: Parser. Use `x.words()` to select words separated with `wordSeparators`
-* `letter`: Parser. Original `C.letter` are only ascii letters. See [opened issue](https://github.com/d-plaindoux/parsec/issues/43).
+* `letter`: Parser. Original `C.letter` are occidental letters. See [opened issue](https://github.com/d-plaindoux/masala-parser/issues/43).
 * `moreSeparator`: series of chars. You don't have to redefine `wordSeparators` when using `{moreSeparator:'$£€'}`
 
 ### X functions
@@ -337,11 +342,6 @@ class to make customization easy. So you can extend it to override methods, or u
 * `x.word()`: accept a word that satisfies repetition of `options.letter`. Returns the word as a string
 * `x.words(keepSpaces=true)`: accept repetition of previous words. Set `keepSpaces=false` to removes spaces from result
 * `x.wordsIn(arrayOfStrings, keepSpaces = true)`: accept given words, separated by previously defined `wordSeparators`
-* `x.stringIn(arrayOfStrings)`: lower level parser. Accept one string that could be found in given `arrayOfStrings`
-* `x.wordsUntil(stopParser)`: Probably the most valuable method. Will traverse the document until the **stop combinator**
-    - returns `undefined` if *stop* is not found
-    - returns all characters if *stop* is found, and set the cursor at the spot of the stop
-    - Use `x.wordsUntil(valueStuffParser).drop().then(valueStuffParser)` to extract *valueStuff*
 * `x.first`, `x.last`: mappers to pick first or last word  
     - example: `x.words().map(x.first)` will pick the first word of the document
 

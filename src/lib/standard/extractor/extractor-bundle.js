@@ -5,7 +5,6 @@ import Parser from './../../parsec/parser';
 /**
  * Created by nicorama on 10/01/2017.
  */
-
 export default class ExtractorBundle {
     constructor(options) {
         this.options = {
@@ -98,11 +97,6 @@ export default class ExtractorBundle {
                 .map(item => item.array());
         }
     }
-
-    _wordSequence(stop) {
-        return F.not(stop);
-    }
-
 
 }
 

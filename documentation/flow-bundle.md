@@ -8,6 +8,26 @@ Parser Combinator: Flow Bundle
 rep() will produce a List of values. You can get the more standard array value by calling `list.array()` 
 
 
+
+Extraction
+---
+
+
+```js
+const line = Streams.ofString('I write until James Bond appears');
+
+const combinator = F.moveUntil(C.string('James'))
+    .then(F.dropTo('appears'))
+    .then(F.eos.drop())
+const value = combinator.parse(line).value;
+
+test.equals(value, 'I write until ');
+
+```
+
+
+
+
 ### Repeat Danger
 
 Two parsers with same repeat can causes problems.

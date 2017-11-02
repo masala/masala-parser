@@ -271,10 +271,14 @@ export default {
                 .isAccepted()
         );
         test.ok(
-            !C.letterAs(C.ASCII_LETTER).parse(Streams.ofString('é')).isAccepted()
+            !C.letterAs(C.ASCII_LETTER)
+                .parse(Streams.ofString('é'))
+                .isAccepted()
         );
         test.ok(
-            !C.letterAs(C.ASCII_LETTER).parse(Streams.ofString('Б')).isAccepted()
+            !C.letterAs(C.ASCII_LETTER)
+                .parse(Streams.ofString('Б'))
+                .isAccepted()
         );
         test.done();
     },
@@ -500,7 +504,9 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.notString('**').parse(Streams.ofString('**hello'), 0).isAccepted(),
+            C.notString('**')
+                .parse(Streams.ofString('**hello'), 0)
+                .isAccepted(),
             false,
             'should be rejected.'
         );
@@ -566,7 +572,10 @@ export default {
         );
         // multiple emojis are also accepted as one
         test.ok(
-            C.emoji.then(F.eos).parse(Streams.ofString('🐵🐵✈️'), 0).isAccepted()
+            C.emoji
+                .then(F.eos)
+                .parse(Streams.ofString('🐵🐵✈️'), 0)
+                .isAccepted()
         );
         test.ok(
             C.emoji.then(F.eos).parse(Streams.ofString('✈️'), 0).isAccepted()
