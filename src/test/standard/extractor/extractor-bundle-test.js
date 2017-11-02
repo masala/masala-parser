@@ -204,55 +204,7 @@ export default {
         console.warn = original;
         test.done();
     },
-    'test wordsUntil': function(test) {
-        const line = stream.ofString('I write until James appears');
 
-        const x = new X();
-        const combinator = x.wordsUntil(C.string('James')).thenLeft(F.any);
-        const value = combinator.parse(line).value;
-
-        test.equals(value, 'I write until ');
-        test.done();
-    },
-    'test wordsUntil Not found': function(test) {
-        const line = stream.ofString('I write until James appears');
-
-        const x = new X();
-        const combinator = x
-            .wordsUntil(C.string('Indiana'))
-            .then(C.string('I'))
-            .thenLeft(F.any);
-        const accepted = combinator.parse(line).isAccepted();
-
-        test.ok(!accepted);
-        test.done();
-    },
-    'test wordsUntil found with more parsers': function(test) {
-        const line = stream.ofString('I write until James Bond appears');
-
-        const x = new X();
-        const combinator = x
-            .wordsUntil(C.string('James'))
-            .thenLeft(C.string('James Bond'))
-            .thenLeft(F.any);
-        const value = combinator.parse(line).value;
-
-        test.equals(value, 'I write until ');
-        test.done();
-    },
-    'test wordsUntil  found with failing parser': function(test) {
-        const line = stream.ofString('I write until James Bond appears');
-
-        const x = new X();
-        const combinator = x
-            .wordsUntil(C.string('James'))
-            .thenLeft(C.string('Indiana jones'))
-            .thenLeft(F.any);
-        const accepted = combinator.parse(line).isAccepted();
-
-        test.ok(!accepted);
-        test.done();
-    },
     'test first': function(test) {
         const line = stream.ofString("Hello 'World'");
         const x = new X({wordSeparators: C.charIn(" '")});

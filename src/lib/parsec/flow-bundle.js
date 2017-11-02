@@ -108,6 +108,22 @@ function startsWith(value){
     return nop().thenReturns(value);
 }
 
+function moveUntil(stop) {
+    if (typeof stop === 'string') {
+        return satisfyStringFast(stop);
+    }
+
+    if (Array.isArray(stop)) {
+        return satisfyArrayStringFast(stop);
+    }
+
+    return doTry(
+        not(stop).rep().then(eos()).thenReturns(undefined)
+    )
+        .or(not(stop).rep().map(chars => chars.join('')))
+        .filter(v => v !== undefined);
+}
+
 export default {
     parse,
     nop: nop,
@@ -121,5 +137,78 @@ export default {
     eos: eos(),
     satisfy: satisfy,
     sequence,
-    startsWith
+    startsWith,
+    moveUntil
 };
+
+
+
+
+
+
+/**Optimization functions */
+
+
+/**
+ * Will work only if input.source is a String
+ * @param string
+ * @returns {Parser}
+ */
+function satisfyStringFast(string) {
+    return new Parser((input, index = 0) => {
+        if (typeof input.source !== 'string') {
+            throw 'Input source must be a String';
+        }
+
+        const sourceIndex = input.source.indexOf(string, index);
+        if (sourceIndex > 0) {
+            return response.accept(
+                input.source.substring(index, sourceIndex),
+                input,
+                sourceIndex,
+                true
+            );
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
+}
+
+/**
+ * Will work only if input.source is a String
+ * Needs to be tested with ReactJS
+ * @param string
+ * @returns {Parser}
+ */
+function satisfyArrayStringFast(array) {
+    return new Parser((input, index = 0) => {
+        if (typeof input.source !== 'string') {
+            throw 'Input source must be a String';
+        }
+
+        let sourceIndex = -1;
+
+        let i = 0;
+        while (sourceIndex < 0 && i < array.length) {
+            const needle = array[i];
+            sourceIndex = input.source.indexOf(needle, index);
+            i++;
+            if (sourceIndex > 0) {
+                break;
+            }
+        }
+
+        //const sourceIndex = input.source.indexOf(string, index)
+
+        if (sourceIndex > 0) {
+            return response.accept(
+                input.source.substring(index, sourceIndex),
+                input,
+                sourceIndex,
+                true
+            );
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
+}
