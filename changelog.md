@@ -5,7 +5,9 @@ Changelog
 ----
 
 * `flatmap()` renamed to `flatMap()`
+* `F.lazy(parser, params, self )` accepts a third `this` parameter
 * `F.sequence()` is deprecated
+
 
 Added  to the FlowBundle
 

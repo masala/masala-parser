@@ -83,6 +83,17 @@ export default {
             'should be accepted.'
         );
         test.done();
+    },'expect (lazy with empty params) to return a given value': function(test) {
+        test.expect(1);
+        // tests here
+        test.equal(
+            F.lazy(function() {
+                return F.returns(123);
+            }, []).parse(stream.ofString(''), 0).value,
+            123,
+            'should be accepted.'
+        );
+        test.done();
     },
 
     'expect (lazy) to be rejected': function(test) {
@@ -113,6 +124,40 @@ export default {
             123,
             'should be accepted.'
         );
+        test.done();
+    },
+    'expect (lazy) with multiple parameters to return a given value': function(
+        test
+    ) {
+        test.expect(1);
+        // tests here
+        test.equal(
+            F.lazy(
+                function(v1, v2) {
+                    return F.returns(v1 + v2);
+                },
+                [10, 20]
+            ).parse(stream.ofString(''), 0).value,
+            30,
+            'should be accepted.'
+        );
+        test.done();
+    },
+    'expect (lazy) with unpacked parameters to fail': function(test) {
+        test.expect(1);
+        // tests here
+
+        let found = false;
+        try {
+            const combinator = F.lazy((v1, v2) => F.returns(v1 + v2), 10, 20);
+            combinator.parse(stream.ofString(''), 0);
+        } catch (e) {
+            console.log(e);
+            if (e.includes('packed into an array')) {
+                found = true;
+            }
+        }
+        test.ok(found, 'should have catch an error');
         test.done();
     },
 

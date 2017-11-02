@@ -16,7 +16,7 @@ export default {
     setUp: function (done) {
         done();
     },
-/*
+
     'expect flatten result to be ok': function (test) {
         const string = 'foobar';
         // tests here
@@ -219,16 +219,46 @@ export default {
 
         test.ok(accepted);
         test.done();
-    },*/
+    },
     'test moveUntil found with more parsers': function (test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.moveUntil(C.string('James'))
             .then(F.dropTo('appears'))
-            .then(F.eos.drop())
+            .then(F.eos.drop());
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
         test.done();
     },
-};
+
+    'lazy with a class':function(test){
+
+        const line = Streams.ofString('ababa');
+
+        const combinator = new SomeLazyParser('a').first()
+            .then(F.eos.drop());
+        const value = combinator.parse(line).value;
+
+        test.equals(value.join(''), 'ababa');
+        test.done();
+
+    }
+}
+
+
+class SomeLazyParser{
+
+    constructor(char){
+        this.char = char;
+    }
+
+    first(){
+        return C.char(this.char).then(this.second().opt().map(opt=>opt.orElse('')));
+    }
+
+    second(){
+        return C.char('b').then(F.lazy(this.first, ['a'], this));
+    }
+
+}

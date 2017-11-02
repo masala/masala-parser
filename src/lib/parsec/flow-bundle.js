@@ -16,10 +16,16 @@ function parse(p) {
 }
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
-function lazy(p, parameters) {
+function lazy(p, parameters, self={}) {
+    if (parameters && !Array.isArray(parameters)) {
+        throw 'Lazy(parser, [params]) function expect parser parameters to be packed into an array';
+    }
+
     // equivalent of p(...parameters), but would fail if parameters are undefined
+    // In some case, p is a function that require a 'this' bound to the function
+    // https://github.com/d-plaindoux/masala-parser/issues/9
     return new Parser((input, index = 0) =>
-        p.apply(p.prototype, parameters).parse(input, index)
+        p.apply(self, parameters).parse(input, index)
     );
 }
 
@@ -132,16 +138,16 @@ function dropTo(stop) {
 
 export default {
     parse,
-    nop: nop,
+    nop,
     try: doTry,
     any: any(),
-    subStream: subStream,
+    subStream,
     not: not,
-    lazy: lazy,
-    returns: returns,
+    lazy,
+    returns,
     error: error(),
     eos: eos(),
-    satisfy: satisfy,
+    satisfy,
     sequence,
     startsWith,
     moveUntil,
@@ -161,9 +167,7 @@ function searchStringStart(string) {
             throw 'Input source must be a String';
         }
 
-        console.log('string: ', string);
         const sourceIndex = input.source.indexOf(string, index);
-        console.log('start => sourceIndex: ',index, sourceIndex);
         if (sourceIndex > 0) {
             return response.accept(
                 input.source.substring(index, sourceIndex),

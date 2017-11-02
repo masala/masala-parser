@@ -1,11 +1,7 @@
-F.dropTo()
-F.moveUntil()
-
 parser.isCompleted();
 
 rename F.nop() to F.nop
 parsing.isCompleted()
-Deprecate really thenLeft and thenRight
 
 
 
@@ -19,14 +15,21 @@ typescript
 lotech
 -> release
 
-remove thenLeft, thenRight
+
+
+
+prune thenLeft and thenRight
+
+Questions Didier
+
+- perdu lien coveralls
+
+
+Promotion
 
 StackOverflow Regex
 https://stackoverflow.com/questions/5436824/matching-accented-characters-with-javascript-regexes
 >>>> Make a response with next Masala version
 
+Compare Google operation parsing with masala
 
-Questions Didier
-
-- perdu lien coveralls
-- flatmap or flatMap ?

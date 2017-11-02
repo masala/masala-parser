@@ -520,6 +520,20 @@ export default {
         test.done();
     },
 
+    'expect (opt) to come back if fail': function(test) {
+        test.expect(1);
+        // tests here
+        test.equals(
+            C.char('b')
+                .then(C.string('aaFAIL').opt().drop())
+                .then(C.string('aaab'))
+                .parse(stream.ofString('baaab'))
+                .value.join(''),
+            'baaab'
+        );
+        test.done();
+    },
+
     'expect (rep) to accepted': function(test) {
         test.expect(1);
         // tests here
