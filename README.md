@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/parser-combinator.svg)](https://badge.fury.io/js/parser-combinator)
 [![Build Status](https://travis-ci.org/d-plaindoux/masala-parser.svg)](https://travis-ci.org/d-plaindoux/masala-parser)
-[![Coverage Status](https://coveralls.io/repos/d-plaindoux/masala-parser/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/masala-parser?branch=master)
+[![Coverage Status](https://coveralls.io/repos/d-plaindoux/parser-combinator/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parser-combinator?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
 Masala Parser is inspired by the paper titled:
@@ -40,18 +40,17 @@ Or in the browser
 
 ```js
 // N: Number Bundle, C: Chars Bundle
-import {stream, N,C} from 'parser-combinator';
-const document = '|4.6|';
+const {Streams, N, C}= require('@masala/parser');
 
-const floorCombinator= C.char('|').drop()
-                        .then( N.numberLiteral )    // we had [ '|' , 4.6], we keep 4.6
-                        .then( C.char('|').drop() )   // we had [ 4.6 , '|' ], we keep 4.6
-                        .map(x => Math.floor(x)); // we transform selected value in meaningful value
+const stream = Stream.ofString('|4.6|');
+const floorCombinator = C.char('|').drop()
+    .then(N.numberLiteral)    // we have ['|',4.6], we keep 4.6
+    .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
+    .map(x =>Math.floor(x));
 
 // Parsec needs a stream of characters
-const parsing = floorCombinator.parse(stream.ofString(document));
-
-console.log( parsing.value === 4 );
+const parsing = floorCombinator.parse(stream);
+assertEquals( 4, parsing.value, 'Floor parsing');
 ```
 
 
@@ -91,9 +90,7 @@ The goal is check that we have Hello 'something', then to grab that *something*
 
 ```js
 // Plain old javascript
-var parsec = require('parser-combinator');
-var stream = parsec.stream;
-var C = parsec.C;
+const {Streams,  C}= require('@masala/parser');
 
 var helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
@@ -101,9 +98,9 @@ var helloParser = C.string("Hello")
                     .then(C.letter.rep()) // keeping repeated ascii letters
                     .then(C.char(`'`).drop());    // keeping previous letters
 
-var parsing = helloParser.parse(stream.ofString("Hello 'World'"));
+var parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
 // C.letter.rep() will give an array of letters
-console.log(parsing.value.array().toString() == ['W','o','r','l','d'].toString());
+assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");
 ```
 
 ## Improvement with Extractor Bundle
@@ -114,9 +111,9 @@ We have used a complex combinator that shows us how to parse character by charac
 
 
 ```js
-import {stream, X} from 'parser-combinator'
+import {Streams, X} from '@masala/parser'
 
-const line = stream.ofString("Hello 'World'");
+const line = Streams.ofString("Hello 'World'");
 
 // Adding a `'` as a word separator;  
 const x = new X({moreSeparators: `'`});
@@ -137,42 +134,41 @@ Let's use a real example. We combine many functions that returns a new Parser. A
 is a combination of Parsers given by the standard bundles or previous functions.
 
 ```js
-import  {stream, N,C, F, T} from 'parser-combinator';
+import  {Streams, N,C, F} from '@masala/parser';
+
+const blanks = ()=>C.char(' ').optrep();
 
 function operator(symbol) {
-    return T.blank().drop()
-            .then(C.char(symbol))
-            .then(T.blank().drop());
+    return blanks().thenRight(C.char(symbol)).thenLeft(blanks());
 }
 
 function sum() {
-    return N.integer.then(operator('+').drop()).then(N.integer)  // drop() will remove symbol from resulting values
-        .map(values=>values[0] + values[1]);
-        //.map([v1, v2] => v1 + v2); for advanced ES2015
+    return N.integer.thenLeft(operator('+')).then(N.integer)
+        .map(values => values[0] + values[1]);
 }
 
 function multiplication() {
-    return N.integer.then(operator('*').drop()).then(N.integer)
-        .map(values=>values[0] * values[1]);
+    return N.integer.thenLeft(operator('*')).then(N.integer)
+        .map(values => values[0] * values[1]);
 }
 
-function scalar(){
+function scalar() {
     return N.integer;
 }
 
 function combinator() {
     return F.try(sum())
-        .or(F.try(multiplication()))    // or() will often work with try() ; see below
+        .or(F.try(multiplication()))    // or() will often work with try()
         .or(scalar());
 }
 
 function parseOperation(line) {
-    return combinator().parse(stream.ofString(line));
+    return combinator().parse(Streams.ofString(line));
 }
 
-console.info('sum: ',parseOperation('2   +2').value);  // 4
-console.info('multiplication: ',parseOperation('2 * 3').value); //6
-console.info('scalar: ',parseOperation('8').value);  // 8
+assertEquals(4, parseOperation('2   +2').value, 'sum: ');
+assertEquals(6, parseOperation('2 * 3').value, 'multiplication: ');
+assertEquals(8, parseOperation('8').value, 'scalar: ');
 ```
 
 A curry paste is an higher order ingredient made from a good combination of spices.

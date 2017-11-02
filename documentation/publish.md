@@ -55,4 +55,10 @@ If work :
         cd ..
         # change version to to 0.4.0
         npm publish  --access=public
+
+After publishing
+---
+
+Every integration tests must be tested with the new npm package
+Then change must be published on Github
         

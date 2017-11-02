@@ -1,11 +1,11 @@
-const {Streams, N, C, F, T} = require('../../build/lib/index');
+const {Streams, N, C, F} = require('../../build/lib/index');
 
-const test = require('./test');
+const {assertEquals} = require('../../integration-npm/assert');
 
-
+const blanks = ()=>C.char(' ').optrep();
 
 function operator(symbol) {
-    return T.blank().thenRight(C.char(symbol)).thenLeft(T.blank());
+    return blanks().thenRight(C.char(symbol)).thenLeft(blanks());
 }
 
 function sum() {
@@ -28,17 +28,15 @@ function combinator() {
         .or(scalar());
 }
 
-
-
 function parseOperation(line) {
-    return combinator().parse(Streams.ofString(line), 0);
+    return combinator().parse(Streams.ofString(line));
 }
 
 
 
 
-test('sum: ', 4, parseOperation('2   +2').value);
-test('multiplication: ', 6, parseOperation('2 * 3').value);
-test('scalar: ', 8, parseOperation('8').value);
+assertEquals(4, parseOperation('2   +2').value, 'sum: ');
+assertEquals(6, parseOperation('2 * 3').value, 'multiplication: ');
+assertEquals(8, parseOperation('8').value, 'scalar: ');
 
 
