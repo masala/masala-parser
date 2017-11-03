@@ -81,7 +81,7 @@ export default {
         test.equal(
             option
                 .some(12)
-                .flatmap(function(a) {
+                .flatMap(function(a) {
                     return option.some(a);
                 })
                 .get(),
@@ -97,7 +97,7 @@ export default {
         test.equal(
             option
                 .some()
-                .flatmap(function(a) {
+                .flatMap(function(a) {
                     return a;
                 })
                 .isPresent(),

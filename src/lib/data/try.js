@@ -48,7 +48,7 @@ class Try {
         }
     }
 
-    flatmap(bindCall) {
+    flatMap(bindCall) {
         if (this.isSuccess()) {
             try {
                 return bindCall(this.value);

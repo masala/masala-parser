@@ -1,5 +1,5 @@
-import mdParser from '../../../lib/standard/markdown/markdown-parser';
-import stream from '../../../lib/stream/index';
+import M from '@masala/parser';
+import Streams from '@masala/parser';
 import path from 'path';
 import fs from 'fs';
 
@@ -14,7 +14,7 @@ function testFile(sample) {
     var sampleContent = fs.readFileSync(sampleFileName).toString();
     var sampleExpected = fs.readFileSync(expectedFileName).toString();
         
-    const parsing = mdParser.parse(stream.ofString(sampleContent));
+    const parsing = M.parse(Streams.ofString(sampleContent));
     value = parsing.value;
     expected = JSON.parse(sampleExpected);
 

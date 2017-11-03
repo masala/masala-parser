@@ -1,5 +1,6 @@
-import stream from '../../lib/stream/index';
+import Streams from '../../lib/stream/index';
 import {F, C} from '../../lib/parsec/index';
+
 
 export default {
     setUp: function(done) {
@@ -10,7 +11,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.char('a').parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a').parse(Streams.ofString('a'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -21,7 +22,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.char('a').parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a').parse(Streams.ofString('b'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -41,7 +42,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.notChar('a').parse(stream.ofString('b'), 0).isAccepted(),
+            C.notChar('a').parse(Streams.ofString('b'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -52,7 +53,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.notChar('a').parse(stream.ofString('a'), 0).isAccepted(),
+            C.notChar('a').parse(Streams.ofString('a'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -72,7 +73,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.charNotIn('a').parse(stream.ofString('b'), 0).isAccepted(),
+            C.charNotIn('a').parse(Streams.ofString('b'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -83,7 +84,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.charNotIn('a').parse(stream.ofString('a'), 0).isAccepted(),
+            C.charNotIn('a').parse(Streams.ofString('a'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -94,7 +95,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.charIn('a').parse(stream.ofString('a'), 0).isAccepted(),
+            C.charIn('a').parse(Streams.ofString('a'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -105,7 +106,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.charIn('a').parse(stream.ofString('b'), 0).isAccepted(),
+            C.charIn('a').parse(Streams.ofString('b'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -116,7 +117,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.lowerCase.parse(stream.ofString('a'), 0).isAccepted(),
+            C.lowerCase.parse(Streams.ofString('a'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -127,7 +128,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.lowerCase.parse(stream.ofString('A'), 0).isAccepted(),
+            C.lowerCase.parse(Streams.ofString('A'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -138,7 +139,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.upperCase.parse(stream.ofString('A'), 0).isAccepted(),
+            C.upperCase.parse(Streams.ofString('A'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -149,7 +150,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.upperCase.parse(stream.ofString('z'), 0).isAccepted(),
+            C.upperCase.parse(Streams.ofString('z'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -160,7 +161,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.letter.parse(stream.ofString('A'), 0).isAccepted(),
+            C.letter.parse(Streams.ofString('A'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -171,7 +172,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.letter.parse(stream.ofString('z'), 0).isAccepted(),
+            C.letter.parse(Streams.ofString('z'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -181,7 +182,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.letter.parse(stream.ofString(' '), 0).isAccepted(),
+            C.letter.parse(Streams.ofString(' '), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -192,7 +193,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.letter.parse(stream.ofString('0'), 0).isAccepted(),
+            C.letter.parse(Streams.ofString('0'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -200,26 +201,26 @@ export default {
     },
 
     'expect occidental letter to be accepted': function(test) {
-        test.ok(C.letter.parse(stream.ofString('a'), 0).isAccepted());
-        test.ok(C.letterAs().parse(stream.ofString('a'), 0).isAccepted());
+        test.ok(C.letter.parse(Streams.ofString('a'), 0).isAccepted());
+        test.ok(C.letterAs().parse(Streams.ofString('a'), 0).isAccepted());
         test.ok(
             C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(stream.ofString('a'))
+                .parse(Streams.ofString('a'))
                 .isAccepted()
         );
         test.ok(
             C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(stream.ofString('é'))
+                .parse(Streams.ofString('é'))
                 .isAccepted()
         );
         test.ok(
             !C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(stream.ofString('Б'))
+                .parse(Streams.ofString('Б'))
                 .isAccepted()
         );
         test.ok(
             !C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(stream.ofString('÷'))
+                .parse(Streams.ofString('÷'))
                 .isAccepted()
         );
         test.done();
@@ -227,29 +228,29 @@ export default {
 
     'expect occidental letters to be accepted': function(test) {
         test.ok(
-            C.letters.then(F.eos).parse(stream.ofString('aéÉ'), 0).isAccepted()
+            C.letters.then(F.eos).parse(Streams.ofString('aéÉ'), 0).isAccepted()
         );
         test.ok(
             C.lettersAs()
                 .then(F.eos)
-                .parse(stream.ofString('aéÉ'), 0)
+                .parse(Streams.ofString('aéÉ'), 0)
                 .isAccepted()
         );
         test.ok(
             C.lettersAs(C.OCCIDENTAL_LETTER)
-                .parse(stream.ofString('a'))
+                .parse(Streams.ofString('a'))
                 .isAccepted()
         );
         test.ok(
             C.lettersAs(C.OCCIDENTAL_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('éA'))
+                .parse(Streams.ofString('éA'))
                 .isAccepted()
         );
         test.ok(
             !C.lettersAs(C.OCCIDENTAL_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('БAs'))
+                .parse(Streams.ofString('БAs'))
                 .isAccepted()
         );
         test.done();
@@ -258,14 +259,18 @@ export default {
     'expect ascii letter to be accepted': function(test) {
         test.ok(
             C.letterAs(C.ASCII_LETTER)
-                .parse(stream.ofString('a'), 0)
+                .parse(Streams.ofString('a'), 0)
                 .isAccepted()
         );
         test.ok(
-            !C.letterAs(C.ASCII_LETTER).parse(stream.ofString('é')).isAccepted()
+            !C.letterAs(C.ASCII_LETTER)
+                .parse(Streams.ofString('é'))
+                .isAccepted()
         );
         test.ok(
-            !C.letterAs(C.ASCII_LETTER).parse(stream.ofString('Б')).isAccepted()
+            !C.letterAs(C.ASCII_LETTER)
+                .parse(Streams.ofString('Б'))
+                .isAccepted()
         );
         test.done();
     },
@@ -274,19 +279,19 @@ export default {
         test.ok(
             C.lettersAs(C.ASCII_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('a'))
+                .parse(Streams.ofString('a'))
                 .isAccepted()
         );
         test.ok(
             !C.lettersAs(C.ASCII_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('éA'))
+                .parse(Streams.ofString('éA'))
                 .isAccepted()
         );
         test.ok(
             !C.lettersAs(C.ASCII_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('БAs'))
+                .parse(Streams.ofString('БAs'))
                 .isAccepted()
         );
         test.done();
@@ -294,16 +299,16 @@ export default {
 
     'expect utf8 letter to be accepted': function(test) {
         test.ok(
-            C.letterAs(C.UTF8_LETTER).parse(stream.ofString('a')).isAccepted()
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('a')).isAccepted()
         );
         test.ok(
-            C.letterAs(C.UTF8_LETTER).parse(stream.ofString('é')).isAccepted()
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('é')).isAccepted()
         );
         test.ok(
-            C.letterAs(C.UTF8_LETTER).parse(stream.ofString('Б')).isAccepted()
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('Б')).isAccepted()
         );
         test.ok(
-            !C.letterAs(C.UTF8_LETTER).parse(stream.ofString('÷')).isAccepted()
+            !C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('÷')).isAccepted()
         );
         test.done();
     },
@@ -311,32 +316,32 @@ export default {
         test.ok(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('a'))
+                .parse(Streams.ofString('a'))
                 .isAccepted()
         );
         test.ok(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('éA'))
+                .parse(Streams.ofString('éA'))
                 .isAccepted()
         );
         test.ok(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('БAs'))
+                .parse(Streams.ofString('БAs'))
                 .isAccepted()
         );
         test.ok(
             !C.letterAs(C.UTF8_LETTER)
                 .then(F.eos)
-                .parse(stream.ofString('Б÷As'))
+                .parse(Streams.ofString('Б÷As'))
                 .isAccepted()
         );
         test.done();
     },
 
     'expect unknown letters to be rejected': function(test) {
-        const line = stream.ofString('a');
+        const line = Streams.ofString('a');
         let errorFound = false;
         try {
             const combinator = C.lettersAs(Symbol('UNKNOWN')).then(F.eos);
@@ -353,7 +358,7 @@ export default {
         // tests here
         const parsing = C.letters
             .thenLeft(F.eos)
-            .parse(stream.ofString('someLetters'), 0);
+            .parse(Streams.ofString('someLetters'), 0);
         test.equal(parsing.isAccepted(), true, 'should be accepted.');
         test.deepEqual(parsing.value, 'someLetters', 'should be equal.');
         test.done();
@@ -364,7 +369,7 @@ export default {
         // tests here
         const parsing = C.letters
             .then(F.eos)
-            .parse(stream.ofString('some Letters'), 0);
+            .parse(Streams.ofString('some Letters'), 0);
         test.equal(parsing.isAccepted(), false, 'should be rejected.');
         test.notDeepEqual(parsing.value, 'some Letters', 'should be equal.');
         test.done();
@@ -375,7 +380,7 @@ export default {
         // tests here
         const parsing = C.letters
             .then(F.eos)
-            .parse(stream.ofString('some2Letters'), 0);
+            .parse(Streams.ofString('some2Letters'), 0);
         test.equal(parsing.isAccepted(), false, 'should be accepted.');
         test.done();
     },
@@ -387,7 +392,7 @@ export default {
         // tests here
         const parsing = C.letters
             .thenLeft(F.eos)
-            .parse(stream.ofString('someLetters'), 0);
+            .parse(Streams.ofString('someLetters'), 0);
         test.equal(parsing.value, 'someLetters', 'not a string');
         test.done();
     },
@@ -396,7 +401,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.string('Hello').parse(stream.ofString('Hello'), 0).isAccepted(),
+            C.string('Hello').parse(Streams.ofString('Hello'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -407,7 +412,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.string('hello').parse(stream.ofString('hell'), 0).isAccepted(),
+            C.string('hello').parse(Streams.ofString('hell'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -415,7 +420,7 @@ export default {
     },
 
     'test stringIn': function(test) {
-        let line = stream.ofString('James Bond');
+        let line = Streams.ofString('James Bond');
 
         const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
         const value = combinator.parse(line).value;
@@ -426,7 +431,7 @@ export default {
 
     'test stringIn Similar': function(test) {
         // Checks the search comes back after each search
-        let line = stream.ofString('Jack James Jane');
+        let line = Streams.ofString('Jack James Jane');
 
         const combinator = C.stringIn(['Jamie', 'Jacko', 'Jack']);
         const parsing = combinator.parse(line);
@@ -438,7 +443,7 @@ export default {
     },
 
     'test stringIn one string sidecase': function(test) {
-        let line = stream.ofString('James');
+        let line = Streams.ofString('James');
 
         const combinator = C.stringIn(['James']);
         const value = combinator.parse(line).value;
@@ -448,7 +453,7 @@ export default {
     },
 
     'test stringIn empty sidecase': function(test) {
-        let line = stream.ofString('James');
+        let line = Streams.ofString('James');
 
         const combinator = C.stringIn([]).then(F.eos);
         const parsing = combinator.parse(line);
@@ -457,7 +462,7 @@ export default {
     },
 
     'test stringIn empty accept nothing sidecase': function(test) {
-        let line = stream.ofString('');
+        let line = Streams.ofString('');
 
         const combinator = C.stringIn([]).then(F.eos);
         const parsing = combinator.parse(line);
@@ -469,7 +474,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.notString('**').parse(stream.ofString('hello'), 0).isAccepted(),
+            C.notString('**').parse(Streams.ofString('hello'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -480,7 +485,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.notString('**').parse(stream.ofString('hello'), 0).value,
+            C.notString('**').parse(Streams.ofString('hello'), 0).value,
             'h',
             'should be h.'
         );
@@ -491,7 +496,9 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.notString('**').parse(stream.ofString('**hello'), 0).isAccepted(),
+            C.notString('**')
+                .parse(Streams.ofString('**hello'), 0)
+                .isAccepted(),
             false,
             'should be rejected.'
         );
@@ -502,7 +509,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.utf8Letter.parse(stream.ofString('é'), 0).isAccepted(),
+            C.utf8Letter.parse(Streams.ofString('é'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -514,12 +521,12 @@ export default {
         //Белград
         //български
         test.equal(
-            C.utf8Letter.parse(stream.ofString('Б'), 0).isAccepted(),
+            C.utf8Letter.parse(Streams.ofString('Б'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
         test.equal(
-            C.utf8Letter.parse(stream.ofString('б'), 0).isAccepted(),
+            C.utf8Letter.parse(Streams.ofString('б'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -529,7 +536,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.utf8Letter.parse(stream.ofString('-'), 0).isAccepted(),
+            C.utf8Letter.parse(Streams.ofString('-'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -539,7 +546,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            C.utf8Letter.parse(stream.ofString(''), 0).isAccepted(),
+            C.utf8Letter.parse(Streams.ofString(''), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -550,20 +557,23 @@ export default {
         // It's super important for emoji to test there is EOS just after,
         // because some emoji takes two \uWXYZ codes, where utf_8 does not
         test.ok(
-            !C.emoji.then(F.eos).parse(stream.ofString('б'), 0).isAccepted()
+            !C.emoji.then(F.eos).parse(Streams.ofString('б'), 0).isAccepted()
         );
         test.ok(
-            !C.emoji.then(F.eos).parse(stream.ofString('a'), 0).isAccepted()
+            !C.emoji.then(F.eos).parse(Streams.ofString('a'), 0).isAccepted()
         );
         // multiple emojis are also accepted as one
         test.ok(
-            C.emoji.then(F.eos).parse(stream.ofString('🐵🐵✈️'), 0).isAccepted()
+            C.emoji
+                .then(F.eos)
+                .parse(Streams.ofString('🐵🐵✈️'), 0)
+                .isAccepted()
         );
         test.ok(
-            C.emoji.then(F.eos).parse(stream.ofString('✈️'), 0).isAccepted()
+            C.emoji.then(F.eos).parse(Streams.ofString('✈️'), 0).isAccepted()
         );
         // Emoji 5.0 released in June 2017.
-        test.ok(C.emoji.then(F.eos).parse(stream.ofString('🥪')).isAccepted());
+        test.ok(C.emoji.then(F.eos).parse(Streams.ofString('🥪')).isAccepted());
         test.done();
     },
 };
