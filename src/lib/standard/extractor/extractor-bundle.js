@@ -1,6 +1,4 @@
 import {F, C, N} from '../../index';
-import response from './../../parsec/response';
-import Parser from './../../parsec/parser';
 
 /**
  * Created by nicorama on 10/01/2017.

@@ -243,6 +243,22 @@ export default {
     },
 
     'lazy with a class': function(test) {
+        class SomeLazyParser {
+            constructor(char) {
+                this.char = char;
+            }
+
+            first() {
+                return C.char(this.char).then(
+                    this.second().opt().map(opt => opt.orElse(''))
+                );
+            }
+
+            second() {
+                return C.char('b').then(F.lazy(this.first, ['a'], this));
+            }
+        }
+
         const line = Streams.ofString('ababa');
 
         const combinator = new SomeLazyParser('a').first().then(F.eos.drop());
@@ -253,18 +269,3 @@ export default {
     },
 };
 
-class SomeLazyParser {
-    constructor(char) {
-        this.char = char;
-    }
-
-    first() {
-        return C.char(this.char).then(
-            this.second().opt().map(opt => opt.orElse(''))
-        );
-    }
-
-    second() {
-        return C.char('b').then(F.lazy(this.first, ['a'], this));
-    }
-}

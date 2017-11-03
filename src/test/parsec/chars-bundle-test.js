@@ -1,14 +1,6 @@
 import Streams from '../../lib/stream/index';
 import {F, C} from '../../lib/parsec/index';
 
-let value = undefined;
-
-function testParser(parser, string) {
-    let stream = Streams.ofString(string);
-    let parsing = parser.parse(stream);
-
-    value = parsing.value;
-}
 
 export default {
     setUp: function(done) {
