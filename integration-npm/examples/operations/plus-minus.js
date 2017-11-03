@@ -1,4 +1,4 @@
-const {Stream, F, N, C, X} = require('@masala/parser');
+const {Streams, F, N, C, X} = require('@masala/parser');
 
 
 
@@ -113,7 +113,7 @@ function combinator() {
 
 const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
 
-let myStream = Stream.ofString(string);
-let parsing = combinator().parse(myStream);
+let stream = Streams.ofString(string);
+let parsing = combinator().parse(stream);
 console.log(string+'='+parsing.value);
 

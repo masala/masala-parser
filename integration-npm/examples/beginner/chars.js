@@ -1,9 +1,9 @@
-const {Stream, F, C } = require('@masala/parser');
+const {Streams, F, C } = require('@masala/parser');
 const {assertArrayEquals, assertEquals} = require('../../assert');
 
 
 // Only char
-let stream = Stream.ofString('abc');
+let stream = Streams.ofString('abc');
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -14,7 +14,7 @@ assertArrayEquals(['a', 'b', 'c'], parsing.value);
 
 
 // Using letter and rep() ;
-stream = Stream.ofString('Hello World');
+stream = Streams.ofString('Hello World');
 const letterParser = C.letter.rep()  // 'Hello'
     .then(C.char(' '))  // space is not a letter
     .then(C.letter.rep()); // 'World'
@@ -26,7 +26,7 @@ parsing = letterParser.parse(stream);
 
 
 // Using C.letters and C.string
-stream = Stream.ofString('Hello World');
+stream = Streams.ofString('Hello World');
 const helloParser = C.string('Hello')
     .then(C.char(' '))
     .then(C.letters);
@@ -36,7 +36,7 @@ assertArrayEquals(['Hello',' ','World'], parsing.value);
 
 
 // Using C.stringIn
-stream = Stream.ofString('James');
+stream = Streams.ofString('James');
 const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
 parsing = combinator.parse(stream);
 assertEquals('James', parsing.value);

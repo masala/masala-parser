@@ -1,4 +1,4 @@
-const {Stream,  C}= require('@masala/parser');
+const {Streams,  C}= require('@masala/parser');
 const {assertArrayEquals} = require('../../assert');
 
 // thenLeft, thenRight
@@ -8,5 +8,5 @@ const parser = C.string("Hello")
     .thenRight(C.letter.rep())
     .thenLeft(C.char("'"));
 
-var parsing = parser.parse(Stream.ofString("Hello 'World'"));
+var parsing = parser.parse(Streams.ofString("Hello 'World'"));
 assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");

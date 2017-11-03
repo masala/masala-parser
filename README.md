@@ -32,6 +32,8 @@ Or in the browser
 * [download Release](https://github.com/d-plaindoux/masala-parser/releases)
 * `<script src="masala-parser.min.js"/>`
 
+Check the [Change Log](./changelog.md) if you can from a previous version.
+
 
 # Quick Examples
 

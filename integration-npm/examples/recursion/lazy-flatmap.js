@@ -1,4 +1,4 @@
-const {Stream, F, N, C, X} = require('@masala/parser');
+const {Streams, F, N, C, X} = require('@masala/parser');
 const {assertFalse} = require('../../assert');
 
 
@@ -15,7 +15,7 @@ function B(aVal) {
 const parser = A();
 
 const str = 'AAAB';
-const stream = Stream.ofString(str);
+const stream = Streams.ofString(str);
 const parsing = parser.parse(stream);
 
 console.log(parsing.offset === str.length? true:parsing.offset);
