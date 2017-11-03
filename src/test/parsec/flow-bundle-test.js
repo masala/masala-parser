@@ -13,11 +13,11 @@ function testParser(parser, string) {
 }
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done();
     },
 
-    'expect flatten result to be ok': function (test) {
+    'expect flatten result to be ok': function(test) {
         const string = 'foobar';
         // tests here
         const parser = C.char('f')
@@ -29,7 +29,7 @@ export default {
         test.done();
     },
 
-    'expect thenReturns to be ok when empty': function (test) {
+    'expect thenReturns to be ok when empty': function(test) {
         const string = 'some';
         // tests here
         const parser = F.any.rep().then(F.eos).thenReturns([]);
@@ -39,7 +39,7 @@ export default {
         test.done();
     },
 
-    'expect startsWith to start': function (test) {
+    'expect startsWith to start': function(test) {
         const string = ' world';
         const object = 'hello';
         // tests here
@@ -52,10 +52,8 @@ export default {
         test.done();
     },
 
-
-    'test moveUntilFast string': function (test) {
+    'test moveUntilFast string': function(test) {
         const line = Streams.ofString('soXYZso');
-
 
         const combinator = F.moveUntil('XYZ');
         const parser = combinator.parse(line);
@@ -66,15 +64,16 @@ export default {
         test.equals(offset, 2);
         test.done();
     },
-    'test moveUntilFast string with continuation': function (test) {
+    'test moveUntilFast string with continuation': function(test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
         const start = C.string('start-');
 
-        const combinator = start.drop()
+        const combinator = start
+            .drop()
             .then(F.moveUntil('XYZ'))
-            .then(C.string('XYZ-continues').drop())
+            .then(C.string('XYZ-continues').drop());
         const parser = combinator.parse(line);
         const value = parser.value;
         const offset = parser.offset;
@@ -83,13 +82,14 @@ export default {
         test.equals(offset, document.length);
         test.done();
     },
-    'test moveUntilFast array of string with continuation': function (test) {
+    'test moveUntilFast array of string with continuation': function(test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
         const start = C.string('start-');
 
-        const combinator = start.drop()
+        const combinator = start
+            .drop()
             .then(F.moveUntil(['ABC', 'ZE', 'XYZ']))
             .then(C.string('XYZ-continues').drop());
 
@@ -101,13 +101,14 @@ export default {
         test.equals(offset, document.length);
         test.done();
     },
-    'test moveUntilFast string fails': function (test) {
+    'test moveUntilFast string fails': function(test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
         const start = C.string('start-');
 
-        const combinator = start.drop()
+        const combinator = start
+            .drop()
             .then(F.moveUntil('EEE'))
             .then(C.string('XYZ-continues').drop());
 
@@ -116,13 +117,14 @@ export default {
         test.ok(!parsing.isAccepted());
         test.done();
     },
-    'test moveUntilFast array of string fails': function (test) {
+    'test moveUntilFast array of string fails': function(test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
         const start = C.string('start-');
 
-        const combinator = start.drop()
+        const combinator = start
+            .drop()
             .then(F.moveUntil(['ABC', 'ZE', 'EEE']))
             .then(C.string('XYZ-continues').drop());
 
@@ -131,10 +133,9 @@ export default {
         test.ok(!parsing.isAccepted());
         test.done();
     },
-    'test moveUntilFast fails if array stream': function (test) {
+    'test moveUntilFast fails if array stream': function(test) {
         const document = ['More', 'XYZ'];
         const line = Streams.ofArray(document);
-
 
         const combinator = F.moveUntil(['ABC', 'ZE', 'XYZ']);
         let found = false;
@@ -149,10 +150,9 @@ export default {
         test.ok(found);
         test.done();
     },
-    'test moveUntilFastString fails if array stream': function (test) {
+    'test moveUntilFastString fails if array stream': function(test) {
         const document = ['More', 'XYZ'];
         const line = Streams.ofArray(document);
-
 
         const combinator = F.moveUntil('XYZ');
         let found = false;
@@ -168,7 +168,7 @@ export default {
         test.done();
     },
 
-    'test moveUntil': function (test) {
+    'test moveUntil': function(test) {
         const line = Streams.ofString('I write until James appears');
 
         const combinator = F.moveUntil(C.string('James')).then(F.any.drop());
@@ -177,7 +177,7 @@ export default {
         test.equals(value, 'I write until ');
         test.done();
     },
-    'test moveUntil Not found': function (test) {
+    'test moveUntil Not found': function(test) {
         const line = Streams.ofString('I write until James appears');
 
         const combinator = F.moveUntil(C.string('Indiana'))
@@ -188,17 +188,16 @@ export default {
         test.ok(!accepted);
         test.done();
     },
-    'test moveUntil  found with failing parser': function (test) {
+    'test moveUntil  found with failing parser': function(test) {
         const line = Streams.ofString('I write until James Bond appears');
 
-        const combinator = F.moveUntil(C.string('James'))
-            .then(F.dropTo(F.eos));
+        const combinator = F.moveUntil(C.string('James')).then(F.dropTo(F.eos));
         const accepted = combinator.parse(line).isAccepted();
 
         test.ok(!accepted);
         test.done();
     },
-    'test dropTo with string': function (test) {
+    'test dropTo with string': function(test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.dropTo('James')
@@ -209,7 +208,18 @@ export default {
         test.ok(accepted);
         test.done();
     },
-    'test dropTo with parser': function (test) {
+    'test dropTo with string fail': function(test) {
+        const line = Streams.ofString('I write until James Bond appears');
+
+        const combinator = F.dropTo('James')
+            .then(C.string(' Bond appears'))
+            .then(F.eos);
+        const accepted = combinator.parse(line).isAccepted();
+
+        test.ok(accepted);
+        test.done();
+    },
+    'test dropTo with parser': function(test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.dropTo(C.string('James'))
@@ -220,7 +230,7 @@ export default {
         test.ok(accepted);
         test.done();
     },
-    'test moveUntil found with more parsers': function (test) {
+    'test moveUntil found with more parsers': function(test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.moveUntil(C.string('James'))
@@ -232,33 +242,29 @@ export default {
         test.done();
     },
 
-    'lazy with a class':function(test){
-
+    'lazy with a class': function(test) {
         const line = Streams.ofString('ababa');
 
-        const combinator = new SomeLazyParser('a').first()
-            .then(F.eos.drop());
+        const combinator = new SomeLazyParser('a').first().then(F.eos.drop());
         const value = combinator.parse(line).value;
 
         test.equals(value.join(''), 'ababa');
         test.done();
+    },
+};
 
-    }
-}
-
-
-class SomeLazyParser{
-
-    constructor(char){
+class SomeLazyParser {
+    constructor(char) {
         this.char = char;
     }
 
-    first(){
-        return C.char(this.char).then(this.second().opt().map(opt=>opt.orElse('')));
+    first() {
+        return C.char(this.char).then(
+            this.second().opt().map(opt => opt.orElse(''))
+        );
     }
 
-    second(){
+    second() {
         return C.char('b').then(F.lazy(this.first, ['a'], this));
     }
-
 }

@@ -16,7 +16,7 @@ function parse(p) {
 }
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
-function lazy(p, parameters, self={}) {
+function lazy(p, parameters, self = {}) {
     if (parameters && !Array.isArray(parameters)) {
         throw 'Lazy(parser, [params]) function expect parser parameters to be packed into an array';
     }
@@ -222,7 +222,7 @@ function searchArrayStringStart(array) {
 
 // string -> Parser string char
 // index is forwarded at the length of the string
-function string(s) {
+export function string(s) {
     return new Parser((input, index = 0) => {
         if (input.subStreamAt(s.split(''), index)) {
             return response.accept(s, input, index + s.length, true);

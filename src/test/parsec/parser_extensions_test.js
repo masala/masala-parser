@@ -83,7 +83,8 @@ export default {
             'should be accepted.'
         );
         test.done();
-    },'expect (lazy with empty params) to return a given value': function(test) {
+    },
+    'expect (lazy with empty params) to return a given value': function(test) {
         test.expect(1);
         // tests here
         test.equal(

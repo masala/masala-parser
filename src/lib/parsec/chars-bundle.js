@@ -6,8 +6,7 @@
  * Licensed under the LGPL2 license.
  */
 import F from './flow-bundle';
-import Parser from './parser';
-import response from './response';
+import {string} from './flow-bundle';
 
 const ASCII_LETTER = Symbol('ASCII');
 const OCCIDENTAL_LETTER = Symbol('OCCIDENTAL');
@@ -100,7 +99,7 @@ function subString(length) {
 
 // string -> Parser string char
 // index is forwarded at the length of the string
-function string(s) {
+/*function string(s) {
     return new Parser((input, index = 0) => {
         if (input.subStreamAt(s.split(''), index)) {
             return response.accept(s, input, index + s.length, true);
@@ -108,7 +107,7 @@ function string(s) {
             return response.reject(input.location(index), false);
         }
     });
-}
+}*/
 
 function stringIn(array) {
     const tryString = s => F.try(string(s));
