@@ -79,9 +79,12 @@ The goal of a parser is to find out. The goal of Parsec is to make this easy.
 A monoid is an object with functions and one single encapsulated value. Have you heard of jQuery ? The `$` object is a monoid, where
  the value is the DOM selection.
 The parser will read through the document and aggregate values. The single value of the monoid will be modified by the document stream,
-  but can also be modified by function calls, such as the `map()` function.
+  but can also be modified by function calls, such as the `map()` function. The value is the `Response` of your `Parser`.
 
 ![](./documentation/parsec-monoid.png)
+
+A Http Promise is also a good example. It will give you later the value. Masala does the same: it will give you
+the `Response` after parsing. 
 
 
 ## Hello 'X'
@@ -230,6 +233,33 @@ Here is a link for [Core functions documentation](./documentation/parser-core-fu
 
 It will explain `then()`, `drop()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
 with code examples.
+
+
+## The Response
+
+A Parser can parse. When it finished this work, it can return two subtypes of `Response`:
+ 
+* `Accept` when it found something.    
+* `Reject` if it could not.
+
+
+```js
+
+    let response = C.char('a').rep().parse(Streams.ofString('aaaa'));
+    assertEquals(response.value.join(''), 'aaaa' );
+    assertEquals(response.offset, 4 );
+    assertTrue(response.isAccepted());
+    assertTrue(response.isConsumed());
+    
+    // Partially accepted
+    response = C.char('a').rep().parse(Streams.ofString('aabb'));
+    assertEquals(response.value.join(''), 'aa' );
+    assertEquals(response.offset, 2 );
+    assertTrue(response.isAccepted());
+    assertFalse(response.isConsumed());
+
+```
+
 
 ## The Flow Bundle
 

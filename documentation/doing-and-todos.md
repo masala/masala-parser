@@ -1,8 +1,6 @@
-parser.isCompleted();
+Make a quick release for getting {Streams} from  @masala/parser
 
-rename F.nop() to F.nop
-parsing.isCompleted()
-
+Check for integration of isConsumed()
 
 
 -> release

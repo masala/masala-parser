@@ -24,8 +24,8 @@ Parser Object :
 
 ## Parser constructor
  
-Usually, you should **NOT** create a Parser from its constructor. You will combine **existing parsers** to create a
- new one
+Usually, you would **NOT** create a Parser from its constructor. You will combine **existing parsers** to create a
+ new one. However it can solve specific problems when combining existing parser is too difficult or not efficient. 
  
 ```js
     const newParser = new Parser(parseFunction);
@@ -45,9 +45,7 @@ Usually, you should **NOT** create a Parser from its constructor. You will combi
 ### then
 
 * difficulty : 1
-* Construct an array of values from **two** previous success values
-* If more than two are needed, use `flatMap()`
-* `then()` uses internally `flatMap()`
+* Construct an array of values from previous accepted values
 
 ```js
 
@@ -57,7 +55,7 @@ const charsParser = C.char('a')
     .then(C.char('c'))
     .then(F.eos.drop()); // End Of Stream ; droping its value, just checking it's here
 let parsing = charsParser.parse(stream);
-console.log(parsing.value);
+assertEquals(parsing.value, 'abc');
 ```        
 
 ### drop()
@@ -84,7 +82,7 @@ assertEquals( 4, parsing.value, 'Floor parsing');
 ### map(f)
 
 * difficulty : 0
-* Change the value of the monoid
+* Change the value of the response
 
 
 ```js

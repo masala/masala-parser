@@ -33,6 +33,10 @@ class Response {
                 atry.failure(new Error('parser error at ' + reject.offset))
         );
     }
+
+    isConsumed(){
+        return false; //overridden by Accept
+    }
 }
 
 /**
@@ -55,6 +59,8 @@ class Reject extends Response {
         return this;
     }
 
+
+
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
     flatMap() {
         return this;
@@ -76,6 +82,10 @@ class Accept extends Response {
         this.consumed = consumed;
         this.value = value;
         this.input = input;
+    }
+
+    isConsumed(){
+        return this.input.endOfStream(this.offset);
     }
 
     // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
@@ -111,8 +121,8 @@ class Accept extends Response {
 /**
  * Constructors
  */
-const accept = (value, sequence, offset, consumed) =>
-    new Accept(value, sequence, offset, consumed);
+const accept = (value, stream, offset, consumed) =>
+    new Accept(value, stream, offset, consumed);
 const reject = (offset, consumed) => new Reject(offset, consumed);
 const response = {accept, reject};
 

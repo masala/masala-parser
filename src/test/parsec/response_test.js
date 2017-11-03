@@ -1,4 +1,5 @@
 import response from '../../lib/parsec/response';
+import stream from '../../lib/stream/index';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -186,6 +187,33 @@ export default {
                 .isAccepted(),
             false,
             'should not filter the response.'
+        );
+        test.done();
+    },
+
+    'accept can be consumed': function(test) {
+        test.expect(1);
+        // tests here
+        const myStream = stream.ofString('abc');
+        test.equal(
+            response
+                .accept('c', myStream, 3, false)
+                .isConsumed(),
+            true,
+            'should be consumed'
+        );
+        test.done();
+    },
+    'accept should not be yet consumed': function(test) {
+        test.expect(1);
+        // tests here
+        const myStream = stream.ofString('abc');
+        test.equal(
+            response
+                .accept('b', myStream, 2, false)
+                .isConsumed(),
+            false,
+            'should be consumed'
         );
         test.done();
     },
