@@ -1,14 +1,14 @@
 Recursion
 ====
 
-Parsec is a top-down parser and doesn't like [Left Recursion](https://cs.stackexchange.com/a/9971). Furthemore, building naively your
+Masala-Parser (like Parsec) is a top-down parser and doesn't like [Left Recursion](https://cs.stackexchange.com/a/9971). Furthemore, building naively your
 combinator parser with recursion would make a stack overflow before parsing
 
 
 Recursion fail
 ----
 
-        const {stream, F, N, C, X} = require('@masala/parser');
+        const {Streams, F, N, C, X} = require('@masala/parser');
         
         function A(){
             return C.char('A').then(B());
@@ -21,7 +21,7 @@ Recursion fail
         console.log('=== Building Parser ====');
         const parser = A();
         console.log('=== NEVER THERE ====');
-        let parsing = parser.parse(stream.ofString('AAAAAB'));
+        let parsing = parser.parse(Streams.ofString('AAAAAB'));
 
 
 Lazy Recursion
@@ -42,7 +42,7 @@ be called only while parsing the stream.
         console.log('=== Building Parser ====');
         const parser = A();
         console.log('=== GETTING THERE ====');
-        let parsing = parser.parse(stream.ofString('AAAAAB')); // Accepted :)
+        let parsing = parser.parse(Streams.ofString('AAAAAB')); // Accepted :)
         
 Operations
 -----

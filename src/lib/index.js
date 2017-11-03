@@ -12,19 +12,19 @@ import parsec from './parsec/index';
 import parser from './parsec/parser';
 import {F, C, N} from './parsec/index';
 import standard from './standard/index';
-import Stream from './stream/index';
+import Streams from './stream/index';
 
 const JSON = standard.jsonParser;
 const MD = standard.markdownBundle;
 const X = standard.extractorBundle;
 const T = standard.tokenBundle;
 
-export {
+export const bundle = {
     data,
     genlex,
     parsec,
     standard,
-    Stream,
+    Streams,
     parser,
     F,
     C,
@@ -34,3 +34,21 @@ export {
     X,
     T,
 };
+
+export {
+    data,
+    genlex,
+    parsec,
+    standard,
+    Streams,
+    parser,
+    F,
+    C,
+    N,
+    JSON,
+    MD,
+    X,
+    T,
+};
+
+export default bundle;

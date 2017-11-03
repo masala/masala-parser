@@ -1,5 +1,4 @@
-import stream from '../../../lib/stream/index';
-import jsonparser from '../../../lib/standard/json/jsonparser';
+import {Streams, JSON} from '@masala/parser';
 
 
 /*
@@ -30,7 +29,7 @@ export default {
   'number accepted': function(test) {
     test.expect(1);
     // tests here    
-    test.ok(jsonparser.parse(stream.ofString('123')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('123')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -38,7 +37,7 @@ export default {
   'string accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('"123"')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('"123"')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -46,7 +45,7 @@ export default {
   'string and unrecognized item rejected': function(test) {
     test.expect(1);
     // tests here
-    test.equal(jsonparser.parse(stream.ofString('"123" -')).isAccepted(), 
+    test.equal(JSON.parse(Streams.ofString('"123" -')).isAccepted(), 
                false,
                'should be rejected.');
     test.done();
@@ -55,7 +54,7 @@ export default {
   'string and unrecognized item rejected with correct offset': function(test) {
     test.expect(1);
     // tests here
-    var result = jsonparser.parse(stream.ofString('["123", -]'));
+    var result = JSON.parse(Streams.ofString('["123", -]'));
     test.equal(result.offset,
                7,
                'should be 7.');
@@ -65,7 +64,7 @@ export default {
   'null accepted': function(test) {
     test.expect(1);
     // tests here    
-    test.ok(jsonparser.parse(stream.ofString('null')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('null')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -73,7 +72,7 @@ export default {
   'true accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('true')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('true')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -81,7 +80,7 @@ export default {
   'false accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('false')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('false')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -89,7 +88,7 @@ export default {
   'empty array accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('[ ]')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('[ ]')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -97,7 +96,7 @@ export default {
   'singleton array accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('[ 123 ]')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('[ 123 ]')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -105,7 +104,7 @@ export default {
   'multi element array accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('[ 123 , 234 ]')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('[ 123 , 234 ]')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -113,7 +112,7 @@ export default {
   'empty object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('{ }')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('{ }')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -121,7 +120,7 @@ export default {
   'singleton object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('{ "a" : "v" }')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('{ "a" : "v" }')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -129,7 +128,7 @@ export default {
   'multi element object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('{ "a" : "v", "a" : [] }')).isAccepted(), 
+    test.ok(JSON.parse(Streams.ofString('{ "a" : "v", "a" : [] }')).isAccepted(), 
             'should be accepted.');
     test.done();
   },
@@ -137,7 +136,7 @@ export default {
   'multi level object accepted': function(test) {
     test.expect(1);
     // tests here
-    test.ok(jsonparser.parse(stream.ofString('{ "a" : "v", "b" : {"c":{"d":12} }}')).isAccepted(),
+    test.ok(JSON.parse(Streams.ofString('{ "a" : "v", "b" : {"c":{"d":12} }}')).isAccepted(),
         'should be accepted.');
     test.done();
   },

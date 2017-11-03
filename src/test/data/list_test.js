@@ -74,15 +74,15 @@ export default {
         test.done();
     },
 
-    'flatmap integer list': function(test) {
+    'flatMap integer list': function(test) {
         test.expect(1);
         // tests here
         test.deepEqual(
-            list(1, 2, 3).flatmap(function(v) {
+            list(1, 2, 3).flatMap(function(v) {
                 return list(v, v + 1);
             }),
             list(1, 2, 2, 3, 3, 4),
-            'should flatmap.'
+            'should flatMap.'
         );
         test.done();
     },

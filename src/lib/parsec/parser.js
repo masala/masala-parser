@@ -29,7 +29,7 @@ export default class Parser {
     }
 
     // Parser 'a 'c => ('a -> Parser 'b 'c) -> Parser 'b 'c
-    flatmap(f) {
+    flatMap(f) {
         return bind(this, f);
     }
 
@@ -58,7 +58,7 @@ export default class Parser {
 
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
-        return this.flatmap(a =>
+        return this.flatMap(a =>
             p.map(b => {
                 let result = list(a).append(list(b)).array();
                 if (result.length === 1) {

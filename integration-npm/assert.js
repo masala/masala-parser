@@ -1,11 +1,11 @@
 module.exports = {
-    assertArrayEquals: function (expected, actual, testName = "Unknown Test") {
+    assertArrayEquals(expected, actual, testName = "Unknown Test") {
         if (!arraysEqual(expected, actual)) {
             throw new Error( "Prepublish error for operations - Failed " + testName +
                 " - . Expected " + expected + " , but != " + actual);
         }
     },
-    assertEquals: function test(expected, actual, testName = "Unknown Test") {
+    assertEquals(expected, actual, testName = "Unknown Test") {
         if (expected !== actual) {
             throw new Error( "Prepublish error for operations - Failed " + testName +
             " - . Expected " + expected + " , but != " + actual);

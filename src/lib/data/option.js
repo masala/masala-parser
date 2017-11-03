@@ -26,7 +26,7 @@ class Option {
         }
     }
 
-    flatmap(bindCall) {
+    flatMap(bindCall) {
         if (this.isPresent()) {
             return bindCall(this.value);
         } else {

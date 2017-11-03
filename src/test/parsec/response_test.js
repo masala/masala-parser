@@ -1,4 +1,5 @@
 import response from '../../lib/parsec/response';
+import stream from '../../lib/stream/index';
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -67,13 +68,13 @@ export default {
         test.done();
     },
 
-    'response accepted flatmap to accepted': function(test) {
+    'response accepted flatMap to accepted': function(test) {
         test.expect(1);
         // tests here
         test.ok(
             response
                 .accept('a')
-                .flatmap(function(a) {
+                .flatMap(function(a) {
                     return response.accept(a);
                 })
                 .isAccepted(),
@@ -82,13 +83,13 @@ export default {
         test.done();
     },
 
-    'response accepted flatmap to return the value': function(test) {
+    'response accepted flatMap to return the value': function(test) {
         test.expect(1);
         // tests here
         test.ok(
             response
                 .accept('a')
-                .flatmap(function(a) {
+                .flatMap(function(a) {
                     return response.accept(a);
                 })
                 .isAccepted(),
@@ -98,13 +99,13 @@ export default {
         test.done();
     },
 
-    'response accepted flatmap to reject': function(test) {
+    'response accepted flatMap to reject': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             response
                 .accept()
-                .flatmap(function() {
+                .flatMap(function() {
                     return response.reject();
                 })
                 .isAccepted(),
@@ -130,13 +131,13 @@ export default {
         test.done();
     },
 
-    'response rejected flatmap to rejected': function(test) {
+    'response rejected flatMap to rejected': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             response
                 .reject()
-                .flatmap(function() {
+                .flatMap(function() {
                     return response.accept();
                 })
                 .isAccepted(),
@@ -190,6 +191,29 @@ export default {
         test.done();
     },
 
+    'accept can be consumed': function(test) {
+        test.expect(1);
+        // tests here
+        const myStream = stream.ofString('abc');
+        test.equal(
+            response.accept('c', myStream, 3, false).isConsumed(),
+            true,
+            'should be consumed'
+        );
+        test.done();
+    },
+    'accept should not be yet consumed': function(test) {
+        test.expect(1);
+        // tests here
+        const myStream = stream.ofString('abc');
+        test.equal(
+            response.accept('b', myStream, 2, false).isConsumed(),
+            false,
+            'should be consumed'
+        );
+        test.done();
+    },
+
     'response rejected': function(test) {
         test.expect(1);
         // tests here
@@ -197,6 +221,17 @@ export default {
             response.reject().isAccepted(),
             false,
             'should be rejected.'
+        );
+        test.done();
+    },
+
+    'response rejected should not be consumed': function(test) {
+        test.expect(1);
+        // tests here
+        test.equal(
+            response.reject().isConsumed(),
+            false,
+            'should be not consumed.'
         );
         test.done();
     },

@@ -24,8 +24,8 @@ Parser Object :
 
 ## Parser constructor
  
-Usually, you should **NOT** create a Parser from its constructor. You will combine **existing parsers** to create a
- new one
+Usually, you would **NOT** create a Parser from its constructor. You will combine **existing parsers** to create a
+ new one. However it can solve specific problems when combining existing parser is too difficult or not efficient. 
  
 ```js
     const newParser = new Parser(parseFunction);
@@ -45,19 +45,17 @@ Usually, you should **NOT** create a Parser from its constructor. You will combi
 ### then
 
 * difficulty : 1
-* Construct an array of values from **two** previous success values
-* If more than two are needed, use `flatmap()`
-* `then()` uses internally `flatmap()`
+* Construct an array of values from previous accepted values
 
 ```js
 
-let stream = Stream.ofString('abc');
+let stream = Streams.ofString('abc');
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
     .then(F.eos.drop()); // End Of Stream ; droping its value, just checking it's here
 let parsing = charsParser.parse(stream);
-console.log(parsing.value);
+assertEquals(parsing.value, 'abc');
 ```        
 
 ### drop()
@@ -66,13 +64,13 @@ console.log(parsing.value);
 * Uses `then()` and returns only the left or right value
 
 ```js
-const stream = Stream.ofString('|4.6|');
+const stream = Streams.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
     .then(N.numberLiteral)    // we have ['|',4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
     .map(x =>Math.floor(x));
 
-// Parsec needs a stream of characters
+// Masala needs a stream of characters
 const parsing = floorCombinator.parse(stream);
 assertEquals( 4, parsing.value, 'Floor parsing');
 ```     
@@ -84,11 +82,11 @@ assertEquals( 4, parsing.value, 'Floor parsing');
 ### map(f)
 
 * difficulty : 0
-* Change the value of the monoid
+* Change the value of the response
 
 
 ```js
-const stream = parsec.stream.ofString("5x8");
+const stream = Streams.ofString("5x8");
 const combinator = N.integer
                     .then(C.charIn('x*').drop())
                     .then(N.integer)
@@ -105,7 +103,7 @@ assertEquals(combinator.parse(stream).value, 40)
 
         
 ```js
-const stream = parsec.stream.ofString("ab");
+const stream = Streams.ofString("ab");
 // given 'ac', value should be ['X' , 'c']
 const combinator = C.char('a')
                     .thenReturns('X')
@@ -159,7 +157,7 @@ TODO : There is no explicit test for `any()`
 
 ```js
 
-const stream = Stream.ofString('aaa');
+const stream = Streams.ofString('aaa');
 const parsing = C.char('a').rep().parse(stream);
 test.ok(parsings.isAccepted);
 // We need to call list.array()
@@ -206,24 +204,47 @@ TODO : missing a pertinent test for using try()
 
 
 
-### flatmap (f )
+### flatMap (f )
  
 * difficulty : 3
 * parameter f is a function
 * pass parser.value to `f` function (TODO : better explain)
 * f can combine parsers to continue to read the stream, knowing the previous value
 
-        'expect (flatmap) to be return a-b-c': function(test) {
+        'expect (flatMap) to be return a-b-c': function(test) {
             test.equal(parser.char("a")
-                .flatmap(
+                .flatMap(
                     aVal=> parser.char('b').then(parser.char('c'))
                     .map(bcVal=>aVal+'-'+bcVal.join('-')) //--> join 3 letters
                 ) 
-                .parse(stream.ofString("abc")).value,
+                .parse(Streams.ofString("abc")).value,
                 'a-b-c',
                 'should be accepted.');
           },
 
+
+It can help you to read your document knowing what happen previously
+
+```js
+/* We need to parse this:
+        name: Nicolas
+        hotel: SuperMarriot
+        Nicolas: nz@robusta.io
+ */
+function combinator() {
+    return readNextTag('name').map( name =>  {name})
+        .then(readNextTag('hotel')).map(([context, hotel]) => Object.assign(context, {hotel}))
+        // we don't know that tag is Nicolas. It depends on running context 
+        .flatMap(userEmail);
+        // now parsing value has name, hotel and email keys
+}
+
+
+// We have Nicolas: nz@robusta.io
+function userEmail(context){// context injected is the running value of the parsing
+    return readNextTag(context.name).map(email => Object.assign(context, {email}))
+}
+```
 
  
 ### filter (predicate)
@@ -236,7 +257,7 @@ TODO : missing a pertinent test for using try()
  
         'expect (filter) to be accepted': function(test) {
             test.equal(parser.char("a").filter(a => a === 'a')
-                  .parse(stream.ofString("a")).isAccepted(),
+                  .parse(Streams.ofString("a")).isAccepted(),
                    true,
                    'should be accepted.');
         }

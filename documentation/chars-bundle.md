@@ -7,9 +7,9 @@ General Use
 Using Only Chars
 
 ```js
-const {Stream, F, C } = require('masala-parser');
+const {Streams, F, C } = require('@masala/parser');
 
-let stream = Stream.ofString('abc');
+let stream = Streams.ofString('abc');
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -23,7 +23,7 @@ Or just using `C.letter` and `rep()`:
 
 
 ```js
-stream = Stream.ofString('Hello World');
+stream = Streams.ofString('Hello World');
 const letterParser = C.letter.rep()  // 'Hello'
     .then(C.char(' '))  // space is not a letter
     .then(C.letter.rep()); // 'World'
@@ -38,7 +38,7 @@ We can improve our control by using the right function at the right time. Here,
 Using `C.letters` and `C.string`
 
 ```js
-stream = Stream.ofString('Hello World');
+stream = Streams.ofString('Hello World');
 const helloParser = C.string('Hello')
     .then(C.char(' '))
     .then(C.letters);
@@ -55,18 +55,18 @@ Detailed functions
 ### `letterAs(symbol)`:
 
 ```js
-import {Stream, F, C } from 'masala-parser';
+import {Streams, F, C } from 'masala-parser';
 
-assertTrue(C.letterAs().parse(Stream.ofString('a')).isAccepted());
-assertTrue(C.letterAs(C.OCCIDENTAL_LETTER).parse(Stream.ofString('a')).isAccepted());
-assertTrue(C.letterAs(C.UTF8_LETTER).parse(Stream.ofString('Б')).isAccepted());
-assertTrue(!C.letterAs(C.OCCIDENTAL_LETTER).parse(Stream.ofString('÷')).isAccepted());
+assertTrue(C.letterAs().parse(Streams.ofString('a')).isAccepted());
+assertTrue(C.letterAs(C.OCCIDENTAL_LETTER).parse(Streams.ofString('a')).isAccepted());
+assertTrue(C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('Б')).isAccepted());
+assertTrue(!C.letterAs(C.OCCIDENTAL_LETTER).parse(Streams.ofString('÷')).isAccepted());
 ```
 
 ### stringIn
 
 ```js
-stream = Stream.ofString('James');
+stream = Streams.ofString('James');
 const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
 parsing = combinator.parse(stream);
 assertEquals('James', parsing.value);

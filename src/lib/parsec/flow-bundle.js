@@ -16,10 +16,16 @@ function parse(p) {
 }
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
-function lazy(p, parameters) {
+function lazy(p, parameters, self = {}) {
+    if (parameters && !Array.isArray(parameters)) {
+        throw 'Lazy(parser, [params]) function expect parser parameters to be packed into an array';
+    }
+
     // equivalent of p(...parameters), but would fail if parameters are undefined
+    // In some case, p is a function that require a 'this' bound to the function
+    // https://github.com/d-plaindoux/masala-parser/issues/9
     return new Parser((input, index = 0) =>
-        p.apply(p.prototype, parameters).parse(input, index)
+        p.apply(self, parameters).parse(input, index)
     );
 }
 
@@ -104,17 +110,124 @@ function sequence() {
     return current;
 }
 
+function startsWith(value) {
+    return nop().thenReturns(value);
+}
+
+function moveUntil(stop) {
+    if (typeof stop === 'string') {
+        return searchStringStart(stop);
+    }
+
+    if (Array.isArray(stop)) {
+        return searchArrayStringStart(stop);
+    }
+
+    return doTry(not(stop).rep().then(eos()).thenReturns(undefined))
+        .or(not(stop).rep().map(chars => chars.join('')))
+        .filter(v => v !== undefined);
+}
+
+function dropTo(stop) {
+    if (typeof stop === 'string') {
+        return moveUntil(stop).then(string(stop)).drop();
+    } else {
+        return moveUntil(stop).then(stop).drop();
+    }
+}
+
 export default {
     parse,
-    nop: nop,
+    nop,
     try: doTry,
     any: any(),
-    subStream: subStream,
+    subStream,
     not: not,
-    lazy: lazy,
-    returns: returns,
+    lazy,
+    returns,
     error: error(),
     eos: eos(),
-    satisfy: satisfy,
+    satisfy,
     sequence,
+    startsWith,
+    moveUntil,
+    dropTo,
 };
+
+/**Optimization functions */
+
+/**
+ * Will work only if input.source is a String
+ * @param string
+ * @returns {Parser}
+ */
+function searchStringStart(string) {
+    return new Parser((input, index = 0) => {
+        if (typeof input.source !== 'string') {
+            throw 'Input source must be a String';
+        }
+
+        const sourceIndex = input.source.indexOf(string, index);
+        if (sourceIndex > 0) {
+            return response.accept(
+                input.source.substring(index, sourceIndex),
+                input,
+                sourceIndex,
+                true
+            );
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
+}
+
+/**
+ * Will work only if input.source is a String
+ * Needs to be tested with ReactJS
+ * @param string
+ * @returns {Parser}
+ */
+function searchArrayStringStart(array) {
+    return new Parser((input, index = 0) => {
+        if (typeof input.source !== 'string') {
+            throw 'Input source must be a String';
+        }
+
+        let sourceIndex = -1;
+
+        let i = 0;
+        while (sourceIndex < 0 && i < array.length) {
+            const needle = array[i];
+            sourceIndex = input.source.indexOf(needle, index);
+            i++;
+            if (sourceIndex > 0) {
+                break;
+            }
+        }
+
+        //const sourceIndex = input.source.indexOf(string, index)
+
+        if (sourceIndex > 0) {
+            return response.accept(
+                input.source.substring(index, sourceIndex),
+                input,
+                sourceIndex,
+                true
+            );
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
+}
+
+// string -> Parser string char
+// index is forwarded at the length of the string
+export function string(s) {
+    return new Parser((input, index = 0) => {
+        if (input.subStreamAt(s.split(''), index)) {
+            return response.accept(s, input, index + s.length, true);
+        } else {
+            return response.reject(input.location(index), false);
+        }
+    });
+}

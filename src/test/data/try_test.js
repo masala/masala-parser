@@ -116,13 +116,13 @@ export default {
         test.done();
     },
 
-    'atry success flatmap of atry': function(test) {
+    'atry success flatMap of atry': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             atry
                 .success(1)
-                .flatmap(function(i) {
+                .flatMap(function(i) {
                     return atry.success(i + 1);
                 })
                 .success(),
@@ -132,13 +132,13 @@ export default {
         test.done();
     },
 
-    'atry failure flatmap of int': function(test) {
+    'atry failure flatMap of int': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             atry
                 .failure(1)
-                .flatmap(function(i) {
+                .flatMap(function(i) {
                     return i + 1;
                 })
                 .failure(),
@@ -148,13 +148,13 @@ export default {
         test.done();
     },
 
-    'atry failure flatmap of Error': function(test) {
+    'atry failure flatMap of Error': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             atry
                 .success(1)
-                .flatmap(function() {
+                .flatMap(function() {
                     throw 1;
                 })
                 .failure(),
