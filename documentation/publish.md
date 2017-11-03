@@ -14,7 +14,7 @@ then level-up the version number in package.json
         
 then publish
 
-        npm publish  --access=public --tag alpha1
+        npm publish  --access=public --tag 0.6-pre
         
         
 Check then with integration-npm
