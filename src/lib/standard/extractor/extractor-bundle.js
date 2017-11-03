@@ -97,7 +97,6 @@ export default class ExtractorBundle {
                 .map(item => item.array());
         }
     }
-
 }
 
 function _last(values) {

@@ -227,8 +227,6 @@ export default {
         test.equals(value, 'World');
         test.done();
     },
-
-
 };
 
 function _includes(array, value) {

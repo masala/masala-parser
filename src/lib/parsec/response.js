@@ -34,7 +34,7 @@ class Response {
         );
     }
 
-    isConsumed(){
+    isConsumed() {
         return false; //overridden by Accept
     }
 }
@@ -59,8 +59,6 @@ class Reject extends Response {
         return this;
     }
 
-
-
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
     flatMap() {
         return this;
@@ -84,7 +82,7 @@ class Accept extends Response {
         this.input = input;
     }
 
-    isConsumed(){
+    isConsumed() {
         return this.input.endOfStream(this.offset);
     }
 

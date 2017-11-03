@@ -196,9 +196,7 @@ export default {
         // tests here
         const myStream = stream.ofString('abc');
         test.equal(
-            response
-                .accept('c', myStream, 3, false)
-                .isConsumed(),
+            response.accept('c', myStream, 3, false).isConsumed(),
             true,
             'should be consumed'
         );
@@ -209,9 +207,7 @@ export default {
         // tests here
         const myStream = stream.ofString('abc');
         test.equal(
-            response
-                .accept('b', myStream, 2, false)
-                .isConsumed(),
+            response.accept('b', myStream, 2, false).isConsumed(),
             false,
             'should be consumed'
         );
@@ -225,6 +221,17 @@ export default {
             response.reject().isAccepted(),
             false,
             'should be rejected.'
+        );
+        test.done();
+    },
+
+    'response rejected should not be consumed': function(test) {
+        test.expect(1);
+        // tests here
+        test.equal(
+            response.reject().isConsumed(),
+            false,
+            'should be not consumed.'
         );
         test.done();
     },
