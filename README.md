@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40masala%2Fparser.svg)](https://badge.fury.io/js/%40masala%2Fparser)
 [![Build Status](https://travis-ci.org/d-plaindoux/masala-parser.svg)](https://travis-ci.org/d-plaindoux/masala-parser)
-[![Coverage Status](https://coveralls.io/repos/d-plaindoux/parser-combinator/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parser-combinator?branch=master)
+[![Coverage Status](https://coveralls.io/repos/d-plaindoux/masala-parser/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parser-combinator?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
 Masala Parser is inspired by the paper titled:
