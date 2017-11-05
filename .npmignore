@@ -10,6 +10,7 @@
 !dist
 !src
 !build
+!masala-parser.d.ts
 # Ignore all files named .DS_Store or ending with .log
 **/.DS_Store
 **.log
