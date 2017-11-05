@@ -1,8 +1,7 @@
-// Plain old ES
 import {Streams, F, C, N} from '@robusta/trash'
 import {assertEquals, assertArrayEquals, assertTrue} from '../../assert';
 
-// The goal is check that we have Hello 'something', then to grab that something
+
 
 const helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
