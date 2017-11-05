@@ -3,6 +3,8 @@
  * Inspired by https://github.com/jon-hanson/parsecj
  */
 
+export interface Unit {}
+
 // Not needed
 export interface Option<Type> {
     isPresent(): boolean;
@@ -44,7 +46,7 @@ export interface Stream<Data> {
 
 }
 
-export interface StreamFactory {
+interface IStreams {
     ofString(string: string): Stream<string>;
     ofArray<X>(): Stream<Array<X>>;
 }
@@ -81,10 +83,11 @@ export interface Response<T> {
 }
 
 /* Array with different values*/
-export interface ArrayParser<T> extends Parser<T> {
+export interface ArrayParser<T> extends IParser<T> {
     parse<X>(stream: Stream<X>, index?: number): ArrayResponse<T>;
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
-    map<Y> (f: (T) => Y): ArrayParser<T>;
+    then(p: VoidParser): ArrayParser<T>;
+    map<Y> (f: (T) => Y): ArrayParser<Y>;
     flatMap<Z> (f: () => Z): ArrayParser<T>;
     filter(f: (T) => boolean): ArrayParser<T>
 }
@@ -95,34 +98,57 @@ export interface ListParser<T> {
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
 }
 
-interface SingleParser<T> extends Parser<T> {
+interface SingleParser<T> extends IParser<T> {
     parse<X>(stream: Stream<X>, index?: number): SingleResponse<T>;
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
-    map<Y> (f: () => Y): SingleParser<Y>;
-    filter(f: () => boolean): SingleParser<T>
+    then(p: VoidParser): SingleParser<T>;
+    map<Y> (f: (T) => Y): SingleParser<Y>;
+    //filter(f: () => boolean): SingleParser<T>
 }
 
-interface VoidParser extends Parser<void> {
-    then<Y>(p: Parser<Y>): SingleParser<Y>;
+interface VoidParser extends IParser<void> {
+    then<Y>(p: IParser<Y>): SingleParser<Y>;
 }
 
-interface Parser<T> {
+/**
+ * T is the type of the Response
+ */
+export interface IParser<T> {
     // Needed because opt() won(t know if we have void, array or single
-    then<Y>(p:Parser<Y>):Parser<any>;
-    flatMap<Y> (f: () => Y): Parser<Y>;
-    map<Y> (f: (T) => Y): Parser<Y>;
-    filter(f: (T) => boolean): Parser<T>
-    match(value: T): Parser<T>;
+    //then<Y>(p: IParser<Y>): IParser<any>;
+    map<Y> (f: (T) => Y): IParser<Y>;
     drop(): VoidParser;
-    thenReturns<Y>(value: Y): SingleParser<Y>;
-    or<Y>(p: Parser<Y>): Parser<T | Y>;
-    opt(): Parser<T>;
-    rep(): ListParser<List<T>>;
-    occurrence(n: number): ListParser<T>;
-    optrep(): Parser<List<T>>;
-    chain<Y>(): Parser<Y>;
-    debug(hint?: string, details?: boolean): Parser<T>;
-    parse<X>(stream: Stream<X>, index?: number): Response<T>;
+    /*flatMap<Y> (f: () => Y): IParser<Y>;
+     filter(f: (T) => boolean): IParser<T>
+     match(value: T): IParser<T>;
+     thenReturns<Y>(value: Y): SingleParser<Y>;
+     or<Y>(p: IParser<Y>): IParser<T | Y>;
+     opt(): IParser<T>;
+     rep(): ListParser<List<T>>;
+     occurrence(n: number): ListParser<T>;
+     optrep(): IParser<List<T>>;
+     chain<Y>(): IParser<Y>;
+     debug(hint?: string, details?: boolean): IParser<T>;
+     */
+    // parse<X>(stream: Stream<X>, index?: number): Response<T>;
+}
+
+export declare class Parser<T> implements IParser <T> {
+    then<Y>(p: IParser<Y>): IParser<any>;
+    flatMap<Y>(f: () => Y): IParser<Y> ;
+    map<Y>(f: (T: any) => Y): IParser<Y>;
+    filter(f: (T: any) => boolean): IParser<T> ;
+    match(value: T): IParser<T> ;
+    drop(): VoidParser ;
+    thenReturns<Y>(value: Y): SingleParser<Y> ;
+    or<Y>(p: IParser<Y>): IParser<T | Y> ;
+    opt(): IParser<T> ;
+    rep(): ListParser<List<T>> ;
+    occurrence(n: number): ListParser<T> ;
+    optrep(): IParser<List<T>> ;
+    chain<Y>(): IParser<Y> ;
+    debug(hint?: string, details?: boolean): IParser<T>;
+    parse<X>(stream: Stream<X>, index?: number): Response<T> ;
 }
 
 export interface Response<T> {
@@ -133,30 +159,34 @@ export interface Response<T> {
     filter(f: (value) => boolean): Response<T>;
 }
 
-export interface CharBundle {
-    char(string):SingleParser<string>;
-}
-export interface FlowBundle {
-    nop:()=>void
+interface CharBundle {
+    char(string): SingleParser<string>;
 }
 
-export interface NumberBundle {
-    number:SingleParser<number>;
+interface FlowBundle {
+    nop: () => void;
+    eos: SingleParser<Unit>;
 }
 
+interface NumberBundle {
+    number: SingleParser<number>;
+    numberLiteral: SingleParser<number>;
+}
 
-export declare const F:FlowBundle;
-export declare const C:CharBundle;
-export declare const Streams:StreamFactory;
-export declare const N:NumberBundle;
+export declare const F: FlowBundle;
+export declare const C: CharBundle;
+export declare const N: NumberBundle;
+export declare const Streams: IStreams;
+
 
 // TODO: Check if this is needed
-interface MasalaBundlesStatic{
-    Streams?: StreamFactory,
-    C?: CharBundle,
-    F?: FlowBundle,
-    N?:NumberBundle,
+interface MasalaBundlesStatic {
+    Streams: IStreams,
+    C: CharBundle,
+    F: FlowBundle,
+    N: NumberBundle
 }
 
-declare const MasalaBundles :MasalaBundlesStatic;
+
+declare const MasalaBundles: MasalaBundlesStatic;
 export default MasalaBundles;
