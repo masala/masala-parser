@@ -1,5 +1,4 @@
 import {Streams, F, C, N} from '@robusta/trash'
-
 import {assertEquals} from '../../assert';
 
 

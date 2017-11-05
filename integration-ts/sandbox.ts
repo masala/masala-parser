@@ -33,3 +33,41 @@ class A {
 class B extends A{
     stuff(){return 5;}
 }
+
+
+
+export class Option<T> {
+    value:T;
+    constructor(x:T){
+        this.value = x;
+    }
+    get(){return this.value}
+
+    orElse(v: T){
+        return this.value || v;
+    }
+}
+
+class Parser<T>{
+    value: T
+
+    constructor(x:T){
+        this.value = x;
+    }
+
+    map<Y>( func: (x:T)=>Y ){
+        return func(this.value);
+    }
+}
+
+const option = new Option(['a', 'b', 'c']);
+
+new Parser(option).map(x => x.orElse(['a'])[0].charAt(1));
+
+
+
+
+
+
+
+
