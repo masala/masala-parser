@@ -148,7 +148,6 @@ export default {
     error,
     eos,
     satisfy,
-    sequence,
     startWith,
     moveUntil,
     dropTo,

@@ -529,38 +529,6 @@ export default {
         test.done();
     },
 
-    "expect sequence ( '(',text(), ')' ) to return ['(', text, ')']": function(
-        test
-    ) {
-        test.expect(1);
-        // tests here
-        const string = '(Hello)';
-        const expected = ['(', 'Hello', ')'];
-
-        const parsing = F.sequence(
-            C.char('('),
-            C.charNotIn(')').rep().map(v => v.join('')),
-            C.char(')')
-        ).parse(stream.ofString(string), 0);
-
-        test.deepEqual(parsing.value, expected, 'should be equal');
-        test.done();
-    },
-    "expect sequence ( 2+2) to return [2,'+' ,2]": function(test) {
-        test.expect(1);
-        // tests here
-        const string = '2+2';
-        const expected = [2, '+', 2];
-
-        const parsing = F.sequence(
-            N.numberLiteral(),
-            C.char('+'),
-            N.numberLiteral()
-        ).parse(stream.ofString(string), 0);
-
-        test.deepEqual(parsing.value, expected, 'should be equal');
-        test.done();
-    },
 
     "expect chained then (2+2) to return [2,'+' ,2]": function(test) {
         // Main difference with sequence, is that a sequence element could be an array
