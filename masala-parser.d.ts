@@ -89,6 +89,7 @@ export interface ArrayParser<T> extends IParser<T> {
     parse<X>(stream: Stream<X>, index?: number): ArrayResponse<T>;
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
     then(p: VoidParser): ArrayParser<T>;
+    then<Y>(p: ListParser<Y>): ArrayParser<T | Y>;
     map<Y> (f: (T) => Y): ArrayParser<Y>;
     filter(f: (T) => boolean): ArrayParser<T>
     opt():ArrayParser<Option<T>>;
@@ -172,11 +173,28 @@ export interface IParser<T> {
  }*/
 
 
+
 interface CharBundle {
+    UTF8_LETTER:symbol,
+    OCCIDENTAL_LETTER:symbol,
+    ASCII_LETTER:symbol,
+    utf8Letter():SingleParser<string>;
+    letter(): SingleParser<string>;
+    letterAs(s:symbol): SingleParser<string>;
+    letters(): SingleParser<string>;
+    lettersAs(s:symbol): SingleParser<string>;
+    emoji(): SingleParser<string>;
+    notChar(c:string): SingleParser<string>;
     char(string:string): SingleParser<string>;
+    charIn(strings:string[]): SingleParser<string>;
     string(string:string): SingleParser<string>;
     stringIn(strings:string[]): SingleParser<string>;
-    letter(): SingleParser<string>;
+    notString(string:string): SingleParser<string>;
+    charLiteral(): SingleParser<string>;
+    stringLiteral(): SingleParser<string>;
+    lowerCase(): SingleParser<string>;
+    upperCase(): SingleParser<string>;
+
 }
 
 export type parserBuilder<Y,P extends IParser<Y>> = (...rest:any[])=>P;

@@ -1,3 +1,5 @@
+Typescript: missing all combinations of Parsers.then
+
 Documentation for F.startWith
 
 

@@ -9,13 +9,13 @@ function combinator() {
     return F.startWith('hello: ')
         .then(F.moveUntil('brown'))
         .then(C.string('brown'))
-        .then(F.dropTo(F.eos()));
+        .then(F.dropTo('dog'))
 }
 
 let stream = Streams.ofString(string);
 let parsing = combinator().parse(stream);
 
-assertFalse(parsing.isAccepted());
-assertTrue(parsing.offset === 2);
+assertTrue(parsing.isAccepted());
 assertTrue(parsing.value.join('') === 'hello: The quick brown');
+assertTrue(string.length === parsing.offset);
 

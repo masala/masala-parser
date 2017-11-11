@@ -15,7 +15,6 @@ function A(char){
  * within an array
  */
 function B(aVal) {
-    console.log('>>>>',aVal);
     return C.char('B').map(bVal=> aVal.join('')+'-'+bVal).or(F.lazy(A, ['a']));
 }
 
@@ -28,9 +27,3 @@ const stream = Streams.ofString(str);
 const parsing = parser.parse(stream);
 
 assertTrue(parsing.offset === str.length);
-
-//F.startsWith()
-//F.dropTo()
-//F.moveUntil()
-// rename F.nop() to F.nop
-// parsing.isCompleted()
