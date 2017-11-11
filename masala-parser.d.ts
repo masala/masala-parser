@@ -15,6 +15,7 @@ export interface Option<Type> {
 
 }
 
+// Warning: Very limited work!
 export interface Try<V, E> {
     isSuccess(): boolean;
     isFailure(): boolean;
@@ -29,7 +30,8 @@ export interface Try<V, E> {
     filter(f: (value: V) => boolean): Try<V, E>
 
 }
-// Not needed
+
+
 export interface List<T> {
     size: number;
     isEmpty: boolean;
@@ -224,8 +226,10 @@ interface FlowBundle {
 }
 
 interface NumberBundle {
-    number: SingleParser<number>;
-    numberLiteral: SingleParser<number>;
+    number(): SingleParser<number>;
+    numberLiteral(): SingleParser<number>;
+    digit(): SingleParser<string>;
+    digits(): SingleParser<string>;
 }
 
 export declare const F: FlowBundle;
