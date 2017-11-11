@@ -12,6 +12,15 @@ Changelog
 
 # Functions
 
+Every parser in CharBundle, FlowBundle and NumberBundle need to be called as a function
+    
+        //Previously
+        const p = C.letter.then(N.integer).then(F.eos);
+        
+        // Now:
+        const p = C.letter().then(N.integer()).then(F.eos());
+        
+It's less funky, but it avoids construction of Parsers at import statement, before writing the first line code.        
 
 
 
