@@ -6,7 +6,7 @@ import {assertEquals, assertArrayEquals, assertTrue} from '../../assert';
 const helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
                     .then(C.char("'")).drop()
-                    .then(C.letter.rep()) // keeping repeated ascii letters
+                    .then(C.letter().rep()) // keeping repeated ascii letters
                     .then(C.char("'").drop());    // keeping previous letters
 
 const parsing = helloParser.parse(Streams.ofString("Hello 'World'"));

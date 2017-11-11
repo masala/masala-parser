@@ -1,8 +1,6 @@
 /**
  * Written by Nicolas Zozol
- * Inspired by https://github.com/jon-hanson/parsecj
  */
-
 export interface Unit {}
 
 // Not needed
@@ -35,7 +33,8 @@ export interface Try<V, E> {
 export interface List<T> {
     size: number;
     isEmpty: boolean;
-    array: Array<T>
+    array(): Array<T>
+    join(string:string): string;
 }
 
 
@@ -75,6 +74,7 @@ export interface VoidResponse<T>extends Response<T> {
 
 export interface Response<T> {
     isAccepted(): boolean
+    isConsumed(): boolean
     fold(accept, reject?): Response<T>;
     map<Y>(f): Response<Y>;
     flatMap<Y>(f): Response<Y>;
@@ -88,26 +88,39 @@ export interface ArrayParser<T> extends IParser<T> {
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
     then(p: VoidParser): ArrayParser<T>;
     map<Y> (f: (T) => Y): ArrayParser<Y>;
-    flatMap<Z> (f: () => Z): ArrayParser<T>;
     filter(f: (T) => boolean): ArrayParser<T>
+    opt():ArrayParser<Option<T>>;
+    or<Y, P extends IParser<Y>>(p: P): ArrayParser<T>|P;
 }
 
 /* List with same values ; need bo call array() */
-export interface ListParser<T> {
-    parse<X>(stream: Stream<X>, index?: number): Response<List<T>>;
+export interface ListParser<T> extends IParser<T>{
+    parse<X>(stream: Stream<X>, index?: number): ListResponse<T>;
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
+    then(p: VoidParser): ListParser<T>;
+    map<Y> (f: (T) => Y): ListParser<Y>;
+    opt():ListParser<Option<T>>;
+    //
+    or<Y, P extends IParser<Y>>(p: P): ListParser<T>|P;
 }
 
-interface SingleParser<T> extends IParser<T> {
+export interface SingleParser<T> extends IParser<T> {
     parse<X>(stream: Stream<X>, index?: number): SingleResponse<T>;
     then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
+    then<Y>(p: ListParser<Y>): ListParser<T | Y>;
     then(p: VoidParser): SingleParser<T>;
     map<Y> (f: (T) => Y): SingleParser<Y>;
+
+    opt():SingleParser<Option<T>>;
     //filter(f: () => boolean): SingleParser<T>
+    or<Y, P extends IParser<Y>>(p: P): SingleParser<T>|P;
 }
 
 interface VoidParser extends IParser<void> {
-    then<Y>(p: IParser<Y>): SingleParser<Y>;
+    then<Y>(p: SingleParser<Y>): SingleParser< Y>;
+    then<Y>(p: ListParser<Y>): ListParser<Y>;
+    opt():VoidParser;
+    or<Y, P extends IParser<Y>>(p: P): VoidParser|P;
 }
 
 /**
@@ -117,14 +130,18 @@ export interface IParser<T> {
     // Needed because opt() won(t know if we have void, array or single
     //then<Y>(p: IParser<Y>): IParser<any>;
     map<Y> (f: (T) => Y): IParser<Y>;
+    flatMap<Y, P extends IParser<Y>>( builder:parserBuilder<Y,P> ):P;
     drop(): VoidParser;
+    rep(): ListParser<T>;
+    thenReturns<Y>(obj:Y):SingleParser<Y>;
+    debug(s:string, b?:boolean);
+    //then<Y>(p: IParser<Y>): IParser<T|Y>;
+
     /*flatMap<Y> (f: () => Y): IParser<Y>;
      filter(f: (T) => boolean): IParser<T>
      match(value: T): IParser<T>;
      thenReturns<Y>(value: Y): SingleParser<Y>;
-     or<Y>(p: IParser<Y>): IParser<T | Y>;
      opt(): IParser<T>;
-     rep(): ListParser<List<T>>;
      occurrence(n: number): ListParser<T>;
      optrep(): IParser<List<T>>;
      chain<Y>(): IParser<Y>;
@@ -132,40 +149,56 @@ export interface IParser<T> {
      */
     // parse<X>(stream: Stream<X>, index?: number): Response<T>;
 }
+/*
+ export declare class Parser<T> implements IParser <T> {
 
-export declare class Parser<T> implements IParser <T> {
-    then<Y>(p: IParser<Y>): IParser<any>;
-    flatMap<Y>(f: () => Y): IParser<Y> ;
-    map<Y>(f: (T: any) => Y): IParser<Y>;
-    filter(f: (T: any) => boolean): IParser<T> ;
-    match(value: T): IParser<T> ;
-    drop(): VoidParser ;
-    thenReturns<Y>(value: Y): SingleParser<Y> ;
-    or<Y>(p: IParser<Y>): IParser<T | Y> ;
-    opt(): IParser<T> ;
-    rep(): ListParser<List<T>> ;
-    occurrence(n: number): ListParser<T> ;
-    optrep(): IParser<List<T>> ;
-    chain<Y>(): IParser<Y> ;
-    debug(hint?: string, details?: boolean): IParser<T>;
-    parse<X>(stream: Stream<X>, index?: number): Response<T> ;
-}
+ then<Y>(p: IParser<Y>): IParser<any>;
+ flatMap<Y>(f: () => Y): IParser<Y> ;
+ map<Y>(f: (T: any) => Y): IParser<Y>;
+ filter(f: (T: any) => boolean): IParser<T> ;
+ match(value: T): IParser<T> ;
+ drop(): VoidParser ;
+ thenReturns<Y>(value: Y): SingleParser<Y> ;
+ or<Y>(p: IParser<Y>): IParser<T | Y> ;
+ opt(): IParser<T> ;
+ rep(): ListParser<List<T>> ;
+ occurrence(n: number): ListParser<T> ;
+ optrep(): IParser<List<T>> ;
+ chain<Y>(): IParser<Y> ;
+ debug(hint?: string, details?: boolean): IParser<T>;
+ parse<X>(stream: Stream<X>, index?: number): Response<T> ;
+ }*/
 
 export interface Response<T> {
+    isCompleted(): boolean
     isAccepted(): boolean
     fold(accept, reject?): Response<T>;
     map(f): Response<T>;
     flatMap(f): Response<T>;
     filter(f: (value) => boolean): Response<T>;
+    offset: number;
 }
 
 interface CharBundle {
-    char(string): SingleParser<string>;
+    char(string:string): SingleParser<string>;
+    string(string:string): SingleParser<string>;
+    stringIn(strings:string[]): SingleParser<string>;
+    letter: SingleParser<string>;
 }
 
+export type parserBuilder<Y,P extends IParser<Y>> = (...rest:any[])=>P;
+
+type extension<Y,T extends IParser<Y>> = T;
+
 interface FlowBundle {
-    nop: () => void;
-    eos: SingleParser<Unit>;
+    parse<Y,P extends IParser<Y>>(P):P;
+    nop(): VoidParser;
+    try<Y,P extends IParser<Y>>(parser:P):P;
+    any():SingleParser<any>;
+    subStream(length:number):ListParser<any>
+    lazy<Y,P extends IParser<Y>>   (builder: parserBuilder<Y,P>, args:any[]): P;
+    not<Y,P extends IParser<Y>>(P):SingleParser<any>;
+    eos(): SingleParser<Unit>;
 }
 
 interface NumberBundle {
