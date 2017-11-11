@@ -69,6 +69,6 @@ export default {
                 .generator(keywords)
                 .tokenBetweenSpaces(token.builder);
 
-        return tokenizer.chain(expr().thenLeft(F.eos)).parse(source, 0);
+        return tokenizer.chain(expr().thenLeft(F.eos())).parse(source, 0);
     },
 };

@@ -7,11 +7,11 @@ const {assertArrayEquals,assertEquals, assertTrue} = require('../../assert');
 const helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
                     .then(C.char("'"))
-                    .thenRight(C.letter.rep()) // keeping repeated ascii letters
+                    .thenRight(C.letter().rep()) // keeping repeated ascii letters
                     .thenLeft(C.char("'"));    // keeping previous letters
 
 const parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
-// C.letter.rep() will giv a array of letters
+// C.letter().rep() will giv a array of letters
 
 assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");
 

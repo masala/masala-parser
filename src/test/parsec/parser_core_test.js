@@ -77,9 +77,9 @@ export default {
         test.expect(1);
 
         const st = stream.ofString('5x8');
-        const combinator = N.integer
+        const combinator = N.integer()
             .thenLeft(C.char('x'))
-            .then(N.integer)
+            .then(N.integer())
             .map(values => values[0] * values[1]);
 
         test.equal(combinator.parse(st).value, 40, 'should be accepted.');

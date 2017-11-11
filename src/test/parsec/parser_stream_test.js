@@ -30,7 +30,7 @@ export default {
     'endOfStream for empty stream': function(test) {
         test.expect(1);
         // tests here
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral);
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.ok(
             stream.ofParser(p, stream.ofString('')).endOfStream(0),
             'should be endOfStream.'
@@ -41,7 +41,7 @@ export default {
     'endOfStream for non empty stream': function(test) {
         test.expect(1);
         // tests here
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral);
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.ok(
             stream.ofParser(p, stream.ofString('1')).endOfStream(1),
             'should be endOfStream.'
@@ -52,7 +52,7 @@ export default {
     'no endOfStream for non empty stream': function(test) {
         test.expect(1);
         // tests here
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral);
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.equal(
             stream.ofParser(p, stream.ofString('1')).endOfStream(0),
             false,
@@ -64,7 +64,7 @@ export default {
     'get from stream': function(test) {
         test.expect(1);
         // tests here
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral);
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.equal(
             stream.ofParser(p, stream.ofString('1')).get(0).isSuccess(),
             true,
@@ -76,7 +76,7 @@ export default {
     'do not get from empty stream': function(test) {
         test.expect(1);
         // tests here
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral);
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.equal(
             stream.ofParser(p, stream.ofString('1')).get(1).isSuccess(),
             false,
@@ -88,7 +88,7 @@ export default {
     'get from stream numberLiteral 123': function(test) {
         test.expect(1);
         // tests here
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral);
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.equal(
             stream.ofParser(p, stream.ofString('123')).get(0).success(),
             123,

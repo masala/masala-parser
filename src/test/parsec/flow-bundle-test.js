@@ -32,7 +32,7 @@ export default {
     'expect thenReturns to be ok when empty': function(test) {
         const string = 'some';
         // tests here
-        const parser = F.any.rep().then(F.eos).thenReturns([]);
+        const parser = F.any().rep().then(F.eos()).thenReturns([]);
         testParser(parser, string);
         test.ok(accepted);
         test.deepEqual(value, [], 'flatten result not ok');
@@ -45,7 +45,7 @@ export default {
         // tests here
         const parser = F.startsWith(object)
             .then(C.string(' world'))
-            .then(F.eos.drop());
+            .then(F.eos().drop());
         testParser(parser, string);
         test.ok(accepted);
         test.equals(value.join(''), 'hello world');
@@ -171,7 +171,7 @@ export default {
     'test moveUntil': function(test) {
         const line = Streams.ofString('I write until James appears');
 
-        const combinator = F.moveUntil(C.string('James')).then(F.any.drop());
+        const combinator = F.moveUntil(C.string('James')).then(F.any().drop());
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
@@ -182,7 +182,7 @@ export default {
 
         const combinator = F.moveUntil(C.string('Indiana'))
             .then(C.string('I'))
-            .then(F.any.drop());
+            .then(F.any().drop());
         const accepted = combinator.parse(line).isAccepted();
 
         test.ok(!accepted);
@@ -191,7 +191,7 @@ export default {
     'test moveUntil  found with failing parser': function(test) {
         const line = Streams.ofString('I write until James Bond appears');
 
-        const combinator = F.moveUntil(C.string('James')).then(F.dropTo(F.eos));
+        const combinator = F.moveUntil(C.string('James')).then(F.dropTo(F.eos()));
         const accepted = combinator.parse(line).isAccepted();
 
         test.ok(!accepted);
@@ -202,7 +202,7 @@ export default {
 
         const combinator = F.dropTo('James')
             .then(C.string(' Bond appears'))
-            .then(F.eos);
+            .then(F.eos());
         const accepted = combinator.parse(line).isAccepted();
 
         test.ok(accepted);
@@ -213,7 +213,7 @@ export default {
 
         const combinator = F.dropTo('James')
             .then(C.string(' Bond appears'))
-            .then(F.eos);
+            .then(F.eos());
         const accepted = combinator.parse(line).isAccepted();
 
         test.ok(accepted);
@@ -224,7 +224,7 @@ export default {
 
         const combinator = F.dropTo(C.string('James'))
             .then(C.string(' Bond appears'))
-            .then(F.eos);
+            .then(F.eos());
         const accepted = combinator.parse(line).isAccepted();
 
         test.ok(accepted);
@@ -235,7 +235,7 @@ export default {
 
         const combinator = F.moveUntil(C.string('James'))
             .then(F.dropTo('appears'))
-            .then(F.eos.drop());
+            .then(F.eos().drop());
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
@@ -261,7 +261,7 @@ export default {
 
         const line = Streams.ofString('ababa');
 
-        const combinator = new SomeLazyParser('a').first().then(F.eos.drop());
+        const combinator = new SomeLazyParser('a').first().then(F.eos().drop());
         const value = combinator.parse(line).value;
 
         test.equals(value.join(''), 'ababa');

@@ -15,9 +15,9 @@ assertArrayEquals(['a', 'b', 'c'], parsing.value);
 
 // Using letter and rep() ;
 stream = Streams.ofString('Hello World');
-const letterParser = C.letter.rep()  // 'Hello'
+const letterParser = C.letter().rep()  // 'Hello'
     .then(C.char(' '))  // space is not a letter
-    .then(C.letter.rep()); // 'World'
+    .then(C.letter().rep()); // 'World'
 
 parsing = letterParser.parse(stream);
 // console.log(parsing.value);
