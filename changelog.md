@@ -22,7 +22,9 @@ Every parser in CharBundle, FlowBundle and NumberBundle need to be called as a f
         
 It's less funky, but it avoids construction of Parsers at import statement, before writing the first line code.        
 
+### FlowBundle
 
+* `F.startWith(value)`
 
 
 0.5 -> 0.6

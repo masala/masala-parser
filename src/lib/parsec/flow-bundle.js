@@ -110,7 +110,7 @@ function sequence() {
     return current;
 }
 
-function startsWith(value) {
+function startWith(value) {
     return nop().thenReturns(value);
 }
 
@@ -149,7 +149,7 @@ export default {
     eos,
     satisfy,
     sequence,
-    startsWith,
+    startWith,
     moveUntil,
     dropTo,
 };

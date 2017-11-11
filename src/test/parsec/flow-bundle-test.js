@@ -39,11 +39,11 @@ export default {
         test.done();
     },
 
-    'expect startsWith to start': function(test) {
+    'expect startWith to start': function(test) {
         const string = ' world';
         const object = 'hello';
         // tests here
-        const parser = F.startsWith(object)
+        const parser = F.startWith(object)
             .then(C.string(' world'))
             .then(F.eos().drop());
         testParser(parser, string);
