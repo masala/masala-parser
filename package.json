@@ -1,8 +1,8 @@
 {
-  "name": "@masala/parser",
+  "name": "@robusta/trash",
   "description": "Masala Parser",
   "license": "LGPL-2.1",
-  "version": "0.6.1",
+  "version": "0.0.3",
   "keywords": [
     "parser",
     "javascript",
@@ -58,7 +58,7 @@
     "check": "npm run lint && npm run test && npm run cover",
     "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",
     "dist": "rimraf dist/ && mkdirp dist && npm run test && browserify -t uglifyify build/lib/index.js --standalone masala-parser -o dist/masala-parser.min.js",
-    "prepublish": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
+
     "postpublish": "cd integration-npm && rimraf node_modules && sleep 5 && npm install && node integrate.js"
   },
   "devDependencies": {
