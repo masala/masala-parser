@@ -79,8 +79,10 @@ export interface Response<T> {
     map<Y>(f): Response<Y>;
     flatMap<Y>(f): Response<Y>;
     filter(f: (value) => boolean): Response<T>;
-    //value:any
+    //value:T
+    offset: number;
 }
+
 
 /* Array with different values*/
 export interface ArrayParser<T> extends IParser<T> {
@@ -169,26 +171,19 @@ export interface IParser<T> {
  parse<X>(stream: Stream<X>, index?: number): Response<T> ;
  }*/
 
-export interface Response<T> {
-    isCompleted(): boolean
-    isAccepted(): boolean
-    fold(accept, reject?): Response<T>;
-    map(f): Response<T>;
-    flatMap(f): Response<T>;
-    filter(f: (value) => boolean): Response<T>;
-    offset: number;
-}
 
 interface CharBundle {
     char(string:string): SingleParser<string>;
     string(string:string): SingleParser<string>;
     stringIn(strings:string[]): SingleParser<string>;
-    letter: SingleParser<string>;
+    letter(): SingleParser<string>;
 }
 
 export type parserBuilder<Y,P extends IParser<Y>> = (...rest:any[])=>P;
 
 type extension<Y,T extends IParser<Y>> = T;
+
+type predicate<V> = (value: V)=>boolean;
 
 interface FlowBundle {
     parse<Y,P extends IParser<Y>>(P):P;
@@ -196,9 +191,18 @@ interface FlowBundle {
     try<Y,P extends IParser<Y>>(parser:P):P;
     any():SingleParser<any>;
     subStream(length:number):ListParser<any>
-    lazy<Y,P extends IParser<Y>>   (builder: parserBuilder<Y,P>, args:any[]): P;
     not<Y,P extends IParser<Y>>(P):SingleParser<any>;
+    lazy<Y,P extends IParser<Y>>   (builder: parserBuilder<Y,P>, args:any[]): P;
+    returns<T>(value:T):SingleParser<T>;
+    error():VoidParser;
     eos(): SingleParser<Unit>;
+    satisfy<V>(predicate:predicate<V>):SingleParser<any>
+    startWith<V>(value:V):SingleParser<V>;
+    moveUntil(s:string):SingleParser<string>;
+    moveUntil<Y>(p:IParser<Y>):SingleParser<string>;
+    dropTo(s:string):VoidParser;
+    dropTo<Y>(p:IParser<Y>):VoidParser;
+
 }
 
 interface NumberBundle {
