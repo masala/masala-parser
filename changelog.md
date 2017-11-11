@@ -1,6 +1,21 @@
 Changelog
 ====
 
+0.6 -> 0.7
+----
+
+## Export
+
+* Export is a bit better handled; no more doublon
+* Exporting `Parser` instead of `parser`
+* `ExtractorBundle` and `TokenBundle` are pruned (#96) 
+
+# Functions
+
+
+
+
+
 0.5 -> 0.6
 ----
 
