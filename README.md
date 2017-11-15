@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40masala%2Fparser.svg)](https://badge.fury.io/js/%40masala%2Fparser)
 [![Build Status](https://travis-ci.org/d-plaindoux/masala-parser.svg)](https://travis-ci.org/d-plaindoux/masala-parser)
-[![Coverage Status](https://coveralls.io/repos/d-plaindoux/masala-parser/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/parser-combinator?branch=master)
+[![Coverage Status](https://coveralls.io/repos/d-plaindoux/masala-parser/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/masala-parser?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
 Masala Parser is inspired by the paper titled:
@@ -37,7 +37,6 @@ Check the [Change Log](./changelog.md) if you can from a previous version.
 
 # Quick Examples
 
-
 ## Floor notation
 
 ```js
@@ -46,7 +45,7 @@ const {Streams, N, C}= require('@masala/parser');
 
 const stream = Stream.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
-    .then(N.numberLiteral)    // we have ['|',4.6], we keep 4.6
+    .then(N.numberLiteral)      // we have ['|', 4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
     .map(x =>Math.floor(x));
 
@@ -54,9 +53,6 @@ const floorCombinator = C.char('|').drop()
 const parsing = floorCombinator.parse(stream);
 assertEquals( 4, parsing.value, 'Floor parsing');
 ```
-
-
-
 
 ## Explanations
 
