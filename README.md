@@ -108,28 +108,6 @@ var parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
 assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");
 ```
 
-## Improvement with Extractor Bundle
-
-We have used a complex combinator that shows us how to parse character by character. But you can build or use
- higher level parsers to do the same job. **Masala Parser** offers an Extractor Bundle that could replace
-  all of your regexp extractions.
-
-
-```js
-import {Streams, X} from '@masala/parser'
-
-const line = Streams.ofString("Hello 'World'");
-
-// Adding a `'` as a word separator;  
-const x = new X({moreSeparators: `'`});
-
-const helloParser = x.words(false) // false because we don't keep separators
-                     .map(x.last); // We had "Hello" and "World"
-
-const value = helloParser.parse(line).value;
-
-test.equals(value, 'World');
-```
 
 
 
@@ -224,6 +202,15 @@ Suppose we do not `try()` but use `or()` directly:
 
 `N.integer.or(C.letter())` doesn't require a `try()`.
 
+
+# Recursion
+
+Masala-Parser (like Parsec) is a top-down parser and doesn't like [Left Recursion](https://cs.stackexchange.com/a/9971).
+
+However, it is a resolved problem for this kind of parsers, with a lot of documentation. you can read more on []recursion
+with Masala](./documentation/recursion.md), and checkout exemples on our Github repository 
+( [simple recursion](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/recursion/aaab-lazy-recursion.js), 
+or [calculous expressions](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/operations/plus-minus.js) ).
 
 
 
