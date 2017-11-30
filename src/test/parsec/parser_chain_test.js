@@ -28,8 +28,8 @@ export default {
     'expect (chain) to be accepted': function(test) {
         test.expect(1);
         // tests here
-        var p1 = N.numberLiteral.thenLeft(C.char(' ').opt()),
-            p2 = F.any.then(F.any).thenLeft(F.eos).map(function(r) {
+        var p1 = N.numberLiteral().thenLeft(C.char(' ').opt()),
+            p2 = F.any().then(F.any()).thenLeft(F.eos()).map(function(r) {
                 return r[0] + r[1];
             });
 
@@ -44,8 +44,8 @@ export default {
     'expect (chain) to return 46': function(test) {
         test.expect(1);
         // tests here
-        var p1 = N.numberLiteral.thenLeft(C.char(' ').opt()),
-            p2 = F.any.then(F.any).thenLeft(F.eos).map(function(r) {
+        var p1 = N.numberLiteral().thenLeft(C.char(' ').opt()),
+            p2 = F.any().then(F.any()).thenLeft(F.eos()).map(function(r) {
                 return r[0] + r[1];
             });
 

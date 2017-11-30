@@ -53,7 +53,7 @@ let stream = Streams.ofString('abc');
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
-    .then(F.eos.drop()); // End Of Stream ; droping its value, just checking it's here
+    .then(F.eos().drop()); // End Of Stream ; droping its value, just checking it's here
 let parsing = charsParser.parse(stream);
 assertEquals(parsing.value, 'abc');
 ```        
@@ -66,7 +66,7 @@ assertEquals(parsing.value, 'abc');
 ```js
 const stream = Streams.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
-    .then(N.numberLiteral)    // we have ['|',4.6], we keep 4.6
+    .then(N.numberLiteral())    // we have ['|',4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
     .map(x =>Math.floor(x));
 
@@ -87,9 +87,9 @@ assertEquals( 4, parsing.value, 'Floor parsing');
 
 ```js
 const stream = Streams.ofString("5x8");
-const combinator = N.integer
+const combinator = N.integer()
                     .then(C.charIn('x*').drop())
-                    .then(N.integer)
+                    .then(N.integer())
                     // values are [5,8] : we map to its multiplication
                     .map(values => values[0] * values[1]);
 assertEquals(combinator.parse(stream).value, 40)
@@ -159,7 +159,7 @@ TODO : There is no explicit test for `any()`
 
 const stream = Streams.ofString('aaa');
 const parsing = C.char('a').rep().parse(stream);
-test.ok(parsings.isAccepted);
+test.ok(parsing.isAccepted());
 // We need to call list.array()
 test.deepEqual(parsing.value.array(),['a', 'a', 'a']);
 

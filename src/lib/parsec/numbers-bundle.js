@@ -49,8 +49,8 @@ function integer() {
 }
 
 export default {
-    numberLiteral: numberLiteral(),
-    digit: digit(),
-    digits: digits(),
-    integer: integer(),
+    numberLiteral,
+    digit,
+    digits,
+    integer,
 };

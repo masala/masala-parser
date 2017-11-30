@@ -39,7 +39,7 @@ function titleSharp() {
     return sharps()
         .thenLeft(white())
         .then(T.rawTextUntil(T.eol()))
-        .thenLeft(T.eol().or(F.eos))
+        .thenLeft(T.eol().or(F.eos()))
         .map(array => ({
             title: {
                 level: array[0],

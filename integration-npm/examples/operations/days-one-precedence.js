@@ -1,4 +1,4 @@
-const {Stream, F, N, C} = require('@masala/parser');
+const {Streams, F, N, C} = require('@masala/parser');
 const {assertTrue} = require('../../assert');
 /*
  Implementing stack solution :
@@ -65,14 +65,14 @@ function terminal() {
 
 
 function combinator() {
-    return expr().then(F.eos);
+    return expr().then(F.eos());
 }
 
 
 const string = '(TUESDAY OR THURSDAY OR TUESDAY)    OR (WEDNESDAY OR (FRIDAY))';
 
-let myStream = Stream.ofString(string);
-let parsing = combinator().parse(myStream);
+let stream = Streams.ofString(string);
+let parsing = combinator().parse(stream);
 
 assertTrue(parsing.isAccepted());
 

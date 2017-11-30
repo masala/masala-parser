@@ -1,4 +1,4 @@
-const {Stream, F, C} = require('@masala/parser');
+const {Streams, F, C} = require('@masala/parser');
 const {assertFalse} = require('../../assert');
 
 function day() {
@@ -32,8 +32,8 @@ function combinator() {
 
 const string = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY';
 
-let myStream = Stream.ofString(string);
-let parsing = combinator().parse(myStream);
+let stream = Streams.ofString(string);
+let parsing = combinator().parse(stream);
 
 assertFalse(parsing.isAccepted());
 

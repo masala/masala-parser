@@ -20,7 +20,7 @@ function trimEndingLineFeed(str) {
 }
 
 function stop() {
-    return F.eos.or(T.lineFeed()).or(C.charIn('*`'));
+    return F.eos().or(T.lineFeed()).or(C.charIn('*`'));
 }
 
 function pureText() {

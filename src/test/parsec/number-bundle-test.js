@@ -15,28 +15,28 @@ export default {
         done();
     },
 
-    'expect N.integer to be ok': function(test) {
+    'expect N.integer() to be ok': function(test) {
         const string = '007';
         // tests here
-        const parser = N.integer;
+        const parser = N.integer();
         testParser(parser, string);
-        test.equal(value, 7, 'N.integer');
+        test.equal(value, 7, 'N.integer()');
         test.done();
     },
 
-    'expect N.integer with sign to be ok': function(test) {
+    'expect N.integer() with sign to be ok': function(test) {
         const string = '-007';
         // tests here
-        const parser = N.integer;
+        const parser = N.integer();
         testParser(parser, string);
-        test.equal(value, -7, 'negative N.integer');
+        test.equal(value, -7, 'negative N.integer()');
         test.done();
     },
 
     'expect numberLiteral without sign to be ok': function(test) {
         const string = '007.12';
         // tests here
-        const parser = N.numberLiteral;
+        const parser = N.numberLiteral();
         testParser(parser, string);
         test.equal(value, 7.12, 'numberLiteral');
         test.done();
@@ -45,10 +45,10 @@ export default {
     'expect many digits to be joined and to be a string': function(test) {
         const string = '007';
         // tests here
-        const parser = N.digits;
+        const parser = N.digits();
         testParser(parser, string);
-        test.equal(typeof value, 'string', 'N.digits should be a string');
-        test.equal(value, '007', 'N.digits returns a bad value');
+        test.equal(typeof value, 'string', 'N.digits() should be a string');
+        test.equal(value, '007', 'N.digits() returns a bad value');
         test.done();
     },
 };
