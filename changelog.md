@@ -1,8 +1,10 @@
 Changelog
 ====
 
-0.6 -> 0.7
+0.6 -> 0.7: Typescript support
 ----
+
+This release has been focused on typescript support.
 
 ## Export
 
@@ -25,6 +27,13 @@ It's less funky, but it avoids construction of Parsers at import statement, befo
 ### FlowBundle
 
 * `F.startWith(value)`
+
+
+### Typescript and @types
+
+Automated types are enabled with a partial declaration file. Basically, all functions of Parser, CharBundle, 
+NumberBundle and FlowBundle are supported, but Genlex is not yet. 0.8 release will be focused on Genlex.
+
 
 
 0.5 -> 0.6
