@@ -29,7 +29,7 @@ parsing = letterParser.parse(stream);
 stream = Streams.ofString('Hello World');
 const helloParser = C.string('Hello')
     .then(C.char(' '))
-    .then(C.letters);
+    .then(C.letters());
 
 parsing = helloParser.parse(stream);
 assertArrayEquals(['Hello',' ','World'], parsing.value);
