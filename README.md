@@ -327,39 +327,6 @@ and incomplete markdown parser.
 * `blank(nothing|string|parser)`: accept standard blanks (space, tab), or defined characters, or a combined Parser
 * `eol`: accept **E**nd **O**f **L**ine `\n` or `\r\n`
 
-## The Extractor Bundle
-
-The Extractor will help you to find valuable data in complex text (emails sent by platforms, website crawling...)
-
-`Parser` is a `class`, but you never use `new Parser()`. Other bundles are simple JS objects. The `X` extractor is a
-class to make customization easy. So you can extend it to override methods, or use its constructor to change options.
-
-### X constructor
-
-`const x = new X(options)` with default options to:
-
-        {
-            spacesCharacters:' \n',
-            wordSeparators:C.charIn(' \n:-,;'),
-            letter : C.letter,
-            moreSeparators: null
-        }
-
-* `spacesCharacters`: series of chars. Use `x.spaces()` to accept given spaces
-* `wordSeparators`: Parser. Use `x.words()` to select words separated with `wordSeparators`
-* `letter`: Parser. Original `C.letter` are occidental letters. See [opened issue](https://github.com/d-plaindoux/masala-parser/issues/43).
-* `moreSeparator`: series of chars. You don't have to redefine `wordSeparators` when using `{moreSeparator:'$£€'}`
-
-### X functions
-
-* `x.spaces()`: accept spaces defined in `options.spacesCharacters`
-* `x.digits()`: accept many digits and returns a string
-* `x.word()`: accept a word that satisfies repetition of `options.letter`. Returns the word as a string
-* `x.words(keepSpaces=true)`: accept repetition of previous words. Set `keepSpaces=false` to removes spaces from result
-* `x.wordsIn(arrayOfStrings, keepSpaces = true)`: accept given words, separated by previously defined `wordSeparators`
-* `x.first`, `x.last`: mappers to pick first or last word  
-    - example: `x.words().map(x.first)` will pick the first word of the document
-
 
 
 ## JSON Bundle and Markdown Bundle
