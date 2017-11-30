@@ -65,7 +65,7 @@ function terminal() {
 
 
 function combinator() {
-    return expr().then(F.eos);
+    return expr().then(F.eos());
 }
 
 

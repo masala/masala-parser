@@ -108,7 +108,7 @@ function terminal() {
 }
 
 function combinator() {
-    return expr().then(F.eos.drop());
+    return expr().then(F.eos().drop());
 }
 
 const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';

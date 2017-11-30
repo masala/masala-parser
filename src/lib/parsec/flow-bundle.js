@@ -102,13 +102,6 @@ function subStream(length) {
     return any().occurrence(length);
 }
 
-function sequence() {
-    var current = nop();
-    for (let v in arguments) {
-        current = current.then(arguments[v]);
-    }
-    return current;
-}
 
 function startWith(value) {
     return nop().thenReturns(value);

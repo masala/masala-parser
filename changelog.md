@@ -26,7 +26,8 @@ It's less funky, but it avoids construction of Parsers at import statement, befo
 
 ### FlowBundle
 
-* `F.startWith(value)`
+* `F.startWith(value)`: Creates a Parser with a defined value
+* `F.sequence()` is pruned
 
 
 ### Typescript and @types
