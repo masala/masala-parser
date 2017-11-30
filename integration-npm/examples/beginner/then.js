@@ -5,7 +5,7 @@ const {assertArrayEquals} = require('../../assert');
 const parser = C.string("Hello")
     .then(C.char(' ').rep())
     .then(C.char("'"))
-    .thenRight(C.letter.rep())
+    .thenRight(C.letter().rep())
     .thenLeft(C.char("'"));
 
 var parsing = parser.parse(Streams.ofString("Hello 'World'"));

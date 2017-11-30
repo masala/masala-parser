@@ -9,17 +9,17 @@ function operator(symbol) {
 }
 
 function sum() {
-    return N.integer.thenLeft(operator('+')).then(N.integer)
+    return N.integer().thenLeft(operator('+')).then(N.integer())
         .map(values => values[0] + values[1]);
 }
 
 function multiplication() {
-    return N.integer.thenLeft(operator('*')).then(N.integer)
+    return N.integer().thenLeft(operator('*')).then(N.integer())
         .map(values => values[0] * values[1]);
 }
 
 function scalar() {
-    return N.integer;
+    return N.integer();
 }
 
 function combinator() {

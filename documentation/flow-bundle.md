@@ -65,7 +65,7 @@ class SomeLazyParser{
 
 }
 
-const combinator = new SomeLazyParser('A').first().then(F.eos.drop());
+const combinator = new SomeLazyParser('A').first().then(F.eos().drop());
 ```
 
 
@@ -82,7 +82,7 @@ const line = Streams.ofString('I write until James Bond appears');
 
 const combinator = F.moveUntil(C.string('James'))
     .then(F.dropTo('appears'))
-    .then(F.eos.drop());
+    .then(F.eos().drop());
 const value = combinator.parse(line).value;
 
 test.equals(value, 'I write until ');

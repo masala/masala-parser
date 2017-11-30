@@ -102,15 +102,8 @@ function subStream(length) {
     return any().occurrence(length);
 }
 
-function sequence() {
-    var current = nop();
-    for (let v in arguments) {
-        current = current.then(arguments[v]);
-    }
-    return current;
-}
 
-function startsWith(value) {
+function startWith(value) {
     return nop().thenReturns(value);
 }
 
@@ -140,16 +133,15 @@ export default {
     parse,
     nop,
     try: doTry,
-    any: any(),
+    any,
     subStream,
     not: not,
     lazy,
     returns,
-    error: error(),
-    eos: eos(),
+    error,
+    eos,
     satisfy,
-    sequence,
-    startsWith,
+    startWith,
     moveUntil,
     dropTo,
 };

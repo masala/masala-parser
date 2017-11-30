@@ -1,6 +1,6 @@
-Make a quick release for getting {Streams} from  @masala/parser
+Typescript: missing all combinations of Parsers.then
 
-Check for integration of isConsumed()
+Documentation for F.startWith
 
 
 -> release
@@ -13,6 +13,10 @@ typescript
 lotech
 -> release
 
+
+// keep that for personal library
+// @masala/support
+occurence: accept occurence(3), or occurence({min:3, max:7})
 
 
 

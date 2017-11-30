@@ -8,7 +8,7 @@ import textParser from './text-parser';
 import T from './token';
 
 function stop() {
-    return F.eos.or(C.charIn('\r\n*`'));
+    return F.eos().or(C.charIn('\r\n*`'));
 }
 
 function pureText() {

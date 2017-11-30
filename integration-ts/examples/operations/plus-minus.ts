@@ -1,4 +1,6 @@
-const {Streams, F, N, C, X} = require('@masala/parser');
+import {Streams, F, C, Option, N, SingleParser, parserBuilder, ListParser} from '@robusta/trash'
+import {assertTrue} from '../../assert';
+
 
 
 
@@ -25,8 +27,8 @@ const {Streams, F, N, C, X} = require('@masala/parser');
  */
 
 
-const MULT = Symbol('MULT');
-const PLUS = Symbol('PLUS');
+const MULT = 'MULT';
+const PLUS = 'PLUS';
 
 
 
@@ -108,7 +110,7 @@ function terminal() {
 }
 
 function combinator() {
-    return expr().then(F.eos().drop());
+    return expr().then(F.eos.drop());
 }
 
 const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
