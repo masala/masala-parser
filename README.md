@@ -361,7 +361,7 @@ Tokens are:
 
 ## License
 
-Copyright (C)2016-2017 D. Plaindoux.
+Copyright (C)2016-2018 D. Plaindoux.
 
 This program is  free software; you can redistribute  it and/or modify
 it  under the  terms  of  the GNU  Lesser  General  Public License  as
