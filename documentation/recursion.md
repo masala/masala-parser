@@ -73,13 +73,13 @@ Using only one level of operator, we simplify to:
 
         T -> F T'
         T' -> operator FT'  |  eps
-        F -> NUMBER | ID | ( T )
+        F -> NUMBER | ( T )
 
 Which can be translated in *pseudo masala*:
 
-        expr -> terminal subExpr
-        subExpr -> (operator terminal subExpr ).opt()
-        terminal -> DAY | ( F.lazy(expr) )
+        expr -> terminal then subExpr
+        subExpr -> (operator then terminal then subExpr ).opt()
+        terminal -> NUMBER or ( F.lazy(expr) )
  
  
 
