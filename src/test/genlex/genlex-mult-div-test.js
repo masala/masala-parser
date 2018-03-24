@@ -15,54 +15,39 @@ function tkKey(s) {
     return tkKeyword.match(s);
 }
 
-const priorToken = () => tkKey('*').or(tkKey('/'))
+const priorToken = () => tkKey('*').or(tkKey('/'));
 
-
-const multExpr = () => terminal().then(subMultExpr().opt())
-    .map(([left, optRight]) => left * optRight.orElse(1));
-
-
-const subMultExpr = function () {
-
-    return tkKey('*').drop().then(terminal())
-        .then(F.lazy(subMultExpr).opt())
-        .map(([left, optRight]) => left * optRight.orElse(1))
-};
 
 function terminal() {
-    return tkNumber.or(F.lazy(multExpr));
+    return tkNumber.or(F.lazy(priorExpr));
 }
 
 function priorExpr() {
-    return terminal().then(subPriorExpr().opt())
-        .map(([left, optRight]) => {
-            if (optRight.isPresent()){
-                let [operator, right] = optRight.get();
-                return operator === '*' ? left*right : left/right;
-            }else{
-                return left;
-            }
+    return terminal().flatMap(optSubPriorExp);
 
-        });
 
 }
 
-function subPriorExpr() {
+function optSubPriorExp(priorValue) {
+    // console.log('previousValue', priorValue);
+    return subPriorExpr(priorValue).opt()
+        .map(opt => opt.isPresent() ? opt.get() : priorValue);
+}
+
+
+function subPriorExpr(priorValue) {
 
     return priorToken().then(terminal())
-        .then(F.lazy(subPriorExpr).opt())
-        .map(([token, left, optRight]) => {
-            console.log(token, left, optRight);
-            return [token, left * optRight.orElse(1)];
-        })
-};
+        .map(([token, left]) => token === '*' ? priorValue * left : priorValue / left)
+        .flatMap(optSubPriorExp)
+}
 
 
 function multParser() {
-    var keywords = ['*', '/'],
-        tokenizer = genlex
-            .generator(keywords)
-            .tokenBetweenSpaces(token.builder);
+    let keywords = ['*', '/'];
+    let tokenizer = genlex
+        .generator(keywords)
+        .tokenBetweenSpaces(token.builder);
 
     return tokenizer.chain(priorExpr().thenLeft(F.eos().drop()));
 }
@@ -77,8 +62,16 @@ export default {
         test.equal(parsing.value, 12, 'simple multiplication');
 
         parsing = multParser().parse(stream.ofString('14 / 4'));
-        console.log('>>>', parsing.value);
+
         test.equal(parsing.value, 3.5, 'simple division');
+
+        parsing = multParser().parse(stream.ofString('14 / 4*3 '));
+
+        test.equal(parsing.value, 10.5, 'combine mult and div');
+
+        parsing = multParser().parse(stream.ofString('14 / 4*3 /2*  2 '));
+
+        test.equal(parsing.value, 10.5, 'combine more mult and div');
 
         test.done();
     }
