@@ -49,7 +49,7 @@ function priorToken() {
  */
 
 function expr() {
-    return subExpr().debug('subExpr').flatMap(optYieldExpr);
+    return subExpr().flatMap(optYieldExpr);
 }
 
 
@@ -87,7 +87,7 @@ function priorExpr(priorValue) {
 }
 
 function terminal() {
-    return tkNumber.debug('terminal>').or(F.lazy(expr));
+    return tkNumber.or(F.lazy(expr));
 }
 
 
@@ -107,26 +107,14 @@ export default {
 
     'expect operation combinations': function (test) {
 
-        let parsing = ringParser().parse(stream.ofString('-3'));
-        test.equal(parsing.value, 3);
-
-        /*
-        parsing = ringParser().parse(stream.ofString('3 * 4 + 2'));
-        test.equal(parsing.value, 14);
-
-        parsing = ringParser().parse(stream.ofString('2+ 3 * 4'));
-        test.equal(parsing.value, 14);
-
-
-
-        parsing = ringParser().parse(stream.ofString('3 - 14 / 2'));
-
+        let parsing = ringParser().parse(stream.ofString('3 - 14 / 2 +1 -1'));
         test.equal(parsing.value, -4, 'addition before division');
 
-        parsing = ringParser().parse(stream.ofString('-16 + 4'));
 
-        test.equal(parsing.value, -10, 'combine mult, div, addition');
-        */
+        parsing = ringParser().parse(stream.ofString('-3'));
+        test.equal(parsing.value, 3);
+
+
         test.done();
     }
 

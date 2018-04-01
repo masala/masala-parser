@@ -55,7 +55,6 @@ class Genlex {
 
     // GenLexFactory 'a -> Parser 'a char
     number(f) {
-        console.log('chosing number');
         return N.numberLiteral().map(f.number);
     }
 
