@@ -68,10 +68,6 @@ function yieldExpr(left) {
 }
 
 
-function terminal() {
-    return tkNumber.or(F.lazy(expr));
-}
-
 function subExpr() {
     return terminal().flatMap(optPriorExp);
 }
@@ -90,14 +86,18 @@ function priorExpr(priorValue) {
         .flatMap(optPriorExp)
 }
 
+function terminal() {
+    return tkNumber.debug('terminal>').or(F.lazy(expr));
+}
 
-function multParser() {
+
+function ringParser() {
     let keywords = ['*', '/', '-', '+'];
     let tokenizer = genlex
         .generator(keywords)
         .tokenBetweenSpaces(token.builder);
 
-    return tokenizer.chain(priorExpr().thenLeft(F.eos().drop()));
+    return tokenizer.chain(expr().thenLeft(F.eos().drop()));
 }
 
 export default {
@@ -107,22 +107,26 @@ export default {
 
     'expect operation combinations': function (test) {
 
-        let parsing = multParser().parse(stream.ofString('3'));
+        let parsing = ringParser().parse(stream.ofString('-3'));
         test.equal(parsing.value, 3);
 
-
         /*
-         let parsing = multParser().parse(stream.ofString('3 * 4 + 2'));
-         test.equal(parsing.value, 14);
+        parsing = ringParser().parse(stream.ofString('3 * 4 + 2'));
+        test.equal(parsing.value, 14);
 
-         parsing = multParser().parse(stream.ofString('3 - 14 / 2'));
+        parsing = ringParser().parse(stream.ofString('2+ 3 * 4'));
+        test.equal(parsing.value, 14);
 
-         test.equal(parsing.value, -4, 'addition before division');
 
-         parsing = multParser().parse(stream.ofString('16 / -4* 3 +2'));
 
-         test.equal(parsing.value, -10, 'combine mult, div, addition');
-         */
+        parsing = ringParser().parse(stream.ofString('3 - 14 / 2'));
+
+        test.equal(parsing.value, -4, 'addition before division');
+
+        parsing = ringParser().parse(stream.ofString('-16 + 4'));
+
+        test.equal(parsing.value, -10, 'combine mult, div, addition');
+        */
         test.done();
     }
 
