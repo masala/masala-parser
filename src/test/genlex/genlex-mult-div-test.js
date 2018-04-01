@@ -24,8 +24,6 @@ function terminal() {
 
 function priorExpr() {
     return terminal().flatMap(optSubPriorExp);
-
-
 }
 
 function optSubPriorExp(priorValue) {
