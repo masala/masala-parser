@@ -91,7 +91,7 @@ class TKChar extends Token {
 
 // (Token -> Option 'a) -> Parser 'a Token
 function literal(tokenise) {
-    //console.log('tokenize ', tokenise);
+
     return F.parse((input, index) =>
         input
             .get(index)

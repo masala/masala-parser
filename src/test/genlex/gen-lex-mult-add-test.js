@@ -112,7 +112,7 @@ export default {
 
 
         parsing = ringParser().parse(stream.ofString('-3'));
-        test.equal(parsing.value, 3);
+        test.equal(parsing.value, -3);
 
 
         test.done();
