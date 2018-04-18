@@ -112,14 +112,17 @@ function literal(tokenise) {
     {
         return input
             .get(index)
-            .map(value =>
-                tokenise(value)
+            .map(value =>{
+                // I know the name (tkNumber) and the value
+                console.log('in tokenize >>>', value, index);
+                return tokenise(value)
                     .map(token =>
                         response.accept(token, input, index + 1, true)
                     )
                     .orLazyElse(() =>
                         response.reject(input.location(index), false)
                     )
+                }
             )
             .lazyRecoverWith(() =>
                 response.reject(input.location(index), false)
