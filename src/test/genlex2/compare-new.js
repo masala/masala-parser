@@ -19,6 +19,13 @@ let numberAccept = token => { // What is this token ?
         Option.none();
 };
 */
+
+class DateToken{
+    constructor(name, value) {
+        this.name = name;
+        this.value = value;
+    }
+}
 class NewToken {
 
     constructor(name, value) {
@@ -115,8 +122,13 @@ class TKChar extends Token {
 // Token: identifier + parser + mapper
 
 
-function genlexNumber(f) {
+function genlexNumber() {
     return N.numberLiteral().map(value => new NewToken('number',value));
+}
+
+
+function genlexDate() {
+    return date().map(date => new NewToken('date', date))
 }
 
 // GenLexFactory 'a -> Parser 'a char
@@ -125,7 +137,9 @@ function genlexChar(f) {
 }
 
 function genlexTokens(f) {
-    return genlexNumber(f).or(genlexChar(f)).debug('token found');
+    return F.try(genlexDate()) // need a try...
+        .or(genlexNumber())
+        .or(genlexChar(f)).debug('token found');
 }
 
 function tokensBetweenSpaces(f) {
@@ -147,11 +161,16 @@ console.log('===== tokenizer generated ====', tokenizer);
 
 const parser = {
     number: literal(token => {
-        console.log('in literal acceptance');
+        console.log('in number literal acceptance');
         // instead of token.number() ; the function name is a parameter
         return token.accept('number')
     }),
     char: literal(token => token.char()),
+    date:literal(token=>{
+        console.log('in date literal acceptance');
+        // instead of token.number() ; the function name is a parameter
+        return token.accept('date')
+    })
 };
 
 const newParser={
@@ -160,10 +179,13 @@ const newParser={
 
 
 
-const grammar = parser.number.debug('parsed number').rep();
+const grammar = parser.date.debug('parsed date')
+    .then(parser.number.debug('parsed number').rep());
 
 
-const parsing = tokenizer.chain(grammar.then(F.eos().drop())).parse(stream.ofString('34 23'));
+
+const parsing = tokenizer.chain(grammar.then(F.eos().drop()))
+    .parse(stream.ofString('10/12/2013 34 23'));
 console.log('>>>>', parsing.value);
 
 
@@ -195,3 +217,12 @@ function spaces() {
     return C.charIn(' \r\n\f\t').optrep().map(() => unit);
 }
 
+function date() {
+    return N.digits()
+        .then(C.charIn('-/').thenReturns('-'))
+        .then(N.digits())
+        .then(C.charIn('-/').thenReturns('-'))
+        .then(N.digits())
+        .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
+        .map(dateArray => dateArray.join(''));
+}
