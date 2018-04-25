@@ -1,49 +1,79 @@
-let addToken=charToken('add', '+').precedence(1050);
-// or as POO ?
-let minusToken=new CharToken('minus', '-').precedence(1050);
-let dateToken = new Token('date',dateParser()).precedence(1200);
-
-let tokens = new TokenCollectionBuilder()
-    .addAll(basicTokens()) // id, number,...
-    .add(dateToken())
-    .addAll([addToken, minusToken])
-    .changePrecedence('number', 500)
-    .build();
-
-const tkNumber = tokens.get('number');
+import {F, C, N} from "../../lib/parsec";
+import {GenLex} from '../../lib/genlex2/genlex';
+import stream from "../../lib/stream";
 
 
-/** Defining grammar with Parsers **/
-function opToken() {
-    return tokens.get('+').or(tokens.get('-'));
+export default {
+    setUp: function (done) {
+        done();
+    },
+
+    'expect Genlex to be constructed with spaces ': function (test) {
+
+        const genlex = new GenLex();
+        test.ok(genlex.spaces !== undefined);
+        test.ok(genlex.definitions.length === 0);
+        test.done();
+
+    },
+
+    'expect tokenize() to add on definition': function (test) {
+        const genlex = new GenLex();
+        genlex.tokenize(N.numberLiteral(), 'number', 500);
+        test.ok(genlex.definitions.length === 1);
+        test.done();
+    },
+    'expect use() to sort definitions by revert precedence': function (test) {
+        const genlex = new GenLex();
+        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkDate = genlex.tokenize(date(), 'date', 800);
+        const tkChar = genlex.tokenize(C.charLiteral(), 'char', 1200);
+        let grammar = tkDate.then(tkNumber.rep().or(tkChar));
+
+        test.notEqual(genlex.definitions[0].name, 'date');
+        genlex.use(grammar);
+        test.equal(genlex.definitions[2].name, 'date');
+        test.equal(genlex.definitions[0].name, 'char');
+        test.done();
+    },
+
+    'expect use() to create an easy tokenizer': function (test) {
+
+        const genlex = new GenLex();
+        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkDate = genlex.tokenize(date(), 'date', 800);
+        let grammar = tkNumber.rep();
+
+        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString('34 23'));
+
+        test.ok(parsing.isAccepted());
+        test.done()
+
+
+    },
+    'expect use() to create an easy tokenizer with precedence': function (test) {
+
+        const genlex = new GenLex();
+        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkDate = genlex.tokenize(date(), 'date', 800);
+        let grammar = tkDate.then(tkNumber.rep());
+
+        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString('10/05/2014 34 23'));
+
+        test.ok(parsing.isAccepted());
+        test.done()
+    }
 }
 
-function operation(){
-    return tkNumber.then(opToken()).then(tkNumber)
-        .map( ([left, op, right]) => op ==='+' ? left+right : left - right );
+
+function date() {
+    return N.digits()
+        .then(C.charIn('-/').thenReturns('-'))
+        .then(N.digits())
+        .then(C.charIn('-/').thenReturns('-'))
+        .then(N.digits())
+        .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
+        .map(dateArray => dateArray.join(''));
 }
-
-
-/* Chaining, like Before */
-function numberParser() {
-    let keywords = ['*', '/', '-', '+'];
-    let tokenizer = genlex
-        .generator(keywords)
-        .tokenBetweenSpaces(token.builder);
-
-    return tokenizer.chain(operation());
-}
-
-/* Chaining now */
-function numberParser2() {
-
-    let tokenizer = new GenLexBuider()
-        .withTokens(tokens)
-        .separatedBy(basicSpaces())
-        .build();
-
-    return tokenizer.chain(operation());
-}
-
-
-

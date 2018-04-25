@@ -20,12 +20,8 @@ let numberAccept = token => { // What is this token ?
 };
 */
 
-class DateToken{
-    constructor(name, value) {
-        this.name = name;
-        this.value = value;
-    }
-}
+
+
 class NewToken {
 
     constructor(name, value) {
@@ -132,21 +128,21 @@ function genlexDate() {
 }
 
 // GenLexFactory 'a -> Parser 'a char
-function genlexChar(f) {
-    return C.charLiteral().map(f.char);
+function genlexChar() {
+    return C.charLiteral().map(c => new NewToken('char', c));
 }
 
-function genlexTokens(f) {
+function genlexTokens() {
     return F.try(genlexDate()) // need a try...
         .or(genlexNumber())
-        .or(genlexChar(f)).debug('token found');
+        .or(genlexChar()).debug('token found');
 }
 
-function tokensBetweenSpaces(f) {
-    return spaces().drop().then(genlexTokens(f)).then(spaces().drop());
+function tokensBetweenSpaces() {
+    return spaces().drop().then(genlexTokens()).then(spaces().drop());
 }
 
-
+/*
 const builder = { //mapper ?
     number: value => {
         console.log('creating the tkNumber', value);
@@ -154,9 +150,9 @@ const builder = { //mapper ?
         //return new TKNumber(value)
     },
     char: value => new TKChar(value)
-};
+};*/
 
-const tokenizer = tokensBetweenSpaces(builder);
+const tokenizer = tokensBetweenSpaces();
 console.log('===== tokenizer generated ====', tokenizer);
 
 const parser = {
@@ -175,7 +171,7 @@ const parser = {
 
 const newParser={
     number:literal(token => token.accept())
-}
+};
 
 
 
