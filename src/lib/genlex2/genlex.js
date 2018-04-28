@@ -1,6 +1,5 @@
 import response from "../parsec/response";
-import {F} from "../parsec";
-import C from "../parsec/chars-bundle";
+import {F, C, N} from "../parsec";
 import unit from "../data/unit";
 import option from "../data/option";
 
@@ -38,17 +37,29 @@ export class GenLex {
 
         this.spaces = defaultSpaces();
         this.definitions = [];
+        this.tokensMap = {}
     }
 
-    keyword(keyword, precedence = 1000) {
+    keyword(keyword, precedence = 500) {
         // create a new token
         return this.tokenize(C.string(keyword), keyword, precedence);
     }
 
     tokenize(parser, name, precedence = 1000) {
-        const definition = new TokenDefinition(parser,name,precedence)
+
+        if(typeof parser ==='string'){
+            if (name === undefined){
+                name = parser;
+            }
+            return this.tokenize(C.string(parser), name, precedence);
+        }
+
+        const definition = new TokenDefinition(parser, name, precedence)
         this.definitions.push(definition);
-        return literal( token=> token.accept(name));
+
+        const token = literal(token => token.accept(name));
+        this.tokensMap[name] = token;
+        return token;
     }
 
 
@@ -70,9 +81,9 @@ export class GenLex {
         return this.buildTokenizer().chain(grammar);
     }
 
-    getAllTokenParsers(){
+    getAllTokenParsers() {
         const sortedDefinitions = this.definitions
-            .sort( (d1,d2) => d2.precedence - d1.precedence);
+            .sort((d1, d2) => d2.precedence - d1.precedence);
 
         return sortedDefinitions.reduce(
             (combinator, definition) =>
@@ -81,16 +92,22 @@ export class GenLex {
         );
     }
 
-    remove(tokenName){
+    remove(tokenName) {
 
     }
 
+    // type: { [key: string]: Parser }
+    tokens() {
+        return this.tokensMap;
+    }
+
+    clone(){}
 }
 
-function getTokenParser(def){
-    return def.parser.map( value => new Token(def.name, value));
-}
 
+function getTokenParser(def) {
+    return def.parser.map(value => new Token(def.name, value));
+}
 
 
 function literal(tokenize) {
@@ -119,3 +136,13 @@ function literal(tokenize) {
 function defaultSpaces() {
     return C.charIn(' \r\n\f\t').optrep().map(() => unit);
 }
+
+
+export function getBasicGenLex() {
+    const basicGenlex = new GenLex();
+
+    basicGenlex.tokenize(N.numberLiteral(), 'number', 1000);
+    basicGenlex.tokenize(N.digits, 'digits', 1000);
+    return basicGenlex;
+}
+

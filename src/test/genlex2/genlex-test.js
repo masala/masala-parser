@@ -64,6 +64,28 @@ export default {
 
         test.ok(parsing.isAccepted());
         test.done()
+    },
+    'GenLex can tokenize keywords':function(test){
+        const genlex = new GenLex();
+        const plus = genlex.keyword('+');
+
+        let grammar = plus.rep().then(F.eos().drop());
+        const parser = genlex.use(grammar);
+        const text = '+++++';
+        const parsing = parser.parse(stream.ofString(text));
+        test.ok(parsing.isAccepted());
+        test.done()
+    },
+    'tokenize(string) is a shortcut for keywords':function(test){
+        const genlex = new GenLex();
+        const plus = genlex.tokenize('+');
+
+        let grammar = plus.rep().then(F.eos().drop());
+        const parser = genlex.use(grammar);
+        const text = '+++++';
+        const parsing = parser.parse(stream.ofString(text));
+        test.ok(parsing.isAccepted());
+        test.done()
     }
 }
 

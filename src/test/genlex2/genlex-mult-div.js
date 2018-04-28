@@ -1,0 +1,71 @@
+
+import {GenLex, getBasicGenLex} from '../../lib/genlex2/genlex';
+import {F, C, N} from '../../lib/parsec/index';
+import stream from '../../lib/stream/index';
+
+
+//
+// Facilities
+//
+
+const genlex = getBasicGenLex();
+const {number} = genlex.tokens();
+const mult = genlex.keyword('*');
+const div = genlex.keyword('/');
+
+const priorToken = () => mult.or(div);
+
+
+function terminal() {
+    return number.or(F.lazy(priorExpr));
+}
+
+function priorExpr() {
+    return terminal().flatMap(optSubPriorExp);
+}
+
+function optSubPriorExp(priorValue) {
+    // console.log('previousValue', priorValue);
+    return subPriorExpr(priorValue).opt()
+        .map(opt => opt.isPresent() ? opt.get() : priorValue);
+}
+
+
+function subPriorExpr(priorValue) {
+
+    return priorToken().then(terminal())
+        .map(([token, left]) => token === '*' ? priorValue * left : priorValue / left)
+        .flatMap(optSubPriorExp)
+}
+
+
+function multParser() {
+
+    return genlex.use(priorExpr().then(F.eos().drop()));
+}
+
+export default {
+    setUp: function (done) {
+        done();
+    },
+
+    'expect multExpr to make mults': function (test) {
+        let parsing = multParser().parse(stream.ofString('3 * 4'));
+        test.equal(parsing.value, 12, 'simple multiplication');
+
+        parsing = multParser().parse(stream.ofString('14 / 4'));
+
+        test.equal(parsing.value, 3.5, 'simple division');
+
+        parsing = multParser().parse(stream.ofString('14 / 4*3 '));
+
+        test.equal(parsing.value, 10.5, 'combine mult and div');
+
+        parsing = multParser().parse(stream.ofString('14 / 4*3 /2*  2 '));
+
+        test.equal(parsing.value, 10.5, 'combine more mult and div');
+
+        test.done();
+    }
+
+}
