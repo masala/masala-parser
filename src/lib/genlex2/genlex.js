@@ -93,12 +93,19 @@ export class GenLex {
     }
 
     remove(tokenName) {
-
+        // find definitions
+        this.definitions=this.definitions
+            .filter(d => d.name !== tokenName);
+        delete this.tokensMap[tokenName];
     }
 
     // type: { [key: string]: Parser }
     tokens() {
         return this.tokensMap;
+    }
+
+    get(tokenName){
+        return this.tokensMap[tokenName];
     }
 
     clone(){}
@@ -141,8 +148,10 @@ function defaultSpaces() {
 export function getBasicGenLex() {
     const basicGenlex = new GenLex();
 
-    basicGenlex.tokenize(N.numberLiteral(), 'number', 1000);
-    basicGenlex.tokenize(N.digits, 'digits', 1000);
+    // We try first to have digits
+    basicGenlex.tokenize(N.digits(), 'digits', 1000);
+    basicGenlex.tokenize(N.numberLiteral(), 'number', 1100);
+
     return basicGenlex;
 }
 

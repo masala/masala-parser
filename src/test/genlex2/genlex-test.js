@@ -1,5 +1,5 @@
 import {F, C, N} from "../../lib/parsec";
-import {GenLex} from '../../lib/genlex2/genlex';
+import {GenLex, getBasicGenLex} from '../../lib/genlex2/genlex';
 import stream from "../../lib/stream";
 
 
@@ -86,7 +86,62 @@ export default {
         const parsing = parser.parse(stream.ofString(text));
         test.ok(parsing.isAccepted());
         test.done()
+    },
+
+    'tokenize mixes with keywords':function(test){
+        const genlex = new GenLex();
+        const number = genlex.tokenize(N.numberLiteral(),'number');
+        const plus = genlex.tokenize('+');
+
+        let grammar = plus.rep().then(F.eos().drop());
+        const parser = genlex.use(grammar);
+        const text = '+++++';
+        const parsing = parser.parse(stream.ofString(text));
+        test.ok(parsing.isAccepted());
+        test.done()
+    },
+    'getBasicGenlex gives a simple genlex':function(test){
+        const genlex = getBasicGenLex();
+        const number = genlex.get('number');
+        const digits = genlex.get('digits');
+
+        let grammar = digits.rep();
+
+        const text = '15 14';
+        const parser = genlex.use(grammar);
+
+        const parsing = parser.parse(stream.ofString(text));
+
+
+        test.deepEqual(parsing.value.array(), ['15', '14']);
+        test.done()
+
+    },'getBasicGenlex can be enhanced':function(test){
+        const genlex = getBasicGenLex();
+        genlex.remove('digits')
+        const number = genlex.get('number');
+        //const digits = genlex.get('digits');
+        const tkDate = genlex.tokenize(date(), 'date', 800);
+
+
+
+
+        let grammar = tkDate.rep()
+            .then(number)
+            .then(F.eos());
+
+        const text = '15-12-2018      12-02-2020   12 ';
+        const parser = genlex.use(grammar);
+
+        const parsing = parser.parse(stream.ofString(text));
+
+
+
+        test.ok(parsing.isAccepted());
+        test.done()
+
     }
+
 }
 
 
