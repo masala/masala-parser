@@ -1,5 +1,5 @@
 
-import {GenLex, getBasicGenLex} from '../../lib/genlex2/genlex';
+import {GenLex, getMathGenLex} from '../../lib/genlex2/genlex';
 import {F, C, N} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 
@@ -8,7 +8,7 @@ import stream from '../../lib/stream/index';
 // Facilities
 //
 
-const genlex = getBasicGenLex();
+const genlex = getMathGenLex();
 const {number} = genlex.tokens();
 const mult = genlex.keyword('*');
 const div = genlex.keyword('/');

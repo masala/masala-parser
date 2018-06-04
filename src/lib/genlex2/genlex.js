@@ -21,7 +21,7 @@ class Token {
     }
 
     // Or for Parser ?
-    withPrecedence(precedence) {
+    setPrecedence(precedence) {
         this.precedence = precedence;
         return this;
     }

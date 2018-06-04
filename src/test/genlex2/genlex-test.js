@@ -184,7 +184,29 @@ export default {
         test.deepEqual(parsing.value.array(), [15, 12, 35]);
         test.done()
 
+    },
+
+    'genlex provide all tokens': function (test) {
+        const genlex = getMathGenLex();
+
+        const {number, plus, mult, open, close} = genlex.tokens();
+        //const number = genlex.get('number');
+
+        let grammar = number.or(plus).or(open).or(close).or(mult).rep().then(F.eos().drop());
+
+
+        const text = '12+ 35';
+
+        const parser = genlex.use(grammar);
+
+        const parsing = parser.parse(stream.ofString(text));
+
+        test.ok(parsing.isAccepted());
+        test.deepEqual(parsing.value.array(), [12, '+', 35]);
+        test.done()
+
     }
+
 
 }
 
