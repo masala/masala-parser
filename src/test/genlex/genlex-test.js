@@ -41,7 +41,6 @@ export default {
 
         const genlex = new GenLex();
         const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
-        const tkDate = genlex.tokenize(date(), 'date', 800);
         let grammar = tkNumber.rep();
 
         const parser = genlex.use(grammar);
@@ -176,7 +175,30 @@ export default {
 
     },
 
-    'genlex provide all tokens': function (test) {
+    'genlex can change separators with a full Parser': function (test) {
+        const genlex = getMathGenLex();
+        const number = genlex.get('number');
+
+        let grammar = number.rep().then(F.eos().drop());
+
+        const separatorParser = C.char('-')
+            .then(C.char('/').opt())
+            .optrep();
+
+        genlex.setSeparatorsParser(separatorParser);
+        const text = '15-12-/35--10';
+
+        const parser = genlex.use(grammar);
+
+        const parsing = parser.parse(stream.ofString(text));
+
+        test.ok(parsing.isAccepted());
+        test.deepEqual(parsing.value.array(), [15, 12, 35,10]);
+        test.done()
+
+    },
+
+    'genlex provide all named tokens': function (test) {
         const genlex = getMathGenLex();
 
         const {number, plus, mult, open, close} = genlex.tokens();

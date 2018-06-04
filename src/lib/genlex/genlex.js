@@ -18,13 +18,6 @@ export class Token {
     constructor(name, value) {
         this.name = name;
         this.value = value;
-        this.precedence = 1000;
-    }
-
-    // Or for Parser ?
-    setPrecedence(precedence) {
-        this.precedence = precedence;
-        return this;
     }
 
     accept(name) {
