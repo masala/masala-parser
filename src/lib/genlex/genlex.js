@@ -1,101 +1,194 @@
-/*
- * Parsec
- * https://github.com/d-plaindoux/parsec
- *
- * Copyright (c) 2016 Didier Plaindoux
- * Licensed under the LGPL2 license.
- */
+import response from "../parsec/response";
+import {F, C, N} from "../parsec";
+import unit from "../data/unit";
+import option from "../data/option";
 
-import F from '../parsec/flow-bundle';
-import C from '../../lib/parsec/chars-bundle';
-import N from '../../lib/parsec/numbers-bundle';
-import unit from '../data/unit.js';
 
-// (string -> 'a,string -> 'a,number -> 'a,string -> 'a,char -> 'a) -> GenlexFactory 'a
-function GenlexFactory(keyword, ident, number, string, char) {
-    this.keyword = keyword;
-    this.ident = ident;
-    this.number = number;
-    this.string = string;
-    this.char = char;
+export class TokenDefinition {
+    // value will be determined at runtime while parsing
+    constructor(parser, name, precedence) {
+        this.parser = parser;
+        this.name = name;
+        this.precedence = precedence;
+    }
 }
 
-class Genlex {
-    // [String] -> Genlex
-    constructor(keywords = []) {
-        var idletter = C.letter().or(C.char('_')).or(N.digit());
-        this.identParser = C.letter()
-            .then(idletter.optrep())
-            .map(r => [r[0]].concat(r[1].array()).join(''));
-        this.keywordParser = keywords.reduce(
-            (p, s) => C.string(s).or(p),
+// a Token object is instantiated at runtime, with a value given by the parsed text
+export class Token {
+    constructor(name, value) {
+        this.name = name;
+        this.value = value;
+        this.precedence = 1000;
+    }
+
+    // Or for Parser ?
+    setPrecedence(precedence) {
+        this.precedence = precedence;
+        return this;
+    }
+
+    accept(name) {
+        return this.name === name ? option.some(this.value) : option.none();
+    }
+}
+
+export class GenLex {
+
+    constructor() {
+
+        this.spaces = defaultSpaces();
+        // definitions keep trace of all: parser, precedence and name
+        this.definitions = [];
+        // get a token, but not directly its precedence
+        this.tokensMap = {}
+    }
+
+
+    tokenize(parser, name, precedence = 1000) {
+
+        if (typeof parser === 'string') {
+            if (name === undefined) {
+                name = parser;
+            }
+            return this.tokenize(C.string(parser), name, precedence);
+        }
+
+
+        const definition = new TokenDefinition(parser, name, precedence)
+        this.definitions.push(definition);
+
+        // probably a bad name
+        const token = literal(token => token.accept(name));
+        this.tokensMap[name] = token;
+        return token;
+    }
+
+    keywords(keys, precedence = 1000) {
+        return keys.reduce((acc, key) =>
+                acc.concat(this.tokenize(key, key, precedence))
+            , []);
+    }
+
+
+    setSeparators(spacesCharacters) {
+        if (typeof spacesCharacters !== 'string') {
+            throw "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
+            " use  setSeparatorsParser to declare a parser";
+        }
+        this.spaces = C.charIn(spacesCharacters).optrep().map(() => unit);
+    }
+
+    /**
+     * Set separator Parser. It's up to the parser to accept or not
+     * optional repetition
+     * @param spacesParser
+     */
+    setSeparatorsParser(spacesParser) {
+        this.spaces = spacesParser.map(() => unit);
+    }
+
+    updatePrecedence(tokenName, precedence) {
+    }
+
+    buildTokenizer() {
+        const tokens = this.getAllTokenParsers();
+        return this.spaces.drop()
+            .then(tokens)
+            .then(this.spaces.drop());
+    }
+
+    use(grammar) {
+        return this.buildTokenizer().chain(grammar);
+    }
+
+    getAllTokenParsers() {
+        const sortedDefinitions = this.definitions
+            .sort((d1, d2) => d2.precedence - d1.precedence);
+
+        return sortedDefinitions.reduce(
+            (combinator, definition) =>
+                F.try(getTokenParser(definition)).or(combinator),
             F.error()
         );
     }
 
-    // unit -> Parser char char
-    space() {
-        return C.charIn(' \r\n\f\t');
+    remove(tokenName) {
+        // find definitions
+        this.definitions = this.definitions
+            .filter(d => d.name !== tokenName);
+        delete this.tokensMap[tokenName];
     }
 
-    // unit -> Parser unit char
-    spaces() {
-        return this.space().optrep().map(() => unit);
+    // type: { [key: string]: Parser }
+    tokens() {
+        return this.tokensMap;
     }
 
-    // GenLexFactory 'a -> Parser 'a char
-    keyword(f) {
-        return this.keywordParser.map(f.keyword);
+    get(tokenName) {
+        return this.tokensMap[tokenName];
     }
 
-    // GenLexFactory 'a -> Parser 'a char
-    ident(f) {
-        return this.identParser.map(f.ident);
-    }
 
-    // GenLexFactory 'a -> Parser 'a char
-    number(f) {
-        return N.numberLiteral().map(f.number);
-    }
-
-    // GenLexFactory 'a -> Parser 'a char
-    string(f) {
-        return C.stringLiteral().map(f.string);
-    }
-
-    // GenLexFactory 'a -> Parser 'a char
-    char(f) {
-        return C.charLiteral().map(f.char);
-    }
-
-    // GenLexFactory 'a -> Parser 'a char
-    token(f) {
-        return this.keyword(f)
-            .or(this.ident(f))
-            .or(this.number(f))
-            .or(this.string(f))
-            .or(this.char(f));
-    }
-
-    // GenLexFactory 'a -> Parser 'a char
-    tokenBetweenSpaces(f) {
-        return this.spaces().thenRight(this.token(f)).thenLeft(this.spaces());
-    }
-
-    // GenLexFactory 'a -> Parser ['a] char
-    tokens(f) {
-        return this.tokenBetweenSpaces(f)
-            .optrep()
-            .thenLeft(F.eos())
-            .map(r => r.array());
-    }
 }
 
-export default {
-    factory: function(keyword, ident, number, string, char) {
-        return new GenlexFactory(keyword, ident, number, string, char);
-    },
-    generator: function(keywords) {
-        return new Genlex(keywords);
-    },
-};
+
+function getTokenParser(def) {
+    return def.parser.map(value => new Token(def.name, value));
+}
+
+
+function literal(tokenize) {
+
+    return F.parse((input, index) => {
+            return input
+                .get(index)
+                .map(value => {
+                        return tokenize(value)
+                            .map(token =>
+                                response.accept(token, input, index + 1, true)
+                            )
+                            .orLazyElse(() =>
+                                response.reject(input.location(index), false)
+                            )
+                    }
+                )
+                .lazyRecoverWith(() =>
+                    response.reject(input.location(index), false)
+                )
+        }
+    );
+}
+
+
+function defaultSpaces() {
+    return C.charIn(' \r\n\f\t').optrep().map(() => unit);
+}
+
+
+export function getMathGenLex() {
+    const basicGenlex = new GenLex();
+
+    // We try first to have digits
+    basicGenlex.tokenize(N.numberLiteral(), 'number', 1100);
+    basicGenlex.tokenize(C.char('+'), 'plus', 1000);
+    basicGenlex.tokenize(C.char('-'), 'minus', 1000);
+    basicGenlex.tokenize(C.char('*'), 'mult', 800);
+    basicGenlex.tokenize(C.char('/'), 'div', 800);
+    basicGenlex.tokenize(C.char('('), 'open', 1000);
+    basicGenlex.tokenize(C.char(')'), 'close', 1000);
+
+    return basicGenlex;
+}
+
+export function getLanguageGenLex(){
+    const basicGenlex = new GenLex();
+    basicGenlex.tokenize(N.numberLiteral(), 'number', 1100);
+    basicGenlex.tokenize(C.stringLiteral(), 'string', 1100);
+
+}
+
+
+
+
+
+

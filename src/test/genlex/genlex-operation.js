@@ -1,5 +1,5 @@
-import {GenLex, getMathGenLex} from '../../lib/genlex2/genlex';
-import {F, C, N} from '../../lib/parsec/index';
+import { getMathGenLex} from '../../lib/genlex/genlex';
+import {F} from '../../lib/parsec/index';
 import stream from '../../lib/stream/index';
 
 /*

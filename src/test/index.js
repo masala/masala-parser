@@ -11,9 +11,9 @@ import tryTest from './data/try_test';
 import listTest from './data/list_test';
 import streamsTest from './stream/stream_test';
 import bufferedStreamsTest from './stream/buffered_stream_test';
-import genlexTest from './genlex/genlex_test';
-import tokenTest from './genlex/token_test';
-import tokenizerTest from './genlex/tokenizer_test';
+import propositionTest from './genlex/proposition';
+import genlexTest from './genlex/genlex-test';
+import genlexOperationTest from './genlex/genlex-operation';
 import parserChainTest from './parsec/parser_chain_test';
 import parserCoreTest from './parsec/parser_core_test';
 import parserCoreDefaultTest from './parsec/parser_core_default_test';
@@ -33,8 +33,8 @@ export {
     streamsTest,
     bufferedStreamsTest,
     genlexTest,
-    tokenTest,
-    tokenizerTest,
+    propositionTest,
+    genlexOperationTest,
     parserChainTest,
     parserCoreTest,
     parserCoreDefaultTest,

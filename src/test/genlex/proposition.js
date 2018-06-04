@@ -1,6 +1,5 @@
-import {GenLex} from "../../lib/genlex2/genlex";
-import {F,C, N} from "../../lib/parsec";
-import unit from "../../lib/data/unit";
+import {GenLex} from "../../lib/genlex/genlex";
+import {C, N} from "../../lib/parsec";
 import stream from "../../lib/stream";
 
 

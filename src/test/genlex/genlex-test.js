@@ -1,5 +1,5 @@
 import {F, C, N} from "../../lib/parsec";
-import {GenLex, getMathGenLex} from '../../lib/genlex2/genlex';
+import {GenLex, getMathGenLex} from '../../lib/genlex/genlex';
 import stream from "../../lib/stream";
 
 
@@ -65,18 +65,8 @@ export default {
         test.ok(parsing.isAccepted());
         test.done()
     },
-    'GenLex can tokenize keywords': function (test) {
-        const genlex = new GenLex();
-        const plus = genlex.keyword('+');
 
-        let grammar = plus.rep().then(F.eos().drop());
-        const parser = genlex.use(grammar);
-        const text = '+++++';
-        const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isAccepted());
-        test.done()
-    },
-    'tokenize(string) is a shortcut for keywords': function (test) {
+    'GenLex can tokenize keywords': function (test) {
         const genlex = new GenLex();
         const plus = genlex.tokenize('+');
 
@@ -84,7 +74,7 @@ export default {
         const parser = genlex.use(grammar);
         const text = '+++++';
         const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isAccepted());
+        test.ok(parsing.isAccepted(), 'GenLex can tokenize keywords');
         test.done()
     },
 
@@ -93,14 +83,14 @@ export default {
         const number = genlex.tokenize(N.numberLiteral(), 'number');
         const plus = genlex.tokenize('+');
 
-        let grammar = plus.rep().then(F.eos().drop());
+        let grammar = plus.or(number).rep().then(F.eos().drop());
         const parser = genlex.use(grammar);
-        const text = '+++++';
+        const text = '++77++4+';
         const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isAccepted());
+        test.ok(parsing.isConsumed(), 'tokenize mixes with keywords');
         test.done()
     },
-    'getMathGenLex gives a simple genlex': function (test) {
+    'getMathGenLex() gives a simple genlex': function (test) {
         const genlex = getMathGenLex();
         const number = genlex.get('number');
         const plus = genlex.get('plus');
@@ -113,7 +103,7 @@ export default {
         const parsing = parser.parse(stream.ofString(text));
 
 
-        test.deepEqual(parsing.value.array(), ['15', '14']);
+        test.deepEqual(parsing.value.array(), ['15', '14'], 'getMathGenLex() gives a simple genlex');
         test.done()
 
     }, 'getMathGenLex can be enhanced with a parser': function (test) {
