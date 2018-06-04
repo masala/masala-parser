@@ -51,17 +51,23 @@ export default {
 
 
     },
-    'expect use() to create an easy tokenizer with precedence': function (test) {
+    'a Genlex can update its precedence': function (test) {
 
         const genlex = new GenLex();
         const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
         const tkDate = genlex.tokenize(date(), 'date', 800);
-        let grammar = tkDate.then(tkNumber.rep());
+
+        let content = '10/05/2014 34 23';
+        genlex.setSeparators(' /');
+        genlex.updatePrecedence('number', 10);
+
+        let grammar = tkDate.or(tkNumber).rep();
+
 
         const parser = genlex.use(grammar);
-        const parsing = parser.parse(stream.ofString('10/05/2014 34 23'));
+        const parsing = parser.parse(stream.ofString(content));
 
-        test.ok(parsing.isAccepted());
+        test.deepEqual(parsing.value.array(), [10,5,2014,34,23]);
         test.done()
     },
 

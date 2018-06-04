@@ -81,6 +81,8 @@ export class GenLex {
     }
 
     updatePrecedence(tokenName, precedence) {
+        this.definitions.find(def=>def.name === tokenName)
+            .precedence = precedence;
     }
 
     buildTokenizer() {
@@ -171,13 +173,6 @@ export function getMathGenLex() {
     basicGenlex.tokenize(C.char(')'), 'close', 1000);
 
     return basicGenlex;
-}
-
-export function getLanguageGenLex(){
-    const basicGenlex = new GenLex();
-    basicGenlex.tokenize(N.numberLiteral(), 'number', 1100);
-    basicGenlex.tokenize(C.stringLiteral(), 'string', 1100);
-
 }
 
 
