@@ -17,7 +17,7 @@ function parse(p) {
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
 function lazy(p, parameters, self = {}) {
-    //console.log('putting a lazy on ', p);
+
     if (parameters && !Array.isArray(parameters)) {
         throw 'Lazy(parser, [params]) function expect parser parameters to be packed into an array';
     }

@@ -20,34 +20,31 @@ import stream from '../../lib/stream/index';
  optPlusExpr -> ( + then subExpr then F.lazy(optPlusExpr) ).opt()
  subExpr -> terminal then optMultExpr
  optMultExpr -> ( * then terminal then F.lazy(optMultExpr) ).opt()
- F -> F.try( '(' then expr then ')' ).or(N.litteral)
+ F -> F.try( '(' then expr then ')' ).or(N.litteral)    // care of priority !
 
  */
 
-//
-// Facilities
-//
 
+// tokens
 const genlex = getMathGenLex();
-
 const {number, plus, minus, mult, div, open, close} = genlex.tokens();
 
 const priorToken = () => mult.or(div);
 
 
 function terminal() {
-    return number
-        .or(F.lazy(negative))
+    return parenthesis()
+        .or(number)
+        .or(negative())
         .or(F.lazy(priorExpr))
-        .or(F.lazy(parenthesis));
 }
 
 function negative() {
-    return minus.drop().then(terminal()).map(x => -x);
+    return minus.drop().then(F.lazy(terminal)).map(x => -x);
 }
 
-function parenthesis(){
-    return open.drop().then(priorExpr()).then(close.drop())
+function parenthesis() {
+    return open.drop().then(F.lazy(priorExpr)).then(close.drop())
 }
 
 function priorExpr() {
@@ -71,7 +68,9 @@ function subPriorExpr(priorValue) {
 
 function multParser() {
 
-    return genlex.use(priorExpr().then(F.eos().drop()));
+    const parser = priorExpr();
+
+    return genlex.use(parser.then(F.eos().drop()));
 }
 
 export default {
@@ -79,29 +78,44 @@ export default {
         done();
     },
 
-    'expect multExpr to make mults': function (test) {
-        let parsing = multParser().parse(stream.ofString('3 * 4'));
-        test.equal(parsing.value, 12, 'simple multiplication');
+      'expect multExpr to make mults': function (test) {
+          let parsing = multParser().parse(stream.ofString('3 * 4'));
+          test.equal(parsing.value, 12, 'simple multiplication');
 
-        parsing = multParser().parse(stream.ofString('14 / 4'));
+          parsing = multParser().parse(stream.ofString('14 / 4'));
 
-        test.equal(parsing.value, 3.5, 'simple division');
+          test.equal(parsing.value, 3.5, 'simple division');
 
-        parsing = multParser().parse(stream.ofString('14 / 4*3 '));
+          parsing = multParser().parse(stream.ofString('14 / 4*3 '));
 
-        test.equal(parsing.value, 10.5, 'combine mult and div');
+          test.equal(parsing.value, 10.5, 'combine mult and div');
 
-        parsing = multParser().parse(stream.ofString('14 / 4*3 /2*  2 '));
+          parsing = multParser().parse(stream.ofString('14 / 4*3 /2*  2 '));
 
-        test.equal(parsing.value, 10.5, 'combine more mult and div');
+          test.equal(parsing.value, 10.5, 'combine more mult and div');
 
-        test.done();
-    },
-    'expect multExpr to make negative priorities': function (test) {
-        let parsing = multParser().parse(stream.ofString('3 * -4'));
-        test.equal(parsing.value, -12, 'simple multiplication');
+          test.done();
+      },
+      'expect multExpr to make negative priorities': function (test) {
+          let parsing = multParser().parse(stream.ofString('3 * -4'));
+          test.equal(parsing.value, -12, 'negative multiplication');
+
+          test.done();
+      },
+    'expect Expr to be inside parenthesis': function (test) {
+
+        let parsing = multParser().parse(stream.ofString('3 * (4)'));
+        test.equal(parsing.value, 12, 'simple parenthesis expr');
+
+        parsing = multParser().parse(stream.ofString('3 * (2*4)'));
+        test.equal(parsing.value, 24, 'more complexe parenthesis expr');
+
+        parsing = multParser().parse(stream.ofString('3 * (2*(4))'));
+        test.equal(parsing.value, 24, 'deep parenthesis expr');
 
         test.done();
     }
+
+
 
 }
