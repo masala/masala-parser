@@ -1,5 +1,5 @@
 import {F, C, N} from "../../lib/parsec";
-import {GenLex, getBasicGenLex} from '../../lib/genlex2/genlex';
+import {GenLex, getMathGenLex} from '../../lib/genlex2/genlex';
 import stream from "../../lib/stream";
 
 
@@ -65,7 +65,7 @@ export default {
         test.ok(parsing.isAccepted());
         test.done()
     },
-    'GenLex can tokenize keywords':function(test){
+    'GenLex can tokenize keywords': function (test) {
         const genlex = new GenLex();
         const plus = genlex.keyword('+');
 
@@ -76,7 +76,7 @@ export default {
         test.ok(parsing.isAccepted());
         test.done()
     },
-    'tokenize(string) is a shortcut for keywords':function(test){
+    'tokenize(string) is a shortcut for keywords': function (test) {
         const genlex = new GenLex();
         const plus = genlex.tokenize('+');
 
@@ -88,9 +88,9 @@ export default {
         test.done()
     },
 
-    'tokenize mixes with keywords':function(test){
+    'tokenize mixes with keywords': function (test) {
         const genlex = new GenLex();
-        const number = genlex.tokenize(N.numberLiteral(),'number');
+        const number = genlex.tokenize(N.numberLiteral(), 'number');
         const plus = genlex.tokenize('+');
 
         let grammar = plus.rep().then(F.eos().drop());
@@ -100,12 +100,12 @@ export default {
         test.ok(parsing.isAccepted());
         test.done()
     },
-    'getBasicGenlex gives a simple genlex':function(test){
-        const genlex = getBasicGenLex();
+    'getMathGenLex gives a simple genlex': function (test) {
+        const genlex = getMathGenLex();
         const number = genlex.get('number');
-        const digits = genlex.get('digits');
+        const plus = genlex.get('plus');
 
-        let grammar = digits.rep();
+        let grammar = number.rep();
 
         const text = '15 14';
         const parser = genlex.use(grammar);
@@ -116,14 +116,12 @@ export default {
         test.deepEqual(parsing.value.array(), ['15', '14']);
         test.done()
 
-    },'getBasicGenlex can be enhanced':function(test){
-        const genlex = getBasicGenLex();
-        genlex.remove('digits')
+    }, 'getMathGenLex can be enhanced with a parser': function (test) {
+        const genlex = getMathGenLex();
+        genlex.remove('-');
         const number = genlex.get('number');
         //const digits = genlex.get('digits');
         const tkDate = genlex.tokenize(date(), 'date', 800);
-
-
 
 
         let grammar = tkDate.rep()
@@ -135,9 +133,55 @@ export default {
 
         const parsing = parser.parse(stream.ofString(text));
 
+        test.ok(parsing.isAccepted());
+        test.done()
 
+    }, 'getMathGenLex can be enhanced with a string': function (test) {
+        const genlex = getMathGenLex();
+        const number = genlex.get('number');
+        const dol = genlex.tokenize('$', 'dol');
+
+        let grammar = number.then(dol).rep().then(F.eos());
+
+        const text = '15 $ ';
+        const parser = genlex.use(grammar);
+
+        const parsing = parser.parse(stream.ofString(text));
+
+        test.ok(parsing.isConsumed());
+        test.done()
+
+    }, 'getMathGenLex can be enhanced with a string and no name': function (test) {
+        const genlex = getMathGenLex();
+        const number = genlex.get('number');
+        genlex.tokenize('$');
+        const dol = genlex.get('$');
+
+        let grammar = number.then(dol).rep().then(F.eos());
+
+        const text = '15 $ ';
+        const parsing = genlex.use(grammar).parse(stream.ofString(text));
+
+        test.ok(parsing.isConsumed());
+        test.done()
+
+    },
+
+    'genlex can change separators with a given string': function (test) {
+        const genlex = getMathGenLex();
+        const number = genlex.get('number');
+
+        let grammar = number.rep().then(F.eos().drop());
+
+        genlex.setSeparators('-');
+        const text = '15-12-35--';
+
+        const parser = genlex.use(grammar);
+
+        const parsing = parser.parse(stream.ofString(text));
 
         test.ok(parsing.isAccepted());
+        test.deepEqual(parsing.value.array(), [15, 12, 35]);
         test.done()
 
     }
@@ -154,3 +198,11 @@ function date() {
         .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
         .map(dateArray => dateArray.join(''));
 }
+
+
+
+
+
+
+
+

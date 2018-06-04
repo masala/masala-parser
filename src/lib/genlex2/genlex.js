@@ -63,8 +63,21 @@ export class GenLex {
     }
 
 
-    withSpaces(spacesParser) {
-        this.spaces = spacesParser;
+    setSeparators(spacesCharacters) {
+        if (typeof spacesCharacters !== 'string'){
+            throw "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
+            " use  setSeparatorsParser to declare a parser";
+        }
+        this.spaces= C.charIn(spacesCharacters).optrep().map(() => unit);
+    }
+
+    /**
+     * Set separator Parser. It's up to the parser to accept or not
+     * optional repetition
+     * @param spacesParser
+     */
+    setSeparatorsParser(spacesParser) {
+        this.spaces = spacesParser.map(()=>unit);
     }
 
     updatePrecedence(tokenName, precedence) {
@@ -108,7 +121,7 @@ export class GenLex {
         return this.tokensMap[tokenName];
     }
 
-    clone(){}
+
 }
 
 
@@ -145,13 +158,25 @@ function defaultSpaces() {
 }
 
 
-export function getBasicGenLex() {
+export function getMathGenLex() {
     const basicGenlex = new GenLex();
 
     // We try first to have digits
-    basicGenlex.tokenize(N.digits(), 'digits', 1000);
     basicGenlex.tokenize(N.numberLiteral(), 'number', 1100);
+    basicGenlex.tokenize(C.char('+'), 'plus', 1000);
+    basicGenlex.tokenize(C.char('-'), 'minus', 1000);
+    basicGenlex.tokenize(C.char('*'), 'mult', 800);
+    basicGenlex.tokenize(C.char('/'), 'div', 800);
+    basicGenlex.tokenize(C.char('('), 'open', 1000);
+    basicGenlex.tokenize(C.char(')'), 'close', 1000);
 
     return basicGenlex;
 }
+
+
+
+
+
+
+
 
