@@ -8,19 +8,17 @@ import stream from '../../lib/stream/index';
  E' -> + TE'  |  eps
  T -> F T'
  T' -> * FT'  |  eps
- F -> NUMBER | ( E )   // missing | -F   (https://en.wikipedia.org/wiki/Operator-precedence_parser)
+ F -> NUMBER | ( E )   (https://en.wikipedia.org/wiki/Operator-precedence_parser)
 
- E== expr
- T == subExpr
- E'== optPlusExpr
- T' == optMultExpr
- F == terminal
 
- expr -> subExpr optPlusExpr'
- optPlusExpr -> ( + then subExpr then F.lazy(optPlusExpr) ).opt()
- subExpr -> terminal then optMultExpr
- optMultExpr -> ( * then terminal then F.lazy(optMultExpr) ).opt()
- F -> F.try( '(' then expr then ')' ).or(N.litteral)    // care of priority !
+
+ * Expr -> SubExpr then OptYieldExpr
+ * OptYieldExpr -> YieldExpr.opt()
+ * YieldExpr ->  + then SubExpr then YieldExpr
+ * PriorExpr -> Terminal then OptPriorExpr
+ * OptPriorExpr -> PriorExpr.opt()
+ * PriorExpr ->  * then Terminal then OptPriorExpr
+ * Terminal -> (Expr)| Number | -Terminal | Expr  // care of priority !
 
  */
 
@@ -30,13 +28,13 @@ const genlex = getMathGenLex();
 const {number, plus, minus, mult, div, open, close} = genlex.tokens();
 
 const priorToken = () => mult.or(div);
-
+const yieldToken = () => plus.or(minus);
 
 function terminal() {
     return parenthesis()
         .or(number)
         .or(negative())
-        .or(F.lazy(priorExpr))
+        .or(F.lazy(expression))
 }
 
 function negative() {
@@ -44,8 +42,28 @@ function negative() {
 }
 
 function parenthesis() {
-    return open.drop().then(F.lazy(priorExpr)).then(close.drop())
+    return open.drop().then(F.lazy(expression)).then(close.drop())
 }
+
+function expression(){
+    return priorExpr().flatMap(optYieldExpr);
+}
+
+
+function optYieldExpr(left) {
+
+    return yieldExpr(left).opt()
+        .map(opt => opt.isPresent() ? opt.get() : left)
+}
+
+function yieldExpr(left) {
+    return yieldToken()
+        .then(priorExpr())
+        .map(([token, right]) =>
+            token === '+' ? left + right : left - right)
+        .flatMap(optYieldExpr);
+}
+
 
 function priorExpr() {
     return terminal().flatMap(optSubPriorExp);
@@ -68,7 +86,7 @@ function subPriorExpr(priorValue) {
 
 function multParser() {
 
-    const parser = priorExpr();
+    const parser = expression();
 
     return genlex.use(parser.then(F.eos().drop()));
 }
@@ -114,8 +132,26 @@ export default {
         test.equal(parsing.value, 24, 'deep parenthesis expr');
 
         test.done();
-    }
+    },
+    'expect + and * to respect priorities': function (test) {
 
+        let parsing = multParser().parse(stream.ofString('3 +2*4 '));
+        test.equal(parsing.value, 11, 'simple multiplication');
+
+        test.done();
+    },
+    'expect complex calcul to true and lightening fast': function (test) {
+
+        let x= 3 +2*4 -((2*45-78)*2*(6*(9-8)+3*(2-5)  ));
+        const calculus = '3 +2*4 -((2*45-78)*2*(6*(9-8)+3*(2-5)  ))';
+
+        let time = new Date().getTime();
+        let parsing = multParser().parse(stream.ofString(calculus));
+        test.equal(parsing.value, 83, 'complex multiplication');
+        console.log('Done in ',new Date().getTime()-time, ' ms');
+
+        test.done();
+    },
 
 
 }
