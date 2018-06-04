@@ -142,16 +142,23 @@ export default {
     },
     'expect complex calcul to true and lightening fast': function (test) {
 
-        let x= 3 +2*4 -((2*45-78)*2*(6*(9-8)+3*(2-5)  ));
         const calculus = '3 +2*4 -((2*45-78)*2*(6*(9-8)+3*(2-5)  ))';
 
         let time = new Date().getTime();
         let parsing = multParser().parse(stream.ofString(calculus));
+        time = new Date().getTime()-time;
+
         test.equal(parsing.value, 83, 'complex multiplication');
-        console.log('Done in ',new Date().getTime()-time, ' ms');
+        test.ok(time < 20, 'parsing is too slow');
 
         test.done();
     },
+    'expect - and / to respect priorities': function (test) {
 
+        let parsing = multParser().parse(stream.ofString('3 + -4/2*5 '));
+        test.equal(parsing.value, -7, 'bad priorities');
+
+        test.done();
+    },
 
 }
