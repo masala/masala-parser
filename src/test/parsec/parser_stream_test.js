@@ -96,4 +96,48 @@ export default {
         );
         test.done();
     },
+
+
+
+    'series of numbers': function(test) {
+
+        // tests here
+        const p = N.numberLiteral();
+        const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
+                                                       // index: ^0    ^6
+
+
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 123);
+
+        const second = parserStream.get(6).success(); //>> 114
+        test.equal(second, 14137);
+
+        // Offset after reading start (1) is related to index after 123 (3)
+        // Offset after reading at 6 (7) is related to index after '123   14137'(11)
+        test.deepEqual(parserStream.offsets, {1:3, 7:11});
+
+        test.done();
+    },
+
+    'failing series of numbers': function(test) {
+
+        // tests here
+        const p = N.numberLiteral();
+        const parserStream = stream.ofParser(p, stream.ofString('123   a'));
+        // index: ^0    ^6
+
+
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 123);
+        test.deepEqual(parserStream.offsets, {1:3});
+
+        const second = parserStream.get(6); // try 'a'
+        test.ok(second.isFailure());
+        test.deepEqual(parserStream.offsets, {1:3});
+
+        test.done();
+    },
+
+
 };

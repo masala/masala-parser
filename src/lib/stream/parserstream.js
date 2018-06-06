@@ -20,6 +20,7 @@ class ParserStream extends Stream {
     }
 
     getOffset(index) {
+        // FIX ME: not safe; probably this.offsets[index] || 0
         return this.offsets[index] || index;
     }
 
@@ -35,6 +36,7 @@ class ParserStream extends Stream {
 
     // ParserStream 'a => number -> 'a <+> error
     unsafeGet(index) {
+        // the wrapped parser parses the StringStream
         var result = this.source.parse(this.input, this.getOffset(index));
 
         if (result.isAccepted()) {
