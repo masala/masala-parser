@@ -420,6 +420,32 @@ export default {
         test.done();
     },
 
+    'expect (thenEos) to be accepted at the end': function(test) {
+        test.expect(1);
+        // tests here
+        test.equal(
+            C.char('a')
+                .thenEos()
+                .parse(stream.ofString('a'))
+                .isAccepted(),
+            true,
+            'should be accepted.'
+        );
+        test.done();
+    },'expect (thenEos) to be rejected if not the end': function(test) {
+        test.expect(1);
+        // tests here
+        test.equal(
+            C.char('a')
+                .thenEos()
+                .parse(stream.ofString('abc'))
+                .isAccepted(),
+            false,
+            'should be rejected'
+        );
+        test.done();
+    },
+
     'expect (thenReturns) to be accepted': function(test) {
         test.expect(1);
         // tests here

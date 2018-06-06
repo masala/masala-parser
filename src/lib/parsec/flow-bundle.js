@@ -7,7 +7,7 @@
  */
 
 import unit from '../data/unit.js';
-import Parser from './parser';
+import Parser, {eos} from './parser';
 import response from './response';
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
@@ -44,16 +44,6 @@ function error() {
     );
 }
 
-// unit -> Parser unit 'c
-function eos() {
-    return new Parser((input, index = 0) => {
-        if (input.endOfStream(index)) {
-            return response.accept(unit, input, index, false);
-        } else {
-            return response.reject(input.location(index), false);
-        }
-    });
-}
 
 // ('a -> boolean) -> Parser a 'c
 // index is forwarded at index +1
@@ -176,9 +166,6 @@ function searchStringStart(string) {
 
 /**
  * Will work only if input.source is a String
- * Needs to be tested with ReactJS
- * @param string
- * @returns {Parser}
  */
 function searchArrayStringStart(array) {
     return new Parser((input, index = 0) => {
