@@ -37,6 +37,13 @@ class Response {
     isConsumed() {
         return false; //overridden by Accept
     }
+
+    /**
+     * fold takes a function to map the value depending on result
+     * Abstract function fold(accept, reject)
+     *
+     * flatMap is a specialization of fold
+     */
 }
 
 /**
@@ -48,6 +55,7 @@ class Reject extends Response {
         this.offset = offset;
         this.consumed = consumed;
     }
+
 
     // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
     fold(_, reject) {
