@@ -25,7 +25,7 @@ export default {
     setUp: function(done) {
         done();
     },
-
+/*
     'number accepted': function(test) {
         test.expect(1);
         // tests here
@@ -45,19 +45,20 @@ export default {
         );
         test.done();
     },
-
+*/
     'string and unrecognized item rejected': function(test) {
         test.expect(1);
         // tests here
+        let content = '"123" -'; //'"123" -'
         test.equal(
-            jsonparser.parse(stream.ofString('"123" -')).isAccepted(),
+            jsonparser.parse(stream.ofString(content)).isAccepted(),
             false,
             'should be rejected.'
         );
         test.done();
     },
 
-  /*  'string and unrecognized item rejected with correct offset': function(
+    'string and unrecognized item rejected with correct offset': function(
         test
     ) { //FIXME #108
         test.expect(1);
@@ -67,7 +68,7 @@ export default {
         test.equal(result.offset, 7, 'should be 7.');
         test.done();
     },
-*/
+/*
     'null accepted': function(test) {
         test.expect(1);
         // tests here
@@ -170,5 +171,5 @@ export default {
             'should be accepted.'
         );
         test.done();
-    },
+    },*/
 };
