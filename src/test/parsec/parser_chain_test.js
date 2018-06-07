@@ -48,11 +48,41 @@ export default {
 
         const response = parser.parse(stream.ofString('x'));
 
-        console.log(response.offset)
-        test.ok( response.offset, 'Should be rejected');
+        test.ok( response.offset === 1, 'Should have moved');
 
         test.done();
 
+    },
+    'expect (chain) to be accepted and offset to have move more': function (test){
+
+        const lower = C.string('xyz');
+
+        // satisfy makes the stuff move only if accepted
+        const upper = F.satisfy( val => val ==='xyz' );
+
+        const parser  = lower.chain(upper.then(upper));
+
+        const response = parser.parse(stream.ofString('xyzxyz'));
+
+        test.equal( response.offset ,2, 'Should have moved more');
+
+        test.done();
+
+    },
+    'expect (chain) to be find back the source offset': function (test){
+
+        const lower = C.string('xyz');
+
+        // satisfy makes the stuff move only if accepted
+        const upper = F.satisfy( val => val ==='xyz' );
+
+        const parser  = lower.chain(upper.then(upper));
+
+        const response = parser.parse(stream.ofString('xyzxyz'));
+
+        test.equal( response.input.source.offsets[response.offset] ,6, 'Should have find stringStream offset');
+
+        test.done();
     }
 /*
     'expect (chain) to be accepted': function (test) {
