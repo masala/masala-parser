@@ -70,7 +70,6 @@ function priorExpr() {
 }
 
 function optSubPriorExp(priorValue) {
-    // console.log('previousValue', priorValue);
     return subPriorExpr(priorValue).opt()
         .map(opt => opt.isPresent() ? opt.get() : priorValue);
 }

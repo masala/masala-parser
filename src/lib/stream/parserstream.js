@@ -20,6 +20,11 @@ class ParserStream extends Stream {
     }
 
     getOffset(index) {
+        let that = this;
+        if (this.offsets[index] === undefined){
+            console.error('unknown offset', this.offsets, index);
+
+        }
         // FIX ME: not safe; probably this.offsets[index] || 0
         return this.offsets[index] || index;
     }

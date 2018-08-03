@@ -141,14 +141,15 @@ function literal(tokenize) {
                 .map(value => {
                         return tokenize(value)
                             .map(token =>{
-                                    console.log('accept:', token,index, input.location(index));
+                                    //console.log('accept:', token,index, input.location(index));
                                     return response.accept(token, input, index + 1, true)
                             }
 
                             )
                             .orLazyElse(() =>{
 
-                                    console.log('reject:',index, input.source.offsets[index],input,'>>>', value,  input.location(index));
+                                   // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
+                                    //  input.location(index));
                                 return    response.reject(input.location(index), false)
                             }
 
@@ -156,7 +157,7 @@ function literal(tokenize) {
                     }
                 )
                 .lazyRecoverWith(() =>{
-                        console.log('lazyRecover with offset:', input.location(index));
+                        //console.log('lazyRecover with offset:', input.location(index));
                         return response.reject(input.location(index), false)
                 }
 

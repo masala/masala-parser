@@ -153,7 +153,6 @@ export default {
             const combinator = F.lazy((v1, v2) => F.returns(v1 + v2), 10, 20);
             combinator.parse(stream.ofString(''), 0);
         } catch (e) {
-            console.log(e);
             if (e.includes('packed into an array')) {
                 found = true;
             }

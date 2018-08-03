@@ -26,10 +26,10 @@ function tkKey(s) {
 
 // unit -> Parser ? Token
 function arrayOrNothing() {
+    // FIXME: ES2015 code not great
     var value = [],
         addValue = e => {
             value = value.concat(e);
-            console.log('added value to array', value);
         },
         getValue = () => value,
         item = F.lazy(expr).map(addValue);
@@ -38,10 +38,10 @@ function arrayOrNothing() {
 
 // unit -> Parser ? Token
 function objectOrNothing() {
+    // FIXME: ES2015 code not great
     var value = {},
         addValue = e => {
             value[e[0]] = e[1];
-            console.log('added value in object', value);
         },
         getValue = () => value,
         attribute = string
