@@ -8,6 +8,44 @@ export default {
         done();
     },
 
+    'genlex find offsets when success': function (test) {
+        const genlex = new GenLex();
+
+        const plus = genlex.tokenize('+');
+        const minus = genlex.tokenize('-');
+
+        let grammar = plus.or(minus).rep().thenEos();
+
+        const parser = genlex.use(grammar);
+
+        const text = '+ + - --';
+        const parsing = parser.parse(stream.ofString(text));
+        test.ok(parsing.isConsumed(), 'input is consumed');
+        test.equal(5, parsing.offset, 'there are 5 keywords');
+        test.equal(8, parsing.input.location(parsing.offset), 'there are 8 chars')
+        test.done()
+    },
+
+    'genlex find offsets when fail': function (test) {
+        const genlex = new GenLex();
+
+        const plus = genlex.tokenize('+');
+        const minus = genlex.tokenize('-');
+
+        let grammar = plus.or(minus).rep().thenEos();
+
+        const parser = genlex.use(grammar);
+
+        const text = '+     +* --';
+        const parsing = parser.parse(stream.ofString(text));
+
+        test.ok(! parsing.isConsumed(), 'an error should have occured');
+        test.equal(7, parsing.offset, 'fail is not 3: it must be the char offset before the error');
+
+        test.done();
+    },
+
+
     'expect Genlex to be constructed with spaces ': function (test) {
 
         const genlex = new GenLex();
@@ -230,6 +268,7 @@ export default {
 
 
 function date() {
+
     return N.digits()
         .then(C.charIn('-/').thenReturns('-'))
         .then(N.digits())

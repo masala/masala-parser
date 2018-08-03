@@ -137,18 +137,29 @@ function literal(tokenize) {
     return F.parse((input, index) => {
             return input
                 .get(index)
+                // FIXME= value is the token, token is the value
                 .map(value => {
                         return tokenize(value)
-                            .map(token =>
-                                response.accept(token, input, index + 1, true)
+                            .map(token =>{
+                                    console.log('accept:', token,index, input.location(index));
+                                    return response.accept(token, input, index + 1, true)
+                            }
+
                             )
-                            .orLazyElse(() =>
-                                response.reject(input.location(index), false)
+                            .orLazyElse(() =>{
+
+                                    console.log('reject:',index, input.source.offsets[index],input,'>>>', value,  input.location(index));
+                                return    response.reject(input.location(index), false)
+                            }
+
                             )
                     }
                 )
-                .lazyRecoverWith(() =>
-                    response.reject(input.location(index), false)
+                .lazyRecoverWith(() =>{
+                        console.log('lazyRecover with offset:', input.location(index));
+                        return response.reject(input.location(index), false)
+                }
+
                 )
         }
     );

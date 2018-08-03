@@ -7,13 +7,13 @@ export default {
         done();
     },
 
-    'expect (chain) to be accepted': function (test){
+    'expect (chain) to be accepted': function (test) {
 
         const lower = C.char('x');
 
-        const upper = F.satisfy( val => val ==='x' );
+        const upper = F.satisfy(val => val === 'x');
 
-        const parser  = lower.chain(upper);
+        const parser = lower.chain(upper);
 
         const response = parser.parse(stream.ofString('x'));
 
@@ -22,69 +22,69 @@ export default {
         test.done();
 
     },
-    'expect (chain) to be rejected': function (test){
+    'expect (chain) to be rejected': function (test) {
 
         const lower = C.char('x');
 
-        const upper = F.satisfy( val => val ==='y' );
+        const upper = F.satisfy(val => val === 'y');
 
-        const parser  = lower.chain(upper);
+        const parser = lower.chain(upper);
 
         const response = parser.parse(stream.ofString('x'));
 
-        test.ok(! response.isAccepted(), 'Should be rejected');
+        test.ok(!response.isAccepted(), 'Should be rejected');
 
         test.done();
 
     },
-    'expect (chain) to be accepted and offset to have move': function (test){
+    'expect (chain) to be accepted and offset to have move': function (test) {
 
         const lower = C.char('x');
 
         // satisfy makes the stuff move only if accepted
-        const upper = F.satisfy( val => val ==='x' );
+        const upper = F.satisfy(val => val === 'x');
 
-        const parser  = lower.chain(upper);
+        const parser = lower.chain(upper);
 
         const response = parser.parse(stream.ofString('x'));
 
-        test.ok( response.offset === 1, 'Should have moved');
+        test.ok(response.offset === 1, 'Should have moved');
 
         test.done();
 
     },
-    'expect (chain) to be accepted and offset to have move more': function (test){
+    'expect (chain) to be accepted and offset to have move more': function (test) {
 
         const lower = C.string('xyz');
 
         // satisfy makes the stuff move only if accepted
-        const upper = F.satisfy( val => val ==='xyz' );
+        const upper = F.satisfy(val => val === 'xyz');
 
-        const parser  = lower.chain(upper.then(upper));
+        const parser = lower.chain(upper.then(upper));
 
         const response = parser.parse(stream.ofString('xyzxyz'));
 
-        test.equal( response.offset ,2, 'Should have moved more');
+        test.equal(response.offset, 2, 'Should have moved more');
 
         test.done();
 
     },
-    'expect (chain) to be find back the source offset': function (test){
+    'expect (chain) to be find back the source offset': function (test) {
 
         const lower = C.string('xyz');
 
         // satisfy makes the stuff move only if accepted
-        const upper = F.satisfy( val => val ==='xyz' );
+        const upper = F.satisfy(val => val === 'xyz');
 
-        const parser  = lower.chain(upper.then(upper));
+        const parser = lower.chain(upper.then(upper));
 
         const response = parser.parse(stream.ofString('xyzxyz'));
 
-        test.equal( response.input.source.offsets[response.offset] ,6, 'Should have find stringStream offset');
+        test.equal(response.input.source.offsets[response.offset], 6, 'Should have find stringStream offset');
 
         test.done();
-    }
-/*
+    },
+
     'expect (chain) to be accepted': function (test) {
         test.expect(1);
         // tests here
@@ -117,32 +117,34 @@ export default {
         test.done();
     },
 
-    'expect (chain) to fail ': function (test) {
-        const token = N.numberLiteral();
-        const lex = spaces().drop().debug('start')
-            .then(F.any()).debug('any')
-            .then(spaces().drop().debug('end'))
-            .then(F.any()).debug('any2')
-            .map(values => values.array().reduce((acc, n) => {
-                    console.log(values, acc, n)
-                    return acc + n
-                }
-                , 0
-            ));
+    'expect (chain) to add multiple numbers ': function (test) {
+        const token = N.numberLiteral().then(spaces().opt().drop());
+        const lex = F.satisfy(number => number > 0).rep()
+            .map(values => values.array().reduce((acc, n) => acc + n, 0 ));
 
 
-        const parsing = token.chain(lex).parse(stream.ofString('10 12 '), 0)
+        const parsing = token.chain(lex).parse(stream.ofString('10 12 44'), 0)
 
-        console.log(parsing.isConsumed())
 
-        test.equal(
-            parsing.value,
-            20,
-            'should be 20.'
-        );
+        test.ok(parsing.isConsumed(), 'should have been consumed');
+        test.equal(parsing.value, 66, 'should be 66.');
         test.done();
 
-    }*/
+    },
+
+    'expect (chain) to be not satisfied by upper level ': function (test) {
+        const token = N.numberLiteral().then(spaces().opt().drop());
+        const lex = F.satisfy(number => number > 0).rep()
+            .map(values => values.array().reduce((acc, n) => acc + n, 0 ));
+
+
+        const parsing = token.chain(lex).parse(stream.ofString('10 -12 44'), 0)
+
+
+        test.ok(!parsing.isConsumed(), 'should have been consumed');
+        test.done();
+
+    }
 }
 
 function spaces() {

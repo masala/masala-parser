@@ -45,7 +45,7 @@ export default {
         );
         test.done();
     },
-*/
+
     'string and unrecognized item rejected': function(test) {
         test.expect(1);
         // tests here
@@ -57,14 +57,16 @@ export default {
         );
         test.done();
     },
-
+*/
     'string and unrecognized item rejected with correct offset': function(
         test
     ) { //FIXME #108
-        test.expect(1);
+        test.expect(2);
         // tests here
         var result = jsonparser.parse(stream.ofString('["123", -]'));
         test.ok(result.isConsumed(),'should be consumed.');
+
+
         test.equal(result.offset, 7, 'should be 7.');
         test.done();
     },
@@ -171,5 +173,5 @@ export default {
             'should be accepted.'
         );
         test.done();
-    },*/
+    }*/
 };

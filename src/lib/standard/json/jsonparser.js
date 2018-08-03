@@ -18,7 +18,7 @@ import {C, N} from "../../parsec";
 let genlex = new GenLex();
 genlex.keywords(['null', 'false', 'true', '{', '}', '[', ']', ':', ',']);
 let number = genlex.tokenize(N.numberLiteral(), 'number', 1100);
-let string = genlex.tokenize(C.stringLiteral(), 'string', 1100);
+let string = genlex.tokenize(C.stringLiteral(), 'string', 800);
 
 function tkKey(s) {
     return genlex.get(s);
@@ -29,6 +29,7 @@ function arrayOrNothing() {
     var value = [],
         addValue = e => {
             value = value.concat(e);
+            console.log('added value to array', value);
         },
         getValue = () => value,
         item = F.lazy(expr).map(addValue);
@@ -40,6 +41,7 @@ function objectOrNothing() {
     var value = {},
         addValue = e => {
             value[e[0]] = e[1];
+            console.log('added value in object', value);
         },
         getValue = () => value,
         attribute = string
