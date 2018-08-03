@@ -7,45 +7,87 @@ export default {
     },
 
 
-    'Parsing ok with a StringStream': function(test) {
+    'response ok with a StringStream': function(test) {
 
         const stream = Streams.ofString('The world is a vampire');
 
 
         const parser = C.string('The');
-        const parsing = parser.parse(stream, 0);
+        const response = parser.parse(stream, 0);
 
-        test.ok(parsing.isAccepted());
-        test.ok(! parsing.isConsumed());
-        test.equal(parsing.offset, 3);
+        test.ok(response.isAccepted());
+        test.ok(! response.isConsumed());
+        test.equal(response.offset, 3);
 
         test.done();
     },
 
-    'Parsing ok inside a StringStream': function(test) {
+    'response ok inside a StringStream': function(test) {
 
         const stream = Streams.ofString('The world is a vampire');
 
         const parser = C.string('world');
-        const parsing = parser.parse(stream, 4);
+        const response = parser.parse(stream, 4);
 
-        test.ok(parsing.isAccepted());
-        test.ok(! parsing.isConsumed());
-        test.equal(parsing.offset, 9);
+        test.ok(response.isAccepted());
+        test.ok(! response.isConsumed());
+        test.equal(response.offset, 9);
 
         test.done();
     },
 
-    'Parsing ok completing a StringStream': function(test) {
+    'response ok completing a StringStream': function(test) {
 
         const stream = Streams.ofString('The world is a vampire');
 
         const parser = C.letter().or(C.char(' ')).rep();
-        const parsing = parser.parse(stream);
+        const response = parser.parse(stream);
 
-        test.ok(parsing.isAccepted());
-        test.ok(parsing.isConsumed());
-        test.equal(parsing.offset, 22);
+        test.ok(response.isAccepted());
+        test.ok(response.isConsumed());
+        test.equal(response.offset, 22);
+
+        test.done();
+    },
+
+    'response fails at StringStream start': function(test) {
+
+        const stream = Streams.ofString('The world is a vampire');
+
+        const parser = C.string('That');
+        const response = parser.parse(stream);
+
+        test.ok(!response.isAccepted());
+        test.equal(response.offset, 0);
+
+        test.done();
+    },
+
+    'response fails inside a StringStream': function(test) {
+
+        const stream = Streams.ofString('abc de');
+
+        const parser = C.string('abc').then(C.string('fails'));
+        const response = parser.parse(stream);
+
+        test.ok(!response.isAccepted());
+        test.equal(response.offset, 3);
+
+        test.done();
+    },
+
+    'response passes the StringStream': function(test) {
+
+        const stream = Streams.ofString('abc de');
+
+        const parser = C.letter().or(C.char(' ')).rep().then(C.string('!!!'));
+        const response = parser.parse(stream);
+
+        test.ok(!response.isAccepted());
+
+        // because an error has NEVER stream consumed
+        test.ok(!response.isConsumed());
+        test.equal(response.offset, stream.source.length);
 
         test.done();
     },
