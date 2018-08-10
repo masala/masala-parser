@@ -66,7 +66,11 @@ function doTry(p) {
             .parse(input, index)
             .fold(
                 accept => accept,
-                reject => response.reject(input.location(reject.offset), false)
+                // Compared to satisfy, we come back to initial offset
+                reject => {
+                    // FIXME: better ES6 hnadling
+                    return response.reject(input.location(reject.offset), false)
+                }
             )
     );
 }

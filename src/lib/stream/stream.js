@@ -8,6 +8,11 @@
 
 import atry from '../data/try';
 
+/**
+ * Abstract methods:
+ * - unsafeGet(index)
+ * - iterateTo(index)
+ */
 class Stream {
     constructor() {}
 

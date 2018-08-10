@@ -1,5 +1,6 @@
-import Streams from '../../lib/stream/index';
-import C from "../../lib/parsec/chars-bundle";
+import Streams from '../../lib/stream/index';;
+import {F, C, N} from "../../lib/parsec";
+import unit from "../../lib/data/unit";
 
 export default {
     setUp: function (done) {
@@ -92,7 +93,69 @@ export default {
         test.done();
     },
 
+    'response with a failed try is rejected, and offset is 0': function(test) {
+        const stream = Streams.ofString('abc de');
+
+        const parser = F.try(C.string('abc').then(C.char('x')))
+            .or(C.string('x'));
+        const response = parser.parse(stream);
+
+        test.ok(!response.isAccepted());
+        test.equal(response.offset, 0);
+
+        test.done();
+
+    },
+
+
+    'ParserStream can iterate to a sourceIndex': function(test) {
+        const parser = N.numberLiteral().then(spaces().opt().drop());
+
+        const lowerStream = Streams.ofString('10 12 44');
+        const parserStream = Streams.ofParser(parser, lowerStream);
+
+        let firstOffset = parserStream.offsets[1];
+        test.equal(firstOffset, undefined);
+
+        parserStream.iterateTo(6);
+        test.equal(parserStream.offsets[1], 3);
+        test.equal(parserStream.offsets[2], 6);
+
+        test.done();
+
+    },
 
 
 
+    'ParserStream.get() is idemPotent':function(test){
+        const lower = N.numberLiteral().then(spaces().opt().drop());
+
+
+        const lowerStream = Streams.ofString('10 12 44');
+        const parserStream = Streams.ofParser(lower, lowerStream);
+
+        let firstOffset = parserStream.getOffset(1);
+        test.equal(parserStream.offsets['1'], 3);
+
+        let tryGet = parserStream.get(0);
+        test.ok(tryGet.isSuccess());
+        test.equal(10, tryGet.value);
+        test.equal(parserStream.offsets['1'], 3);
+
+        let secondOffset = parserStream.getOffset(1);
+
+        test.ok(firstOffset, secondOffset);
+
+
+
+        test.done();
+    }
+
+
+
+}
+
+
+function spaces() {
+    return C.charIn(' \r\n\f\t').optrep().map(() => unit);
 }
