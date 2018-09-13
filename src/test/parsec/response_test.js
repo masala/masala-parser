@@ -212,13 +212,14 @@ export default {
         );
         test.done();
     },
-
     'accept can be consumed': function (test) {
         test.expect(1);
         // tests here
         const myStream = stream.ofString('abc');
+        const acceptance = response.accept('c', myStream, 3, false);
+        const consumed = acceptance.isConsumed();
         test.equal(
-            response.accept('c', myStream, 3, false).isConsumed(),
+            consumed,
             true,
             'should be consumed'
         );

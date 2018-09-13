@@ -40,7 +40,7 @@ function returns(v) {
 // unit -> Parser 'a 'c
 function error() {
     return new Parser((input, index = 0) =>
-        response.reject(input.location(index), false)
+        response.reject(input, index, false)
     );
 }
 
@@ -54,7 +54,7 @@ function satisfy(predicate) {
             .filter(predicate)
             .map(value => response.accept(value, input, index + 1, true))
             .lazyRecoverWith(() =>
-                response.reject(input.location(index), false)
+                response.reject(input, index, false)
             )
     );
 }
@@ -69,7 +69,7 @@ function doTry(p) {
                 // Compared to satisfy, we come back to initial offset
                 reject => {
                     // FIXME: better ES6 hnadling
-                    return response.reject(input.location(reject.offset), false)
+                    return response.reject(input, reject.offset , false)
                 }
             )
     );
@@ -163,7 +163,7 @@ function searchStringStart(string) {
                 true
             );
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }
@@ -199,7 +199,7 @@ function searchArrayStringStart(array) {
                 true
             );
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }
@@ -211,7 +211,7 @@ export function string(s) {
         if (input.subStreamAt(s.split(''), index)) {
             return response.accept(s, input, index + s.length, true);
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }

@@ -9,17 +9,31 @@
 import atry from '../data/try.js';
 
 /**
- * Response basic type
+ * ParserResponse basic type
  * fold() is an abstract method implemented in Accept and Reject
+ * A Response has two markers: offset and location().
+ * Offset is the token count from the start of the input stream, where
+ * location() is the character count of the input stream.
+ *
+ *
+ * consumed is a boolean describing if the offest has moved forward. It doesn't mean
+ * that the stream is fully consumed. See parser.eos() for that.
  */
-class Response {
+class ParserResponse {
+
+    constructor(input, offset, consumed) {
+        this.input = input;
+        this.offset = offset;
+        this.consumed = consumed;
+    }
+
     // Response 'a 'c => unit -> bool
     isAccepted() {
         return this.fold(
-            function() {
+            function () {
                 return true;
             },
-            function() {
+            function () {
                 return false;
             }
         );
@@ -49,11 +63,9 @@ class Response {
 /**
  * Reject response class
  */
-class Reject extends Response {
-    constructor(offset, consumed) {
-        super();
-        this.offset = offset;
-        this.consumed = consumed;
+class Reject extends ParserResponse  {
+    constructor(input, offset, consumed) {
+        super(input, offset, consumed);
     }
 
 
@@ -74,23 +86,21 @@ class Reject extends Response {
 
     // Response 'a 'c => ('a -> bool) -> Response 'b 'c
     filter() {
-        return new Reject(this.offset, false);
+        return new Reject(this.input,this.offset, false);
     }
 }
 
 /**
  * Accept response class
  */
-class Accept extends Response {
+class Accept extends ParserResponse  {
     constructor(value, input, offset, consumed) {
-        super();
-        this.offset = offset;
-        this.consumed = consumed;
+        super(input, offset, consumed);
         this.value = value;
-        this.input = input;
     }
 
     isConsumed() {
+        let that = this;
         return this.input.endOfStream(this.offset);
     }
 
@@ -119,7 +129,7 @@ class Accept extends Response {
         if (predicate(this.value)) {
             return this;
         } else {
-            return new Reject(this.offset, false);
+            return new Reject(this.input, this.offset, false);
         }
     }
 }
@@ -127,9 +137,9 @@ class Accept extends Response {
 /**
  * Constructors
  */
-const accept = (value, stream, offset, consumed) =>
-    new Accept(value, stream, offset, consumed);
-const reject = (offset, consumed) => new Reject(offset, consumed);
+const accept = (value, input, offset, consumed) =>
+    new Accept(value, input, offset, consumed);
+const reject = (input, offset, consumed) => new Reject(input, offset, consumed);
 const response = {accept, reject};
 
 export default response;

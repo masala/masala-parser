@@ -104,7 +104,7 @@ function subString(length) {
         if (input.subStreamAt(s.split(''), index)) {
             return response.accept(s, input, index + s.length, true);
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index , false);
         }
     });
 }*/

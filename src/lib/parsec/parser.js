@@ -166,7 +166,7 @@ function bindAccepted(accept_a, f) {
                 ),
             reject_b =>
                 response.reject(
-                    accept_a.input.location(reject_b.offset),
+                    input, reject_b.offset,
                     accept_a.consumed || reject_b.consumed
                 )
         );
@@ -214,7 +214,7 @@ function repeatable(self, occurrences, accept) {
             return response.accept(value, input, offset, consumed);
         }
 
-        return response.reject(offset, consumed);
+        return response.reject(input, offset, consumed);
     });
 }
 
@@ -234,7 +234,7 @@ export function eos() {
         if (input.endOfStream(index)) {
             return response.accept(unit, input, index, false);
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }

@@ -150,7 +150,7 @@ function literal(tokenize) {
 
                                    // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
                                     //  input.location(index));
-                                return    response.reject(input.location(index), false)
+                                return    response.reject(input, index, false)
                             }
 
                             )
@@ -158,7 +158,7 @@ function literal(tokenize) {
                 )
                 .lazyRecoverWith(() =>{
                         //console.log('lazyRecover with offset:', input.location(index));
-                        return response.reject(input.location(index), false)
+                        return response.reject(input, index, false)
                 }
 
                 )
