@@ -166,7 +166,7 @@ function bindAccepted(accept_a, f) {
                 ),
             reject_b =>
                 response.reject(
-                    input, reject_b.offset,
+                    reject_b.input, reject_b.offset,
                     accept_a.consumed || reject_b.consumed
                 )
         );
