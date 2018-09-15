@@ -6,7 +6,6 @@
  * Licensed under the LGPL2 license.
  */
 
-import unit from '../data/unit.js';
 import Parser, {eos} from './parser';
 import response from './response';
 

@@ -108,7 +108,6 @@ class Accept extends ParserResponse  {
     }
 
     isConsumed() {
-        let that = this;
         return this.input.endOfStream(this.offset);
     }
 

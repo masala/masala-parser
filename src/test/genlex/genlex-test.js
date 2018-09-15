@@ -138,7 +138,7 @@ export default {
     'getMathGenLex() gives a simple genlex': function (test) {
         const genlex = getMathGenLex();
         const number = genlex.get('number');
-        const plus = genlex.get('plus');
+
 
         let grammar = number.rep();
 
