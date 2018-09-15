@@ -7,61 +7,85 @@
  */
 
 import Stream from './stream';
+import atry from '../data/try';
+import option from '../data/option';
 
 /**
  * ParserStream stream class
+ * Compared to StringStream, it is NOT a RandomAccess.
+ * You
  */
 class ParserStream extends Stream {
     constructor(parser, lowerStream) {
         super();
+        //TODO: why the parser is called source ?
         this.source = parser;
         this.input = lowerStream;
-        this.offsets = {0:0};
+        this.offsets = [0];
     }
 
     getOffset(index) {
-        let higherOffset = 0; // FIXME: take last offset < index
-        if (this.offsets[index] === undefined){
-            this.iterateTo(index,0, 0);
+        if ( index < this.offsets.length) {
+            return option.some(this.offsets[index]);
         }
+        return option.none();
 
-        if (this.offsets[index] === undefined){
-            // We must have advanced to an error
-            //FIXME: hack ; if we go further, it's because of a reject
-            // and the rejet calls the location, so further in the input
-            return index;
-            //throw `ParserStream cannot iterate from ${higherOffset} to ${index}`;
-        }
-        return this.offsets[index];
     }
 
-    iterateTo(sourceIndex, currentIndex=0, start=0){
-        if (start >= sourceIndex){
-            return; // FIXME: might be a gotcha with semi ambigous separation of tokens
+    /**
+     * returns an Try.of(Index)
+     * @param sourceIndex
+     * @param currentIndex
+     * @param start
+     * @returns {*|void}
+     */
+    iterateTo(sourceIndex, currentIndex = 0, start = 0) {
+        if (start >= sourceIndex) {
+            return atry.failure('illegal index'); // FIXME: might be a gotcha with semi ambigous separation of tokens
         }
 
         var response = this.source.parse(this.input, start);
-        if (response.isAccepted()){
+        if (response.isAccepted()) {
             // just building offsets map
-            this.offsets[currentIndex+1]=response.offset;
-            return this.iterateTo(sourceIndex, currentIndex+1, response.offset)
-        }else {
+            this.offsets[currentIndex + 1] = response.offset;
+            return this.iterateTo(sourceIndex, currentIndex + 1, response.offset)
+        } else {
             throw response;
         }
     }
 
+    next(){
+
+    }
+
     // Stream 'a => number -> number
     location(index) {
-        if (index ===0){
+        if (index === 0) {
             return 0;
         }
-        return index;
-        return this.input.location(this.getOffset(index - 1) + 1);
+        const option = this.getOffset(index)
+        if (option.isPresent()) {
+            // TODO: check the +1 ; the -1 has disappeared
+            return this.input.location(option.get());
+        } else {
+            throw 'No location has been found yet for index '+index;
+            // TODO: What is the use case ?
+            return this.input.location(this.getOffset(index - 1) + 1);
+        }
+
     }
 
     // ParserStream 'a => unit -> boolean
     endOfStream(index) {
-        return this.input.endOfStream(this.getOffset(index));
+        const option = this.getOffset(index);
+        if (option.isPresent()) {
+            return this.input.endOfStream(option.get());
+        } else {
+            // If last was the last befor end of stream, then yes
+            const last = this.offsets[this.offsets.length - 1];
+            return this.input.endOfStream(last +1);
+        }
+
     }
 
     // ParserStream 'a => number -> 'a <+> error
@@ -72,11 +96,19 @@ class ParserStream extends Stream {
      */
     unsafeGet(index) {
         // the wrapped parser parses the StringStream
-        var result = this.source.parse(this.input, this.getOffset(index));
+        let sourceIndex;
+        let option = this.getOffset(index);
+        if (option.isPresent()){
+            // we have already read it. Should be caught by the bufferedStream
+            sourceIndex = option.get();
+        }else{
+            sourceIndex = this.getOffset(index)+1;
+        }
+        const result = this.source.parse(this.input, sourceIndex);
 
         if (result.isAccepted()) {
             // Why index+1 ? Because we succeeded, and the source is at result.offset
-            this.offsets[index + 1] = result.offset;
+            this.offsets.push(result.offset);
             return result.value;
         } else {
             throw new Error();

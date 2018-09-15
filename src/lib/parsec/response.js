@@ -52,6 +52,14 @@ class ParserResponse {
         return false; //overridden by Accept
     }
 
+    getOffset(){
+        return this.offset;
+    }
+
+    location(){
+        return this.input.location(this.getOffset());
+    }
+
     /**
      * fold takes a function to map the value depending on result
      * Abstract function fold(accept, reject)
