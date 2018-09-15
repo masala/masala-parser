@@ -2,34 +2,14 @@ import stream from '../../lib/stream/index';
 import C from '../../lib/parsec/chars-bundle';
 import N from '../../lib/parsec/numbers-bundle';
 
-/*
-  ======== A Handy Little Nodeunit Reference ========
-  https://github.com/caolan/nodeunit
-
-  Test methods:
-    test.expect(numAssertions)
-    test.done()
-  Test assertions:
-    test.ok(value, [message])
-    test.equal(actual, expected, [message])
-    test.notEqual(actual, expected, [message])
-    test.deepEqual(actual, expected, [message])
-    test.notDeepEqual(actual, expected, [message])
-    test.strictEqual(actual, expected, [message])
-    test.notStrictEqual(actual, expected, [message])
-    test.throws(block, [error], [message])
-    test.doesNotThrow(block, [error], [message])
-    test.ifError(value)
-*/
 
 export default {
-    setUp: function(done) {
+    setUp: function (done) {
         done();
     },
-/*
-    'endOfStream for empty stream': function(test) {
-        test.expect(1);
-        // tests here
+
+    'endOfStream for empty stream': function (test) {
+
         var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.ok(
             stream.ofParser(p, stream.ofString('')).endOfStream(0),
@@ -39,9 +19,8 @@ export default {
     },
 
 
-    'endOfStream for non empty stream': function(test) {
-        test.expect(1);
-        // tests here
+    'endOfStream for non empty stream': function (test) {
+
         var p = C.char(' ').optrep().thenRight(N.numberLiteral());
         test.ok(
             stream.ofParser(p, stream.ofString('1')).endOfStream(1),
@@ -51,98 +30,132 @@ export default {
     },
 
 
-        'no endOfStream for non empty stream': function(test) {
-            test.expect(1);
-            // tests here
-            var p = C.char(' ').optrep().thenRight(N.numberLiteral());
-            test.equal(
-                stream.ofParser(p, stream.ofString('1')).endOfStream(0),
-                false,
-                'should be endOfStream.'
-            );
-            test.done();
-        },
+    'no endOfStream for non empty stream': function (test) {
 
-            'get from stream': function(test) {
-                test.expect(1);
-                // tests here
-                var p = C.char(' ').optrep().thenRight(N.numberLiteral());
-                test.equal(
-                    stream.ofParser(p, stream.ofString('1')).get(0).isSuccess(),
-                    true,
-                    'should be a success.'
-                );
-                test.done();
-            },
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
+        test.equal(
+            stream.ofParser(p, stream.ofString('1')).endOfStream(0),
+            false,
+            'should be endOfStream.'
+        );
+        test.done();
+    },
 
-            'do not get from empty stream': function(test) {
-                test.expect(1);
-                // tests here
-                var p = C.char(' ').optrep().thenRight(N.numberLiteral());
-                test.equal(
-                    stream.ofParser(p, stream.ofString('1')).get(1).isSuccess(),
-                    false,
-                    'should be a failure.'
-                );
-                test.done();
-            },
+    'get from stream': function (test) {
 
-            'get from stream numberLiteral 123': function(test) {
-                test.expect(1);
-                // tests here
-                var p = C.char(' ').optrep().thenRight(N.numberLiteral());
-                test.equal(
-                    stream.ofParser(p, stream.ofString('123')).get(0).success(),
-                    123,
-                    'should be a 123.'
-                );
-                test.done();
-            },
-    */
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
+        test.equal(
+            stream.ofParser(p, stream.ofString('1')).get(0).isSuccess(),
+            true,
+            'should be a success.'
+        );
+        test.done();
+    },
+
+    'do not get from empty stream': function (test) {
+
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
+        test.equal(
+            stream.ofParser(p, stream.ofString('1')).get(1).isSuccess(),
+            false,
+            'should be a failure.'
+        );
+        test.done();
+    },
+
+    'get from stream numberLiteral 123': function (test) {
+
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
+        test.equal(
+            stream.ofParser(p, stream.ofString('123')).get(0).success(),
+            123,
+            'should be a 123.'
+        );
+        test.done();
+    },
 
 
-                'Offset are found in series of numbers': function(test) {
+    'Offset are found in series of numbers': function (test) {
 
-                    // tests here
-                    const p = N.numberLiteral()
-                        .then(C.char(' ').optrep().drop());
+        const p = N.numberLiteral()
+            .then(C.char(' ').optrep().drop());
 
-                    const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
-                                                                   // index: ^0    ^6
-
-
-                    const first = parserStream.get(0).success(); //>> 123
-                    test.equal(first, 123);
-
-                    const second = parserStream.get(1).success(); //>> 114
-                    test.equal(second, 14137);
-                    test.deepEqual(parserStream.offsets, [0,6,11]);
-/*
-                    // Offset after reading start (1) is related to index after 123 (3)
-                    // Offset after reading at 6 (7) is related to index after '123   14137'(11)
-
-*/
-                    test.done();
-                },
-/*
-                'failing series of numbers': function(test) {
-
-                    // tests here
-                    const p = N.numberLiteral();
-                    const parserStream = stream.ofParser(p, stream.ofString('123   a'));
-                    // index: ^0    ^6
+        const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
+        // index: ^0    ^6
 
 
-                    const first = parserStream.get(0).success(); //>> 123
-                    test.equal(first, 123);
-                    test.deepEqual(parserStream.offsets, {1:3});
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 123);
 
-                    const second = parserStream.get(6); // try 'a'
-                    test.ok(second.isFailure());
-                    test.deepEqual(parserStream.offsets, {1:3});
+        const second = parserStream.get(1).success(); //>> 114
+        test.equal(second, 14137);
+        test.deepEqual(parserStream.offsets, [0, 6, 11]);
 
-                    test.done();
-                },
+        // Offset after reading start (1) is related to index after 123 (3)
+        // Offset after reading at 6 (7) is related to index after '123   14137'(11)
 
-            */
+
+        test.done();
+    },
+
+    'failing series of numbers': function (test) {
+
+        const p = N.numberLiteral()
+            .then(C.char(' ').optrep().drop());
+        const parserStream = stream.ofParser(p, stream.ofString('123   a'));
+        //                                                index: ^0    ^6
+
+
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 123);
+        test.deepEqual(parserStream.offsets, [0, 6]);
+
+        const second = parserStream.get(1); // try 'a'
+        test.ok(second.isFailure());
+
+        test.deepEqual(parserStream.offsets, [0, 6]);
+
+        test.done();
+    },
+
+    'having correct location when success': function (test) {
+
+        const p = N.numberLiteral()
+            .then(C.char(' ').optrep().drop());
+
+        const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
+        //                                                index: ^0    ^6
+
+
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 123);
+        test.equal(0, parserStream.location(0));
+
+        const second = parserStream.get(1).success(); //>> 114
+        test.equal(second, 14137);
+        test.equal(6, parserStream.location(1));
+
+        test.done();
+    },
+
+    'having correct location when fail': function (test) {
+
+        const p = N.numberLiteral();
+
+        const parserStream = stream.ofParser(p, stream.ofString('1234   14137'));
+        //                                                index: ^0  ^4
+
+
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 1234);
+        test.equal(0, parserStream.location(0));
+
+        parserStream.get(1); //>> fail
+        test.equal(4, parserStream.location(1));
+
+        test.done();
+    },
+
+
+
 };
