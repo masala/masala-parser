@@ -138,6 +138,31 @@ export default {
         test.done();
     },
 
+    'searching illegal location will fail': function (test) {
+
+        const p = N.numberLiteral()
+            .then(C.char(' ').optrep().drop());
+
+        const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
+        //                                                index: ^0    ^6
+
+
+        const first = parserStream.get(0).success(); //>> 123
+        test.equal(first, 123);
+        let foundError = false;
+
+        try{
+            test.equal(0, parserStream.location(4));
+        }catch(e){
+            foundError = true;
+        }
+
+        test.ok(foundError);
+
+        test.done();
+    },
+
+
     'having correct location when fail': function (test) {
 
         const p = N.numberLiteral();

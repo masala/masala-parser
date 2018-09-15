@@ -32,31 +32,6 @@ class ParserStream extends Stream {
 
     }
 
-    /**
-     * returns an Try.of(Index)
-     * @param sourceIndex
-     * @param currentIndex
-     * @param start
-     * @returns {*|void}
-     */
-    iterateTo(sourceIndex, currentIndex = 0, start = 0) {
-        if (start >= sourceIndex) {
-            return atry.failure('illegal index'); // FIXME: might be a gotcha with semi ambigous separation of tokens
-        }
-
-        var response = this.source.parse(this.input, start);
-        if (response.isAccepted()) {
-            // just building offsets map
-            this.offsets[currentIndex + 1] = response.offset;
-            return this.iterateTo(sourceIndex, currentIndex + 1, response.offset)
-        } else {
-            throw response;
-        }
-    }
-
-    next(){
-
-    }
 
     // Stream 'a => number -> number
     location(index) {
@@ -70,7 +45,7 @@ class ParserStream extends Stream {
         } else {
             throw 'No location has been found yet for index '+index;
             // TODO: What is the use case ?
-            return this.input.location(this.getOffset(index - 1) + 1);
+            // return this.input.location(this.getOffset(index - 1) + 1);
         }
 
     }
