@@ -101,11 +101,11 @@ export default {
     */
 
 
-                'series of numbers': function(test) {
+                'Offset are found in series of numbers': function(test) {
 
                     // tests here
                     const p = N.numberLiteral()
-                        .then(C.char(' ').rep().drop());
+                        .then(C.char(' ').optrep().drop());
 
                     const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
                                                                    // index: ^0    ^6
@@ -116,10 +116,11 @@ export default {
 
                     const second = parserStream.get(1).success(); //>> 114
                     test.equal(second, 14137);
+                    test.deepEqual(parserStream.offsets, [0,6,11]);
 /*
                     // Offset after reading start (1) is related to index after 123 (3)
                     // Offset after reading at 6 (7) is related to index after '123   14137'(11)
-                    test.deepEqual(parserStream.offsets, {0:6, 1:11});
+
 */
                     test.done();
                 },
