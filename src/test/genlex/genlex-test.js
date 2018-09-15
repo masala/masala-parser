@@ -36,11 +36,13 @@ export default {
 
         const parser = genlex.use(grammar);
 
-        const text = '+     +* --';
+        const text = '+  +  +* --';
+        //            0  1  23
         const parsing = parser.parse(stream.ofString(text));
 
-        test.ok(! parsing.isConsumed(), 'an error should have occured');
-        test.equal(7, parsing.offset, 'fail is not 3: it must be the char offset before the error');
+        test.ok(! parsing.isConsumed(), 'an error should have occurred');
+        test.equal(3, parsing.getOffset(), 'Failed at the third token');
+        test.equal(7, parsing.location(), 'fail is not 3: it must be the char offset before the error');
 
         test.done();
     },
