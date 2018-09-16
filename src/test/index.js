@@ -11,6 +11,8 @@ import tryTest from './data/try_test';
 import listTest from './data/list_test';
 import streamsTest from './stream/stream_test';
 import bufferedStreamsTest from './stream/buffered_stream_test';
+import arrayStreamTest from './stream/array-stream-test';
+import offsetTest from './stream/offset-test';
 import propositionTest from './genlex/proposition';
 import genlexTest from './genlex/genlex-test';
 import genlexOperationTest from './genlex/genlex-operation';
@@ -23,7 +25,7 @@ import parserResponseTest from './parsec/response_test';
 import flowBundleTest from './parsec/flow-bundle-test';
 import charsBundleTest from './parsec/chars-bundle-test';
 import numberBundleTest from './parsec/number-bundle-test';
-import markdown from './standard/markdown/index';
+import markdownTest from './standard/markdown/index';
 import jsonParseTest from './standard/json/jsonparser_test';
 import jsonSampleTest from './standard/json/jsonsample_test';
 export {
@@ -31,7 +33,9 @@ export {
     tryTest,
     listTest,
     streamsTest,
+    offsetTest,
     bufferedStreamsTest,
+    arrayStreamTest,
     genlexTest,
     propositionTest,
     genlexOperationTest,
@@ -46,5 +50,5 @@ export {
     numberBundleTest,
     jsonParseTest,
     jsonSampleTest,
-    markdown
+    markdownTest
 };

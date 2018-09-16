@@ -77,7 +77,7 @@ class ParserStream extends Stream {
             // we have already read it. Should be caught by the bufferedStream
             sourceIndex = option.get();
         }else{
-            sourceIndex = this.getOffset(index)+1;
+            throw new Error();
         }
         const result = this.source.parse(this.input, sourceIndex);
 

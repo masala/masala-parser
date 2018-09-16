@@ -1,12 +1,15 @@
 import stream from '../../lib/stream/index';
 import C from '../../lib/parsec/chars-bundle';
 import N from '../../lib/parsec/numbers-bundle';
+import Streams from "../../lib/stream";
+import unit from "../../lib/data/unit";
 
 
 export default {
     setUp: function (done) {
         done();
     },
+
 
     'endOfStream for empty stream': function (test) {
 
@@ -181,6 +184,45 @@ export default {
         test.done();
     },
 
+    'unsafe_get can see next element': function (test) {
+        const lower = N.numberLiteral().then(spaces().opt().drop());
+
+
+        const lowerStream = Streams.ofString('10 12 44');
+        const parserStream = Streams.ofParser(lower, lowerStream);
+
+        parserStream.unsafeGet(0);
+
+        let value = parserStream.unsafeGet(1);
+
+        test.equal(12, value);
+
+
+        test.done();
+    },
+
+    'unsafe_get cannot see beyond next element': function (test) {
+        const lower = N.numberLiteral().then(spaces().opt().drop());
+
+
+        const lowerStream = Streams.ofString('10 12 44');
+        const parserStream = Streams.ofParser(lower, lowerStream);
+
+        let found = false;
+
+        try {
+            parserStream.unsafeGet(1);
+        } catch (e) {
+            found = true;
+        }
+        test.ok(found);
+
+        test.done();
+    }
 
 
 };
+
+function spaces() {
+    return C.charIn(' \r\n\f\t').optrep().map(() => unit);
+}

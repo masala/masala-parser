@@ -221,6 +221,22 @@ export default {
 
     },
 
+
+    'genlex separators must be a string': function (test) {
+        const genlex = getMathGenLex();
+
+        let found = false;
+        try{
+            genlex.setSeparators(C.char('-'));
+        }catch(e){
+            found = true;
+        }
+
+        test.ok(found);
+        test.done()
+
+    },
+
     'genlex can change separators with a full Parser': function (test) {
         const genlex = getMathGenLex();
         const number = genlex.get('number');
