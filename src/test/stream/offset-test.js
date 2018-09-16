@@ -108,22 +108,6 @@ export default {
     },
 
 
-    'ParserStream can iterate to a sourceIndex': function(test) {
-        const parser = N.numberLiteral().then(spaces().opt().drop());
-
-        const lowerStream = Streams.ofString('10 12 44');
-        const parserStream = Streams.ofParser(parser, lowerStream);
-
-        let firstOffset = parserStream.offsets[1];
-        test.equal(firstOffset, undefined);
-
-        parserStream.iterateTo(6);
-        test.equal(parserStream.offsets[1], 3);
-        test.equal(parserStream.offsets[2], 6);
-
-        test.done();
-
-    },
 
 
 
@@ -134,13 +118,18 @@ export default {
         const lowerStream = Streams.ofString('10 12 44');
         const parserStream = Streams.ofParser(lower, lowerStream);
 
-        let firstOffset = parserStream.getOffset(1);
-        test.equal(parserStream.offsets['1'], 3);
-
         let tryGet = parserStream.get(0);
         test.ok(tryGet.isSuccess());
         test.equal(10, tryGet.value);
-        test.equal(parserStream.offsets['1'], 3);
+
+        let firstOffset = parserStream.getOffset(1);
+        test.equal(parserStream.offsets[1], 3);
+
+        tryGet = parserStream.get(1);
+        test.ok(tryGet.isSuccess());
+        test.equal(12, tryGet.value);
+
+        test.equal(parserStream.offsets[1], 3);
 
         let secondOffset = parserStream.getOffset(1);
 
