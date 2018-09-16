@@ -7,7 +7,6 @@
  */
 
 import Stream from './stream';
-import atry from '../data/try';
 import option from '../data/option';
 
 /**

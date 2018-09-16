@@ -1,7 +1,5 @@
 import Streams from '../../lib/stream/index';
 
-;
-import {F, C, N} from "../../lib/parsec";
 
 export default {
     setUp: function (done) {
