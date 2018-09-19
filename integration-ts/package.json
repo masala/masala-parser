@@ -11,7 +11,7 @@
     "typescript": "^2.5.3"
   },
   "scripts": {
-    "test": "ts-node ./test.ts"
+    "test": "ts-node ./examples/index.ts"
   },
   "author": "",
   "license": "ISC"

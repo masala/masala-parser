@@ -22,6 +22,7 @@ function deleteBuild() {
 function copy() {
     ncp('./build/', './integration-ts/node_modules/@masala/parser/build');
     ncp('./src/', './integration-ts/node_modules/@masala/parser/src');
+    ncp('./masala-parser.d.ts', './integration-ts/node_modules/@masala/parser/masala-parser.d.ts');
     console.log('Done --- \n');
 }
 

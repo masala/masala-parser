@@ -1,13 +1,11 @@
-//import * as masala from './masala';
-import {C, F, Streams} from '@robusta/trash'
-//let  = masala;
+import {C, F, Streams} from '@masala/parser'
 
 
 import{assertArrayEquals, assertEquals, assertTrue} from './assert';
 
 let stream = Streams.ofString('ab');
 let parser = C.char('a');
-let arrayParser = parser.then(C.char('b'))//.map(x=>x+'yop');
+let arrayParser = parser.then(C.char('b'));
 let parsing = arrayParser.parse(stream);
 
 assertArrayEquals(['a', 'b'], parsing.value) ; //compiling, types are almost OK

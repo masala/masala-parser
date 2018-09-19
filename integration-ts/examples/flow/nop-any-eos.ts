@@ -1,4 +1,4 @@
-import {Streams, F, C,Option, N, SingleParser} from '@robusta/trash'
+import {Streams, F, C} from '@masala/parser'
 import {assertFalse, assertTrue} from '../../assert';
 
 function day() {
@@ -14,7 +14,7 @@ const string = '-MONDAY-';
 
 
 function combinator() {
-    return F.any().then(day()).then(F.nop()).then(F.any()).then(F.eos());
+    return F.any().then(day()).then(F.nop()).then(F.any()).thenEos();
 }
 
 let stream = Streams.ofString(string);
