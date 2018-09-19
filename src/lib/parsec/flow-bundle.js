@@ -6,8 +6,7 @@
  * Licensed under the LGPL2 license.
  */
 
-import unit from '../data/unit.js';
-import Parser from './parser';
+import Parser, {eos} from './parser';
 import response from './response';
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
@@ -17,6 +16,7 @@ function parse(p) {
 
 // (('b -> Parser 'a 'c) * 'b)-> Parser 'a 'c
 function lazy(p, parameters, self = {}) {
+
     if (parameters && !Array.isArray(parameters)) {
         throw 'Lazy(parser, [params]) function expect parser parameters to be packed into an array';
     }
@@ -39,20 +39,10 @@ function returns(v) {
 // unit -> Parser 'a 'c
 function error() {
     return new Parser((input, index = 0) =>
-        response.reject(input.location(index), false)
+        response.reject(input, index, false)
     );
 }
 
-// unit -> Parser unit 'c
-function eos() {
-    return new Parser((input, index = 0) => {
-        if (input.endOfStream(index)) {
-            return response.accept(unit, input, index, false);
-        } else {
-            return response.reject(input.location(index), false);
-        }
-    });
-}
 
 // ('a -> boolean) -> Parser a 'c
 // index is forwarded at index +1
@@ -63,7 +53,7 @@ function satisfy(predicate) {
             .filter(predicate)
             .map(value => response.accept(value, input, index + 1, true))
             .lazyRecoverWith(() =>
-                response.reject(input.location(index), false)
+                response.reject(input, index, false)
             )
     );
 }
@@ -75,7 +65,11 @@ function doTry(p) {
             .parse(input, index)
             .fold(
                 accept => accept,
-                reject => response.reject(input.location(reject.offset), false)
+                // Compared to satisfy, we come back to initial offset
+                reject => {
+                    // FIXME: better ES6 hnadling
+                    return response.reject(input, reject.offset , false)
+                }
             )
     );
 }
@@ -168,16 +162,13 @@ function searchStringStart(string) {
                 true
             );
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }
 
 /**
  * Will work only if input.source is a String
- * Needs to be tested with ReactJS
- * @param string
- * @returns {Parser}
  */
 function searchArrayStringStart(array) {
     return new Parser((input, index = 0) => {
@@ -207,7 +198,7 @@ function searchArrayStringStart(array) {
                 true
             );
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }
@@ -219,7 +210,7 @@ export function string(s) {
         if (input.subStreamAt(s.split(''), index)) {
             return response.accept(s, input, index + s.length, true);
         } else {
-            return response.reject(input.location(index), false);
+            return response.reject(input, index, false);
         }
     });
 }

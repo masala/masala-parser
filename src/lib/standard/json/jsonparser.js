@@ -6,24 +6,27 @@
  * Licensed under the LGPL2 license.
  */
 
-import genlex from '../../genlex/genlex.js';
-import token from '../../genlex/token';
+import {GenLex} from '../../genlex/genlex';
+
 import {F} from '../../parsec/index';
+import {C, N} from "../../parsec";
 
 //
 // Facilities
 //
 
-var tkNumber = token.parser.number,
-    tkString = token.parser.string,
-    tkKeyword = token.parser.keyword;
+let genlex = new GenLex();
+genlex.keywords(['null', 'false', 'true', '{', '}', '[', ']', ':', ',']);
+let number = genlex.tokenize(N.numberLiteral(), 'number', 1100);
+let string = genlex.tokenize(C.stringLiteral(), 'string', 800);
 
 function tkKey(s) {
-    return tkKeyword.match(s);
+    return genlex.get(s);
 }
 
 // unit -> Parser ? Token
 function arrayOrNothing() {
+    // FIXME: ES2015 code not great
     var value = [],
         addValue = e => {
             value = value.concat(e);
@@ -35,12 +38,13 @@ function arrayOrNothing() {
 
 // unit -> Parser ? Token
 function objectOrNothing() {
+    // FIXME: ES2015 code not great
     var value = {},
         addValue = e => {
             value[e[0]] = e[1];
         },
         getValue = () => value,
-        attribute = tkString
+        attribute = string
             .thenLeft(tkKey(':'))
             .then(F.lazy(expr))
             .map(addValue);
@@ -52,8 +56,8 @@ function objectOrNothing() {
 
 // unit -> Parser ? Token
 function expr() {
-    return tkNumber
-        .or(tkString)
+    return number
+        .or(string)
         .or(tkKey('null').thenReturns(null))
         .or(tkKey('true').thenReturns(true))
         .or(tkKey('false').thenReturns(false))
@@ -63,12 +67,10 @@ function expr() {
 
 //const parse =
 export default {
-    parse: function(source) {
-        var keywords = ['null', 'false', 'true', '{', '}', '[', ']', ':', ','],
-            tokenizer = genlex
-                .generator(keywords)
-                .tokenBetweenSpaces(token.builder);
+    parse: function (source) {
 
-        return tokenizer.chain(expr().thenLeft(F.eos())).parse(source, 0);
+        const parser = genlex.use(expr().thenLeft(F.eos()));
+
+        return parser.parse(source, 0);
     },
 };

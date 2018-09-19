@@ -1,7 +1,10 @@
 Typescript: missing all combinations of Parsers.then
 
 Documentation for F.startWith
+    // rename en startsWith ?
 
+
+remove Tokens bundle from doc
 
 -> release
 
@@ -24,7 +27,6 @@ prune thenLeft and thenRight
 
 Questions Didier
 
-- perdu lien coveralls
 
 
 Promotion

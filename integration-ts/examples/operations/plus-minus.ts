@@ -1,7 +1,4 @@
-import {Streams, F, C, Option, N, SingleParser, parserBuilder, ListParser} from '@robusta/trash'
-import {assertTrue} from '../../assert';
-
-
+import {Streams, F, C} from '@masala/parser'
 
 
 /*
@@ -110,7 +107,7 @@ function terminal() {
 }
 
 function combinator() {
-    return expr().then(F.eos.drop());
+    return expr().then(F.eos().drop());
 }
 
 const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';

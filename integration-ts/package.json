@@ -4,14 +4,14 @@
   "description": "used to test npm publications",
   "main": "index.js",
   "dependencies": {
-    "@robusta/trash": "0.7.0"
+    "@masala/parser": "0.7.0"
   },
   "devDependencies": {
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3"
   },
   "scripts": {
-    "test": "ts-node ./test.ts"
+    "test": "ts-node ./examples/index.ts"
   },
   "author": "",
   "license": "ISC"
