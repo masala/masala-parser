@@ -68,6 +68,7 @@ export interface VoidResponse<T>extends Response<T> {
 }
 
 export interface Response<T> {
+
     isAccepted(): boolean
     isConsumed(): boolean
     fold(accept, reject?): Response<T>;
@@ -76,6 +77,7 @@ export interface Response<T> {
     filter(f: (value) => boolean): Response<T>;
     //value:T
     offset: number;
+    location():number;
 }
 
 
