@@ -1,4 +1,4 @@
-import {Streams, F, C, N} from '@robusta/trash'
+import {Streams, F, C, N} from '@masala/parser'
 import {assertEquals, assertFalse, assertTrue} from '../../assert';
 
 

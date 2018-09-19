@@ -18,6 +18,7 @@ import option from '../data/option';
 import list from '../data/list';
 
 import response from './response';
+import unit from "../data/unit";
 
 /**
  * Parser class
@@ -68,6 +69,10 @@ export default class Parser {
                 }
             })
         );
+    }
+
+    thenEos(){
+        return this.then(eos().drop());
     }
 
     concat(p) {
@@ -161,7 +166,7 @@ function bindAccepted(accept_a, f) {
                 ),
             reject_b =>
                 response.reject(
-                    accept_a.input.location(reject_b.offset),
+                    reject_b.input, reject_b.offset,
                     accept_a.consumed || reject_b.consumed
                 )
         );
@@ -209,7 +214,7 @@ function repeatable(self, occurrences, accept) {
             return response.accept(value, input, offset, consumed);
         }
 
-        return response.reject(offset, consumed);
+        return response.reject(input, offset, consumed);
     });
 }
 
@@ -221,4 +226,15 @@ function returns(v) {
     return new Parser((input, index = 0) =>
         response.accept(v, input, index, false)
     );
+}
+
+// unit -> Parser unit 'c
+export function eos() {
+    return new Parser((input, index = 0) => {
+        if (input.endOfStream(index)) {
+            return response.accept(unit, input, index, false);
+        } else {
+            return response.reject(input, index, false);
+        }
+    });
 }

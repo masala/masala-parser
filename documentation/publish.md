@@ -1,10 +1,23 @@
 This document is for contributors who want to publish. You must have
 correct ssh key
 
-`npm run dist` will create the browserified distributed file, thought it's not
-the main file
+
+Integration test at lower level
+-----
+
+TL;DR: run `npm run compile` then `node tasks/integrate.js`
+
+`npm run compile` will compile files with babel; `package.json` says users will import
  
         "main": "build/index.js",
+        
+        
+then `tasks/post-compile` will copy json files needed for unit and performance tests.
+
+`npm run prepublish` will make a few integration test with this compiled version. 
+
+These prepublish tests cant be run independently with `node tasks/integrate.js`
+
 
 ### Make a pre-release to test stuff
         

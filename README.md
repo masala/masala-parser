@@ -246,39 +246,17 @@ A Parser can parse. When it finished this work, it can return two subtypes of `R
 ```
 
 
-## The Flow Bundle
-
-The flow bundle will mix ingredients together.
-
-For example if you have a Parser `p`, `F.not(p)` will accept anything
-that does not satisfy `p`
-
-All of these functions will return a brand new Parser that you can combine with others.
-
-Most important:
-
-* `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed
-* `F.any`: Accept any character (and so moves the cursor)
-* `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
-* `F.eos`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
-* `F.moveUntil(string|stopParser)`: Alternative for **regex**. Will traverse the document **until** the *stop parser*
-    - returns `undefined` if *stop* is not found
-    - returns all characters if *stop* is found, and set the cursor at the spot of the stop
-* `F.dropTo(string|stopParser)`: Will traverse the document **including** the *stop parser*
-    
-
-Others:
-
-* `F.lazy`: Makes a lazy evaluation. May be used for Left recursion (difficult)
-* `F.parse(parserFunction)`: Create a new Parser from a function. Usually, you won't start here.
-* `F.subStream(length)`: accept any next characters  
-* `F.returns`: forces a returned value
-* `F.error`: returns an error. Parser will never be accepted
-* `F.satisfy`: check if condition is satisfied
-* `F.startsWith(value)`: create a no-op parser with initial value 
-
-
 ## The Chars Bundle
+
+Example: 
+
+```js
+C.char('-')
+    .then(C.letters())
+    .then(C.char('-'))
+// accepts  '-hello-' ; value is ['-','hello','-']
+// reject '-hel lo-' because space is not a letter    
+```
 
 [General use](./documentation/chars-bundle.md)
 
@@ -295,11 +273,22 @@ Others:
 * `string(word)`: accept if next input is the given `word`  
 * `stringIn(words)`: accept if next input is the given `words` [More here](./documentation/chars-bundle.md)
 * `notString(word)`: accept if next input is *not* the given `word`
-* `charLiteral`: single quoted char element in C/Java : `'a'` is accepted
-* `stringLiteral`: double quoted string element in java/json: `"hello world"` is accepted
-* `lowerCase`: accept any next lower case inputs
-* `upperCase`: accept any next uppercase inputs
+* `charLiteral()`: single quoted char element in C/Java : `'a'` is accepted
+* `stringLiteral()`: double quoted string element in java/json: `"hello world"` is accepted
+* `lowerCase()`: accept any next lower case inputs
+* `upperCase()`: accept any next uppercase inputs
 
+Other example:
+
+```js
+C.string('Hello')
+    .then(C.char(' '))
+    .then(C.lowerCase().rep().join(''))
+
+// accepts Hello johnny ; value is ['Hello', ' ', 'johnny']
+// rejects Hello Johnny : J is not lowercase ; no value
+// rep() is not easy to handle.
+```
 
 ## The Numbers Bundle
 
@@ -308,6 +297,40 @@ Others:
 * `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
 * `digits`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
 * `integer`: accept any positive or negative integer
+
+
+
+
+## The Flow Bundle
+
+The flow bundle will mix ingredients together.
+
+For example if you have a Parser `p`, `F.not(p)` will accept anything
+that does not satisfy `p`
+
+All of these functions will return a brand new Parser that you can combine with others.
+
+Most important:
+
+* `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed
+* `F.any`: Accept any character (and so moves the cursor)
+* `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
+* `F.eos()`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
+* `F.moveUntil(string|stopParser)`: Alternative for **regex**. Will traverse the document **until** the *stop parser*
+    - returns `undefined` if *stop* is not found
+    - returns all characters if *stop* is found, and set the cursor at the spot of the stop
+* `F.dropTo(string|stopParser)`: Will traverse the document **including** the *stop parser*
+    
+
+Others:
+
+* `F.lazy(parser, ?params)`: Makes a lazy evaluation. May be used for Left recursion (difficult)
+* `F.parse(parserFunction)`: Create a new Parser from a function. Usually, you won't start here.
+* `F.subStream(length)`: accept any next characters  
+* `F.returns(value)`: forces a returned value
+* `F.error()`: returns an error. Parser will never be accepted
+* `F.satisfy(predicate)`: check if condition is satisfied
+* `F.startsWith(value)`: create a no-op parser with initial value 
 
 
 # The Standard bundles

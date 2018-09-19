@@ -1,4 +1,4 @@
-import {Streams, F, C, Option, N, SingleParser, parserBuilder, ListParser} from '@robusta/trash'
+import {Streams, F, C, Option, N, SingleParser, parserBuilder, ListParser} from '@masala/parser'
 import {assertTrue} from '../../assert';
 
 

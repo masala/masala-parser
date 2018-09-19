@@ -7,38 +7,82 @@
  */
 
 import Stream from './stream';
+import option from '../data/option';
 
 /**
  * ParserStream stream class
+ * Compared to StringStream, it is NOT a RandomAccess.
+ * You must use a substream before making an access to a unreached point.
  */
 class ParserStream extends Stream {
-    constructor(parser, source) {
+    constructor(parser, lowerStream) {
         super();
+        //TODO: why the parser is called source ?
         this.source = parser;
-        this.input = source;
-        this.offsets = {};
+        this.input = lowerStream;
+        this.offsets = [0];
     }
 
     getOffset(index) {
-        return this.offsets[index] || index;
+        if ( index < this.offsets.length) {
+            return option.some(this.offsets[index]);
+        }
+        return option.none();
+
     }
+
 
     // Stream 'a => number -> number
     location(index) {
-        return this.input.location(this.getOffset(index - 1) + 1);
+        if (index === 0) {
+            return 0;
+        }
+        const option = this.getOffset(index)
+        if (option.isPresent()) {
+            // TODO: check the +1 ; the -1 has disappeared
+            return this.input.location(option.get());
+        } else {
+            throw 'No location has been found yet for index '+index;
+            // TODO: What is the use case ?
+            // return this.input.location(this.getOffset(index - 1) + 1);
+        }
+
     }
 
     // ParserStream 'a => unit -> boolean
     endOfStream(index) {
-        return this.input.endOfStream(this.getOffset(index));
+        const option = this.getOffset(index);
+        if (option.isPresent()) {
+            return this.input.endOfStream(option.get());
+        } else {
+            // If last was the last befor end of stream, then yes
+            const last = this.offsets[this.offsets.length - 1];
+            return this.input.endOfStream(last +1);
+        }
+
     }
 
     // ParserStream 'a => number -> 'a <+> error
+    /**
+     * index is the token index ; It uses getOffset(index) to retrieve the location
+     * in the stringStream
+     * @param index  token index
+     */
     unsafeGet(index) {
-        var result = this.source.parse(this.input, this.getOffset(index));
+        // the wrapped parser parses the StringStream
+        let sourceIndex;
+        let option = this.getOffset(index);
+        if (option.isPresent()){
+            // we have already read it. Should be caught by the bufferedStream
+            sourceIndex = option.get();
+        }else{
+            throw new Error();
+        }
+        const result = this.source.parse(this.input, sourceIndex);
 
         if (result.isAccepted()) {
-            this.offsets[index + 1] = result.offset;
+            // Why index+1 ? Because we succeeded, and the source is at result.offset
+            this.offsets.push(result.offset);
             return result.value;
         } else {
             throw new Error();
@@ -46,8 +90,8 @@ class ParserStream extends Stream {
     }
 }
 
-function factory(parser, source) {
-    return new ParserStream(parser, source);
+function factory(parser, lowerStream) {
+    return new ParserStream(parser, lowerStream);
 }
 
 export default factory;

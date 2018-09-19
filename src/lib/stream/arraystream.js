@@ -18,7 +18,7 @@ class ArrayStream extends Stream {
 
     // ArrayStream 'a => unit -> boolean
     endOfStream(index) {
-        return this.source.length <= index;
+        return index >= this.source.length;
     }
 
     // ArrayStream 'a => number -> 'a <+> error

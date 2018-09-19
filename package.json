@@ -2,9 +2,10 @@
   "name": "@masala/parser",
   "description": "Masala Parser",
   "license": "LGPL-2.1",
-  "version": "0.7.0",
+  "version": "0.8.0-rc1",
   "keywords": [
     "parser",
+    "parsec",
     "javascript",
     "ll",
     "combinator",
@@ -58,6 +59,7 @@
     "check": "npm run lint && npm run test && npm run cover",
     "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",
     "dist": "rimraf dist/ && mkdirp dist && npm run test && browserify -t uglifyify build/lib/index.js --standalone masala-parser -o dist/masala-parser.min.js",
+    "copy-to-ts":"",
     "prepublish": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
     "postpublish": "cd integration-npm && rimraf node_modules && sleep 5 && npm install && node integrate.js"
   },
