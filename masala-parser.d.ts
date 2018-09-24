@@ -227,10 +227,32 @@ interface NumberBundle {
     digits(): SingleParser<string>;
 }
 
+type ParserOrString<T> =IParser<T>|string;
+
+interface Token<T> extends SingleParser<T>{
+
+}
+
+type TokenCollection = {
+    [key: string]: Token<any>
+}
+
+interface GenLex{
+    tokenize<T>(parser:ParserOrString<T>, name:string, precedence?:number):Token<T>;
+    use<T>(grammar:IParser<T>):IParser<T>;
+    tokens():TokenCollection;
+}
+
+
+
+
+
 export declare const F: FlowBundle;
 export declare const C: CharBundle;
 export declare const N: NumberBundle;
 export declare const Streams: IStreams;
+
+
 
 
 // TODO: Check if this is needed
@@ -238,7 +260,8 @@ interface MasalaBundlesStatic {
     Streams: IStreams,
     C: CharBundle,
     F: FlowBundle,
-    N: NumberBundle
+    N: NumberBundle,
+    GenLex:GenLex
 }
 
 
