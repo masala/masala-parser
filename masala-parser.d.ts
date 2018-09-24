@@ -245,8 +245,6 @@ interface GenLex{
 
 
 
-
-
 export declare const F: FlowBundle;
 export declare const C: CharBundle;
 export declare const N: NumberBundle;
@@ -261,7 +259,8 @@ interface MasalaBundlesStatic {
     C: CharBundle,
     F: FlowBundle,
     N: NumberBundle,
-    GenLex:GenLex
+    GenLex:GenLex,
+    getMathGenLex():GenLex
 }
 
 

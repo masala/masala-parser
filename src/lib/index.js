@@ -7,7 +7,7 @@
  */
 
 import data from './data/index';
-import {GenLex} from './genlex/genlex';
+import {GenLex,getMathGenLex} from './genlex/genlex';
 import parsec from './parsec/index';
 import Parser from './parsec/parser';
 import {F, C, N} from './parsec/index';
@@ -21,6 +21,7 @@ const MD = standard.markdownBundle;
 export {
     data,
     GenLex,
+    getMathGenLex,
     parsec,
     standard,
     Streams,
