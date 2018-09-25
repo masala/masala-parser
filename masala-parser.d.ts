@@ -70,7 +70,7 @@ export interface VoidResponse<T>extends Response<T> {
 export interface Response<T> {
 
     isAccepted(): boolean
-    isConsumed(): boolean
+    isEos(): boolean
     fold(accept, reject?): Response<T>;
     map<Y>(f): Response<Y>;
     flatMap<Y>(f): Response<Y>;

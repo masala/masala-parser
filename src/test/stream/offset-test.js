@@ -17,7 +17,7 @@ export default {
         const response = parser.parse(stream, 0);
 
         test.ok(response.isAccepted());
-        test.ok(! response.isConsumed());
+        test.ok(! response.isEos());
         test.equal(response.offset, 3);
 
         test.done();
@@ -31,7 +31,7 @@ export default {
         const response = parser.parse(stream, 4);
 
         test.ok(response.isAccepted());
-        test.ok(! response.isConsumed());
+        test.ok(! response.isEos());
         test.equal(response.offset, 9);
 
         test.done();
@@ -45,7 +45,7 @@ export default {
         const response = parser.parse(stream);
 
         test.ok(response.isAccepted());
-        test.ok(response.isConsumed());
+        test.ok(response.isEos());
         test.equal(response.offset, 22);
 
         test.done();
@@ -87,7 +87,7 @@ export default {
         test.ok(!response.isAccepted());
 
         // because an error has NEVER stream consumed
-        test.ok(!response.isConsumed());
+        test.ok(!response.isEos());
         test.equal(response.offset, stream.source.length);
 
         test.done();

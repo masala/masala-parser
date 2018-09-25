@@ -20,7 +20,7 @@ export default {
 
         const text = '+ + - --';
         const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isConsumed(), 'input is consumed');
+        test.ok(parsing.isEos(), 'input is consumed');
         test.equal(5, parsing.offset, 'there are 5 keywords');
         test.equal(8, parsing.input.location(parsing.offset), 'there are 8 chars')
         test.done()
@@ -40,7 +40,7 @@ export default {
         //            0  1  23
         const parsing = parser.parse(stream.ofString(text));
 
-        test.ok(! parsing.isConsumed(), 'an error should have occurred');
+        test.ok(! parsing.isEos(), 'an error should have occurred');
         test.equal(3, parsing.getOffset(), 'Failed at the third token');
         test.equal(7, parsing.location(), 'fail is not 3: it must be the char offset before the error');
 
@@ -132,7 +132,7 @@ export default {
         const parser = genlex.use(grammar);
         const text = '++77++4+';
         const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isConsumed(), 'tokenize mixes with keywords');
+        test.ok(parsing.isEos(), 'tokenize mixes with keywords');
         test.done()
     },
     'getMathGenLex() gives a simple genlex': function (test) {
@@ -183,7 +183,7 @@ export default {
 
         const parsing = parser.parse(stream.ofString(text));
 
-        test.ok(parsing.isConsumed());
+        test.ok(parsing.isEos());
         test.done()
 
     }, 'getMathGenLex can be enhanced with a string and no name': function (test) {
@@ -197,7 +197,7 @@ export default {
         const text = '15 $ ';
         const parsing = genlex.use(grammar).parse(stream.ofString(text));
 
-        test.ok(parsing.isConsumed());
+        test.ok(parsing.isEos());
         test.done()
 
     },

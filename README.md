@@ -45,7 +45,7 @@ const {Streams, N, C}= require('@masala/parser');
 
 const stream = Stream.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
-    .then(N.numberLiteral)      // we have ['|', 4.6], we keep 4.6
+    .then(N.number())      // we have ['|', 4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
     .map(x =>Math.floor(x));
 
@@ -122,17 +122,17 @@ function operator(symbol) {
 }
 
 function sum() {
-    return N.integer.thenLeft(operator('+')).then(N.integer)
+    return N.integer().thenLeft(operator('+')).then(N.integer())
         .map(values => values[0] + values[1]);
 }
 
 function multiplication() {
-    return N.integer.thenLeft(operator('*')).then(N.integer)
+    return N.integer().thenLeft(operator('*')).then(N.integer())
         .map(values => values[0] * values[1]);
 }
 
 function scalar() {
-    return N.integer;
+    return N.integer();
 }
 
 function combinator() {
@@ -196,7 +196,7 @@ Suppose we do not `try()` but use `or()` directly:
  You should avoid long sequences of `try()` if memory is constrained. If possible, you can use `or()` without `try()`
   when there is no *starting ambiguity*.
 
-`N.integer.or(C.letter())` doesn't require a `try()`.
+`N.integer().or(C.letter())` doesn't require a `try()`.
 
 
 # Recursion
@@ -293,10 +293,10 @@ C.string('Hello')
 ## The Numbers Bundle
 
 
-* `numberLiteral`: accept any float number, such as -2.3E+24, and returns a float    
-* `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
-* `digits`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
-* `integer`: accept any positive or negative integer
+* `number()`: accept any float number, such as -2.3E+24, and returns a float    
+* `digit()`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
+* `digits()`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
+* `integer()`: accept any positive or negative integer
 
 
 
@@ -335,16 +335,8 @@ Others:
 
 # The Standard bundles
 
-Masala Parser offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental
-and incomplete markdown parser.
+Masala Parser offers a Json parser, and bricks for custom markdown parser.
 
-## The Token Bundle
-
-
-* `email`: accept a very large number of emails
-* `date`: accept a very small number of dates (2017-03-27 or 27/03/2017)
-* `blank(nothing|string|parser)`: accept standard blanks (space, tab), or defined characters, or a combined Parser
-* `eol`: accept **E**nd **O**f **L**ine `\n` or `\r\n`
 
 
 

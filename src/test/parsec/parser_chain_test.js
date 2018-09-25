@@ -126,7 +126,7 @@ export default {
         const parsing = token.chain(lex).parse(stream.ofString('10 12 44'), 0)
 
 
-        test.ok(parsing.isConsumed(), 'should have been consumed');
+        test.ok(parsing.isEos(), 'should have been consumed');
         test.equal(parsing.value, 66, 'should be 66.');
         test.done();
 
@@ -141,7 +141,7 @@ export default {
         const parsing = token.chain(lex).parse(stream.ofString('10 -12 44'), 0)
 
 
-        test.ok(!parsing.isConsumed(), 'should have been consumed');
+        test.ok(!parsing.isEos(), 'should have been consumed');
         test.done();
 
     }
