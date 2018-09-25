@@ -17,7 +17,7 @@ import {C, N} from "../../parsec";
 
 let genlex = new GenLex();
 genlex.keywords(['null', 'false', 'true', '{', '}', '[', ']', ':', ',']);
-let number = genlex.tokenize(N.numberLiteral(), 'number', 1100);
+let number = genlex.tokenize(N.number(), 'number', 1100);
 let string = genlex.tokenize(C.stringLiteral(), 'string', 800);
 
 function tkKey(s) {

@@ -59,13 +59,13 @@ export default {
 
     'expect tokenize() to add on definition': function (test) {
         const genlex = new GenLex();
-        genlex.tokenize(N.numberLiteral(), 'number', 500);
+        genlex.tokenize(N.number(), 'number', 500);
         test.ok(genlex.definitions.length === 1);
         test.done();
     },
     'expect use() to sort definitions by revert precedence': function (test) {
         const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkNumber = genlex.tokenize(N.number(), 'number');
         const tkDate = genlex.tokenize(date(), 'date', 800);
         const tkChar = genlex.tokenize(C.charLiteral(), 'char', 1200);
         let grammar = tkDate.then(tkNumber.rep().or(tkChar));
@@ -80,7 +80,7 @@ export default {
     'expect use() to create an easy tokenizer': function (test) {
 
         const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkNumber = genlex.tokenize(N.number(), 'number');
         let grammar = tkNumber.rep();
 
         const parser = genlex.use(grammar);
@@ -94,7 +94,7 @@ export default {
     'a Genlex can update its precedence': function (test) {
 
         const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkNumber = genlex.tokenize(N.number(), 'number');
         const tkDate = genlex.tokenize(date(), 'date', 800);
 
         let content = '10/05/2014 34 23';
@@ -125,7 +125,7 @@ export default {
 
     'tokenize mixes with keywords': function (test) {
         const genlex = new GenLex();
-        const number = genlex.tokenize(N.numberLiteral(), 'number');
+        const number = genlex.tokenize(N.number(), 'number');
         const plus = genlex.tokenize('+');
 
         let grammar = plus.or(number).rep().then(F.eos().drop());

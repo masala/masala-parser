@@ -15,7 +15,7 @@ export default {
 
 
         const tkDate =  genlex.tokenize(date(), 'date', 500);
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number', 700);
+        const tkNumber = genlex.tokenize(N.number(), 'number', 700);
         let grammar = tkDate.then(tkNumber.rep());
         const parser = genlex.use(grammar);
         const parsing = parser.parse(stream.ofString('10/12/2013 34 23'));

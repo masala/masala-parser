@@ -112,7 +112,7 @@ export default {
 
 
     'ParserStream.get() is idemPotent':function(test){
-        const lower = N.numberLiteral().then(spaces().opt().drop());
+        const lower = N.number().then(spaces().opt().drop());
 
 
         const lowerStream = Streams.ofString('10 12 44');

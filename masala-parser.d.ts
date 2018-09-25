@@ -222,9 +222,9 @@ interface FlowBundle {
 
 interface NumberBundle {
     number(): SingleParser<number>;
-    numberLiteral(): SingleParser<number>;
-    digit(): SingleParser<string>;
-    digits(): SingleParser<string>;
+    integer(): SingleParser<number>;
+    digit(): SingleParser<number>;
+    digits(): SingleParser<number>;
 }
 
 type ParserOrString<T> =IParser<T>|string;

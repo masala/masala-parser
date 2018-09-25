@@ -10,7 +10,7 @@ import C from './chars-bundle';
 import F from './flow-bundle';
 
 // unit -> Parser number char
-function numberLiteral() {
+function number() {
     // [-+]?\d+([.]\d+)?([eE][+-]?\d+)?
     var join = r => r.join(''),
         joinOrEmpty = r => r.map(join).orElse(''),
@@ -29,15 +29,19 @@ function numberLiteral() {
 
 // unit -> Parser char char
 function digit() {
-    return F.satisfy(v => '0' <= v && v <= '9');
+    return F.satisfy(v => '0' <= v && v <= '9')
+        .map(c=>parseInt(c));
 }
+
 
 function digits() {
-    return digit().rep().map(v => v.join(''));
+    return digit().rep().map(v => v.join(''))
+                .map(s=>parseInt(s));
 }
 
+
 function integer() {
-    // [-+]?\d+([.]\d+)?([eE][+-]?\d+)?
+    // [-+]?\d+
     var join = r => r.join(''),
         digits = digit().rep().map(join),
         integer = C.charIn('+-')
@@ -49,8 +53,8 @@ function integer() {
 }
 
 export default {
-    numberLiteral,
+    number,
     digit,
     digits,
-    integer,
+    integer
 };
