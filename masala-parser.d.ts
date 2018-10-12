@@ -70,7 +70,7 @@ export interface VoidResponse<T>extends Response<T> {
 export interface Response<T> {
 
     isAccepted(): boolean
-    isConsumed(): boolean
+    isEos(): boolean
     fold(accept, reject?): Response<T>;
     map<Y>(f): Response<Y>;
     flatMap<Y>(f): Response<Y>;
@@ -222,10 +222,28 @@ interface FlowBundle {
 
 interface NumberBundle {
     number(): SingleParser<number>;
-    numberLiteral(): SingleParser<number>;
-    digit(): SingleParser<string>;
-    digits(): SingleParser<string>;
+    integer(): SingleParser<number>;
+    digit(): SingleParser<number>;
+    digits(): SingleParser<number>;
 }
+
+type ParserOrString<T> =IParser<T>|string;
+
+interface Token<T> extends SingleParser<T>{
+
+}
+
+type TokenCollection = {
+    [key: string]: Token<any>
+}
+
+interface GenLex{
+    tokenize<T>(parser:ParserOrString<T>, name:string, precedence?:number):Token<T>;
+    use<T>(grammar:IParser<T>):IParser<T>;
+    tokens():TokenCollection;
+}
+
+
 
 export declare const F: FlowBundle;
 export declare const C: CharBundle;
@@ -233,12 +251,16 @@ export declare const N: NumberBundle;
 export declare const Streams: IStreams;
 
 
+
+
 // TODO: Check if this is needed
 interface MasalaBundlesStatic {
     Streams: IStreams,
     C: CharBundle,
     F: FlowBundle,
-    N: NumberBundle
+    N: NumberBundle,
+    GenLex:GenLex,
+    getMathGenLex():GenLex
 }
 
 

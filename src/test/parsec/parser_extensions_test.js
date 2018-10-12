@@ -310,7 +310,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.numberLiteral().parse(stream.ofString('123'), 0).isAccepted(),
+            N.number().parse(stream.ofString('123'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -321,7 +321,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.numberLiteral().parse(stream.ofString('123'), 0).value,
+            N.number().parse(stream.ofString('123'), 0).value,
             123,
             'should be accepted.'
         );
@@ -332,7 +332,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.numberLiteral().parse(stream.ofString('-123'), 0).isAccepted(),
+            N.number().parse(stream.ofString('-123'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -343,7 +343,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.numberLiteral().parse(stream.ofString('-123'), 0).value,
+            N.number().parse(stream.ofString('-123'), 0).value,
             -123,
             'should be accepted.'
         );
@@ -354,7 +354,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.numberLiteral()
+            N.number()
                 .parse(stream.ofString('123.34e-34'), 0)
                 .isAccepted(),
             true,
@@ -367,7 +367,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.numberLiteral().parse(stream.ofString('123.34e-34'), 0).value,
+            N.number().parse(stream.ofString('123.34e-34'), 0).value,
             123.34e-34,
             'should be accepted.'
         );
@@ -536,9 +536,9 @@ export default {
         const string = '2+2';
         const expected = [2, '+', 2];
 
-        const parsing = N.numberLiteral()
+        const parsing = N.number()
             .then(C.char('+'))
-            .then(N.numberLiteral())
+            .then(N.number())
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
@@ -552,9 +552,9 @@ export default {
         const string = '2+2';
         const expected = [];
 
-        const parsing = N.numberLiteral()
+        const parsing = N.number()
             .then(C.char('+'))
-            .then(N.numberLiteral())
+            .then(N.number())
             .thenReturns([])
             .parse(stream.ofString(string), 0);
 

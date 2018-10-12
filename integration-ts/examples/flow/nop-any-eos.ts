@@ -21,5 +21,5 @@ let stream = Streams.ofString(string);
 let parsing = combinator().parse(stream);
 
 assertTrue(parsing.isAccepted());
-assertTrue(parsing.isConsumed());
+assertTrue(parsing.isEos());
 

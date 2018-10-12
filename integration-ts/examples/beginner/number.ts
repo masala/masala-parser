@@ -8,7 +8,7 @@ const s = Streams.ofString(document);
 // numberLitteral defines any int or float number
 // We expect a number, then eos: End Of Stream
 // We use drop() because we don't need the value of F.eos, we only want 12
-const numberParser = N.numberLiteral().then(F.eos().drop());
+const numberParser = N.number().then(F.eos().drop());
 const parsing = numberParser.parse(s);
 
 // If the parser reached the end of stream (F.eos) without rejection, parsing is accepted
