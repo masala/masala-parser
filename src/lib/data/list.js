@@ -7,8 +7,27 @@
  */
 
 class List {
+
+    /**
+     *  Treaten as an internal private constructor
+     *  @var value: array of values
+     */
     constructor(value) {
-        this.value = value;
+
+        if (!Array.isArray(value)){
+            throw "Illegal state exception: FlatList must have an array in its private constructor";
+        }
+        // internal token
+        this.__masala__list__ = true;
+        if (value && (value.__masala__list__ === true)) {
+            // auto unwrapping
+            console.log('found a list', value, value.value);
+            this.value = value.value;
+        } else {
+            // nominal case
+
+            this.value = value;
+        }
     }
 
     size() {
@@ -23,8 +42,13 @@ class List {
         return new List(this.value.concat([element]));
     }
 
-    append(list) {
-        return new List(this.value.concat(list.value));
+    append(element) {
+        if (element && element.__masala__list__){
+
+        return new List(this.value.concat(element.value));
+        }
+
+        return new List(this.value.concat(element));
     }
 
     filter(funcall) {
@@ -58,10 +82,21 @@ class List {
     }
 }
 
-export default function() {
-    if (arguments.length === 1 && Array.isArray(arguments[0])) {
-        return new List(arguments[0]);
+export default function (...args) {
+    if (args.length === 0) {
+        return new List([]);
     }
+    /*if (arguments.length === 1 && Array.isArray(arguments[0])) {
+        return new List(arguments[0]);
+    }*/
+    let values = [];
+    args.forEach(arg => {
+        if (arg && arg.__masala__list__) {
+            arg.value.forEach(v => values.push(v)); // flattening
+        } else {
+            values.push(arg);
+        }
+    });
 
-    return new List(Array.prototype.slice.call(arguments));
+    return new List(values);
 }

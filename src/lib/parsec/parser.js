@@ -71,7 +71,7 @@ export default class Parser {
         );
     }
 
-    thenEos(){
+    thenEos() {
         return this.then(eos().drop());
     }
 
@@ -103,10 +103,20 @@ export default class Parser {
         return choice(this, p);
     }
 
+    /**
+     * Must be used with F.layer()
+     * @param p
+     * @returns {Parser}
+     */
+    and(p) {
+        return both(this, p);
+    }
+
     // Parser 'a 'c => unit -> Parser (Option 'a) 'c
     opt() {
         return this.map(option.some).or(returns(option.none()));
     }
+
 
     // Parser 'a 'c => unit -> Parser (List 'a) 'c
     rep() {
@@ -189,6 +199,19 @@ function choice(self, f) {
             .fold(
                 accept => accept,
                 reject => (reject.consumed ? reject : f.parse(input, index))
+            )
+    );
+}
+
+// Parser 'a 'c -> Parser 'a 'c -> Parser 'a 'c
+function both(self, f) {
+    return new Parser((input, index = 0) =>
+        self
+            .parse(input, index)
+            .fold(
+                accept => f.parse(input, index)
+                    .map(r => [accept.value, r]),
+                reject => reject
             )
     );
 }

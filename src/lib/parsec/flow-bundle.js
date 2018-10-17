@@ -66,13 +66,27 @@ function doTry(p) {
             .fold(
                 accept => accept,
                 // Compared to satisfy, we come back to initial offset
-                reject => {
-                    // FIXME: better ES6 hnadling
-                    return response.reject(input, reject.offset , false)
-                }
+                reject =>  response.reject(input, reject.offset , false)
+
             )
     );
 }
+
+function layer(p) {
+    return new Parser((input, index = 0) =>
+        p
+            .parse(input, index)
+            .fold(
+                accept => {
+                    console.log('response', response.accept(accept.value,input, index, false));
+                    return response.accept(accept.value, input, index, false)
+                },
+                        // Compared to satisfy, we come back to initial offset
+                reject =>  reject
+            )
+    );
+}
+
 
 // unit -> Parser 'a 'c
 function any() {
@@ -130,6 +144,7 @@ export default {
     any,
     subStream,
     not: not,
+    layer,
     lazy,
     returns,
     error,

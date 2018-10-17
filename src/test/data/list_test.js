@@ -118,4 +118,15 @@ export default {
 
         test.done();
     },
+    'a list of a list is the same list':function(test){
+        const lower = list(1,2);
+        if (lower.value && lower.__masala__list__ === true){
+            console.log('found');
+        }
+
+        const wrap = list(lower);
+        test.deepEqual(lower.value, wrap.value);
+        test.deepEqual(wrap.value, [1,2]);
+        test.done();
+    }
 };
