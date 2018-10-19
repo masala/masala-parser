@@ -53,8 +53,8 @@ interface IStreams {
 }
 
 
-export interface ArrayResponse<T> extends Response<T> {
-    value: Array<T>
+export interface ListResponse<T> extends Response<T> {
+    value: List<T>
 }
 
 
@@ -82,29 +82,29 @@ export interface Response<T> {
 
 
 /* Array with different values*/
-export interface ArrayParser<T> extends IParser<T> {
-    parse<X>(stream: Stream<X>, index?: number): ArrayResponse<T>;
-    then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
-    then(p: VoidParser): ArrayParser<T>;
-    then<Y>(p: ArrayParser<Y>): ArrayParser<T | Y>;
-    then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
-    map<Y> (f: (T) => Y): ArrayParser<Y>;
+export interface ListParser<T> extends IParser<T> {
+    parse<X>(stream: Stream<X>, index?: number): ListResponse<T>;
+    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
+    then(p: VoidParser): ListParser<T>;
+    then<Y>(p: ListParser<Y>): ListParser<T | Y>;
+    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
+    map<Y> (f: (T) => Y): ListParser<Y>;
 
-    opt():ArrayParser<Option<T>>;
-    optrep():ArrayParser<List<T>>;
-    rep(): ArrayParser<List<T>>;
-    or<Y, P extends IParser<Y>>(p: P): ArrayParser<T>|P;
+    opt():SingleParser<Option<List<T>>>;
+    optrep():ListParser<T>;
+    rep(): ListParser<T>;
+    or<Y, P extends IParser<Y>>(p: P): ListParser<T>|P;
 }
 
 export interface SingleParser<T> extends IParser<T> {
     parse<X>(stream: Stream<X>, index?: number): SingleResponse<T>;
-    then<Y>(p: SingleParser<Y>): ArrayParser<T | Y>;
-    then<Y>(p: ArrayParser<Y>): ArrayParser<T | Y>;
+    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
+    then<Y>(p: ListParser<Y>): ListParser<T | Y>;
     then(p: VoidParser): SingleParser<T>;
     map<Y> (f: (T) => Y): SingleParser<Y>;
 
     opt():SingleParser<Option<T>>;
-    optrep():ArrayParser<Option<T>>;
+    optrep():ListParser<Option<T>>;
     rep(): SingleParser<List<T>>;
     //filter(f: () => boolean): SingleParser<T>
     or<Y, P extends IParser<Y>>(p: P): SingleParser<T>|P;
@@ -112,7 +112,7 @@ export interface SingleParser<T> extends IParser<T> {
 
 interface VoidParser extends IParser<void> {
     then<Y>(p: SingleParser<Y>): SingleParser< Y>;
-    then<Y>(p: ArrayParser<Y>): ArrayParser<Y>;
+    then<Y>(p: ListParser<Y>): ListParser<Y>;
     map<Y> (f: (T) => Y): VoidParser;
     opt():VoidParser;
     rep(): VoidParser;
