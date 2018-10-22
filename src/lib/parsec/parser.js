@@ -15,7 +15,7 @@
 import stream from '../stream/index';
 
 import option from '../data/option';
-import list from '../data/list';
+import list, {MASALA_VOID} from '../data/list';
 
 import response from './response';
 import unit from "../data/unit";
@@ -80,7 +80,7 @@ export default class Parser {
     }
 
     drop() {
-        return this.map(() => []);
+        return this.map(() => MASALA_VOID);
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c

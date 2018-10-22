@@ -8,6 +8,7 @@
 
 import Parser, {eos} from './parser';
 import response from './response';
+import {MASALA_VOID} from "../data/list";
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
 function parse(p) {
@@ -96,7 +97,7 @@ function any() {
 // unit -> Parser 'a 'c
 function nop() {
     return new Parser((input, index = 0) =>
-        response.accept([], input, index, true)
+        response.accept(MASALA_VOID, input, index, true)
     );
 }
 
