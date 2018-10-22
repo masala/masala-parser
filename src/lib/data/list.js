@@ -6,22 +6,24 @@
  * Licensed under the LGPL2 license.
  */
 
+export const MASALA_VOID = Symbol('__MASALA__VOID__');
+export const MASALA_LIST = Symbol('__MASALA__LIST__');
+
 class List {
 
     /**
-     *  Treaten as an internal private constructor
-     *  @var value: array of values
+     *  Treated as an internal private constructor
+     *  @param value: array of values
      */
     constructor(value) {
 
-        if (!Array.isArray(value)){
-            throw "Illegal state exception: FlatList must have an array in its private constructor";
+        if (!Array.isArray(value)) {
+            throw "Illegal state exception: List must have an array in its private constructor";
         }
         // internal token
-        this.__masala__list__ = true;
-        if (value && (value.__masala__list__ === true)) {
-            // auto unwrapping
-            console.log('found a list', value, value.value);
+        this.listType = MASALA_LIST;
+        if (value && (value.listType === MASALA_LIST)) {
+            // auto flattening
             this.value = value.value;
         } else {
             // nominal case
@@ -39,17 +41,20 @@ class List {
     }
 
     add(element) {
-        return new List(this.value.concat([element]));
+        const array = element!== MASALA_VOID? [element] : [];
+        return new List(this.value.concat(array));
     }
 
-    append(element) {
-        if (element && element.__masala__list__){
 
-        return new List(this.value.concat(element.value));
+
+    append(list) {
+        if (!list || (list.listType !== MASALA_LIST) ) {
+            throw 'Append must append a MasalaList'
         }
 
-        return new List(this.value.concat(element));
+        return new List(this.value.concat(list.value));
     }
+
 
     filter(funcall) {
         var result = [];
@@ -66,7 +71,7 @@ class List {
     }
 
     flatMap(funcall) {
-        var result = new List([]);
+        let result = new List([]);
         this.value.forEach(value => {
             result = result.append(funcall(value));
         });
@@ -82,6 +87,8 @@ class List {
     }
 }
 
+
+
 export default function (...args) {
     if (args.length === 0) {
         return new List([]);
@@ -91,12 +98,29 @@ export default function (...args) {
     }*/
     let values = [];
     args.forEach(arg => {
-        if (arg && arg.__masala__list__) {
+        if (arg && (arg.listType === MASALA_LIST) ) {
             arg.value.forEach(v => values.push(v)); // flattening
         } else {
-            values.push(arg);
+            if (arg !== MASALA_VOID) {
+                values.push(arg);
+            }
         }
     });
 
     return new List(values);
+}
+
+// asList is not exported in the masala lib. Only for internal use
+export function asList(array) {
+    if (!Array.isArray(array)) {
+        throw 'asList expects an array';
+    }
+    return new List(array);
+
+}
+
+export function isList(list) {
+    return list !== undefined
+        && typeof list === 'object'
+        && list.listType === true;
 }
