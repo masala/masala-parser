@@ -150,3 +150,5 @@ const reject = (input, offset, consumed) => new Reject(input, offset, consumed);
 const response = {accept, reject};
 
 export default response;
+
+export {accept,reject}
