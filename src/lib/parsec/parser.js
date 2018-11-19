@@ -58,17 +58,34 @@ export default class Parser {
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
+    // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
         return this.flatMap(a =>
             p.map(b => {
-                let result = list(a).append(list(b)).array();
-                if (result.length === 1) {
-                    return result[0];
-                } else {
-                    return result;
+
+                let result = list(a).append(list(b));
+
+                switch (result.size()) {
+                    case 0:
+                        return MASALA_VOID;
+                    case 1:
+                        return result.value[0];
+                    default:
+                        return result;
                 }
             })
         );
+    }
+
+    // Should be called only on ListParser ; Always returns an array
+    array(){
+
+        return this.map( value => {
+            if (! isList(value)){
+                throw 'array() is called only on ListParser';
+            }
+            return value.array();
+        });
     }
 
     thenEos() {
