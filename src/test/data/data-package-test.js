@@ -3,7 +3,7 @@ import tryTest from './try_test';
 import listTest from './list_test';
 
 
-export {
+export default {
     optionTest,
     tryTest,
     listTest,

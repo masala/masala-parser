@@ -85,7 +85,7 @@ export default {
         test.done();
     },
 
-    'expect (chain) to be accepted': function (test) {
+    'expect (chain) to be accepted again': function (test) {
         test.expect(1);
         // tests here
         var p1 = N.numberLiteral().thenLeft(C.char(' ').opt()),

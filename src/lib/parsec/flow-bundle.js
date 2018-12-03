@@ -79,7 +79,7 @@ function layer(p) {
             .parse(input, index)
             .fold(
                 accept => {
-                    console.log('response', response.accept(accept.value,input, index, false));
+                    //console.log('response', response.accept(accept.value,input, index, false));
                     return response.accept(accept.value, input, index, false)
                 },
                         // Compared to satisfy, we come back to initial offset
