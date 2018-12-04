@@ -94,6 +94,7 @@ export interface ListParser<T> extends IParser<T> {
     optrep():ListParser<T>;
     rep(): ListParser<T>;
     or<Y, P extends IParser<Y>>(p: P): ListParser<T>|P;
+    array():SingleParser<T[]>
 }
 
 export interface SingleParser<T> extends IParser<T> {

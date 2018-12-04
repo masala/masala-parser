@@ -43,6 +43,7 @@ function integer() {
         integer = C.charIn('+-')
             .opt()
             .then(digits)
+            .array()
             .map(r => r[0].orElse('') + r[1]);
 
     return integer.map(i => parseInt(i, 10));

@@ -122,5 +122,5 @@ export function asList(array) {
 export function isList(list) {
     return list !== undefined
         && typeof list === 'object'
-        && list.listType === true;
+        && list.listType === MASALA_LIST;
 }
