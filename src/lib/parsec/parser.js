@@ -230,7 +230,7 @@ function both(self, f) {
             .parse(input, index)
             .fold(
                 accept => f.parse(input, index)
-                    .map(r => [accept.value, r]),
+                    .map(r => list(accept.value, r)),
                 reject => reject
             )
     );

@@ -29,43 +29,49 @@ export default {
     },
 
     'expect F.layer(parser).and(other) to succeed': function (test) {
-        const first = C.char('a').then(C.char('a')).thenEos().map(r => r.length);
-        const second = C.string('aa').thenEos();
+        try {
+            const first = C.char('a').then(C.char('a')).array().thenEos().map(r => r.length);
 
-        const successInput = 'aa';
+            const second = C.string('aa').thenEos();
 
-        const layer = F.layer(first).and(second);
+            const successInput = 'aa';
 
-        let response = layer.parse(Streams.ofString(successInput));
+            const layer = F.layer(first).and(second).and(second).array();
 
-        test.ok(response.isAccepted());
-        test.deepEqual(response.value, list(2, 'aa'));
-        test.equal(response.offset, 2);
+            let response = layer.parse(Streams.ofString(successInput));
+
+            test.ok(response.isAccepted());
+            test.deepEqual(response.value, [2, 'aa', 'aa']);
+            test.equal(response.offset, 2);
+        }catch (e) {
+            console.log(e);
+        }
         test.done();
     },
+
     'expect F.layer(first).and(second).and(third) to be associative': function (test) {
-        const first = C.char('a').then(C.char('a')).thenEos().map(r => r.length);
-        const second = C.char('a').then(C.char('a')).thenEos().map(r => r.join('-'));
+        const first = C.char('a').then(C.char('a')).array().thenEos().map(r => r.length);
+        const second = C.char('a').then(C.char('a')).array().thenEos().map(r => r.join('-'));
         const third = C.string('aa').thenEos();
 
         const input = 'aa';
 
-        const layer = F.layer(first).and(second).and(third);
+        const layer = F.layer(first).and(second).and(third).array();
 
         let response = layer.parse(Streams.ofString(input));
 
         test.ok(response.isAccepted());
-        test.deepEqual(response.value, list(2, 'a-a', 'aa'));
+        test.deepEqual(response.value, [2, 'a-a', 'aa']);
         test.equal(response.offset, 2);
         test.done();
     },
     'expect F.layer(parser).and(other) to fail with second': function (test) {
-        const first = C.char('a').then(C.char('a')).thenEos().map(r => r.length);
+        const first = C.char('a').then(C.char('a')).array().thenEos().map(r => r.length);
         const second = C.string('aaFAIL').thenEos();
 
         const successInput = 'aa';
 
-        const layer = F.layer(first).and(second);
+        const layer = F.layer(first).and(second).array();
 
         let response = layer.parse(Streams.ofString(successInput));
 
@@ -89,7 +95,7 @@ export default {
         test.equal(response.value, undefined);
         test.done();
     },
-/*
+
     'expect F.layer(parser).and(other) to not move on the second after first fails': function (test) {
         const first = C.char('a').then(C.char('a')).thenEos().map(r => r.length);
 
@@ -105,11 +111,11 @@ export default {
         let response = layer.parse(Streams.ofString(successInput));
 
         test.ok(! response.isAccepted());
-        test.equal(response.offset, 0);
-        test.equal(false, found);
+        test.equal(response.offset, 2);
+        test.equal(false, found); // second was not even tried
         test.done();
     },
-*/
+
 
 
 }
