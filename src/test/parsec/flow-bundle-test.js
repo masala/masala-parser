@@ -23,7 +23,8 @@ export default {
         const parser = C.char('f')
             .then(C.char('o'))
             .then(C.char('o'))
-            .then(C.string('bar'));
+            .then(C.string('bar'))
+            .array();
         testParser(parser, string);
         test.deepEqual(value, ['f', 'o', 'o', 'bar'], 'flatten result not ok');
         test.done();

@@ -18,10 +18,12 @@ function numberLiteral() {
         integer = C.charIn('+-')
             .opt()
             .then(digits)
+            .array()
             .map(r => r[0].orElse('') + r[1]),
         float = integer
             .then(C.char('.').then(digits).opt().map(joinOrEmpty))
             .then(C.charIn('eE').then(integer).opt().map(joinOrEmpty))
+            .array()
             .map(r => r[0] + r[1] + r[2]);
 
     return float.map(r => parseFloat(r, 10));

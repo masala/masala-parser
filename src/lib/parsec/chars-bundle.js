@@ -140,6 +140,8 @@ function stringLiteral() {
     return char('"')
         .thenRight(anyChar.optrep())
         .thenLeft(char('"'))
+        .debug('>')
+        //.array()
         .map(r => r.join(''));
 }
 
