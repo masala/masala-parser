@@ -45,7 +45,9 @@ class List {
         return new List(this.value.concat(array));
     }
 
-
+    single(){
+        return this.value[0];
+    }
 
     append(list) {
         if (!list || (list.listType !== MASALA_LIST) ) {

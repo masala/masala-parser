@@ -63,18 +63,15 @@ export default class Parser {
         return this.flatMap(a =>
             p.map(b => {
 
-                let result = list(a).append(list(b));
+                return  list(a).append(list(b));
 
-                switch (result.size()) {
-                    case 0:
-                        return MASALA_VOID;
-                    case 1:
-                        return result.value[0];
-                    default:
-                        return result;
-                }
+
             })
         );
+    }
+
+    single(){
+        return this.map( list => list.single() );
     }
 
     // Should be called only on ListParser ; Always returns an array
