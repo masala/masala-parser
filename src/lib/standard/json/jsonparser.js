@@ -33,7 +33,7 @@ function arrayOrNothing() {
         },
         getValue = () => value,
         item = F.lazy(expr).map(addValue);
-    return item.then(tkKey(',').thenRight(item).optrep()).opt().map(getValue);
+    return item.then(tkKey(',').thenRight(item).optrep().array()).opt().map(getValue);
 }
 
 // unit -> Parser ? Token
@@ -47,9 +47,11 @@ function objectOrNothing() {
         attribute = string
             .thenLeft(tkKey(':'))
             .then(F.lazy(expr))
+            .array()
             .map(addValue);
     return attribute
         .thenLeft(tkKey(',').then(attribute).optrep())
+        .array()
         .opt()
         .map(getValue);
 }
@@ -61,15 +63,15 @@ function expr() {
         .or(tkKey('null').thenReturns(null))
         .or(tkKey('true').thenReturns(true))
         .or(tkKey('false').thenReturns(false))
-        .or(tkKey('[').thenRight(F.lazy(arrayOrNothing)).thenLeft(tkKey(']')))
-        .or(tkKey('{').thenRight(F.lazy(objectOrNothing)).thenLeft(tkKey('}')));
+        .or(tkKey('[').thenRight(F.lazy(arrayOrNothing)).thenLeft(tkKey(']')).single())
+        .or(tkKey('{').thenRight(F.lazy(objectOrNothing)).thenLeft(tkKey('}')).single());
 }
 
 //const parse =
 export default {
     parse: function (source) {
 
-        const parser = genlex.use(expr().thenLeft(F.eos()));
+        const parser = genlex.use(expr().thenLeft(F.eos()).single());
 
         return parser.parse(source, 0);
     },
