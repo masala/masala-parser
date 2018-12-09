@@ -118,7 +118,7 @@ export default {
     },
 
     'expect (chain) to add multiple numbers ': function (test) {
-        const token = N.numberLiteral().then(spaces().opt().drop());
+        const token = N.numberLiteral().then(spaces().opt().drop()).single();
         const lex = F.satisfy(number => number > 0).rep()
             .map(values => values.array().reduce((acc, n) => acc + n, 0 ));
 
@@ -127,7 +127,7 @@ export default {
 
 
         test.ok(parsing.isConsumed(), 'should have been consumed');
-        test.equal(parsing.value, 66, 'should be 66.');
+        test.equal(parsing.value, 66);
         test.done();
 
     },

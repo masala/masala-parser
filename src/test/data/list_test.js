@@ -122,7 +122,8 @@ export default {
     'single is returning the first element of the list' : function(test){
         const l = list(1, 2);
 
-        test.equal (1, list.single());
+
+        test.equal (1, l.single());
 
         test.done();
     },

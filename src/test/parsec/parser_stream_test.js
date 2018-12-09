@@ -68,7 +68,7 @@ export default {
 
     'get from stream numberLiteral 123': function (test) {
 
-        var p = C.char(' ').optrep().thenRight(N.numberLiteral());
+        var p = C.char(' ').optrep().thenRight(N.numberLiteral()).single();
         test.equal(
             stream.ofParser(p, stream.ofString('123')).get(0).success(),
             123,
@@ -81,7 +81,7 @@ export default {
     'Offset are found in series of numbers': function (test) {
 
         const p = N.numberLiteral()
-            .then(C.char(' ').optrep().drop());
+            .then(C.char(' ').optrep().drop()).single();
 
         const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
         // index: ^0    ^6
@@ -104,7 +104,7 @@ export default {
     'failing series of numbers': function (test) {
 
         const p = N.numberLiteral()
-            .then(C.char(' ').optrep().drop());
+            .then(C.char(' ').optrep().drop()).single();
         const parserStream = stream.ofParser(p, stream.ofString('123   a'));
         //                                                index: ^0    ^6
 
@@ -124,7 +124,7 @@ export default {
     'having correct location when success': function (test) {
 
         const p = N.numberLiteral()
-            .then(C.char(' ').optrep().drop());
+            .then(C.char(' ').optrep().drop()).single();
 
         const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
         //                                                index: ^0    ^6
@@ -144,7 +144,7 @@ export default {
     'searching illegal location will fail': function (test) {
 
         const p = N.numberLiteral()
-            .then(C.char(' ').optrep().drop());
+            .then(C.char(' ').optrep().drop()).single();
 
         const parserStream = stream.ofParser(p, stream.ofString('123   14137'));
         //                                                index: ^0    ^6
@@ -185,7 +185,7 @@ export default {
     },
 
     'unsafe_get can see next element': function (test) {
-        const lower = N.numberLiteral().then(spaces().opt().drop());
+        const lower = N.numberLiteral().then(spaces().opt().drop()).single();
 
 
         const lowerStream = Streams.ofString('10 12 44');

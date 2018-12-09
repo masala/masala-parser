@@ -30,7 +30,7 @@ export default {
 
     'expect F.layer(parser).and(other) to succeed': function (test) {
         try {
-            const first = C.char('a').then(C.char('a')).array().thenEos().map(r => r.length);
+            const first = C.char('a').then(C.char('a')).thenEos().array().map(r => r.length);
 
             const second = C.string('aa').thenEos();
 
@@ -50,8 +50,8 @@ export default {
     },
 
     'expect F.layer(first).and(second).and(third) to be associative': function (test) {
-        const first = C.char('a').then(C.char('a')).array().thenEos().map(r => r.length);
-        const second = C.char('a').then(C.char('a')).array().thenEos().map(r => r.join('-'));
+        const first = C.char('a').then(C.char('a')).thenEos().array().map(r => r.length);
+        const second = C.char('a').then(C.char('a')).thenEos().array().map(r => r.join('-'));
         const third = C.string('aa').thenEos();
 
         const input = 'aa';

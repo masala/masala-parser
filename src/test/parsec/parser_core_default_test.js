@@ -269,7 +269,7 @@ export default {
         test.expect(1);
         // tests here
         test.deepEqual(
-            C.char('a').thenLeft(C.char('b')).parse(stream.ofString('ab'))
+            C.char('a').thenLeft(C.char('b')).single().parse(stream.ofString('ab'))
                 .value,
             'a',
             'should be accepted.'
@@ -309,7 +309,7 @@ export default {
         test.expect(1);
         // tests here
         test.deepEqual(
-            C.char('a').thenRight(C.char('b')).parse(stream.ofString('ab'))
+            C.char('a').thenRight(C.char('b')).single().parse(stream.ofString('ab'))
                 .value,
             'b',
             'should be accepted.'

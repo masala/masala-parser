@@ -74,7 +74,8 @@ export default {
         const combinator = start
             .drop()
             .then(F.moveUntil('XYZ'))
-            .then(C.string('XYZ-continues').drop());
+            .then(C.string('XYZ-continues').drop())
+            .single();
         const parser = combinator.parse(line);
         const value = parser.value;
         const offset = parser.offset;
@@ -92,7 +93,8 @@ export default {
         const combinator = start
             .drop()
             .then(F.moveUntil(['ABC', 'ZE', 'XYZ']))
-            .then(C.string('XYZ-continues').drop());
+            .then(C.string('XYZ-continues').drop())
+            .single();
 
         const parser = combinator.parse(line);
         const value = parser.value;
@@ -172,7 +174,7 @@ export default {
     'test moveUntil': function(test) {
         const line = Streams.ofString('I write until James appears');
 
-        const combinator = F.moveUntil(C.string('James')).then(F.any().drop());
+        const combinator = F.moveUntil(C.string('James')).then(F.any().drop()).single();
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
@@ -236,7 +238,8 @@ export default {
 
         const combinator = F.moveUntil(C.string('James'))
             .then(F.dropTo('appears'))
-            .then(F.eos().drop());
+            .then(F.eos().drop())
+            .single();
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
