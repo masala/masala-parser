@@ -89,7 +89,8 @@ export class GenLex {
         const tokens = this.getAllTokenParsers();
         return this.spaces.drop()
             .then(tokens)
-            .then(this.spaces.drop());
+            .then(this.spaces.drop())
+            .single();
     }
 
     use(grammar) {
