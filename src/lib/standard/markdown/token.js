@@ -3,8 +3,8 @@ import {F, C} from '../../parsec/index';
 // resolve meanningles characters as an empty string
 // also accept an empty string
 function blank() {
-    // TODO: why not return C.charIn(' \t').rep().thenReturns(' ');
-    return C.charIn(' \t').optrep().thenReturns('');
+    // TODO: why not return C.charIn(' \t').rep().of(' ');
+    return C.charIn(' \t').optrep().of('');
 }
 
 //todo: escape characters
@@ -26,7 +26,7 @@ function eol() {
 
 //A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
 function lineFeed() {
-    return eol().then(blank()).then(eol()).thenReturns({
+    return eol().then(blank()).then(eol()).of({
         linefeed: undefined,
     });
 }

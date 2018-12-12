@@ -111,7 +111,7 @@ export default class Parser {
     }
 
     // Parser 'a 'c => 'b -> Parser 'b 'c
-    thenReturns(v) {
+    of(v) {
         return this.drop().map(x => v);
     }
 

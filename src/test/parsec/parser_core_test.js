@@ -436,12 +436,12 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to be accepted': function (test) {
+    'expect (of) to be accepted': function (test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .thenReturns('b')
+                .of('b')
                 .parse(stream.ofString('ab'), 0)
                 .isAccepted(),
             true,
@@ -450,23 +450,23 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to return b': function (test) {
+    'expect (of) to return b': function (test) {
         test.expect(1);
         // tests here
         test.equal(
-            C.char('a').thenReturns('b').parse(stream.ofString('ab'), 0).value,
+            C.char('a').of('b').parse(stream.ofString('ab'), 0).value,
             'b',
             'should be accepted.'
         );
         test.done();
     },
 
-    'expect (thenReturns) not to eat char': function (test) {
+    'expect (of) not to eat char': function (test) {
         test.expect(1);
         // tests here
         test.deepEqual(
             C.char('a')
-                .thenReturns('X')
+                .of('X')
                 .then(C.char('b'))
                 .array()
                 .parse(stream.ofString('ab'), 0).value,
@@ -476,12 +476,12 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to be rejected': function (test) {
+    'expect (of) to be rejected': function (test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .thenReturns('b')
+                .of('b')
                 .parse(stream.ofString('b'), 0)
                 .isAccepted(),
             false,

@@ -60,9 +60,9 @@ function objectOrNothing() {
 function expr() {
     return number
         .or(string)
-        .or(tkKey('null').thenReturns(null))
-        .or(tkKey('true').thenReturns(true))
-        .or(tkKey('false').thenReturns(false))
+        .or(tkKey('null').of(null))
+        .or(tkKey('true').of(true))
+        .or(tkKey('false').of(false))
         .or(tkKey('[').thenRight(F.lazy(arrayOrNothing)).thenLeft(tkKey(']')).single())
         .or(tkKey('{').thenRight(F.lazy(objectOrNothing)).thenLeft(tkKey('}')).single());
 }
