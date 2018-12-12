@@ -53,102 +53,76 @@ interface IStreams {
 }
 
 
-export interface ListResponse<T> extends Response<T> {
-    value: List<T>
-}
-
-
-
-export interface SingleResponse<T> extends Response<T> {
-    value: T
-}
-
-export interface VoidResponse<T>extends Response<T> {
-    value: void
-}
 
 export interface Response<T> {
 
+    value:T;
     isAccepted(): boolean
     isConsumed(): boolean
     fold(accept, reject?): Response<T>;
     map<Y>(f): Response<Y>;
     flatMap<Y>(f): Response<Y>;
     filter(f: (value) => boolean): Response<T>;
-    //value:T
     offset: number;
     location():number;
 }
 
 
 /* Array with different values*/
-export interface ListParser<T> extends IParser<T> {
-    parse<X>(stream: Stream<X>, index?: number): ListResponse<T>;
-    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
-    then(p: VoidParser): ListParser<T>;
-    then<Y>(p: ListParser<Y>): ListParser<T | Y>;
-    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
-    map<Y> (f: (T) => Y): ListParser<Y>;
+export interface ListParser<T> extends IParser<List<T>> {
 
-    opt():SingleParser<Option<List<T>>>;
+    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
+    array():SingleParser<T[]>
     optrep():ListParser<T>;
     rep(): ListParser<T>;
-    or<Y, P extends IParser<Y>>(p: P): ListParser<T>|P;
-    array():SingleParser<T[]>
+    single(): SingleParser<T>;
+    last(): SingleParser<T>;
 }
 
-export interface SingleParser<T> extends IParser<T> {
-    parse<X>(stream: Stream<X>, index?: number): SingleResponse<T>;
-    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
-    then<Y>(p: ListParser<Y>): ListParser<T | Y>;
-    then(p: VoidParser): SingleParser<T>;
-    map<Y> (f: (T) => Y): SingleParser<Y>;
-
-    opt():SingleParser<Option<T>>;
-    optrep():ListParser<Option<T>>;
-    rep(): SingleParser<List<T>>;
-    //filter(f: () => boolean): SingleParser<T>
-    or<Y, P extends IParser<Y>>(p: P): SingleParser<T>|P;
+// Almost not a special case, but easier to write
+export interface VoidParser extends SingleParser<void>{
+    then<Y>(p: IParser<Y>): ListParser<Y>;
 }
 
-interface VoidParser extends IParser<void> {
-    then<Y>(p: SingleParser<Y>): SingleParser< Y>;
-    then<Y>(p: ListParser<Y>): ListParser<Y>;
-    map<Y> (f: (T) => Y): VoidParser;
-    opt():VoidParser;
-    rep(): VoidParser;
-    optrep():VoidParser;
-    or<Y, P extends IParser<Y>>(p: P): VoidParser|P;
+export interface SingleParser<T> extends IParser<List<T>> {
+
+    then<Y>(p: IParser<Y>): ListParser<T | Y>;
+
+    optrep():ListParser<T>;
+    rep(): ListParser<T>;
 }
+
+
 
 /**
  * T is the type of the Response
  * Should use F-bounded polymorphism
  */
 export interface IParser<T> {
+    parse<X>(stream: Stream<X>, index?: number): Response<T>;
 
-    //then<Y>(p: IParser<Y>): IParser<any>;
-    map<Y> (f: (T) => Y): IParser<Y>;
+    map<Y> (f: (T) => Y): SingleParser<Y>;
     flatMap<Y, P extends IParser<Y>>( builder:parserBuilder<Y,P> ):P;
+    opt():IParser<Option<T>>
 
-    drop(): VoidParser;
-    rep(): IParser<List<T>>;
-    thenReturns<Y>(obj:Y):SingleParser<Y>;
-    debug(s:string, b?:boolean);
+    drop(): IParser<void>;
 
-    thenEos():this;
+    returns<Y>(value:Y):SingleParser<Y>;
+    debug(s:string, b?:boolean):this;
 
-    filter(f: (T) => boolean): IParser<T>
-    occurrence(n: number): IParser<List<T>>;
+    thenEos():ListParser<T>;
+
+    or<Y, P extends IParser<Y>>(p: P): IParser<T>|P;
+
+    filter(f: (T) => boolean): this
+    //TODO: list or array ?
+    occurrence(n: number): ListParser<T>;
     /*
-     filter(f: (T) => boolean): IParser<T>
      match(value: T): IParser<T>;
      occurrence(n: number): ListParser<T>;
 
      chain<Y>(): IParser<Y>;
-     debug(hint?: string, details?: boolean): IParser<T>;
      */
-    // parse<X>(stream: Stream<X>, index?: number): Response<T>;
 }
 /*
  export declare class Parser<T> implements IParser <T> {
@@ -195,7 +169,7 @@ interface CharBundle {
 
 }
 
-export type parserBuilder<Y,P extends IParser<Y>> = (...rest:any[])=>P;
+type parserBuilder<Y,P extends IParser<Y>> = (...rest:any[])=>P;
 
 type extension<Y,T extends IParser<Y>> = T;
 
@@ -214,8 +188,8 @@ interface FlowBundle {
     eos(): SingleParser<Unit>;
     satisfy<V>(predicate:Predicate<V>):SingleParser<any>
     startWith<V>(value:V):SingleParser<V>;
-    moveUntil(s:string):SingleParser<string>;
-    moveUntil<Y>(p:IParser<Y>):SingleParser<string>;
+    moveUntil(s:string):VoidParser;
+    moveUntil<Y>(p:IParser<Y>):VoidParser;
     dropTo(s:string):VoidParser;
     dropTo<Y>(p:IParser<Y>):VoidParser;
 
@@ -233,7 +207,7 @@ export declare const C: CharBundle;
 export declare const N: NumberBundle;
 export declare const Streams: IStreams;
 
-
+/*
 // TODO: Check if this is needed
 interface MasalaBundlesStatic {
     Streams: IStreams,
@@ -245,3 +219,4 @@ interface MasalaBundlesStatic {
 
 declare const MasalaBundles: MasalaBundlesStatic;
 export default MasalaBundles;
+*/
