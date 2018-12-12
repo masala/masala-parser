@@ -113,7 +113,7 @@ function subStream(length) {
 
 
 function startWith(value) {
-    return nop().thenReturns(value);
+    return nop().returns(value);
 }
 
 function moveUntil(stop) {
@@ -125,7 +125,7 @@ function moveUntil(stop) {
         return searchArrayStringStart(stop);
     }
 
-    return doTry(not(stop).rep().then(eos()).thenReturns(undefined))
+    return doTry(not(stop).rep().then(eos()).returns(undefined))
         .or(not(stop).rep().map(chars => chars.join('')))
         .filter(v => v !== undefined);
 }

@@ -30,10 +30,10 @@ export default {
         test.done();
     },
 
-    'expect thenReturns to be ok when empty': function(test) {
+    'expect returns to be ok when empty': function(test) {
         const string = 'some';
         // tests here
-        const parser = F.any().rep().then(F.eos()).thenReturns([]);
+        const parser = F.any().rep().then(F.eos()).returns([]);
         testParser(parser, string);
         test.ok(accepted);
         test.deepEqual(value, [], 'flatten result not ok');

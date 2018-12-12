@@ -331,12 +331,12 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to be accepted': function(test) {
+    'expect (returns) to be accepted': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .thenReturns('b')
+                .returns('b')
                 .parse(stream.ofString('ab'))
                 .isAccepted(),
             true,
@@ -345,23 +345,23 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to return b': function(test) {
+    'expect (returns) to return b': function(test) {
         test.expect(1);
         // tests here
         test.equal(
-            C.char('a').thenReturns('b').parse(stream.ofString('ab')).value,
+            C.char('a').returns('b').parse(stream.ofString('ab')).value,
             'b',
             'should be accepted.'
         );
         test.done();
     },
 
-    'expect (thenReturns) to be rejected': function(test) {
+    'expect (returns) to be rejected': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .thenReturns('b')
+                .returns('b')
                 .parse(stream.ofString('b'))
                 .isAccepted(),
             false,
