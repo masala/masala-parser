@@ -25,14 +25,14 @@ function equals() {
     return C.string('===')
         .then(T.rawTextUntil(T.eol()))
         .then(T.eol())
-        .of(1); // this mean a level 1 title
+        .thenReturns(1); // this mean a level 1 title
 }
 
 function minuses() {
     return C.string('---')
         .then(T.rawTextUntil(T.eol()))
         .then(T.eol())
-        .of(2); // this mean a level 2 title
+        .thenReturns(2); // this mean a level 2 title
 }
 
 function titleSharp() {

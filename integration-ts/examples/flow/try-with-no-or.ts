@@ -6,7 +6,7 @@ function day() {
 }
 
 function blank(){
-    return C.char(' ').rep().of(' ');
+    return C.char(' ').rep().thenReturns(' ');
 }
 
 const separator = () => C.string('---');

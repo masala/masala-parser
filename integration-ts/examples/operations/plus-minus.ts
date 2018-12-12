@@ -37,7 +37,7 @@ function text() {
 
 
 function blank() {
-    return C.char(' ').rep().of(' ');
+    return C.char(' ').rep().thenReturns(' ');
 }
 
 function operation() {
@@ -45,17 +45,17 @@ function operation() {
 }
 
 function anyOperation() {
-    return C.string('*').of(MULT)
-        .or(C.string('+').of(PLUS));
+    return C.string('*').thenReturns(MULT)
+        .or(C.string('+').thenReturns(PLUS));
 }
 
 
 function andOperation() {
-    return C.string('*').of(MULT)
+    return C.string('*').thenReturns(MULT)
 }
 
 function plusOperation() {
-    return C.string('+').of(PLUS)
+    return C.string('+').thenReturns(PLUS)
 }
 
 

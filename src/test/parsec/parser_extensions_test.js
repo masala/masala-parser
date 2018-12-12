@@ -568,7 +568,7 @@ export default {
         const parsing = N.numberLiteral()
             .then(C.char('+'))
             .then(N.numberLiteral())
-            .of([])
+            .thenReturns([])
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
