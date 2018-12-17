@@ -29,13 +29,13 @@ function numberLiteral() {
     return float.map(r => parseFloat(r, 10));
 }
 
-// unit -> Parser char char
+// unit -> Parser char int
 function digit() {
-    return F.satisfy(v => '0' <= v && v <= '9');
+    return F.satisfy(v => '0' <= v && v <= '9').map(c=>parseInt(c));
 }
 
 function digits() {
-    return digit().rep().map(v => v.join(''));
+    return digit().rep().map(v => parseInt(v.join('')));
 }
 
 function integer() {

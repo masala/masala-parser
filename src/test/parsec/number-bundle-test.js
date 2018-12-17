@@ -46,8 +46,9 @@ export default {
         const string = '007';
         // tests here
         const parser = N.digits();
+
         testParser(parser, string);
-        test.equal(typeof value, 'string', 'N.digits() should be a string');
+        test.equal(typeof value, 'number', 'N.digits() should be a string');
         test.equal(value, '007', 'N.digits() returns a bad value');
         test.done();
     },
