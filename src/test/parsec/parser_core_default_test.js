@@ -205,7 +205,7 @@ export default {
         test.expect(1);
         // tests here
         test.deepEqual(
-            C.char('a').then(C.char('b')).parse(stream.ofString('ab')).value,
+            C.char('a').then(C.char('b')).array().parse(stream.ofString('ab')).value,
             ['a', 'b'],
             'should be accepted.'
         );
@@ -244,7 +244,7 @@ export default {
         test.expect(1);
         // tests here
         test.deepEqual(
-            C.char('a').then(C.char('b')).parse(stream.ofString('ab')).value,
+            C.char('a').then(C.char('b')).array().parse(stream.ofString('ab')).value,
             ['a', 'b'],
             'should be accepted.'
         );
@@ -269,7 +269,7 @@ export default {
         test.expect(1);
         // tests here
         test.deepEqual(
-            C.char('a').thenLeft(C.char('b')).parse(stream.ofString('ab'))
+            C.char('a').thenLeft(C.char('b')).single().parse(stream.ofString('ab'))
                 .value,
             'a',
             'should be accepted.'
@@ -309,7 +309,7 @@ export default {
         test.expect(1);
         // tests here
         test.deepEqual(
-            C.char('a').thenRight(C.char('b')).parse(stream.ofString('ab'))
+            C.char('a').thenRight(C.char('b')).single().parse(stream.ofString('ab'))
                 .value,
             'b',
             'should be accepted.'
@@ -331,12 +331,12 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to be accepted': function(test) {
+    'expect (returns) to be accepted': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .thenReturns('b')
+                .returns('b')
                 .parse(stream.ofString('ab'))
                 .isAccepted(),
             true,
@@ -345,23 +345,23 @@ export default {
         test.done();
     },
 
-    'expect (thenReturns) to return b': function(test) {
+    'expect (returns) to return b': function(test) {
         test.expect(1);
         // tests here
         test.equal(
-            C.char('a').thenReturns('b').parse(stream.ofString('ab')).value,
+            C.char('a').returns('b').parse(stream.ofString('ab')).value,
             'b',
             'should be accepted.'
         );
         test.done();
     },
 
-    'expect (thenReturns) to be rejected': function(test) {
+    'expect (returns) to be rejected': function(test) {
         test.expect(1);
         // tests here
         test.equal(
             C.char('a')
-                .thenReturns('b')
+                .returns('b')
                 .parse(stream.ofString('b'))
                 .isAccepted(),
             false,

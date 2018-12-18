@@ -25,7 +25,8 @@ function bulletLv1() {
         .then(C.charIn('*-')) //first character of a bullet is  * or -
         .then(C.charIn(' \u00A0')) // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
-        .map(someText => ({bullet: {level: 1, content: someText.array()}}));
+        .single()
+        .map(someText => ({bullet: {level: 1, content: someText}}));
 }
 
 function bulletLv2() {
@@ -36,7 +37,8 @@ function bulletLv2() {
         .then(C.charIn('*-')) //first character of a bullet is  * or -
         .then(C.charIn(' \u00A0')) // second character of a bullet is space or non-breakable space
         .thenRight(formattedSequence())
-        .map(someText => ({bullet: {level: 2, content: someText.array()}}));
+        .single()
+        .map(someText => ({bullet: {level: 2, content: someText}}));
 }
 
 function bullet() {

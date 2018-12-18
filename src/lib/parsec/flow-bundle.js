@@ -8,6 +8,7 @@
 
 import Parser, {eos} from './parser';
 import response from './response';
+import {MASALA_VOID} from "../data/list";
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
 function parse(p) {
@@ -66,13 +67,27 @@ function doTry(p) {
             .fold(
                 accept => accept,
                 // Compared to satisfy, we come back to initial offset
-                reject => {
-                    // FIXME: better ES6 hnadling
-                    return response.reject(input, reject.offset , false)
-                }
+                reject =>  response.reject(input, reject.offset , false)
+
             )
     );
 }
+
+function layer(p) {
+    return new Parser((input, index = 0) =>
+        p
+            .parse(input, index)
+            .fold(
+                accept => {
+                    //console.log('response', response.accept(accept.value,input, index, false));
+                    return response.accept(accept.value, input, index, false)
+                },
+                        // Compared to satisfy, we come back to initial offset
+                reject =>  reject
+            )
+    );
+}
+
 
 // unit -> Parser 'a 'c
 function any() {
@@ -82,7 +97,7 @@ function any() {
 // unit -> Parser 'a 'c
 function nop() {
     return new Parser((input, index = 0) =>
-        response.accept([], input, index, true)
+        response.accept(MASALA_VOID, input, index, true)
     );
 }
 
@@ -98,7 +113,7 @@ function subStream(length) {
 
 
 function startWith(value) {
-    return nop().thenReturns(value);
+    return nop().returns(value);
 }
 
 function moveUntil(stop) {
@@ -110,7 +125,7 @@ function moveUntil(stop) {
         return searchArrayStringStart(stop);
     }
 
-    return doTry(not(stop).rep().then(eos()).thenReturns(undefined))
+    return doTry(not(stop).rep().then(eos()).returns(undefined))
         .or(not(stop).rep().map(chars => chars.join('')))
         .filter(v => v !== undefined);
 }
@@ -130,6 +145,7 @@ export default {
     any,
     subStream,
     not: not,
+    layer,
     lazy,
     returns,
     error,

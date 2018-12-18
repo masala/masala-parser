@@ -1,0 +1,36 @@
+<html>
+<meta charset="UTF-8">
+<script src="../dist/masala-parser.js"></script>
+<script src="../integration-npm/assert.js"></script>
+
+<script>
+
+    const {N, F, C, Streams} = masala;
+
+    function spaces() {
+        return C.charIn(' \r\n\f\t').optrep().map(() => unit);
+    }
+
+    function test() {
+        const string = 'some';
+        // tests here
+        const parser = C.letters();
+
+        let stream = Streams.ofString(string);
+        let parsing = parser.parse(stream);
+
+        value = parsing.value;
+        accepted = parsing.isAccepted();
+
+        Assert.assertEquals(value, 'some');
+        console.log({value, accepted});
+
+
+        //test.equal(parserStream.offsets[1], 3);
+    }
+
+    test();
+
+</script>
+
+</html>

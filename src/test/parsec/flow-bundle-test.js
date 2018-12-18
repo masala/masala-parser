@@ -23,16 +23,17 @@ export default {
         const parser = C.char('f')
             .then(C.char('o'))
             .then(C.char('o'))
-            .then(C.string('bar'));
+            .then(C.string('bar'))
+            .array();
         testParser(parser, string);
         test.deepEqual(value, ['f', 'o', 'o', 'bar'], 'flatten result not ok');
         test.done();
     },
 
-    'expect thenReturns to be ok when empty': function(test) {
+    'expect returns to be ok when empty': function(test) {
         const string = 'some';
         // tests here
-        const parser = F.any().rep().then(F.eos()).thenReturns([]);
+        const parser = F.any().rep().then(F.eos()).returns([]);
         testParser(parser, string);
         test.ok(accepted);
         test.deepEqual(value, [], 'flatten result not ok');
@@ -73,7 +74,8 @@ export default {
         const combinator = start
             .drop()
             .then(F.moveUntil('XYZ'))
-            .then(C.string('XYZ-continues').drop());
+            .then(C.string('XYZ-continues').drop())
+            .single();
         const parser = combinator.parse(line);
         const value = parser.value;
         const offset = parser.offset;
@@ -91,7 +93,8 @@ export default {
         const combinator = start
             .drop()
             .then(F.moveUntil(['ABC', 'ZE', 'XYZ']))
-            .then(C.string('XYZ-continues').drop());
+            .then(C.string('XYZ-continues').drop())
+            .single();
 
         const parser = combinator.parse(line);
         const value = parser.value;
@@ -171,7 +174,7 @@ export default {
     'test moveUntil': function(test) {
         const line = Streams.ofString('I write until James appears');
 
-        const combinator = F.moveUntil(C.string('James')).then(F.any().drop());
+        const combinator = F.moveUntil(C.string('James')).then(F.any().drop()).single();
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
@@ -235,7 +238,8 @@ export default {
 
         const combinator = F.moveUntil(C.string('James'))
             .then(F.dropTo('appears'))
-            .then(F.eos().drop());
+            .then(F.eos().drop())
+            .single();
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');

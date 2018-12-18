@@ -15,7 +15,7 @@
 import stream from '../stream/index';
 
 import option from '../data/option';
-import list from '../data/list';
+import list, {isList, MASALA_VOID} from '../data/list';
 
 import response from './response';
 import unit from "../data/unit";
@@ -58,20 +58,37 @@ export default class Parser {
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
+    // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
         return this.flatMap(a =>
             p.map(b => {
-                let result = list(a).append(list(b)).array();
-                if (result.length === 1) {
-                    return result[0];
-                } else {
-                    return result;
-                }
+
+                return  list(a).append(list(b));
+
+
             })
         );
     }
 
-    thenEos(){
+    single(){
+        return this.map( list => list.single() );
+    }
+
+    // Should be called only on ListParser ; Always returns an array
+    array(){
+
+        return this.map( value => {
+            if (! isList(value)){
+                throw 'array() is called only on ListParser';
+            }
+            return value.array();
+        });
+    }
+
+
+
+
+    thenEos() {
         return this.then(eos().drop());
     }
 
@@ -80,7 +97,7 @@ export default class Parser {
     }
 
     drop() {
-        return this.map(() => []);
+        return this.map(() => MASALA_VOID);
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c
@@ -94,8 +111,8 @@ export default class Parser {
     }
 
     // Parser 'a 'c => 'b -> Parser 'b 'c
-    thenReturns(v) {
-        return this.thenRight(returns(v));
+    returns(v) {
+        return this.drop().map(x => v);
     }
 
     // Parser 'a 'c -> Parser 'a 'c
@@ -103,10 +120,20 @@ export default class Parser {
         return choice(this, p);
     }
 
+    /**
+     * Must be used with F.layer()
+     * @param p
+     * @returns {Parser}
+     */
+    and(p) {
+        return both(this, p);
+    }
+
     // Parser 'a 'c => unit -> Parser (Option 'a) 'c
     opt() {
         return this.map(option.some).or(returns(option.none()));
     }
+
 
     // Parser 'a 'c => unit -> Parser (List 'a) 'c
     rep() {
@@ -189,6 +216,19 @@ function choice(self, f) {
             .fold(
                 accept => accept,
                 reject => (reject.consumed ? reject : f.parse(input, index))
+            )
+    );
+}
+
+// Parser 'a 'c -> Parser 'a 'c -> Parser 'a 'c
+function both(self, f) {
+    return new Parser((input, index = 0) =>
+        self
+            .parse(input, index)
+            .fold(
+                accept => f.parse(input, index)
+                    .map(r => list(accept.value, r)),
+                reject => reject
             )
     );
 }

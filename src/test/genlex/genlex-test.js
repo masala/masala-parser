@@ -288,9 +288,9 @@ export default {
 function date() {
 
     return N.digits()
-        .then(C.charIn('-/').thenReturns('-'))
+        .then(C.charIn('-/').returns('-'))
         .then(N.digits())
-        .then(C.charIn('-/').thenReturns('-'))
+        .then(C.charIn('-/').returns('-'))
         .then(N.digits())
         .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
         .map(dateArray => dateArray.join(''));

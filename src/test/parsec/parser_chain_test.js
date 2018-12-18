@@ -85,7 +85,7 @@ export default {
         test.done();
     },
 
-    'expect (chain) to be accepted with numbers': function (test) {
+    'expect (chain) to be accepted again': function (test) {
         test.expect(1);
 
         var p1 = N.number().thenLeft(C.char(' ').opt()),
@@ -104,21 +104,21 @@ export default {
     'expect (chain) to return 46': function (test) {
         test.expect(1);
         // tests here
-        var p1 = N.number().thenLeft(C.char(' ').opt()),
-            p2 = F.any().then(F.any()).thenLeft(F.eos()).map(function (r) {
+        const p1 = N.number().thenLeft(C.char(' ').opt()),
+            p2 = F.any().then(F.any()).thenLeft(F.eos())
+                .array().map(function (r) {
                 return r[0] + r[1];
             });
 
         test.equal(
             p1.chain(p2).parse(stream.ofString('12 34'), 0).value,
-            46,
-            'should be 46.'
+            46
         );
         test.done();
     },
 
     'expect (chain) to add multiple numbers ': function (test) {
-        const token = N.number().then(spaces().opt().drop());
+        const token = N.number().then(spaces().opt().drop()).single();
         const lex = F.satisfy(number => number > 0).rep()
             .map(values => values.array().reduce((acc, n) => acc + n, 0 ));
 
@@ -127,7 +127,7 @@ export default {
 
 
         test.ok(parsing.isEos(), 'should have been consumed');
-        test.equal(parsing.value, 66, 'should be 66.');
+        test.equal(parsing.value, 66);
         test.done();
 
     },

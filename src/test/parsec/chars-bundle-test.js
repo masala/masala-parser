@@ -360,6 +360,7 @@ export default {
         // tests here
         const parsing = C.letters()
             .thenLeft(F.eos())
+            .single()
             .parse(Streams.ofString('someLetters'), 0);
         test.equal(parsing.isAccepted(), true, 'should be accepted.');
         test.deepEqual(parsing.value, 'someLetters', 'should be equal.');
@@ -394,6 +395,7 @@ export default {
         // tests here
         const parsing = C.letters()
             .thenLeft(F.eos())
+            .single()
             .parse(Streams.ofString('someLetters'), 0);
         test.equal(parsing.value, 'someLetters', 'not a string');
         test.done();
