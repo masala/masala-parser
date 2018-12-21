@@ -7,7 +7,8 @@ let stream = Streams.ofString('abc');
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
-    .then(F.eos().drop()); // End Of Stream ; droping its value, just checking it's here
+    .then(F.eos().drop()) // End Of Stream ; droping its value, just checking it's here
+    .array();
 let parsing = charsParser.parse(stream);
 
 assertArrayEquals(['a', 'b', 'c'], parsing.value);
@@ -29,7 +30,8 @@ parsing = letterParser.parse(stream);
 stream = Streams.ofString('Hello World');
 const helloParser = C.string('Hello')
     .then(C.char(' '))
-    .then(C.letters());
+    .then(C.letters())
+    .array();
 
 parsing = helloParser.parse(stream);
 assertArrayEquals(['Hello',' ','World'], parsing.value);

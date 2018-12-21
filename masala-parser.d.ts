@@ -71,7 +71,7 @@ export interface Response<T> {
 /* Array with different values*/
 export interface ListParser<T> extends IParser<List<T>> {
 
-    then<Y>(p: SingleParser<Y>): ListParser<T | Y>;
+    then<Y>(p: IParser<Y>): ListParser<T | Y>;
     array():SingleParser<T[]>
     optrep():ListParser<T>;
     rep(): ListParser<T>;
@@ -84,9 +84,10 @@ export interface VoidParser extends SingleParser<void>{
     then<Y>(p: IParser<Y>): ListParser<Y>;
 }
 
-export interface SingleParser<T> extends IParser<List<T>> {
+export interface SingleParser<T> extends IParser<T> {
 
     then<Y>(p: IParser<Y>): ListParser<T | Y>;
+
 
     optrep():ListParser<T>;
     rep(): ListParser<T>;
@@ -101,11 +102,13 @@ export interface SingleParser<T> extends IParser<List<T>> {
 export interface IParser<T> {
     parse<X>(stream: Stream<X>, index?: number): Response<T>;
 
+    then(p: VoidParser): ListParser<T>;
+
     map<Y> (f: (T) => Y): SingleParser<Y>;
     flatMap<Y, P extends IParser<Y>>( builder:parserBuilder<Y,P> ):P;
     opt():IParser<Option<T>>
 
-    drop(): IParser<void>;
+    drop(): VoidParser;
 
     returns<Y>(value:Y):SingleParser<Y>;
     debug(s:string, b?:boolean):this;

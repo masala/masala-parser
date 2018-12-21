@@ -29,7 +29,7 @@ if (typeof module !== "undefined"){
     module.exports = Assert;
 }
 
-if (window && window.decodeURI){
+if (typeof window !== 'undefined' && window && window.decodeURI){
     window.Assert = Assert;
 }
 
