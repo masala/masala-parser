@@ -1,6 +1,5 @@
 import Streams from '../../lib/stream/index';
 import {F, C} from '../../lib/parsec/index';
-import list from "../../lib/data/list";
 
 
 export default {

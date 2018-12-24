@@ -1,6 +1,5 @@
 import Streams from '../../lib/stream/index';;
-import {F, C, N} from "../../lib/parsec";
-import unit from "../../lib/data/unit";
+import {F, C} from "../../lib/parsec";
 
 export default {
     setUp: function (done) {
@@ -113,7 +112,3 @@ export default {
 
 }
 
-
-function spaces() {
-    return C.charIn(' \r\n\f\t').optrep().map(() => unit);
-}

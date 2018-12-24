@@ -1,4 +1,4 @@
-import  {Tuple, NEUTRAL, isTuple, tuple} from '../../lib/data/tuple';
+import  {Tuple, NEUTRAL, tuple} from '../../lib/data/tuple';
 
 
 export default {
