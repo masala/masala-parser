@@ -1,10 +1,10 @@
 import optionTest from './option_test';
 import tryTest from './try_test';
-import listTest from './list_test';
+import tupleTest from './tuple-test';
 
 
 export default {
     optionTest,
     tryTest,
-    listTest,
+    tupleTest
 }

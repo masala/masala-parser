@@ -245,17 +245,22 @@ export default {
 
     'expect (then) to be associative ': function (test) {
         test.expect(1);
-        // tests here
-        // const stream = stream.ofString("ab");
+
+        const first = C.char('a')
+            .then(C.char('b'))
+            .then(C.char('c').drop())
+            .then(C.char('d'))
+            .array();
+
+        const second = C.char('a')
+            .then(C.char('b'))
+            .then(C.char('c').drop().then(C.char('d')))
+            .array();
+
+
         test.deepEqual(
-            C.char('a')
-                .then(C.char('b'))
-                .then(C.char('c').drop())
-                .then(C.char('d'))
-                .array()
-                .parse(stream.ofString('abcd'), 0).value,
-            ['a', 'b', 'd'],
-            'should be accepted.'
+            first.parse(stream.ofString('abcd')).value,
+            second.parse(stream.ofString('abcd')).value
         );
         test.done();
     },

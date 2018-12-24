@@ -15,7 +15,7 @@ import standard from './standard/index';
 import Streams from './stream/index';
 
 import {accept, reject} from "./parsec/response";
-import list,{asList, isList, MASALA_VOID} from "./data/list";
+import {Tuple, isTuple, NEUTRAL} from "./data/tuple";
 
 
 const JSON = standard.jsonParser;
@@ -36,5 +36,5 @@ export {
     N,
     JSON,
     MD,
-    list, asList, isList, MASALA_VOID
+    Tuple, isTuple, NEUTRAL
 };

@@ -15,10 +15,13 @@
 import stream from '../stream/index';
 
 import option from '../data/option';
-import list, {isList, MASALA_VOID} from '../data/list';
+
 
 import response from './response';
 import unit from "../data/unit";
+import {NEUTRAL,Tuple, isTuple} from "../data/tuple";
+
+
 
 /**
  * Parser class
@@ -61,31 +64,25 @@ export default class Parser {
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
         return this.flatMap(a =>
-            p.map(b => {
-
-                return  list(a).append(list(b));
-
-
-            })
+            p.map(b =>  new Tuple([]).append(a).append(b))
         );
     }
 
-    single(){
-        return this.map( list => list.single() );
+    single() {
+        return this.map(list => list.single());
     }
 
-    // Should be called only on ListParser ; Always returns an array
-    array(){
 
-        return this.map( value => {
-            if (! isList(value)){
-                throw 'array() is called only on ListParser';
+    // Should be called only on ListParser ; Always returns an array
+    array() {
+
+        return this.map(value => {
+            if (!isTuple(value)) {
+                throw 'array() is called only on TupleParser';
             }
             return value.array();
         });
     }
-
-
 
 
     thenEos() {
@@ -97,7 +94,7 @@ export default class Parser {
     }
 
     drop() {
-        return this.map(() => MASALA_VOID);
+        return this.map(() => NEUTRAL);
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c
@@ -237,14 +234,14 @@ function both(self, f) {
 function repeatable(self, occurrences, accept) {
     return new Parser((input, index = 0) => {
         var consumed = false,
-            value = list(),
+            value = new Tuple([]),
             offset = index,
             current = self.parse(input, index),
             occurrence = 0;
 
         while (current.isAccepted() && occurrences(occurrence)) {
             occurrence += 1;
-            value = value.append(list(current.value));
+            value = value.append(current.value);
             consumed = consumed || current.consumed;
             offset = current.offset;
             current = self.parse(input, current.offset);
@@ -278,3 +275,4 @@ export function eos() {
         }
     });
 }
+
