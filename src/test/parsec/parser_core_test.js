@@ -243,6 +243,20 @@ export default {
         test.done();
     },
 
+
+    'expect (then) to be empty with two drops ': function (test) {
+
+        const parser = C.char('a').drop()
+            .then(C.char('b').drop());
+
+        const value = parser.parse(stream.ofString('ab')).value.value;
+
+        test.ok(Array.isArray(value));
+        test.equal(value.length, 0);
+
+        test.done();
+    },
+
     'expect (then) to be associative ': function (test) {
         test.expect(1);
 

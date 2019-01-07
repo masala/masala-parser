@@ -72,6 +72,10 @@ export default class Parser {
         return this.map(list => list.single());
     }
 
+    last() {
+        return this.map(list => list.last());
+    }
+
 
     // Should be called only on ListParser ; Always returns an array
     array() {

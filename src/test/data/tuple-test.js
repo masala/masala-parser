@@ -75,5 +75,23 @@ export default {
         test.deepEqual(result, new Tuple([2, 4, 5, 1]));
 
         test.done()
-    }
+    },
+    'empty tuple append to empty tuple is an empty tuple': function (test) {
+
+        const result = tuple().append(tuple());
+        test.deepEqual(result, tuple());
+
+        test.done()
+    },
+
+
+    'last() returns the last element': function (test) {
+
+        const result = new Tuple([2,4,6]).last();
+        test.equal(result, 6);
+
+        test.done()
+    },
+
+
 };

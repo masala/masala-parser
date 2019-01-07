@@ -25,6 +25,10 @@ export class Tuple {
         return this.value[0];
     }
 
+    last() {
+        return this.value[this.size()-1];
+    }
+
     join(j) {
         return this.value.join(j);
     }
