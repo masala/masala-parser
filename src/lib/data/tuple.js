@@ -29,7 +29,7 @@ export class Tuple {
         return this.value[this.size()-1];
     }
 
-    join(j) {
+    join(j='') {
         return this.value.join(j);
     }
 

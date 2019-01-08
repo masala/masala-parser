@@ -69,11 +69,11 @@ export default class Parser {
     }
 
     single() {
-        return this.map(list => list.single());
+        return this.map(tuple => tuple.single());
     }
 
     last() {
-        return this.map(list => list.last());
+        return this.map(tuple => tuple.last());
     }
 
 
@@ -228,7 +228,7 @@ function both(self, f) {
             .parse(input, index)
             .fold(
                 accept => f.parse(input, index)
-                    .map(r => list(accept.value, r)),
+                    .map(r => new Tuple([accept.value, r])),
                 reject => reject
             )
     );

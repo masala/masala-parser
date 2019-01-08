@@ -126,8 +126,17 @@ export declare type NEUTRAL = symbol;
  * A Tuple accepts a `NEUTRAL` element
  */
 export interface Tuple<T> {
-    size: number;
+
+    /**
+     * Wrapped array
+     */
+    value:T[]
+
     isEmpty: boolean;
+    /**
+     * Number of elements in the wrapped array
+     */
+    size(): number;
 
     /**
      * Returns the first token. It's up to the coder to know
@@ -155,7 +164,16 @@ export interface Tuple<T> {
      */
     array(): Array<T>
 
-    join(string: string): string;
+    /**
+     * Returns the last element of the Tuple
+     */
+    last():T;
+
+    /**
+     * Join elements as one string joined by optional separator (ie empty '' separator by default)
+     * @param separator join separator
+     */
+    join(separator?: string): string;
 
     /**
      * The tuple will not change with the NEUTRAL element.
@@ -307,6 +325,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * ```
      * @param p next parser
      */
+    then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
     then(p: VoidParser): TupleParser<T>;
 
@@ -325,7 +344,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
 
 
     /**
-     * Map the response value as the first Tuple element
+     * Map the response value as the **first** Tuple element.
      * ```js
      * const parser = C.char('a')
      *    // 'b' is dropped, but we still have a Tuple
@@ -335,6 +354,8 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * test.equal(value, 'a');
      * ```
      *
+     * WARNING: This may change and throw an exception if it's not a single value.
+     * `first()` may appear.
      */
     single(): SingleParser<T>;
 
@@ -351,6 +372,38 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      *
      */
     last(): SingleParser<T>;
+
+
+    /**
+     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     */
+    rep(): TupleParser<T>;
+
+    /**
+     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     */
+    optrep(): TupleParser<T>;
+
+
+
+    /**
+     * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
+     * ```js
+     * let parser = C.char('a').then (C.char('b')).occurrence(3);
+     * let resp = parser.parse(Streams.ofString('ababab'));
+     * // ->  Tuple { value: [ 'a', 'b', 'a', 'b', 'a', 'b' ] } }
+     * ```
+     * @param n
+     */
+    occurrence(n: number): TupleParser<T>;
+
+    /**
+     * Will be accepted if the parser reaches the End of Stream. The eos response **WILL** be dropped
+     * as this method is a shortcut for `parser.then(eos().drop())`
+     */
+    thenEos(): this;
+
+
 }
 
 declare type MASALA_VOID_TYPE = symbol;
@@ -378,12 +431,12 @@ export interface VoidParser extends SingleParser<any> {
     /**
      * Accepted with zero or more occurrences. Will produce an empty Tuple
      */
-    optrep(): TupleParser<any[]>;
+    optrep(): TupleParser<any>;
 
     /**
      * Accepted with one or more occurrences.Will produce an empty Tuple
      */
-    rep(): TupleParser<any[]>;
+    rep(): TupleParser<any>;
 }
 
 export interface SingleParser<T> extends IParser<T> {
@@ -399,7 +452,37 @@ export interface SingleParser<T> extends IParser<T> {
      * @param p next parser
      */
     then(p: VoidParser): TupleParser<T>;
+    then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
+
+    /**
+     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     */
+    rep(): TupleParser<T>;
+
+    /**
+     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     */
+    optrep(): TupleParser<T>;
+
+
+
+    /**
+     * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
+     * ```js
+     * let parser = C.char('a').then (C.char('b')).occurrence(3);
+     * let resp = parser.parse(Streams.ofString('ababab'));
+     * // ->  Tuple { value: [ 'a', 'b', 'a', 'b', 'a', 'b' ] } }
+     * ```
+     * @param n
+     */
+    occurrence(n: number): TupleParser<T>;
+
+    /**
+     * Will be accepted if the parser reaches the End of Stream. The eos response **WILL** be dropped
+     * as this method is a shortcut for `parser.then(eos().drop())`
+     */
+    thenEos(): TupleParser<T>;
 
 }
 
@@ -428,65 +511,128 @@ export interface IParser<T> {
      */
     then(p: VoidParser): TupleParser<T>;
 
-    map<Y>(f: (T) => Y): SingleParser<Y>;
+    /**
+     * Transforms the Response value
+     *
+     * ```js
+     * const parser = N.number().map (n => n*2);
+     * const value = parser.parse(Streams.ofString('1')).value;
+     * test.equal(value, 2 );
+     * ```
+     *
+     * @param f
+     */
+    map<Y>(f: (value:T) => Y): SingleParser<Y>;
 
+    /**
+     * Create a new parser value *knowing* the current parsing value
+     *
+     * ```js
+     * // Next char must be the double of the previous
+     *   function doubleNumber(param:number){
+     *      return C.string(''+ (param*2) );
+     *   }
+     *
+     *  const combinator = N.digit()
+     *      .flatMap(doubleNumber);
+     *  let response = combinator.parse(Streams.ofString('12'));
+     *  assertTrue(response.isAccepted());
+     * ```
+     *
+     * @param builder: the function building the parser
+     */
     flatMap<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>): P;
 
-
+    /**
+     * The parser will return the Neutral element for the Tuple
+     */
     drop(): VoidParser;
 
+    /**
+     * If accepted, the parser will return the given value
+     * @param value
+     */
     returns<Y>(value: Y): SingleParser<Y>;
 
-    debug(s: string, b?: boolean): this;
+    /**
+     * Will display debug info when the previous parser is accepted.
+     *
+     * ```js
+     * // 'found digit' will be displayed only if N.digit() has been accepted
+     * N.digit().debug('found digit', false);
+     * ```
+     *
+     * @param hint: an indication that the previous parser attempted to parse
+     * @param showValue: if true, will display the response value given by the previous parser. true by default.
+     */
+    debug(hint: string, showValue?: boolean): this;
 
-    filter(f: (T) => boolean): this
+    /**
+     * Given an accepted parser and a response value, this parser.filter(predicate) could be rejected depending on
+     * the predicate applied on the response value.
+     * Filtering a rejected parser will always results in a rejected response.
+     * @param predicate : predicate applied on the response value
+     */
+    filter(predicate: (value:T) => boolean): this
 
-    thenEos(): TupleParser<T>;
 
-    or<Y, P extends IParser<Y>>(p: P): this | P;
 
-    and<Y, P extends IParser<Y>>(p: P): this | P;
+    /**
+     * If this parser is not accepted, the other will be used. It's often use with `F.try()` to
+     * make backtracking.
+     * @param other
+     */
+    or<Y, P extends IParser<Y>>(other: P): IParser<T|Y>;
 
+    /**
+     * If all parsers are accepted, the response value will be a Tuple of these values.
+     * It's a rare case where a Tuple could contain a Tuple.
+     * Warning: still experimental
+     * @param p
+     */
+    and<Y, P extends IParser<Y>>(p: P): TupleParser<T|Y>;
+
+    /**
+     * When `parser()` is rejected, then `parser().opt()` is accepted with an empty Option as response value.
+     * If `parser()` is accepted with a value `X`, then `parser().opt()` is accepted with an `Option.of(X)`
+     */
     opt(): IParser<Option<T>>
 
-    //TODO: Tuple or array ?
-    occurrence(n: number): TupleParser<T>;
 
-    /*
-     match(value: T): IParser<T>;
-     occurrence(n: number): TupleParser<T>;
 
-     chain<Y>(): IParser<Y>;
+    /**
+     * Specialized version of [[filter]] using `val` equality as predicate
+     * @param val the parser is rejected if it's response value is not `val`
      */
+    match(val: T): this;
+
+    /**
+     * Build a new High Leven parser that parses a ParserStream of tokens.
+     * Tokens are defined by `this` parser.
+     * It's internally used by [[GenLex]] which is more easy to work with
+     *
+     * @highParser high level parser
+     */
+    chain<Y, P extends IParser<Y>>(highParser:P): P;
+
 }
 
-type parseFunction<X,T> = (stream: Stream<X>, index?: number)=> Response<T>;
+/**
+ * A `parseFunction` is a function that returns a parser. To build this parser at runtime, any params are available.
+ */
+export type parseFunction<X,T> = (stream: Stream<X>, index?: number)=> Response<T>;
+
 interface Parser<T> extends IParser<T>{
 
 }
+
+/**
+ * Note: the documentation shows two parametric arguments `T` for `Parser<T,T>`, but it's really
+ * one argument. Looks like the only tooling bug, but sadly on the first line.
+ */
 export class Parser<T>{
     new<D> (f:parseFunction<D,T>);
 }
-
-/*
- export declare class Parser<T> implements IParser <T> {
-
- then<Y>(p: IParser<Y>): IParser<any>;
- flatMap<Y>(f: () => Y): IParser<Y> ;
- map<Y>(f: (T: any) => Y): IParser<Y>;
- filter(f: (T: any) => boolean): IParser<T> ;
- match(value: T): IParser<T> ;
- drop(): VoidParser ;
- thenReturns<Y>(value: Y): SingleParser<Y> ;
- or<Y>(p: IParser<Y>): IParser<T | Y> ;
- opt(): IParser<T> ;
- rep(): TupleParser<Tuple<T>> ;
- occurrence(n: number): TupleParser<T> ;
- optrep(): IParser<Tuple<T>> ;
- chain<Y>(): IParser<Y> ;
- debug(hint?: string, details?: boolean): IParser<T>;
- parse<X>(stream: Stream<X>, index?: number): Response<T> ;
- }*/
 
 
 interface CharBundle {
@@ -494,36 +640,103 @@ interface CharBundle {
     OCCIDENTAL_LETTER: symbol,
     ASCII_LETTER: symbol,
 
+    /**
+     * Accepts any letter, including one character emoji. Issue on two characters emoji
+     */
     utf8Letter(): SingleParser<string>;
 
+    /**
+     * Accepts any occidental letter, including most accents
+     */
     letter(): SingleParser<string>;
 
+    /**
+     * Choose s in [[UTF8_LETTER]], [[OCCIDENTAL_LETTER]], [[ASCII_LETTER]]
+     * Ascii letters are A-Za-z letters, excluding any accent
+     * @param s
+     */
     letterAs(s: symbol): SingleParser<string>;
 
+    /**
+     * Accepts a sequence of letters, joined as a string text
+     */
     letters(): SingleParser<string>;
 
+    /**
+     * Sequence of letters, joined as a string text. See [[letterAs]]
+     */
     lettersAs(s: symbol): SingleParser<string>;
 
+    /**
+     * Accepts an emoji
+     *
+     * WARNING: experimental, help needed; Working on emoji is a full-time specialist job.
+     */
     emoji(): SingleParser<string>;
 
-    notChar(c: string): SingleParser<string>;
+    /**
+     * Accepts any character that is not the `exclude` character
+     * @param exclude one character exclude
+     */
+    notChar(exclude: string): SingleParser<string>;
 
-    char(string: string): SingleParser<string>;
+    /**
+     * Accepts any character that is not listed in the `exclude` chain
+     * @param exclude excluded characters
+     *
+     * WARNING: might be issues on emoji
+     */
+    charNotIn(exclude: string): SingleParser<string>;
 
+    /**
+     * Accepts a char
+     * @param c
+     */
+    char(c: string): SingleParser<string>;
+
+    /**
+     * Accepts any char listed in
+     * @param strings
+     */
     charIn(strings: string): SingleParser<string>;
 
+    /**
+     * Accepts a string
+     * @param string
+     */
     string(string: string): SingleParser<string>;
 
+    /**
+     * Accept one of these strings
+     * @param strings
+     */
     stringIn(strings: string[]): SingleParser<string>;
 
+    /**
+     * Accept anything that is not this string. Useful to build *stop*. See also [[FlowBundle.moveUntil]],
+     * [[FlowBundle.dropTo]]
+     * @param string
+     */
     notString(string: string): SingleParser<string>;
 
+    /**
+     * Single character inside single quote, like C/Java characters: `'a'`, `'x'`
+     */
     charLiteral(): SingleParser<string>;
 
+    /**
+     * String characters inside double quotes, like Java strings : `"Hello"`, `"World"`
+     */
     stringLiteral(): SingleParser<string>;
 
+    /**
+     * a-z single letter. WARNING: doesn't work yet on accents or utf-8 characters
+     */
     lowerCase(): SingleParser<string>;
 
+    /**
+     * A-Z single letter. WARNING: doesn't work yet on accents or utf-8 characters
+     */
     upperCase(): SingleParser<string>;
 
 }
