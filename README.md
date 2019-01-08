@@ -18,6 +18,7 @@ Masala Parser is a Javascript implementation of the Haskell **Parsec**.
 * It works in any browser
 * It can validate complete structure with variations
 * It can parse and execute custom operations
+* Great starting point for parser education
 
 Masala Parser keywords are **simplicity**, **variations** and **maintainability**. You won't
 need theoretical bases on languages for extraction or validation use cases.
@@ -37,6 +38,9 @@ Or in the browser
 
 Check the [Change Log](./changelog.md) if you can from a previous version.
 
+# Reference
+
+You will find an [Masala Parser online reference](documentation/typedoc/modules/_masala_parser_d_.html), generated from typescript interface.
 
 # Quick Examples
 
