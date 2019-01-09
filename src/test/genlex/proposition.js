@@ -7,8 +7,25 @@ export default {
     setUp: function (done) {
         done();
     },
-
     'expect Genlex to be easy to use ': function (test) {
+
+
+        const genlex = new GenLex();
+        genlex.keywords([':']);
+
+        const tkName = genlex.tokenize(C.letters(), 'name');
+        // tk is for token
+        const tkDate =  genlex.tokenize(date(), 'date');
+        let grammar = tkName.then(genlex.get(':').then(tkDate));
+        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString('john: 10/12/2013'));
+        // Tuple{'john', ':', '2013-12-10'}
+
+        test.ok(parsing.isAccepted());
+        test.done()
+    },
+
+    'expect Genlex to be easy to use but needs precedence': function (test) {
 
 
         const genlex = new GenLex();

@@ -1,5 +1,5 @@
 /**
- * Written by Nicolas Zozol
+ * empty structure used as marker
  */
 export interface Unit {
 }
@@ -756,6 +756,9 @@ type extension<Y, T extends IParser<Y>> = T;
 
 type Predicate<V> = (value: V) => boolean;
 
+/***
+ * The FlowBundle gives handy functions for controlling the Stream
+ */
 interface FlowBundle {
 
     /**
@@ -879,31 +882,109 @@ interface FlowBundle {
 }
 
 interface NumberBundle {
+    /**
+     * Accepts any float or integer (ex: `'1.25e-07'`)
+     */
     number(): SingleParser<number>;
 
+    /**
+     * Accepts integer of any size (ex: `'+/-45'`)
+     */
     integer(): SingleParser<number>;
 
+    /**
+     * Accepts 0-9 character. Results in a number.
+     */
     digit(): SingleParser<number>;
 
+    /**
+     * Accepts (0-9)+ characters. Results in a number.
+     */
     digits(): SingleParser<number>;
 }
 
 type ParserOrString<T> = IParser<T> | string;
 
-interface Token<T> extends SingleParser<T> {
+/**
+ * Any parser is a candidate for a token.
+ */
+interface Token<T> extends IParser<T> {
 
 }
 
-type TokenCollection = {
+
+export type TokenCollection = {
     [key: string]: Token<any>
 }
 
-interface GenLex {
+/**
+ * GenLex is the main tool for building a parser of tokens, ie a parser of parser.
+ * For exemple :
+ *  - low level parser: number(), C.char('+'), C.char('-'), C.char('*'), C.char('/')
+ *  - high level parser with GenLex: basic calculator  (ex: `44 + 2*3`)
+ *  - higher level with GenLex: language that accepts calculation as expression value
+ *
+ *  GenLex is also probably be the automatic tool when you are **fighting with spaces**. You will understand
+ *  this when you will be confronted to.
+ *
+ *  WARNING: GenLex is mutable with set/update/remove functions. This could change.
+ */
+export class GenLex {
+
+    new();
+
+    /**
+     * Create all tokens from keywords for the GenLex using `C.string('key')`. Theses token have same name as their definition.
+     *
+     * ```js
+     * genlex.keywords(['function', '{','}']);
+     * let tkFunction = genlex.get('function');
+     * let tkOpen = genlex.get('{');
+     * ```
+     *
+     * @param keys
+     * @param precedence
+     */
+    keywords(keys:string[], precedence?:number);
+
+    /**
+     *
+     * @param parser
+     * @param name
+     * @param precedence
+     */
     tokenize<T>(parser: ParserOrString<T>, name: string, precedence?: number): Token<T>;
 
-    use<T>(grammar: IParser<T>): IParser<T>;
+    use<T, P extends IParser<T>>(grammar: P): P;
 
+    /**
+     * Get a token by its name
+     * @param tokenName
+     */
+    get(tokenName);
+
+    /**
+     * Change separator given a string, using `C.charIn(spacesCharacters).optrep()`
+     * @param separatorCharacters
+     */
+    setSeparators(separatorCharacters:string);
+
+    /**
+     * Custom separators between tokens
+     * @param separatorCharacters
+     */
+    setSeparatorsParser(separatorCharacters);
+
+    /**
+     * return all tokens indexed by name
+     */
     tokens(): TokenCollection;
+
+    /**
+     * Remove one token given its name
+     * @param tokenName
+     */
+    remove(tokenName);
 }
 
 
