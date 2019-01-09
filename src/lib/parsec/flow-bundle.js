@@ -112,7 +112,7 @@ function subStream(length) {
 }
 
 
-function startWith(value) {
+function startsWith(value) {
     return nop().returns(value);
 }
 
@@ -151,7 +151,7 @@ export default {
     error,
     eos,
     satisfy,
-    startWith,
+    startsWith,
     moveUntil,
     dropTo,
 };

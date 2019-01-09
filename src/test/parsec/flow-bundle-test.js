@@ -1,5 +1,5 @@
 import Streams from '../../lib/stream/index';
-import {F, C} from '../../lib/parsec/index';
+import {F, C, N} from '../../lib/parsec/index';
 
 let value = undefined;
 let accepted = undefined;
@@ -13,11 +13,11 @@ function testParser(parser, string) {
 }
 
 export default {
-    setUp: function(done) {
+    setUp: function (done) {
         done();
     },
 
-    'expect flatten result to be ok': function(test) {
+    'expect flatten result to be ok': function (test) {
         const string = 'foobar';
         // tests here
         const parser = C.char('f')
@@ -30,7 +30,7 @@ export default {
         test.done();
     },
 
-    'expect returns to be ok when empty': function(test) {
+    'expect returns to be ok when empty': function (test) {
         const string = 'some';
         // tests here
         const parser = F.any().rep().then(F.eos()).returns([]);
@@ -40,11 +40,11 @@ export default {
         test.done();
     },
 
-    'expect startWith to start': function(test) {
+    'expect startsWith to start': function (test) {
         const string = ' world';
         const object = 'hello';
         // tests here
-        const parser = F.startWith(object)
+        const parser = F.startsWith(object)
             .then(C.string(' world'))
             .then(F.eos().drop());
         testParser(parser, string);
@@ -53,7 +53,7 @@ export default {
         test.done();
     },
 
-    'test moveUntilFast string': function(test) {
+    'test moveUntilFast string': function (test) {
         const line = Streams.ofString('soXYZso');
 
         const combinator = F.moveUntil('XYZ');
@@ -65,7 +65,7 @@ export default {
         test.equals(offset, 2);
         test.done();
     },
-    'test moveUntilFast string with continuation': function(test) {
+    'test moveUntilFast string with continuation': function (test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
@@ -84,7 +84,7 @@ export default {
         test.equals(offset, document.length);
         test.done();
     },
-    'test moveUntilFast array of string with continuation': function(test) {
+    'test moveUntilFast array of string with continuation': function (test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
@@ -104,7 +104,7 @@ export default {
         test.equals(offset, document.length);
         test.done();
     },
-    'test moveUntilFast string fails': function(test) {
+    'test moveUntilFast string fails': function (test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
@@ -120,7 +120,7 @@ export default {
         test.ok(!parsing.isAccepted());
         test.done();
     },
-    'test moveUntilFast array of string fails': function(test) {
+    'test moveUntilFast array of string fails': function (test) {
         const document = 'start-detect-XYZ-continues';
         const line = Streams.ofString(document);
 
@@ -136,7 +136,7 @@ export default {
         test.ok(!parsing.isAccepted());
         test.done();
     },
-    'test moveUntilFast fails if array stream': function(test) {
+    'test moveUntilFast fails if array stream': function (test) {
         const document = ['More', 'XYZ'];
         const line = Streams.ofArray(document);
 
@@ -153,7 +153,7 @@ export default {
         test.ok(found);
         test.done();
     },
-    'test moveUntilFastString fails if array stream': function(test) {
+    'test moveUntilFastString fails if array stream': function (test) {
         const document = ['More', 'XYZ'];
         const line = Streams.ofArray(document);
 
@@ -171,7 +171,7 @@ export default {
         test.done();
     },
 
-    'test moveUntil': function(test) {
+    'test moveUntil': function (test) {
         const line = Streams.ofString('I write until James appears');
 
         const combinator = F.moveUntil(C.string('James')).then(F.any().drop()).single();
@@ -180,7 +180,7 @@ export default {
         test.equals(value, 'I write until ');
         test.done();
     },
-    'test moveUntil Not found': function(test) {
+    'test moveUntil Not found': function (test) {
         const line = Streams.ofString('I write until James appears');
 
         const combinator = F.moveUntil(C.string('Indiana'))
@@ -191,7 +191,7 @@ export default {
         test.ok(!accepted);
         test.done();
     },
-    'test moveUntil  found with failing parser': function(test) {
+    'test moveUntil  found with failing parser': function (test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.moveUntil(C.string('James')).then(F.dropTo(F.eos()));
@@ -200,7 +200,7 @@ export default {
         test.ok(!accepted);
         test.done();
     },
-    'test dropTo with string': function(test) {
+    'test dropTo with string': function (test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.dropTo('James')
@@ -211,7 +211,7 @@ export default {
         test.ok(accepted);
         test.done();
     },
-    'test dropTo with string fail': function(test) {
+    'test dropTo with string fail': function (test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.dropTo('James')
@@ -222,7 +222,7 @@ export default {
         test.ok(accepted);
         test.done();
     },
-    'test dropTo with parser': function(test) {
+    'test dropTo with parser': function (test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.dropTo(C.string('James'))
@@ -233,7 +233,7 @@ export default {
         test.ok(accepted);
         test.done();
     },
-    'test moveUntil found with more parsers': function(test) {
+    'test moveUntil found with more parsers': function (test) {
         const line = Streams.ofString('I write until James Bond appears');
 
         const combinator = F.moveUntil(C.string('James'))
@@ -246,7 +246,7 @@ export default {
         test.done();
     },
 
-    'lazy with a class': function(test) {
+    'lazy with a class': function (test) {
         class SomeLazyParser {
             constructor(char) {
                 this.char = char;
@@ -271,5 +271,36 @@ export default {
         test.equals(value.join(''), 'ababa');
         test.done();
     },
+
+    'F.returns wont change offset': function (test) {
+        const line = Streams.ofString('123456');
+
+        const firstCombinator = F.moveUntil('3');
+
+        const secondCombinator = F.moveUntil('3')
+            .then(F.returns(0))
+            .last();
+        const firstResponse = firstCombinator.parse(line);
+        const secondResponse = secondCombinator.parse(line);
+
+        test.equals(firstResponse.offset, secondResponse.offset);
+        test.done();
+    },
+
+    'F.satisfy() is looking at value at current offset': function (test) {
+        let line = Streams.ofString('123456');
+
+        let combinator = F.dropTo('3')
+            .then(F.satisfy(v => v==='4'))
+            .then(N.number().match(56));
+
+        let response = combinator.parse(line);
+
+        test.ok(response.isAccepted());
+        test.done();
+
+    }
+
+
 };
 

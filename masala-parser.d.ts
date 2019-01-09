@@ -130,9 +130,10 @@ export interface Tuple<T> {
     /**
      * Wrapped array
      */
-    value:T[]
+    value: T[]
 
     isEmpty: boolean;
+
     /**
      * Number of elements in the wrapped array
      */
@@ -167,7 +168,7 @@ export interface Tuple<T> {
     /**
      * Returns the last element of the Tuple
      */
-    last():T;
+    last(): T;
 
     /**
      * Join elements as one string joined by optional separator (ie empty '' separator by default)
@@ -265,13 +266,13 @@ export interface Response<T> {
      * @param accept
      * @param reject
      */
-    fold(accept:()=>Response<T>, reject?:()=>Response<T>): Response<T>;
+    fold(accept: () => Response<T>, reject?: () => Response<T>): Response<T>;
 
     /**
      * Transform the response **in case of** success. Won't touch a Reject.
      * @param f
      */
-    map<Y>(f:(v:T)=>Y): Response<Y>;
+    map<Y>(f: (v: T) => Y): Response<Y>;
 
     /**
      * ```js
@@ -282,7 +283,7 @@ export interface Response<T> {
      *
      * @param f mapping function
      */
-    flatMap<Y>(f:(v:T)=>Response<Y>): Response<Y>;
+    flatMap<Y>(f: (v: T) => Response<Y>): Response<Y>;
 
     filter(predicate: (value) => boolean): Response<T>;
 
@@ -302,11 +303,11 @@ export interface Response<T> {
  * Response rejected. Can be transformed in
  * `Accept` using [[fold]]
  */
-export interface Reject<T> extends Response<T>{
+export interface Reject<T> extends Response<T> {
 
 }
 
-export interface Accept<T> extends Response<T>{
+export interface Accept<T> extends Response<T> {
 
 }
 
@@ -326,7 +327,9 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * @param p next parser
      */
     then(p: IParser<T>): TupleParser<T>;
+
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
+
     then(p: VoidParser): TupleParser<T>;
 
     /**
@@ -385,7 +388,6 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     optrep(): TupleParser<T>;
 
 
-
     /**
      * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
      * ```js
@@ -426,6 +428,7 @@ export interface VoidParser extends SingleParser<any> {
      * @param p next parser
      */
     then<Y>(p: IParser<Y>): TupleParser<Y>;
+
     then(p: VoidParser): TupleParser<any>;
 
     /**
@@ -452,7 +455,9 @@ export interface SingleParser<T> extends IParser<T> {
      * @param p next parser
      */
     then(p: VoidParser): TupleParser<T>;
+
     then(p: IParser<T>): TupleParser<T>;
+
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
     /**
@@ -464,7 +469,6 @@ export interface SingleParser<T> extends IParser<T> {
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
      */
     optrep(): TupleParser<T>;
-
 
 
     /**
@@ -522,7 +526,7 @@ export interface IParser<T> {
      *
      * @param f
      */
-    map<Y>(f: (value:T) => Y): SingleParser<Y>;
+    map<Y>(f: (value: T) => Y): SingleParser<Y>;
 
     /**
      * Create a new parser value *knowing* the current parsing value
@@ -573,8 +577,7 @@ export interface IParser<T> {
      * Filtering a rejected parser will always results in a rejected response.
      * @param predicate : predicate applied on the response value
      */
-    filter(predicate: (value:T) => boolean): this
-
+    filter(predicate: (value: T) => boolean): this
 
 
     /**
@@ -582,7 +585,7 @@ export interface IParser<T> {
      * make backtracking.
      * @param other
      */
-    or<Y, P extends IParser<Y>>(other: P): IParser<T|Y>;
+    or<Y, P extends IParser<Y>>(other: P): IParser<T | Y>;
 
     /**
      * If all parsers are accepted, the response value will be a Tuple of these values.
@@ -590,7 +593,7 @@ export interface IParser<T> {
      * Warning: still experimental
      * @param p
      */
-    and<Y, P extends IParser<Y>>(p: P): TupleParser<T|Y>;
+    and<Y, P extends IParser<Y>>(p: P): TupleParser<T | Y>;
 
     /**
      * When `parser()` is rejected, then `parser().opt()` is accepted with an empty Option as response value.
@@ -599,9 +602,15 @@ export interface IParser<T> {
     opt(): IParser<Option<T>>
 
 
-
     /**
      * Specialized version of [[filter]] using `val` equality as predicate
+     *
+     * ```js
+     * const line = Streams.ofString('123456');
+     * const firstCombinator = F.dropTo(C.char('3'))
+     *          .then(N.number().match(456))
+     * ```
+     *
      * @param val the parser is rejected if it's response value is not `val`
      */
     match(val: T): this;
@@ -613,16 +622,16 @@ export interface IParser<T> {
      *
      * @highParser high level parser
      */
-    chain<Y, P extends IParser<Y>>(highParser:P): P;
+    chain<Y, P extends IParser<Y>>(highParser: P): P;
 
 }
 
 /**
- * A `parseFunction` is a function that returns a parser. To build this parser at runtime, any params are available.
+ * A `ParseFunction` is a function that returns a parser. To build this parser at runtime, any params are available.
  */
-export type parseFunction<X,T> = (stream: Stream<X>, index?: number)=> Response<T>;
+export type ParseFunction<D, T> = (stream: Stream<D>, index?: number) => Response<T>;
 
-interface Parser<T> extends IParser<T>{
+interface Parser<T> extends IParser<T> {
 
 }
 
@@ -630,8 +639,8 @@ interface Parser<T> extends IParser<T>{
  * Note: the documentation shows two parametric arguments `T` for `Parser<T,T>`, but it's really
  * one argument. Looks like the only tooling bug, but sadly on the first line.
  */
-export class Parser<T>{
-    new<D> (f:parseFunction<D,T>);
+export class Parser<T> {
+    new<D>(f: ParseFunction<D, T>);
 }
 
 
@@ -748,38 +757,123 @@ type extension<Y, T extends IParser<Y>> = T;
 type Predicate<V> = (value: V) => boolean;
 
 interface FlowBundle {
-    parse<Y, P extends IParser<Y>>(parser: P): P;
 
+    /**
+     * Convenient function to create a new parser
+     * @param parseFunction parse function
+     */
+    parse<D, Y, P extends IParser<Y>>(parseFunction: ParseFunction<D, Y>): P;
+
+    /**
+     * The parser does nothing and returns a VoidParser, ie its response is empty.
+     * The stream is not moving
+     */
     nop(): VoidParser;
 
-    layer<Y>(parser: IParser<Y>): IParser<Y>;
-
+    /**
+     * Starts backtracking for [[IParser.or]] function
+     * @param parser the first parser to backtrack
+     */
     try<Y, P extends IParser<Y>>(parser: P): P;
 
+    /**
+     * Starts backtracking for [[IParser.and]] function
+     * @param parser the first parser to backtrack
+     */
+    layer<Y>(parser: IParser<Y>): IParser<Y>;
+
+    /**
+     * Read next input from the Stream
+     */
     any(): SingleParser<any>;
 
+    /**
+     * Will probably be deprecated
+     * @param length
+     */
     subStream(length: number): VoidParser;
 
+    /**
+     * Read input until P is accepted. It might be costly.
+     * @param P
+     */
     not<Y, P extends IParser<Y>>(P): SingleParser<any>;
 
-    lazy<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>, args?: any[]): P;
+    /**
+     * `F.lazy` allow the building of Parser at runtime. It is mostly needed fr recursive cases.
+     *
+     * ```js
+     * const  A = ()=> C.char('A').then(B());
+     * const  B = ()=> return C.char('B').or(F.lazy(A));
+     * let response = combinator.parse(Streams.ofString('AAAB'));
+     * assertTrue(response.isAccepted());
+     *
+     *
+     * @param builder : function returning a Parser
+     * @param args arguments given to the builder
+     * @param self object bound as `this` inside the builder
+     */
+    lazy<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>, args?: any[], self?: object): P;
 
+    /**
+     * The parser accepts a response with given value. The stream stays at same offset.
+     * @param value
+     */
     returns<T>(value: T): SingleParser<T>;
 
+    /**
+     * The parser is rejected at current offset.
+     * @param value
+     */
     error(): VoidParser;
 
+    /**
+     * Is accepted is the Stream is at its end. eos : End Of Stream.
+     *
+     * Response value (Unit) is an internal constant that may change.
+     */
     eos(): SingleParser<Unit>;
 
+    /**
+     * F.satisfy() is looking at value at current offset and read one input. It's very useful to build
+     * your custom parser from scratch.
+     * @param predicate
+     */
     satisfy<V>(predicate: Predicate<V>): SingleParser<any>
 
-    startWith<V>(value: V): SingleParser<V>;
+    /**
+     * If accepted, the parser initial response value is `val` instead of `undefined`
+     * @param val
+     */
+    startsWith<V>(val: V): SingleParser<V>;
 
+    /**
+     * The parser will accept anything until it finds `s`. The stream is set at the start of
+     * `s` string using backtracking. Value is dropped.
+     * @param s
+     */
     moveUntil(s: string): VoidParser;
 
+    /**
+     * The parser will accept anything until it can accept `p`. The stream is set at the **start** of
+     * `p` acceptance using backtracking. Depending on `p` and text structure, this could be costly.
+     * Value is dropped.
+     * @param p
+     */
     moveUntil<Y>(p: IParser<Y>): VoidParser;
 
+    /**
+     * The parser will accept anything until it finds `s`. The stream is set at the **end** of
+     * `s`. Value is dropped.
+     * @param s
+     */
     dropTo(s: string): VoidParser;
 
+    /**
+     * The parser will accept anything until it can accept `p`. The stream is set at the **end** of
+     * `p` acceptance. Value is dropped.
+     * @param p
+     */
     dropTo<Y>(p: IParser<Y>): VoidParser;
 
 }
