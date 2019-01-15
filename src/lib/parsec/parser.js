@@ -76,6 +76,10 @@ export default class Parser {
         return this.map(tuple => tuple.last());
     }
 
+    join(j='') {
+        return this.map(tuple => tuple.join(j));
+    }
+
 
     // Should be called only on ListParser ; Always returns an array
     array() {

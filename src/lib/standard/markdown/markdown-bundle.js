@@ -10,7 +10,6 @@ export default {
     eol: Token.eol,
     lineFeed: Token.lineFeed,
     fourSpacesBlock: Token.fourSpacesBlock,
-    stop: Text.stop,
     pureText: Text.pureText,
     italic: Text.italic,
     bold: Text.bold,
