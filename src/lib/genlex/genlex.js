@@ -51,7 +51,7 @@ export class GenLex {
         this.definitions.push(definition);
 
         // probably a bad name
-        const token = literal(token => token.accept(name));
+        const token = literal(token => token.accept(name), name);
         this.tokensMap[name] = token;
         return token;
     }
@@ -103,7 +103,7 @@ export class GenLex {
 
         return sortedDefinitions.reduce(
             (combinator, definition) =>
-                F.try(getTokenParser(definition)).or(combinator),
+                F.try(getTokenParser(definition)).debug('tried '+definition.name).or(combinator),
             F.error()
         );
     }
@@ -133,9 +133,11 @@ function getTokenParser(def) {
 }
 
 
-function literal(tokenize) {
+// name is for easier debugging
+function literal(tokenize, name) {
 
     return F.parse((input, index) => {
+       // console.log('trying ', {index, name});
             return input
                 .get(index)
                 // FIXME= value is the token, token is the value
