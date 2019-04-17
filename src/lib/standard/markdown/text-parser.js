@@ -10,7 +10,6 @@
 import {F, C} from '../../parsec/index';
 import stream from '../../stream/index';
 import T from './token';
-import {GenLex} from "../../genlex/genlex";
 
 function trimStartingLineFeed(str) {
     return str.replace(/^[\s]*/, '');
@@ -20,7 +19,6 @@ function trimEndingLineFeed(str) {
     return str.replace(/[\s]*$/, '');
 }
 
-// private for pureText & formattedParagraph()
 function stop() {
     return F.eos().or(T.lineFeed()).or(C.charIn('*`'));
 }
@@ -37,59 +35,6 @@ function pureText() {
             })
     );
 }
-
-function basicText(stoppers) {
-
-    return F.not(C.stringIn(stoppers))
-
-}
-
-function betweenDelimiter({delimiter, type}, endParser) {
-    return C.string(delimiter).drop()
-        .then(F.not(endParser.or(C.string(delimiter))).rep().join())
-        .then(C.string(delimiter).drop())
-        .single()
-        .map(content => ({type, content}));
-}
-
-function rawText(delimiters, endParser) {
-    const strings = delimiters.map(d => d.delimiter);
-    return F.not(endParser.or(C.stringIn(strings)))
-        .rep()
-        .map(t => ({type: 'raw-text', content: t.join()}))
-        .or(C.stringIn(strings).map(content => ({type: 'raw-text', content})))
-
-
-}
-
-/**
- * @param delimiters delimiter : {type: string, delimiter:string}  {type:'code', delimiter: '`'}
- * @returns {*}
- */
-function betweenAnyDelimiters(delimiters, endParser) {
-
-    return delimiters.reduce(function (combinator, next) {
-        return F.try(betweenDelimiter(next, endParser)).or(combinator);
-    }, F.error());
-
-}
-
-
-function formatter(delimiters, endParser) {
-
-    return F.try(betweenAnyDelimiters(delimiters, endParser))
-        .or(rawText(delimiters, endParser))
-        .rep()
-        //.then(endParser);
-
-
-}
-
-// tokens : betweenDelimiter('_'), text, stop
-// priorité : between stopper, puis text ou stopper
-
-
-// TODO: function textBetweenMarkers(marker, name)
 
 function italic(pureTextParser) {
     return C.char('*')
@@ -159,44 +104,8 @@ function parseText(line, offset = 0) {
     return formattedParagraph().parse(stream.ofString(line), offset);
 }
 
-// For unit test
-export const TextParserPrivate = {
-    betweenDelimiter,
-    betweenAnyDelimiters,
-};
-
-/**
- * Class wrapper for one time definition
- */
-export class TextBundle{
-
-    constructor(delimiters, endParser = C.char('\n').returns({type: 'eol'})){
-        if (!Array.isArray(delimiters)){
-            throw `delimiters should be an array like 
-                 const delimiters = [
-                {type: 'italic', delimiter: '__'},
-                {type: 'bold', delimiter: '**'}
-            ];
-            `
-        }
-        this.delimiters=delimiters;
-        this.endParser = endParser;
-    }
-
-    formatter() {
-
-        return formatter(this.delimiters, this.endParser);
-
-
-    }
-    rawText(){
-        return rawText(this.delimiters, this.endParser);
-    }
-}
-
-
 export default {
-    formatter,
+    stop,
     pureText,
     italic,
     bold,

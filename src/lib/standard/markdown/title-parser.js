@@ -54,8 +54,6 @@ function titleLine() {
         .thenRight(
             T.rawTextUntilChar('\r\n')
                 .thenLeft(T.eol())
-                // TODO: equals returns 1
-                // TODO: minuses returns 2
                 .then(equals().or(minuses()))
                 .array()
                 .map(array => ({

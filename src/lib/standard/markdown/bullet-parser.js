@@ -19,11 +19,6 @@ function formattedSequence() {
     return textParser.formattedSequence(pureText(), stop());
 }
 
-
-// TODO: make it dependant of a formattedSequence
-// TODO: remove the '\n' optrep()
-// bullet(level, formattedSequence)
-
 function bulletLv1() {
     return C.char('\n')
         .optrep()
@@ -50,24 +45,6 @@ function bullet() {
     return F.try(bulletLv2()).or(bulletLv1());
 }
 
-
-
-function bulletStart() {
-    return T.twoSpacesBlock().then(C.charIn('*-')).returns(1)
-        .or(
-            C.charIn('*-').returns(1) //first character of a bullet is  * or -
-        )
-}
-
-function anyBullet(formattedSequence, level) {
-
-    return bulletStart()
-        .then(space().drop()) // second character of a bullet is space or non-breakable space
-        .then(formattedSequence())
-        .map(([level, content]) => ({level, content, type: 'bullet'}))
-}
-
-
 function parseBullet(line, offset = 0) {
     return bullet().parse(stream.ofString(line), offset);
 }
@@ -76,7 +53,7 @@ export default {
     bulletLv1,
     bulletLv2,
     bullet,
-    anyBullet,
+
     parse(line) {
         return parseBullet(line, 0);
     },

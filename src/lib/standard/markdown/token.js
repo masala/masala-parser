@@ -27,32 +27,14 @@ function eol() {
 //A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
 function lineFeed() {
     return eol().then(blank()).then(eol()).returns({
-        linefeed: symbol('linefeed'),
+        linefeed: undefined,
     });
 }
 
 //accept 1 tab or 4 spaces. Space may be unbreakable
 function fourSpacesBlock() {
-    return tab().or(space().occurrence(4))
-        .returns({type:'space-block', level:4})
+    return C.char('\t').or(C.charIn(' \u00A0').occurrence(4));
 }
-
-
-function twoSpacesBlock(){
-    return tab().or(space().occurrence(2))
-        .returns({type:'space-block', level:2})
-}
-
-
-
-function space(){
-    return C.charIn(' \u00A0');
-}
-
-function tab(){
-    return C.char('\t');
-}
-
 
 export default {
     blank,
@@ -61,7 +43,4 @@ export default {
     eol,
     lineFeed,
     fourSpacesBlock,
-    twoSpacesBlock,
-    space,
-    tab
 };
