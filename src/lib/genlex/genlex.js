@@ -103,7 +103,7 @@ export class GenLex {
 
         return sortedDefinitions.reduce(
             (combinator, definition) =>
-                F.try(getTokenParser(definition)).debug('tried '+definition.name).or(combinator),
+                F.try(getTokenParser(definition)).or(combinator),
             F.error()
         );
     }
