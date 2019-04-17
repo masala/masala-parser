@@ -32,6 +32,10 @@ export default class Parser {
         this.parse = parse;
     }
 
+    val(text){
+        return this.parse(stream.ofString(text).value);
+    }
+
     // Parser 'a 'c => ('a -> Parser 'b 'c) -> Parser 'b 'c
     flatMap(f) {
         return bind(this, f);

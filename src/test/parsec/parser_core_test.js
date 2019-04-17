@@ -7,6 +7,14 @@ export default {
         done();
     },
 
+    'expect val to be a nice shortcut':function(test){
+
+        const parser = C.string('xyz');
+        const val = parser.val('xyz');
+        test.equal(val, 'xyz');
+        test.done();
+
+    },
     'expect (map) to be accepted': function (test) {
         test.expect(1);
         // tests here
