@@ -40,6 +40,7 @@ function italic(pureTextParser) {
     return C.char('*')
         .thenRight(pureTextParser)
         .thenLeft(C.char('*'))
+        .single()
         .map(string => ({italic: string}));
 }
 
@@ -47,6 +48,7 @@ function bold(pureTextParser) {
     return C.string('**')
         .thenRight(pureTextParser)
         .thenLeft(C.string('**'))
+        .single()
         .map(string => ({bold: string}));
 }
 
@@ -54,6 +56,7 @@ function code(pureTextParser) {
     return C.char('`')
         .thenRight(pureTextParser)
         .thenLeft(C.char('`'))
+        .single()
         .map(string => ({code: string}));
 }
 
@@ -72,14 +75,16 @@ function formattedSequence(pureTextParser, stopParser) {
         .or(text(pureTextParser))
         .or(code(pureTextParser))
         .rep()
-        .thenLeft(stopParser);
+        .thenLeft(stopParser)
+        .array();
 }
 
 function formattedParagraph() {
     return T.blank()
         .thenRight(formattedSequence(pureText(), stop()))
-        .map(list => {
-            var array = list.array();
+        .single()
+        .map(array => {
+
             // We trim the first and last element of the paragraph
             if (
                 array.length > 0 &&

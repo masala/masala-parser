@@ -15,6 +15,7 @@ function codeLine() {
         .thenRight(T.fourSpacesBlock())
         .thenRight(T.fourSpacesBlock())
         .thenRight(T.rawTextUntilChar('\n', true))
+        .single()
         .map(text => ({code: text}));
 }
 

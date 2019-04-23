@@ -111,37 +111,6 @@ export default {
 
 
 
-    'ParserStream.get() is idemPotent':function(test){
-        const lower = N.number().then(spaces().opt().drop());
-
-
-        const lowerStream = Streams.ofString('10 12 44');
-        const parserStream = Streams.ofParser(lower, lowerStream);
-
-        let tryGet = parserStream.get(0);
-        test.ok(tryGet.isSuccess());
-        test.equal(10, tryGet.value);
-
-        let firstOffset = parserStream.getOffset(1);
-        test.equal(parserStream.offsets[1], 3);
-
-        tryGet = parserStream.get(1);
-        test.ok(tryGet.isSuccess());
-        test.equal(12, tryGet.value);
-
-        test.equal(parserStream.offsets[1], 3);
-
-        let secondOffset = parserStream.getOffset(1);
-
-        test.ok(firstOffset, secondOffset);
-
-
-
-        test.done();
-    }
-
-
-
 }
 
 

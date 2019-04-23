@@ -18,25 +18,25 @@ function number() {
         integer = C.charIn('+-')
             .opt()
             .then(digits)
+            .array()
             .map(r => r[0].orElse('') + r[1]),
         float = integer
             .then(C.char('.').then(digits).opt().map(joinOrEmpty))
             .then(C.charIn('eE').then(integer).opt().map(joinOrEmpty))
+            .array()
             .map(r => r[0] + r[1] + r[2]);
 
     return float.map(r => parseFloat(r, 10));
 }
 
-// unit -> Parser char char
+// unit -> Parser char int
 function digit() {
-    return F.satisfy(v => '0' <= v && v <= '9')
-        .map(c=>parseInt(c));
+    return F.satisfy(v => '0' <= v && v <= '9').map(c=>parseInt(c));
 }
 
 
 function digits() {
-    return digit().rep().map(v => v.join(''))
-                .map(s=>parseInt(s));
+    return digit().rep().map(v => parseInt(v.join('')));
 }
 
 
@@ -47,6 +47,7 @@ function integer() {
         integer = C.charIn('+-')
             .opt()
             .then(digits)
+            .array()
             .map(r => r[0].orElse('') + r[1]);
 
     return integer.map(i => parseInt(i, 10));
