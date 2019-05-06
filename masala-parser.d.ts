@@ -412,14 +412,18 @@ export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
      * ```
      * @param p next parser
      */
-    then<Y>(p: IParser<Y>): TupleParser<Y>;
     then(p: VoidParser): TupleParser<MASALA_VOID_TYPE>;
+    then<Y>(p: TupleParser<Y>): TupleParser<Y>;
+    then<Y>(p: SingleParser<Y>): SingleParser<Y>;
+    then<Y>(p: IParser<Y>): TupleParser<Y>;
 
     thenEos():TupleParser<MASALA_VOID_TYPE>;
 
     or(other: VoidParser): VoidParser;
     or<T, P extends IParser<T>>(other: P): VoidParser|P;
 
+
+    opt(): SingleParser<Option<MASALA_VOID_TYPE>>;
 }
 
 export interface SingleParser<T> extends IParser<T> {
@@ -443,6 +447,9 @@ export interface SingleParser<T> extends IParser<T> {
     or(other: SingleParser<T>): SingleParser<T>;
     or<Y>(other: SingleParser<Y>): SingleParser<T|Y>;
     or<Y, P extends IParser<Y>>(other: P): SingleParser<T>|P;
+
+
+    opt(): SingleParser<Option<T>>
 }
 
 
