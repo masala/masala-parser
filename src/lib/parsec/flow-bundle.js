@@ -125,6 +125,8 @@ function moveUntil(stop) {
         return searchArrayStringStart(stop);
     }
 
+    // TODO: change undefined by a Symbol
+    // TODO: for better performance, maybe check in the map if the symbol is included, and remove the or
     return doTry(not(stop).rep().then(eos()).returns(undefined))
         .or(not(stop).rep().map(chars => chars.join('')))
         .filter(v => v !== undefined);

@@ -1,5 +1,5 @@
-import {Streams, F, C, N} from '@masala/parser'
-import {assertEquals, assertFalse, assertTrue} from '../../assert';
+import {Streams,  C, N} from '@masala/parser'
+import {assertEquals, assertTrue} from '../../assert';
 
 let combinator = N.digit().occurrence(5);
 let response = combinator.parse(Streams.ofString('55555'));

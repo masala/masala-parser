@@ -1,5 +1,5 @@
-import {Streams, F, C, N} from '@masala/parser'
-import {assertEquals, assertFalse, assertTrue} from '../../assert';
+import {Streams,  N} from '@masala/parser'
+import {assertEquals, assertFalse} from '../../assert';
 
 let combinator = N.digit().filter(m => m>=5).rep();
 // The parser willl accept first 3 numbers

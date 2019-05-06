@@ -1,4 +1,4 @@
-import {Streams, F, C, N} from '@masala/parser'
+import {Streams, C} from '@masala/parser'
 import {assertEquals, assertArrayEquals, assertTrue} from '../../assert';
 
 
@@ -12,7 +12,7 @@ const helloParser = C.string("Hello")
 const parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
 // C.letter.rep() will giv a array of letters
 
-let x = parsing.value.array();
+
 
 assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");
 

@@ -1,4 +1,4 @@
-import {Streams, F, C,Option, N, SingleParser} from '@masala/parser'
+import {Streams, F, C} from '@masala/parser'
 import {assertFalse} from '../../assert';
 
 function day() {

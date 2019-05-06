@@ -311,6 +311,9 @@ export interface Accept<T> extends Response<T>{
 }
 
 
+
+
+
 /* Array with different values*/
 export interface TupleParser<T> extends IParser<Tuple<T>> {
 
@@ -328,6 +331,11 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
     then(p: VoidParser): TupleParser<T>;
+
+    thenEos():TupleParser<T>;
+
+    or<Y>(other: TupleParser<Y>): TupleParser<T>|TupleParser<Y>;
+    or<T, P extends IParser<T>>(other: P): VoidParser|P;
 
     /**
      * Map the response value as an array
@@ -374,34 +382,13 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     last(): SingleParser<T>;
 
 
-    /**
-     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
-     */
-    rep(): TupleParser<T>;
-
-    /**
-     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
-     */
-    optrep(): TupleParser<T>;
 
 
 
-    /**
-     * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
-     * ```js
-     * let parser = C.char('a').then (C.char('b')).occurrence(3);
-     * let resp = parser.parse(Streams.ofString('ababab'));
-     * // ->  Tuple { value: [ 'a', 'b', 'a', 'b', 'a', 'b' ] } }
-     * ```
-     * @param n
-     */
-    occurrence(n: number): TupleParser<T>;
 
-    /**
-     * Will be accepted if the parser reaches the End of Stream. The eos response **WILL** be dropped
-     * as this method is a shortcut for `parser.then(eos().drop())`
-     */
-    thenEos(): this;
+
+
+
 
 
 }
@@ -413,7 +400,7 @@ declare type MASALA_VOID_TYPE = symbol;
  * Note that `VoidParser.then(VoidParser)` will produce a [[TupleParser]] where
  * inner value is `[]`. Same result with `optrep()` and `rep()`
  */
-export interface VoidParser extends SingleParser<any> {
+export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
 
     /**
      * Combine two parsers for reading the stream
@@ -426,17 +413,13 @@ export interface VoidParser extends SingleParser<any> {
      * @param p next parser
      */
     then<Y>(p: IParser<Y>): TupleParser<Y>;
-    then(p: VoidParser): TupleParser<any>;
+    then(p: VoidParser): TupleParser<MASALA_VOID_TYPE>;
 
-    /**
-     * Accepted with zero or more occurrences. Will produce an empty Tuple
-     */
-    optrep(): TupleParser<any>;
+    thenEos():TupleParser<MASALA_VOID_TYPE>;
 
-    /**
-     * Accepted with one or more occurrences.Will produce an empty Tuple
-     */
-    rep(): TupleParser<any>;
+    or(other: VoidParser): VoidParser;
+    or<T, P extends IParser<T>>(other: P): VoidParser|P;
+
 }
 
 export interface SingleParser<T> extends IParser<T> {
@@ -455,35 +438,11 @@ export interface SingleParser<T> extends IParser<T> {
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
-    /**
-     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
-     */
-    rep(): TupleParser<T>;
+    thenEos():TupleParser<T>;
 
-    /**
-     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
-     */
-    optrep(): TupleParser<T>;
-
-
-
-    /**
-     * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
-     * ```js
-     * let parser = C.char('a').then (C.char('b')).occurrence(3);
-     * let resp = parser.parse(Streams.ofString('ababab'));
-     * // ->  Tuple { value: [ 'a', 'b', 'a', 'b', 'a', 'b' ] } }
-     * ```
-     * @param n
-     */
-    occurrence(n: number): TupleParser<T>;
-
-    /**
-     * Will be accepted if the parser reaches the End of Stream. The eos response **WILL** be dropped
-     * as this method is a shortcut for `parser.then(eos().drop())`
-     */
-    thenEos(): TupleParser<T>;
-
+    or(other: SingleParser<T>): SingleParser<T>;
+    or<Y>(other: SingleParser<Y>): SingleParser<T|Y>;
+    or<Y, P extends IParser<Y>>(other: P): SingleParser<T>|P;
 }
 
 
@@ -503,6 +462,12 @@ export interface IParser<T> {
     parse<D>(stream: Stream<D>, index?: number): Response<T>;
 
     /**
+     * Parses the text and returns the value, or **undefined** if parsing has failed.
+     * @param text text to parse
+     */
+    val(text:string):T
+
+    /**
      * Creates a sequence of tokens accepted by the parser
      * ```js
      * const abParser = C.char('a').then(C.char('b'))
@@ -510,6 +475,11 @@ export interface IParser<T> {
      * @param p
      */
     then(p: VoidParser): TupleParser<T>;
+    then(p: IParser<T>): TupleParser<T>;
+    then<Y>(p: IParser<Y>): TupleParser<T | Y>;
+
+
+
 
     /**
      * Transforms the Response value
@@ -582,7 +552,7 @@ export interface IParser<T> {
      * make backtracking.
      * @param other
      */
-    or<Y, P extends IParser<Y>>(other: P): IParser<T|Y>;
+    or<Y, P extends IParser<Y>>(other: P): IParser<T>|IParser<Y>;
 
     /**
      * If all parsers are accepted, the response value will be a Tuple of these values.
@@ -590,6 +560,7 @@ export interface IParser<T> {
      * Warning: still experimental
      * @param p
      */
+    and<P extends IParser<T>>(p: P): TupleParser<T>;
     and<Y, P extends IParser<Y>>(p: P): TupleParser<T|Y>;
 
     /**
@@ -599,6 +570,27 @@ export interface IParser<T> {
     opt(): IParser<Option<T>>
 
 
+    /**
+     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     */
+    rep(): TupleParser<T>;
+
+    /**
+     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     */
+    optrep(): TupleParser<T>;
+
+
+    /**
+     * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
+     * ```js
+     * let parser = C.char('a').then (C.char('b')).occurrence(3);
+     * let resp = parser.parse(Streams.ofString('ababab'));
+     * // ->  Tuple { value: [ 'a', 'b', 'a', 'b', 'a', 'b' ] } }
+     * ```
+     * @param n
+     */
+    occurrence(n: number): TupleParser<T>;
 
     /**
      * Specialized version of [[filter]] using `val` equality as predicate
@@ -613,7 +605,7 @@ export interface IParser<T> {
      *
      * @highParser high level parser
      */
-    chain<Y, P extends IParser<Y>>(highParser:P): P;
+    chain<Y, P extends IParser<Y>>(highParser: P): P;
 
 }
 
@@ -752,7 +744,7 @@ interface FlowBundle {
 
     nop(): VoidParser;
 
-    layer<Y>(parser: IParser<Y>): IParser<Y>;
+    layer<Y, P extends IParser<Y>>(parser: P): P;
 
     try<Y, P extends IParser<Y>>(parser: P): P;
 
@@ -774,12 +766,20 @@ interface FlowBundle {
 
     startWith<V>(value: V): SingleParser<V>;
 
-    moveUntil(s: string): VoidParser;
+    /**
+     * moveUntil moves the offset until stop is found and returns the text found between.
+     * The *stop* is **not** read
+     * @param stop
+     */
+    moveUntil(stop: string): SingleParser<string>;
+    moveUntil(stops: string[]): SingleParser<string>;
+    moveUntil<Y>(p: IParser<Y>): SingleParser<string>;
 
-    moveUntil<Y>(p: IParser<Y>): VoidParser;
-
+    /**
+     * Move until the stop, stop **included**, and drops it.
+     * @param s
+     */
     dropTo(s: string): VoidParser;
-
     dropTo<Y>(p: IParser<Y>): VoidParser;
 
 }

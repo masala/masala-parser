@@ -1,5 +1,5 @@
-import {Streams, F, C, N} from '@masala/parser'
-import {assertEquals, assertArrayEquals, assertTrue} from '../../assert';
+import {Streams, F,  N} from '@masala/parser'
+import {assertEquals, assertTrue} from '../../assert';
 
 // Parsec needs a stream of characters
 const document = '12';

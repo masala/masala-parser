@@ -1,4 +1,4 @@
-import {Streams, F, C, N} from '@masala/parser'
+import {Streams, F, C} from '@masala/parser'
 import {assertEquals} from '../../assert';
 
 

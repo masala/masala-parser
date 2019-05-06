@@ -10,5 +10,7 @@ import './flow/startWith-moveUntil-dropTo'
 import './lazy/transmission'
 import './chars/letter-letterAs'
 
+import './markdown/test/markdown-tests'
+
 
 console.log('Integration with Typescript perfect !');

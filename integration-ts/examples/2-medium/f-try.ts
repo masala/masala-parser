@@ -17,6 +17,6 @@ const successInput = 'aa';
 
 const layer = F.layer(first).and(second);
 
-response = layer.parse(Streams.ofString(successInput));
+let layerResponse = layer.parse(Streams.ofString(successInput));
 
-assertTrue(response.isAccepted());
+assertTrue(layerResponse.isAccepted());

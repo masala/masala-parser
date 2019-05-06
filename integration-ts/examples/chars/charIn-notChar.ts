@@ -1,5 +1,5 @@
-import {Streams, F, C, N} from '@masala/parser'
-import {assertEquals, assertFalse, assertTrue} from '../../assert';
+import {Streams, C} from '@masala/parser'
+import {assertEquals} from '../../assert';
 
 let combinator = C.charNotIn('abc').rep();
 // will accept x, y, and z but will stop at 'b'
