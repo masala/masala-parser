@@ -15,7 +15,6 @@ function codeLine() {
         .then(T.fourSpacesBlock())
         .drop()
         .then(T.rawTextUntilChar('\n', true))
-        .single()
         .map(text => ({code: text}));
 }
 

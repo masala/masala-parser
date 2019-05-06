@@ -43,7 +43,7 @@ function titleSharp() {
         //.debug('')
         .map(([title, text]) => ({
                 type:'title',
-                typeOption:title.typeOption,
+                typeOption:'title-sharp',
                 level:title.level,
                 text
 
@@ -58,14 +58,14 @@ function titleLine() {
                 .then(T.eol().drop())
                 .then(equals().or(minuses()))
                 .array()
-                .map(array => ({
-                    title: {
-                        level: array[1],
-                        text: array[0],
-                    },
-                }))
-        )
-        .single();
+                .map((  [level, text]   ) => ({
+                        type:'title',
+                        level,
+                        text,
+                        typeOption:'title-line'
+                    }
+                ))
+        );
 }
 
 function title() {

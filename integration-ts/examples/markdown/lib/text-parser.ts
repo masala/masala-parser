@@ -9,12 +9,13 @@
  */
 import {Streams, F, C, SingleParser, IParser} from '@masala/parser'
 import T from './token';
+import {FormattedSequence, MdBold, MdCode, MdItalic, MdText} from "./types";
 
-function trimStartingLineFeed(str:string) {
+function trimStartingLineFeed(str:string):string {
     return str.replace(/^[\s]*/, '');
 }
 
-function trimEndingLineFeed(str:string) {
+function trimEndingLineFeed(str:string):string {
     return str.replace(/[\s]*$/, '');
 }
 
@@ -35,15 +36,15 @@ function pureText() {
     );
 }
 
-function italic(pureTextParser:SingleParser<string>) {
+function italic(pureTextParser:SingleParser<string>):SingleParser<MdItalic> {
     return C.char('*').drop()
         .then(pureTextParser)
         .then(C.char('*').drop())
         .single()
-        .map((string:string) => ({italic: string}));
+        .map((s:string) => ({italic: s}));
 }
 
-function bold(pureTextParser:SingleParser<string>) {
+function bold(pureTextParser:SingleParser<string>):SingleParser<MdBold> {
     return C.string('**').drop()
         .then(pureTextParser)
         .then(C.string('**').drop())
@@ -51,7 +52,7 @@ function bold(pureTextParser:SingleParser<string>) {
         .map((string:string) => ({bold: string}));
 }
 
-function code(pureTextParser:SingleParser<string>) {
+function code(pureTextParser:SingleParser<string>) :SingleParser<MdCode>{
     return C.char('`').drop()
         .then(pureTextParser)
         .then(C.char('`').drop())
@@ -59,16 +60,18 @@ function code(pureTextParser:SingleParser<string>) {
         .map((string:string) => ({code: string}));
 }
 
-function text(pureTextParser:SingleParser<string>) {
+function text(pureTextParser:SingleParser<string>):SingleParser<MdText> {
     return pureTextParser.map(string => ({text: string}));
 }
+
+
 
 /**
  * @param pureTextParser :SingleParser<string>  defines if a text accept some chars or not
  * @param stopParser :IParser<any> defines if text stops at the end of line
  * @returns Parser
  */
-function formattedSequence(pureTextParser:SingleParser<string>, stopParser:IParser<any>) {
+function formattedSequence(pureTextParser:SingleParser<string>, stopParser:IParser<any>):SingleParser<FormattedSequence> {
     return bold(pureTextParser)
         .or(italic(pureTextParser))
         .or(text(pureTextParser))
@@ -81,8 +84,7 @@ function formattedSequence(pureTextParser:SingleParser<string>, stopParser:IPars
 function formattedParagraph() {
     return T.blank().drop()
         .then(formattedSequence(pureText(), stop()))
-        .single()
-        .map(array => {
+        .map( (array :any[]) => {
 
             // We trim the first and last element of the paragraph
             if (
@@ -95,7 +97,7 @@ function formattedParagraph() {
                 array[last].text = trimEndingLineFeed(array[last].text);
             }
 
-            return {paragraph: array};
+            return {paragraph: (array as FormattedSequence)};
         });
 }
 
