@@ -414,7 +414,7 @@ export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
      */
     then(p: VoidParser): TupleParser<MASALA_VOID_TYPE>;
     then<Y>(p: TupleParser<Y>): TupleParser<Y>;
-    then<Y>(p: SingleParser<Y>): SingleParser<Y>;
+    then<Y>(p: SingleParser<Y>): TupleParser<Y>;
     then<Y>(p: IParser<Y>): TupleParser<Y>;
 
     thenEos():TupleParser<MASALA_VOID_TYPE>;

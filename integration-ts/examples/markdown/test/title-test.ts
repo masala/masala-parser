@@ -16,7 +16,7 @@ export const titleTests = {
 
     'test level3': function () {
         let actual = title().val('### title\n');
-        let expected = {level: 3, text: 'title', type:'title-sharp', typeOption:'sharp'};
+        let expected = {level: 3, text: 'title', type:'title', typeOption:'sharp'};
         assertDeepEquals(expected, actual, 'test title level 3');
     },
 
@@ -60,7 +60,7 @@ export const titleTests = {
         assertDeepEquals(expected, actual, 'test stars in title1');
 
         actual = title().val('## 2*3*4 = 24\n');
-        expected = {type:'title', typeOption:'line',level: 2, text: '2*3*4 = 24'};
+        expected = {type:'title', typeOption:'sharp',level: 2, text: '2*3*4 = 24'};
 
         assertDeepEquals(expected, actual, 'test stars in title2');
 

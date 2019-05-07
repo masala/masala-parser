@@ -41,8 +41,20 @@ function arraysEqual(a: Array<any>, b: Array<any>) {
 
 }
 
-export function assertDeepEquals(a: any, b: any, testName = 'Unknown test') {
-    return assertEquals(JSON.stringify(a), JSON.stringify(b), testName);
+function deepEqual(a: any, b: any) {
+    if (a && b && typeof a == 'object' && typeof b == 'object') {
+        if (Object.keys(a).length != Object.keys(b).length) return false;
+        for (let key in a) if (!deepEqual(a[key], b[key])) return false;
+        return true;
+    } else return a === b
+}
+
+export function assertDeepEquals(expected: any, actual: any, testName = 'Unknown test') {
+    if (!deepEqual(expected, actual)) {
+        console.trace();
+        throw ". Expected " + JSON.stringify(expected )+ " , but != " + JSON.stringify(actual);
+    }
+    return assertTrue(deepEqual(expected, actual), testName);
 }
 
 export function launch(collection: any) {
