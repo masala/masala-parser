@@ -8,8 +8,9 @@
  * Limits and axiomes
  * A \n in the markdown source ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar}
  */
-import {F, C} from '@masala/parser'
+import {F, C, SingleParser} from '@masala/parser'
 import T from './token';
+import {MdTitle} from "./types";
 
 let end = () => F.eos().or(T.eol());
 
@@ -34,7 +35,7 @@ function thin() {
         .returns(2); // this mean a level 2 title
 }
 
-function titleSharp() {
+function titleSharp():SingleParser<MdTitle> {
     return sharps()
         .then(white().drop())
         .then(F.moveUntil(end()))
@@ -50,7 +51,7 @@ function titleSharp() {
         );
 }
 
-function titleLine() {
+function titleLine():SingleParser<MdTitle> {
     return F.moveUntil(T.eol())
         .then(T.eol().drop())
         .then(fat().or(thin()))

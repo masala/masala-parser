@@ -3,7 +3,8 @@
  */
 
 import {F, C} from '@masala/parser'
-import textParser from './text-parser';
+import {formattedSequence as seq}  from "./text-parser";
+
 import T from './token';
 
 function stop() {
@@ -15,7 +16,7 @@ function pureText() {
 }
 
 function formattedSequence() {
-    return textParser.formattedSequence(pureText(), stop());
+    return seq(pureText(), stop());
 }
 
 function bulletLv1() {

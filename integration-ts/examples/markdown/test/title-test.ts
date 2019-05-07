@@ -1,5 +1,5 @@
 /**
- * Created by Simon on 14/12/2016.
+ * Created by Nicolas Zozol on 14/12/2016.
  */
 import {title} from "../lib/title-parser";
 import {assertDeepEquals, assertEquals} from "../../../assert";

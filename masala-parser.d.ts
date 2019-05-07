@@ -328,9 +328,10 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * ```
      * @param p next parser
      */
+    then(p: VoidParser): TupleParser<T>;
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
-    then(p: VoidParser): TupleParser<T>;
+
 
     thenEos():TupleParser<T>;
 

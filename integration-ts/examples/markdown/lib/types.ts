@@ -1,9 +1,18 @@
-export type MdBold ={bold: string};
-export type MdItalic ={italic: string};
-export type MdCode ={code: string};
-export type MdText ={text: string};
+export interface MdElement {
+    type: string
+}
 
-export type MdElement= MdText|MdBold|MdItalic|MdCode;
+export interface MdText extends MdElement{
+    text: string
+}
 
-export type FormattedSequence = MdElement[];
+
+export interface MdTitle extends MdElement{
+    level: number,
+    typeOption:any,
+    text: string
+}
+
+export type FormattedSequence = MdText[];
+
 
