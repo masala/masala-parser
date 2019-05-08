@@ -33,47 +33,46 @@ export const codeBlockTests = {
         assertDeepEquals(expected, actual, 'This is a gentle block code');
 
     },
-    /*
+
 
     'test text normal': function() {
         const line = `This is not a code`;
-        let actual = title().val(line);
+        let actual = codeBlock(2).val(line);
         assertTrue(actual === undefined);
     },
 
     'test bullet': function() {
-        const line = `\t This is  a  level2 bullet`;
-        let actual = title().val(line);
-        assertTrue(actual === undefined, 'bullets should not be accepted as a code block');
+        const line = `\t\t* This is  a  level2 bullet`;
+        let actual = codeBlock(2).val(line);
+        assertTrue(actual !== undefined, 'bullets should be accepted as a code block when no priority is set');
         
     },
 
 
 
-    'test code 2': function() {
+    'code blocks are not trimmed in this project': function() {
         const line = `\t\t  This is a code block`;
-        let actual = title().val(line);
-        let expected = {type:'codeline', content: 'This is a code block'};
+        let actual = codeBlock(2).val(line);
+        let expected = {type:'codeBlock', lines: ['\t  This is a code block']};
         assertDeepEquals(
             expected,
             actual,
-            '  This is a  block code stzrting with spaces and ending with eos'
+            '  This is a NOT TRIMMED block code starting with mixed tabs and spaces'
         );
         
     },
 
-    'test code 3': function() {
-        const line = `\t\t`;
-        let actual = title().val(line);
-        let expected = {type:'codeline', content: ''};
-        assertDeepEquals(expected, actual, '  This is a blank line in a code');
+    'test code empty block': function() {
+        const line = `\t`;
+        let actual = codeBlock(2).val(line);
+        assertTrue(actual === undefined, 'Too empty for code block');
         
     },
 
-    'test code 4': function() {
-        const line = `\t\t  `;
-        let actual = title().val(line);
-        let expected = {type:'codeline', content: '  '};
+    'test code space block': function() {
+        const line = `\t  `;
+        let actual = codeBlock(2).val(line);
+        let expected = {type:'codeBlock', lines: ['  ']};
         assertDeepEquals(
             expected,
             actual,
@@ -81,5 +80,5 @@ export const codeBlockTests = {
         );
         
     },
-    */
+
 };

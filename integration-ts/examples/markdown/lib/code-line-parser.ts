@@ -3,14 +3,11 @@
  */
 
 import {C, F, GenLex, TokenResult} from '@masala/parser'
-import T from './token';
+import T, {spacesBlock} from './token';
 import {CodeBlock, CodeLine} from "./types";
 
 
-//accept 1 tab or 4 spaces. Space may be unbreakable
-function spacesBlock(spaces: number) {
-    return C.char('\t').or(C.charIn(' \u00A0').occurrence(spaces));
-}
+
 
 
 /* TODO mix spaces &  tab bug  "  \t  " will not be accepted

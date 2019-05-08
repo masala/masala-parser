@@ -19,7 +19,10 @@ function lineFeed() {
     });
 }
 
-
+//accept 1 tab or 4 spaces. Space may be unbreakable
+export function spacesBlock(spaces: number) {
+    return C.char('\t').or(C.charIn(' \u00A0').occurrence(spaces));
+}
 
 export default {
     blank,
