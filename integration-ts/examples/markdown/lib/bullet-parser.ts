@@ -5,7 +5,7 @@
 import {F, C} from '@masala/parser'
 import {formattedSequence as seq}  from "./text-parser";
 
-import T from './token';
+import {blank, spacesBlock} from './token';
 
 function stop() {
     return F.eos().or(C.charIn('\r\n*`'));
@@ -20,42 +20,24 @@ function formattedSequence() {
 }
 
 function bulletLv1() {
-    return C.char('\n')
-        .optrep()
-        .then(C.charIn('*-')) //first character of a bullet is  * or -
-        .then(C.charIn(' \u00A0')) // second character of a bullet is space or non-breakable space
+    return C.charIn('*-') //first character of a bullet is  * or -
+        .then(blank()) // second character of a bullet is space or non-breakable space
         .then(formattedSequence())
         .last()
-        .map(someText => ({bullet: {level: 1, content: someText}}));
+        .map(someText => ({type:'bullet', level: 1, content: someText}));
 }
 
 function bulletLv2() {
-    return C.char('\n')
-        .optrep()
-        .then(T.fourSpacesBlock())
-        .then(C.char(' ').optrep()) //careful. This will accept 8 space. therefore the code-parser must have higher priority
+    return spacesBlock(2)
+        .then (blank().opt())
         .then(C.charIn('*-')) //first character of a bullet is  * or -
-        .then(C.charIn(' \u00A0')) // second character of a bullet is space or non-breakable space
+        .then(blank()) // second character of a bullet is space or non-breakable space
         .then(formattedSequence())
         .last()
-        .map(someText => ({bullet: {level: 2, content: someText}}));
+        .map(someText => ({type:'bullet',level: 2, content: someText}));
 }
 
 
-function bullet() {
+export function bullet() {
     return F.try(bulletLv2()).or(bulletLv1());
 }
-
-function parseBullet(line:string) {
-    return bullet().val(line);
-}
-
-export default {
-    bulletLv1,
-    bulletLv2,
-    bullet,
-
-    parse(line:string) {
-        return parseBullet(line);
-    },
-};

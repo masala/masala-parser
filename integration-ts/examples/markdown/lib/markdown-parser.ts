@@ -3,18 +3,20 @@
  */
 
 import {Streams, F, Stream} from '@masala/parser'
-import T from './token';
+
 import {paragraph} from './text-parser';
 import {title} from './title-parser';
-import BulletParser from './bullet-parser';
-import codeBlockParser from './code-line-parser';
+import {codeBlock} from "./code-line-parser";
+import {bullet} from "./bullet-parser";
+import {lineFeed} from "./token";
+
 
 function mdLine() {
     return F.try(title())
-        .or(F.try(codeBlockParser.codeLine()))
-        .or(F.try(BulletParser.bullet()))
+        .or(F.try(codeBlock(2)))
+        .or(F.try(bullet()))
         .or(F.try(paragraph()))
-        .or(T.lineFeed());
+        .or(lineFeed());
 }
 
 function document() {

@@ -8,8 +8,9 @@
  * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (F.eos())
  */
 import {F, C, SingleParser, IParser} from '@masala/parser'
-import T from './token';
+
 import {FormattedSequence, MdText} from "./types";
+import {blank, lineFeed} from "./token";
 
 function trimStartingLineFeed(str:string):string {
     return str.replace(/^[\s]*/, '');
@@ -20,7 +21,7 @@ function trimEndingLineFeed(str:string):string {
 }
 
 function stop() {
-    return F.eos().or(T.lineFeed()).or(C.charIn('*`'));
+    return F.eos().or(lineFeed()).or(C.charIn('*`'));
 }
 
 function pureText() {
@@ -82,7 +83,7 @@ export function formattedSequence(pureTextParser:SingleParser<string>, stopParse
 }
 
 export function paragraph() {
-    return T.blank().drop()
+    return blank().drop()
         .then(formattedSequence(pureText(), stop()))
         .single()
         .map( (array :MdText[]) => {

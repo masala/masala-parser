@@ -9,10 +9,11 @@
  * A \n in the markdown source ends the parsing of a title.  #foo\nbar  -> {title:foo},{text:bar}
  */
 import {F, C, SingleParser} from '@masala/parser'
-import T from './token';
-import {MdTitle} from "./types";
 
-let end = () => F.eos().or(T.eol());
+import {MdTitle} from "./types";
+import {blank, eol} from "./token";
+
+let end = () => F.eos().or(eol());
 
 function sharps() {
     return C.char('#').rep().map(string => ({typeOption: 'sharp', level: string.array().length}));
@@ -25,13 +26,13 @@ function white() {
 
 function fat() {
     return C.string('===')
-        .then(C.char('=').optrep().then(T.blank()))
+        .then(C.char('=').optrep().then(blank()))
         .returns(1); // this mean a level 1 title
 }
 
 function thin() {
     return C.string('---')
-        .then(C.char('-').optrep().then(T.blank()))
+        .then(C.char('-').optrep().then(blank()))
         .returns(2); // this mean a level 2 title
 }
 
@@ -52,8 +53,8 @@ function titleSharp():SingleParser<MdTitle> {
 }
 
 function titleLine():SingleParser<MdTitle> {
-    return F.moveUntil(T.eol())
-        .then(T.eol().drop())
+    return F.moveUntil(eol())
+        .then(eol().drop())
         .then(fat().or(thin()))
         .array()
         .map(([text, level]) => ({

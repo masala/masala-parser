@@ -3,7 +3,7 @@
  */
 
 import {C, F, GenLex, TokenResult} from '@masala/parser'
-import T, {spacesBlock} from './token';
+import {eol, spacesBlock} from './token';
 import {CodeBlock, CodeLine} from "./types";
 
 
@@ -15,7 +15,7 @@ import {CodeBlock, CodeLine} from "./types";
   */
 export function codeLine(spaces: number) {
     return spacesBlock(spaces).drop()
-        .then(F.not(T.eol()).rep())
+        .then(F.not(eol()).rep())
         .array()
         .map((s: string[]) => s.join(''))
         .map(text => ({type: 'codeLine', content: text}));

@@ -1,7 +1,8 @@
 import {C} from '@masala/parser'
 
 import{assertArrayEquals,  assertTrue} from './assert';
-import {launchMarkdown} from "./examples/markdown/test/markdown-tests";
+import {launchMarkdown} from "./examples/markdown/test/markdown-test";
+
 
 let parser = C.char('a');
 let arrayParser = parser.then(C.char('b'));
