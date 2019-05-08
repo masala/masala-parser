@@ -808,16 +808,31 @@ interface Token<T> extends SingleParser<T> {
 
 }
 
+
+
 type TokenCollection = {
     [key: string]: Token<any>
 }
 
+
+interface TokenResult<T>{
+    name:string;
+    value:T
+}
+
+
 interface GenLex {
     tokenize<T>(parser: ParserOrString<T>, name: string, precedence?: number): Token<T>;
 
-    use<T>(grammar: IParser<T>): IParser<T>;
+    use<T>(grammar: IParser<T>): TupleParser<TokenResult<T>>;
 
     tokens(): TokenCollection;
+
+    setSeparators(spacesCharacters:string):void;
+}
+
+export class GenLex implements GenLex{
+
 }
 
 

@@ -7,18 +7,6 @@ function blank() {
     return C.charIn(' \t').optrep().returns('');
 }
 
-//todo: escape characters
-function rawTextUntilChar(charList:string, allowVoid = false) {
-    if (allowVoid) {
-        return C.charNotIn(charList).optrep().map(chars => chars.join(''));
-    } else {
-        return C.charNotIn(charList).rep().map(chars => chars.join(''));
-    }
-}
-
-function rawTextUntil(stop:IParser<any>) {
-    return F.not(stop).rep().map(chars => chars.join(''));
-}
 
 function eol() {
     return C.char('\n').or(C.string('\r\n'));
@@ -31,16 +19,10 @@ function lineFeed() {
     });
 }
 
-//accept 1 tab or 4 spaces. Space may be unbreakable
-function fourSpacesBlock() {
-    return C.char('\t').or(C.charIn(' \u00A0').occurrence(4));
-}
+
 
 export default {
     blank,
-    rawTextUntilChar,
-    rawTextUntil,
     eol,
-    lineFeed,
-    fourSpacesBlock,
+    lineFeed
 };

@@ -16,3 +16,10 @@ export interface MdTitle extends MdElement{
 export type FormattedSequence = MdText[];
 
 
+export interface CodeLine extends MdElement{
+    content:string;
+}
+
+export interface CodeBlock extends MdElement{
+    lines:string[]
+}

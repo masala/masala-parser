@@ -86,9 +86,9 @@ export class GenLex {
     }
 
     buildTokenizer() {
-        const tokens = this.getAllTokenParsers();
+        const token = this.findTokenByPrecedence();
         return this.spaces.drop()
-            .then(tokens)
+            .then(token)
             .then(this.spaces.drop())
             .single();
     }
@@ -97,7 +97,7 @@ export class GenLex {
         return this.buildTokenizer().chain(grammar);
     }
 
-    getAllTokenParsers() {
+    findTokenByPrecedence() {
         const sortedDefinitions = this.definitions
             .sort((d1, d2) => d2.precedence - d1.precedence);
 
