@@ -1,6 +1,6 @@
 import {title} from "../lib/title-parser";
 import {assertDeepEquals, assertEquals, assertTrue} from "../../../assert";
-import {bullet} from "../lib/bullet-parser";
+import {bullet, bulletBlock} from "../lib/bullet-parser";
 
 
 export const bulletsTests = {
@@ -18,6 +18,7 @@ export const bulletsTests = {
         let expected = {
             type: 'bullet',
             level: 1,
+            children: [],
             content: [{type: 'text', text: 'This is a bullet'}],
         }
         assertDeepEquals(
@@ -78,6 +79,7 @@ export const bulletsTests = {
         let expected = {
             type: 'bullet',
             level: 1,
+            children: [],
             content: [
                 {type: 'text', text: 'This is a bullet '},
                 {type: 'italic', text: 'with italic'},
@@ -89,6 +91,42 @@ export const bulletsTests = {
             expected,
             actual,
             'problem test:test bullet et format'
+        );
+
+    },
+
+    'test simple bullet block': function () {
+        const block = `
+* This is first bullet
+* This is another bullet
+    - with a child
+    - and a final point
+`;
+
+        let actual = bulletBlock().val(block);
+
+        let expected = [
+            {
+                type: 'bullet',
+                level: 1,
+                content: [{type: 'text', text: 'This is first bullet'}],
+                children: []
+            },
+            {
+                type: 'bullet',
+                level: 1,
+                content: [{type: 'text', text: 'This is another bullet'}],
+                children:
+                    [
+                        {type: 'bullet', level: 2, content: [{type: 'text', text: 'with a child'}]},
+                        {type: 'bullet', level: 2, content: [{type: 'text', text: 'and a final point'}]}
+                    ]
+            }];
+
+        assertDeepEquals(
+            expected,
+            actual.array(),
+            'problem test:test bullet Lvl2'
         );
 
     },

@@ -1,3 +1,7 @@
+export interface HasTypeOption<O>{
+    typeOption:O
+}
+
 export interface MdElement {
     type: string
 }
@@ -7,9 +11,8 @@ export interface MdText extends MdElement{
 }
 
 
-export interface MdTitle extends MdElement{
+export interface MdTitle extends MdElement, HasTypeOption<string>{
     level: number,
-    typeOption:any,
     text: string
 }
 
@@ -22,4 +25,16 @@ export interface CodeLine extends MdElement{
 
 export interface CodeBlock extends MdElement{
     lines:string[]
+}
+
+export interface Bullet extends MdElement{
+    level:number;
+    content: FormattedSequence
+}
+
+export interface BulletLevel2 extends Bullet{
+}
+
+export interface BulletLevel1 extends Bullet{
+    children : BulletLevel2[]
 }
