@@ -30,7 +30,7 @@ export const documentTests = {
     'test document': function () {
         console.log('here');
         const actual = markdown().val(document);
-        console.log(actual);
+        console.log(JSON.stringify(actual));
     }
 
 };

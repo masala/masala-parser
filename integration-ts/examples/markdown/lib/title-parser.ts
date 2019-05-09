@@ -21,18 +21,18 @@ function sharps() {
 
 // a white is a sequence of at least one space, tab or non-breakable space
 function white() {
-    return C.charIn(' \t\u00A0').rep();
+    return C.charIn(' \t\u00A0');
 }
 
 function fat() {
     return C.string('===')
-        .then(C.char('=').optrep().then(blank()))
+        .then(C.char('=').optrep())
         .returns(1); // this mean a level 1 title
 }
 
 function thin() {
     return C.string('---')
-        .then(C.char('-').optrep().then(blank()))
+        .then(C.char('-').optrep())
         .returns(2); // this mean a level 2 title
 }
 

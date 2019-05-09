@@ -21,6 +21,7 @@ export class Token {
     }
 
     accept(name) {
+        // TODO logger console.log('accepting', name, this.name===name, this.value);
         return this.name === name ? option.some(this.value) : option.none();
     }
 }
@@ -35,6 +36,7 @@ export class GenLex {
         // get a token, but not directly its precedence
         this.tokensMap = {}
     }
+
 
 
     tokenize(parser, name, precedence = 1000) {
@@ -68,7 +70,7 @@ export class GenLex {
             throw "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
             " use  setSeparatorsParser to declare a parser";
         }
-        this.spaces = C.charIn(spacesCharacters).optrep().map(() => unit);
+        this.spaces = C.charIn(spacesCharacters).map(() => unit);
     }
 
     /**
@@ -81,15 +83,15 @@ export class GenLex {
     }
 
     updatePrecedence(tokenName, precedence) {
-        this.definitions.find(def=>def.name === tokenName)
+        this.definitions.find(def => def.name === tokenName)
             .precedence = precedence;
     }
 
     buildTokenizer() {
         const token = this.findTokenByPrecedence();
-        return this.spaces.drop()
+        return this.spaces.optrep().drop()
             .then(token)
-            .then(this.spaces.drop())
+            .then(this.spaces.optrep().drop())
             .single();
     }
 
@@ -98,14 +100,18 @@ export class GenLex {
     }
 
     findTokenByPrecedence() {
+
         const sortedDefinitions = this.definitions
             .sort((d1, d2) => d2.precedence - d1.precedence);
 
         return sortedDefinitions.reduce(
             (combinator, definition) =>
-                F.try(getTokenParser(definition)).or(combinator),
+                F.try(getTokenParser(definition))
+                //    .or (F.error('no match for '+definition.name))
+                    .or(combinator),
             F.error()
         );
+
     }
 
     remove(tokenName) {
@@ -137,33 +143,45 @@ function getTokenParser(def) {
 function literal(tokenize, name) {
 
     return F.parse((input, index) => {
-       // console.log('trying ', {index, name});
+            // TODO logger console.log('testing ', {name, input:input.get(index), index});
+            // console.log('trying ', {index, name});
+
             return input
                 .get(index)
                 // FIXME= value is the token, token is the value
                 .map(value => {
-                        return tokenize(value)
-                            .map(token =>{
+
+                    /* TODO: keep for logger
+                    let token = value;
+
+                    try {
+                        console.log('in map', {value, name, index});
+                        console.log('tokenizing', tokenize(token));
+                    } catch (e) {
+                        console.error('failed', e)
+                    }*/
+
+                    return tokenize(value)
+                            .map(token => {
+                                    // TODO logger console.log('accept with ', name, index);
                                     //console.log('accept:', token,index, input.location(index));
                                     return response.accept(token, input, index + 1, true)
-                            }
-
+                                }
                             )
-                            .orLazyElse(() =>{
-
-                                   // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
+                            .orLazyElse(() => {
+                                    // TODO logger console.log('lazyElse failed with ', name, index);
+                                    // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
                                     //  input.location(index));
-                                return    response.reject(input, index, false)
-                            }
-
+                                    return response.reject(input, index, false)
+                                }
                             )
                     }
                 )
-                .lazyRecoverWith(() =>{
+                .lazyRecoverWith(() => {
+                        // TODO logger console.log('failed with ', name, index);
                         //console.log('lazyRecover with offset:', input.location(index));
                         return response.reject(input, index, false)
-                }
-
+                    }
                 )
         }
     );

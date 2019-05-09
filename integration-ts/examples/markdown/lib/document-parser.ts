@@ -24,12 +24,12 @@ export function markdown(){
 
     let genlex = new GenLex();
     genlex.setSeparatorsParser(eol().then(eol().rep()));
-    const tkBullets = genlex.tokenize(bulletBlock(), 'bulletLevel1');
-    const tkCode = genlex.tokenize(codeBlock(2), 'bulletLevel2');
+    const tkBullets = genlex.tokenize(bulletBlock(), 'bulletLevel1',400);
+    const tkCode = genlex.tokenize(codeBlock(2), 'bulletLevel2',1400);
     const tkText= genlex.tokenize(paragraph(), 'paragraph', 1100);
     const tkTitle = genlex.tokenize(title(), 'title', 800);
 
-    const grammar = F.any().debug('').rep();
+    const grammar = F.any().debug('any found====>', true).rep();
 
     return genlex.use(grammar);
 

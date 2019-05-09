@@ -12,6 +12,6 @@ export function launchMarkdown(): void {
     // launch(textTests);
     // launch(codeBlockTests);
      launch(bulletsTests);
-    launch(documentTests);
+    //launch(documentTests);
 
 }

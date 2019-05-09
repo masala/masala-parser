@@ -25,6 +25,7 @@ class ParserStream extends Stream {
 
     getOffset(index) {
         if ( index < this.offsets.length) {
+            // TODO logger console.log('found offset', this.offsets[index]);
             return option.some(this.offsets[index]);
         }
         return option.none();
@@ -42,6 +43,7 @@ class ParserStream extends Stream {
             // TODO: check the +1 ; the -1 has disappeared
             return this.input.location(option.get());
         } else {
+            // TODO logger
             throw 'No location has been found yet for index '+index;
             // TODO: What is the use case ?
             // return this.input.location(this.getOffset(index - 1) + 1);
@@ -76,6 +78,7 @@ class ParserStream extends Stream {
             // we have already read it. Should be caught by the bufferedStream
             sourceIndex = option.get();
         }else{
+            // TODO logger
             throw new Error();
         }
         const result = this.source.parse(this.input, sourceIndex);
@@ -85,6 +88,7 @@ class ParserStream extends Stream {
             this.offsets.push(result.offset);
             return result.value;
         } else {
+            // TODO logger
             throw new Error();
         }
     }

@@ -8,7 +8,7 @@ import {formattedSequence as seq} from "./text-parser";
 import {blank, spacesBlock} from './token';
 
 function stop() {
-    return F.eos().or(C.charIn('\r\n*`'));
+    return F.eos().or(C.charIn('\r\n*`')).debug('stop');
 }
 
 function pureText() {
@@ -42,14 +42,15 @@ export function bulletBlock() {
 
     let genlex = new GenLex();
     genlex.setSeparators('\n');
-    const level1 = genlex.tokenize(bulletLv1(), 'bulletLevel1');
-    const level2 = genlex.tokenize(bulletLv2(), 'bulletLevel2');
+    const level1 = genlex.tokenize(bulletLv1(), 'bulletLevel1',1100).debug('L1');
+    const level2 = genlex.tokenize(bulletLv2(), 'bulletLevel2', 1000).debug('L2');
 
-    const grammar = level1.flatMap(
+    let grammar = level1.flatMap(
         lvl1 => level2.optrep().map(children => ({...lvl1, children:children.array()}))
     ).rep();
 
-    return genlex.use(grammar);
+    let grammar2 = F.any().rep();
+    return genlex.use(grammar2);
 
 }
 

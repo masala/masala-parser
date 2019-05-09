@@ -13,7 +13,7 @@ export function eol() {
 
 //A blank line in the code(that is 2 consecutive \n) is a single end of line (lineFeed) in the rendition
 export function lineFeed() {
-    return eol().then(blank()).then(eol()).returns({
+    return eol().then(blank().opt()).then(eol()).returns({
         type: 'linefeed'
     });
 }

@@ -39,8 +39,10 @@ function returns(v) {
 
 // unit -> Parser 'a 'c
 function error() {
-    return new Parser((input, index = 0) =>
-        response.reject(input, index, false)
+    return new Parser((input, index = 0) => {
+            // TODO: add an optional logger parameter, and log
+            return response.reject(input, index, false)
+        }
     );
 }
 
@@ -79,6 +81,7 @@ function layer(p) {
             .parse(input, index)
             .fold(
                 accept => {
+                    // TODO logger
                     //console.log('response', response.accept(accept.value,input, index, false));
                     return response.accept(accept.value, input, index, false)
                 },
@@ -127,9 +130,10 @@ function moveUntil(stop) {
 
     // TODO: change undefined by a Symbol
     // TODO: for better performance, maybe check in the map if the symbol is included, and remove the or
-    return doTry(not(stop).rep().then(eos()).returns(undefined))
+    const foundEos = Symbol('found-eos');
+    return doTry(not(stop).rep().then(eos()).returns(foundEos))
         .or(not(stop).rep().map(chars => chars.join('')))
-        .filter(v => v !== undefined);
+        .filter(v => v !== foundEos);
 }
 
 function dropTo(stop) {

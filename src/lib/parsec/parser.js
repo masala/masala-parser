@@ -214,6 +214,7 @@ function bind(self, f) {
 }
 
 // Parser 'a 'c -> Parser 'a 'c -> Parser 'a 'c
+// TODO logger representing which choice is made
 function choice(self, f) {
     return new Parser((input, index = 0) =>
         self

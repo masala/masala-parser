@@ -4,7 +4,7 @@ import {bullet, bulletBlock} from "../lib/bullet-parser";
 
 
 export const bulletsTests = {
-
+/*
     'test text normal': function () {
         const line = `This is not a bullet`;
         let actual = bullet().val(line);
@@ -20,7 +20,7 @@ export const bulletsTests = {
             level: 1,
             children: [],
             content: [{type: 'text', text: 'This is a bullet'}],
-        }
+        };
         assertDeepEquals(
             expected,
             actual,
@@ -94,7 +94,7 @@ export const bulletsTests = {
         );
 
     },
-
+*/
     'test simple bullet block': function () {
         const block = `
 * This is first bullet
@@ -105,7 +105,7 @@ export const bulletsTests = {
 
         let actual = bulletBlock().val(block);
 
-        let expected = [
+        let expected2 = [
             {
                 type: 'bullet',
                 level: 1,
@@ -123,9 +123,10 @@ export const bulletsTests = {
                     ]
             }];
 
+        let expected = undefined;
         assertDeepEquals(
             expected,
-            actual.array(),
+            actual,
             'problem test:test bullet Lvl2'
         );
 
