@@ -829,6 +829,8 @@ interface GenLex {
     tokens(): TokenCollection;
 
     setSeparators(spacesCharacters:string):void;
+
+    setSeparatorsParser<T>(parser: IParser<T>):void;
 }
 
 export class GenLex implements GenLex{

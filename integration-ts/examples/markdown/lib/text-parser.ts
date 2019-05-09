@@ -9,7 +9,7 @@
  */
 import {F, C, SingleParser, IParser} from '@masala/parser'
 
-import {FormattedSequence, MdText} from "./types";
+import {FormattedSequence, MdText, Paragraph} from "./types";
 import {blank, lineFeed} from "./token";
 
 function trimStartingLineFeed(str:string):string {
@@ -34,6 +34,7 @@ function pureText() {
                 let allChars = chars.join('');
                 return allChars.replace(/\n/g, ' ').replace(/\r/g, '');
             })
+            .map(text => text.trim())
     );
 }
 
@@ -82,24 +83,13 @@ export function formattedSequence(pureTextParser:SingleParser<string>, stopParse
         .array();
 }
 
-export function paragraph() {
-    return blank().drop()
-        .then(formattedSequence(pureText(), stop()))
-        .single()
+export function paragraph():SingleParser<Paragraph> {
+    return formattedSequence(pureText(), stop())
         .map( (array :MdText[]) => {
 
-            // We trim the first and last element of the paragraph
-            if (
-                array.length > 0 &&
-                typeof array[0] === 'object' &&
-                array[0].text
-            ) {
-                array[0].text = trimStartingLineFeed(array[0].text);
-                const last = array.length - 1;
-                array[last].text = trimEndingLineFeed(array[last].text);
-            }
+           const content = array.filter(mdText => mdText.text.length>0);
 
-            return {type: 'paragraph', content: (array as FormattedSequence)};
+            return {type: 'paragraph', content};
         });
 }
 

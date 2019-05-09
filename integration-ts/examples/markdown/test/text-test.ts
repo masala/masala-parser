@@ -1,6 +1,19 @@
 import {assertDeepEquals, assertTrue} from "../../../assert";
 import {paragraph} from "../lib/text-parser";
 
+const complexParagraph = `They know how to  *use the force*
+  , speed up,  and destroy **Death Stars**.`;
+
+const expectedComplexParagraph = {
+    type: "paragraph",
+    content: [
+        {type:"text", text: "They know how to"},
+        {type:"italic", text: "use the force"},
+        {type:"text", text: ", speed up,  and destroy"},
+        {type:"bold", text: "Death Stars"},
+        {type:"text", text: "."}]
+};
+
 
 export const textTests = {
 
@@ -12,7 +25,8 @@ export const textTests = {
         assertTrue(actual === undefined, 'blank text refused');
 
         actual = paragraph().val('   ');
-        assertTrue(actual === undefined, 'blank line are to be rejected');
+        let expected = {type: 'paragraph', content: []};
+        assertDeepEquals(expected, actual, 'blank line are filtered');
 
 
     },
@@ -53,9 +67,8 @@ export const textTests = {
         let expected = {
             type: 'paragraph', content: [
                 {type: 'italic', text: 'italic'},
-                {type: 'text', text: ' text '},
-                {type: 'bold', text: 'then bold'},
-                {type: 'text', text:''}
+                {type: 'text', text: 'text'},
+                {type: 'bold', text: 'then bold'}
             ]
         };
 
@@ -70,13 +83,20 @@ export const textTests = {
         let expected = {
             type: 'paragraph', content: [
                 {type: 'italic', text: 'italic'},
-                {type: 'text', text: ' text '},
-                {type: 'bold', text: 'then bold'},
-                {type: 'text', text: ''}
+                {type: 'text', text: 'text'},
+                {type: 'bold', text: 'then bold'}
             ]
         };
 
         assertDeepEquals(actual, expected);
 
     },
+
+
+    'other complex paragraph': function () {
+        let actual = paragraph().val(complexParagraph);
+
+        assertDeepEquals(actual, expectedComplexParagraph);
+
+    }
 };

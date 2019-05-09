@@ -19,6 +19,10 @@ export interface MdTitle extends MdElement, HasTypeOption<string>{
 export type FormattedSequence = MdText[];
 
 
+export interface Paragraph extends MdElement{
+    content: FormattedSequence;
+}
+
 export interface CodeLine extends MdElement{
     content:string;
 }

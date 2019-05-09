@@ -6,8 +6,8 @@ import {bulletsTests} from "./bullet-test";
 
 export function launchMarkdown():void{
 
-    /*launch(titleTests);
-    launch(textTests);
-    launch(codeBlockTests);*/
-    launch(bulletsTests);
+    // launch(titleTests);
+     launch(textTests);
+    // launch(codeBlockTests);
+    // launch(bulletsTests);
 }
