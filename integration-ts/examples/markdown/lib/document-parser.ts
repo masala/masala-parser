@@ -26,10 +26,10 @@ export function markdown(){
     genlex.setSeparatorsParser(eol().then(eol().rep()));
     const tkBullets = genlex.tokenize(bulletBlock(), 'bulletLevel1');
     const tkCode = genlex.tokenize(codeBlock(2), 'bulletLevel2');
-    const tkText= genlex.tokenize(paragraph(), 'paragraph');
-    const tkTitle = genlex.tokenize(title(), 'title');
+    const tkText= genlex.tokenize(paragraph(), 'paragraph', 1100);
+    const tkTitle = genlex.tokenize(title(), 'title', 800);
 
-    const grammar = F.any().rep();
+    const grammar = F.any().debug('').rep();
 
     return genlex.use(grammar);
 

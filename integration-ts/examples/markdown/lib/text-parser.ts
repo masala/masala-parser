@@ -6,19 +6,15 @@
  * This parse a text paragraph
  * text can be "simple" text; bold, italic or a mix (sequence) of those
  * a paragraph ends with a blank line("\n\n" or "\n  \t  \n") or "end of stream" (F.eos())
+ *
+ * Another solution is to use Genlex with stops on spaces and \n, then to reduce the text tokens
+ * in bigger text.
  */
 import {F, C, SingleParser, IParser} from '@masala/parser'
 
 import {FormattedSequence, MdText, Paragraph} from "./types";
 import {blank, lineFeed} from "./token";
 
-function trimStartingLineFeed(str:string):string {
-    return str.replace(/^[\s]*/, '');
-}
-
-function trimEndingLineFeed(str:string):string {
-    return str.replace(/[\s]*$/, '');
-}
 
 function stop() {
     return F.eos().or(lineFeed()).or(C.charIn('*`'));

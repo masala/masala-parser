@@ -60,8 +60,12 @@ export function assertDeepEquals(expected: any, actual: any, testName = 'Unknown
 export function launch(collection: any) {
 
     for (let key in collection) {
-        let f: () => void = collection[key];
-        f.apply({});
+
+        if (collection.hasOwnProperty( key)){
+            let f: () => void = collection[key];
+            f.apply({});
+        }
+
     }
 }
 
