@@ -815,22 +815,34 @@ type TokenCollection = {
 }
 
 
-interface TokenResult<T>{
+export interface TokenResult<T>{
     name:string;
     value:T
 }
 
 
 interface GenLex {
-    tokenize<T>(parser: ParserOrString<T>, name: string, precedence?: number): Token<T>;
+    //TODO: make overload here
+    tokenize<T, P extends IParser<T>>(parser: P, name: string, precedence?: number): P;// ou P<TokenResult<T>> ?
 
-    use<T>(grammar: IParser<T>): TupleParser<TokenResult<T>>;
+    use<T, P extends IParser<T>>(grammar: P): P;
 
     tokens(): TokenCollection;
 
-    setSeparators(spacesCharacters:string):void;
+    setSeparators(spacesCharacters:string):GenLex;
 
-    setSeparatorsParser<T>(parser: IParser<T>):void;
+    setSeparatorsParser<T>(parser: IParser<T>):GenLex;
+
+    /**
+     * Should separators be repeated ?
+     *
+     * `separators.optrep().then(myToken()).then(separators.optrep())`
+     * @param repeat default is true
+     */
+    setSeparatorRepetition(repeat:boolean):GenLex;
+
+
+
 
 
 }
