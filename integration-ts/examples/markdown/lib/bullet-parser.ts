@@ -8,7 +8,7 @@ import {formattedSequence as seq} from "./text-parser";
 import {blank, spacesBlock} from './token';
 
 function stop() {
-    return F.eos().or(C.charIn('\r\n*`')).debug('stop');
+    return F.eos().or(C.charIn('\r\n*`'));
 }
 
 function pureText() {
@@ -24,7 +24,7 @@ function bulletLv1() {
         .then(blank()) // second character of a bullet is space or non-breakable space
         .then(formattedSequence())
         .last()
-        .map(someText => ({type: 'bullet', level: 1, content: someText, children:[]}));
+        .map(someText => ({type: 'bullet', level: 1, content: someText, children: []}));
 }
 
 function bulletLv2() {
@@ -42,15 +42,18 @@ export function bulletBlock() {
 
     let genlex = new GenLex();
     genlex.setSeparators('\n');
-    const level1 = genlex.tokenize(bulletLv1(), 'bulletLevel1',1100).debug('L1');
-    const level2 = genlex.tokenize(bulletLv2(), 'bulletLevel2', 1000).debug('L2');
+    const level1 = genlex.tokenize(bulletLv1(), 'bulletLevel1', 1100);
+    const level2 = genlex.tokenize(bulletLv2(), 'bulletLevel2', 1000);
 
-    let grammar = level1.flatMap(
-        lvl1 => level2.optrep().map(children => ({...lvl1, children:children.array()}))
-    ).rep();
+    let grammar = level1.then(
+        level2.optrep().array())
+        .array()
+        .map(([first, children]) => {
+            return ({...first, children: children})
+        })
+        .rep().array();
 
-    let grammar2 = F.any().rep();
-    return genlex.use(grammar2);
+    return genlex.use(grammar);
 
 }
 

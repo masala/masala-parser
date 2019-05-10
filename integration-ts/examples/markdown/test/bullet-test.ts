@@ -99,35 +99,39 @@ export const bulletsTests = {
         const block = `
 * This is first bullet
 * This is another bullet
-    - with a child
-    - and a final point
+    - with *a* child
+    - and a **final point**
 `;
 
         let actual = bulletBlock().val(block);
 
-        let expected2 = [
-            {
-                type: 'bullet',
-                level: 1,
-                content: [{type: 'text', text: 'This is first bullet'}],
-                children: []
-            },
-            {
-                type: 'bullet',
-                level: 1,
-                content: [{type: 'text', text: 'This is another bullet'}],
-                children:
-                    [
-                        {type: 'bullet', level: 2, content: [{type: 'text', text: 'with a child'}]},
-                        {type: 'bullet', level: 2, content: [{type: 'text', text: 'and a final point'}]}
-                    ]
+        let expected = [{
+                "type": "bullet",
+                "level": 1,
+                "content": [{"type": "text", "text": "This is first bullet"}],
+                "children": []
+            }, {
+                "type": "bullet",
+                "level": 1,
+                "content": [{"type": "text", "text": "This is another bullet"}],
+                "children": [{
+                    "type": "bullet",
+                    "level": 2,
+                    "content": [{"type": "text", "text": "with "}, {"type": "italic", "text": "a"}, {
+                        "type": "text",
+                        "text": " child"
+                    }]
+                }, {
+                    "type": "bullet",
+                    "level": 2,
+                    "content": [{"type": "text", "text": "and a "}, {"type": "bold", "text": "final point"}]
+                }]
             }];
 
-        let expected = undefined;
         assertDeepEquals(
             expected,
             actual,
-            'problem test:test bullet Lvl2'
+            'problem with Bullet Block'
         );
 
     },
