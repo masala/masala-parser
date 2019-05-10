@@ -244,8 +244,7 @@ export default {
         let grammar = number.rep().then(F.eos().drop());
 
         const separatorParser = C.char('-')
-            .then(C.char('/').opt())
-            .optrep();
+            .then(C.char('/').opt());
 
         genlex.setSeparatorsParser(separatorParser);
         const text = '15-12-/35--10';

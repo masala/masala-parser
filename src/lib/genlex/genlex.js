@@ -189,7 +189,7 @@ function literal(tokenize, name) {
 
 
 function defaultSpaces() {
-    return C.charIn(' \r\n\f\t').optrep().map(() => unit);
+    return C.charIn(' \r\n\f\t').map(() => unit);
 }
 
 

@@ -831,6 +831,12 @@ interface GenLex {
 
     setSeparators(spacesCharacters:string):GenLex;
 
+    /**
+     * Select the parser used by genlex. It will be used as `separator.optrep().then(token).then(separator.optrep())`.
+     * So the separator must not be optional or it will make an infinite loop.
+     * The separation in your text can't be a strict one-time separation with Genlex.
+     * @param parser
+     */
     setSeparatorsParser<T>(parser: IParser<T>):GenLex;
 
     /**
