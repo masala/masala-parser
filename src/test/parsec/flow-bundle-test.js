@@ -17,6 +17,27 @@ export default {
         done();
     },
 
+    'not parser should not eat offset':function(test){
+
+        const text = 'this is a line';
+        const line = text+'\n';
+
+        const eol = C.char('\n');
+        const parser = F.not(eol).rep();
+
+        let response = parser.parse(Streams.ofString(line));
+        test.ok(response.isAccepted());
+        test.equal(text.length, response.offset);
+
+        const withParser = F.not(eol).rep().then(eol);
+        response = withParser.parse(Streams.ofString(line));
+        test.ok(response.isAccepted());
+        test.equal(line.length, response.offset);
+
+        test.done();
+
+    },
+
     'expect flatten result to be ok': function(test) {
         const string = 'foobar';
         // tests here
