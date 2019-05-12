@@ -470,6 +470,7 @@ export interface IParser<T> {
     parse<D>(stream: Stream<D>, index?: number): Response<T>;
 
     /**
+     * Mainly designed for quick debugging or unit tests
      * Parses the text and returns the value, or **undefined** if parsing has failed.
      * @param text text to parse
      */
@@ -823,7 +824,13 @@ export interface TokenResult<T>{
 
 interface GenLex {
     //TODO: make overload here
-    tokenize<T, P extends IParser<T>>(parser: P, name: string, precedence?: number): P;// ou P<TokenResult<T>> ?
+    /**
+     *
+     * @param parser parser of the token
+     * @param name token name
+     * @param precedence the highest precedence gives higher priority
+     */
+    tokenize<T, P extends IParser<T>>(parser: P, name: string, precedence?: number): P;
 
     use<T, P extends IParser<T>>(grammar: P): P;
 
