@@ -52,7 +52,7 @@ function deepEqual(a: any, b: any) {
 export function assertDeepEquals(expected: any, actual: any, testName = 'Unknown test') {
     if (!deepEqual(expected, actual)) {
         console.trace();
-        throw ". Expected " + JSON.stringify(expected )+ " , but != " + JSON.stringify(actual);
+        throw ". Expected :\n" + JSON.stringify(expected )+ "\n , but != \n" + JSON.stringify(actual);
     }
     return assertTrue(deepEqual(expected, actual), testName);
 }
