@@ -29,7 +29,7 @@ import {NEUTRAL,Tuple, isTuple} from "../data/tuple";
 export default class Parser {
     // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
     constructor(parse) {
-        this.parse = parse;
+        this.parse = parse.bind(this);
     }
 
     val(text){
