@@ -42,3 +42,7 @@ export interface BulletLevel2 extends Bullet{
 export interface BulletLevel1 extends Bullet{
     children : BulletLevel2[]
 }
+
+export interface BulletBlock extends MdElement{
+    bullets:BulletLevel1[]
+}

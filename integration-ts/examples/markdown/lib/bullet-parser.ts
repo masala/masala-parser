@@ -1,11 +1,12 @@
 /**
- * Created by Simon on 24/12/2016.
+ * Created by Nicolas Zozol on 10/05/2019.
  */
 
-import {F, C, GenLex} from '@masala/parser'
-import {formattedSequence as seq} from "./text-parser";
+import {F, C, SingleParser, TupleParser} from '@masala/parser'
+import {formattedLine as line} from "./text-parser";
 
-import {blank, spacesBlock} from './token';
+import {blank, eol, spacesBlock} from './token';
+import {BulletBlock, BulletLevel1, BulletLevel2} from "./types";
 
 function stop() {
     return F.eos().or(C.charIn('\r\n*`'));
@@ -15,45 +16,57 @@ function pureText() {
     return F.not(stop()).rep().map(chars => chars.join(''));
 }
 
-function formattedSequence() {
-    return seq(pureText(), stop());
+function formattedLine() {
+    return line(pureText(), stop());
 }
 
-function bulletLv1() {
+function bulletLv1():SingleParser<BulletLevel1> {
     return C.charIn('*-') //first character of a bullet is  * or -
         .then(blank()) // second character of a bullet is space or non-breakable space
-        .then(formattedSequence())
+        .then(formattedLine())
         .last()
         .map(someText => ({type: 'bullet', level: 1, content: someText, children: []}));
 }
 
-function bulletLv2() {
+function bulletLv2():SingleParser<BulletLevel2> {
     return spacesBlock(2)
         .then(blank().opt())
         .then(C.charIn('*-')) //first character of a bullet is  * or -
         .then(blank()) // second character of a bullet is space or non-breakable space
-        .then(formattedSequence())
+        .then(formattedLine())
         .last()
         .map(someText => ({type: 'bullet', level: 2, content: someText}));
 }
 
 
-export function bulletBlock() {
+export function bulletBlock():SingleParser<BulletBlock> {
 
-    let genlex = new GenLex();
-    genlex.setSeparators('\n');
-    const level1 = genlex.tokenize(bulletLv1(), 'bulletLevel1', 1100);
-    const level2 = genlex.tokenize(bulletLv2(), 'bulletLevel2', 1000);
 
-    let grammar = level1.then(
-        level2.optrep().array())
+    const level2=bulletLv2()
+        .then(F.try(eol().drop().then(bulletLv2())).optrep())
+        .array() as SingleParser<BulletLevel2[]>;
+
+
+    const level1 = bulletLv1()  // father
+        .then(F.try(eol().drop().then(level2)).opt().map(o=>o.isPresent()?o.get():[] ))
         .array()
-        .map(([first, children]) => {
-            return ({...first, children: children})
-        })
-        .rep().array();
+        .map(([father, children]) => {
+            return ({...father, children});
+        }) as SingleParser<BulletLevel1>;
 
-    return genlex.use(grammar);
+
+
+    // this works:
+    // const parser= bulletLv1().then(F.try(eol().drop().then(bulletLv1())).optrep());
+
+    const parser= level1.then(F.try(eol().drop().then(level1)).optrep()) as TupleParser<BulletLevel1>;
+
+
+
+    return parser.array().map( bullets => ({
+        type:'bulletBlock',
+        bullets
+    }))
 
 }
 

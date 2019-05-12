@@ -64,6 +64,13 @@ function text(pureTextParser:SingleParser<string>):SingleParser<MdText> {
 
 
 
+export function formattedLine(pureTextParser:SingleParser<string>, stopParser:IParser<any>):SingleParser<MdText[]>{
+    return bold(pureTextParser)
+        .or(italic(pureTextParser))
+        .or(text(pureTextParser))
+        .or(code(pureTextParser))
+        .rep().array();
+}
 /**
  * @param pureTextParser :SingleParser<string>  defines if a text accept some chars or not
  * @param stopParser :IParser<any> defines if text stops at the end of line
@@ -75,10 +82,11 @@ export function formattedSequence(pureTextParser:SingleParser<string>, stopParse
         .or(text(pureTextParser))
         .or(code(pureTextParser))
         .rep()
-        .then(stopParser.drop())
+        .then(stopParser.drop()) // could reuse formattedLine
         .array();
 }
 
+// So last eaten character could be a '\n'
 export function paragraph():SingleParser<Paragraph> {
     return formattedSequence(pureText(), stop())
         .map( (array :MdText[]) => {

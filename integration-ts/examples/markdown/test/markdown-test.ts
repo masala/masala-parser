@@ -7,11 +7,11 @@ import {documentTests} from "./document-test";
 
 export function launchMarkdown(): void {
 
-    //
-    // launch(titleTests);
-    // launch(textTests);
-    // launch(codeBlockTests);
+
+     launch(titleTests);
+     launch(textTests);
+     launch(codeBlockTests);
      launch(bulletsTests);
-    //launch(documentTests);
+    launch(documentTests);
 
 }

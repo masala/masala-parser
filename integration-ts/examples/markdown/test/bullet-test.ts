@@ -1,7 +1,7 @@
 import {title} from "../lib/title-parser";
-import {assertDeepEquals, assertEquals, assertTrue} from "../../../assert";
+import {assertDeepEquals, assertEquals, assertFalse, assertTrue} from "../../../assert";
 import {bullet, bulletBlock} from "../lib/bullet-parser";
-import {F, GenLex} from "@masala/parser";
+import {F, GenLex, Streams} from "@masala/parser";
 import {eol} from "../lib/token";
 
 
@@ -97,80 +97,114 @@ export const bulletsTests = {
 
     },
 
-    'test simple bullet block': function () {
-        const block = `* This is first bullet
-* This is another bullet
-    - with *a* child
-    - and a **final point**
-`;
+    'test eol is not eaten with simple bullet': function () {
+        const text = `* This is a bullet`;
+        const line = text + '\n';
 
-        let actual = bulletBlock().val(block);
 
-        let expected ={type:'bulletBlock', bullets: [{
-            "type": "bullet",
-            "level": 1,
-            "content": [{"type": "text", "text": "This is first bullet"}],
-            "children": []
-        }, {
-            "type": "bullet",
-            "level": 1,
-            "content": [{"type": "text", "text": "This is another bullet"}],
-            "children": [{
-                "type": "bullet",
-                "level": 2,
-                "content": [{"type": "text", "text": "with "}, {"type": "italic", "text": "a"}, {
-                    "type": "text",
-                    "text": " child"
-                }]
-            }, {
-                "type": "bullet",
-                "level": 2,
-                "content": [{"type": "text", "text": "and a "}, {"type": "bold", "text": "final point"}]
-            }]
-        }]};
-
-        assertDeepEquals(
-            expected,
-            actual,
-            'problem with Bullet Block'
-        );
+        let response = bullet().parse(Streams.ofString(line));
+        assertTrue(response.isAccepted());
+        assertEquals(response.offset, text.length);
 
     },
 
-    'test two blocks': function () {
-        const block = `
-* The princess Leia was an important character
+
+    'test simple bullet block': function () {
+        const block = `* This is first bullet
+* This is another bullet`;
+
+        let response = bulletBlock().parse(Streams.ofString(block));
+        assertTrue(response.isAccepted());
+        assertTrue(response.isEos())
+
+    },
+
+    'test multilevel bullet block': function () {
+        const block = `* This is first bullet
+  - This is a child
+  - This is another child`;
+
+        const text=block+'\n';
+
+        let response = bulletBlock().parse(Streams.ofString(text));
+        assertTrue(response.isAccepted());
+        assertEquals(block.length, response.offset);
+        assertFalse(response.isEos())
+
+        let otherResponse=bulletBlock().then(eol()).parse(Streams.ofString(text));
+        assertTrue(otherResponse.isAccepted());
+        assertTrue(otherResponse.isEos());
+
+
+    },
+
+
+
+
+        'test complex bullet block': function () {
+            const block = `* This is first bullet
+* This is another bullet
+  - with *a* child
+  - and a **final point**
+`;
+
+            let actual = bulletBlock().val(block);
+
+            let expected = {
+                type: 'bulletBlock', bullets: [{
+                    "type": "bullet",
+                    "level": 1,
+                    "content": [{"type": "text", "text": "This is first bullet"}],
+                    "children": []
+                }, {
+                    "type": "bullet",
+                    "level": 1,
+                    "content": [{"type": "text", "text": "This is another bullet"}],
+                    "children": [{
+                        "type": "bullet",
+                        "level": 2,
+                        "content": [{"type": "text", "text": "with "}, {"type": "italic", "text": "a"}, {
+                            "type": "text",
+                            "text": " child"
+                        }]
+                    }, {
+                        "type": "bullet",
+                        "level": 2,
+                        "content": [{"type": "text", "text": "and a "}, {"type": "bold", "text": "final point"}]
+                    }]
+                }]
+            };
+
+            assertDeepEquals(
+                expected,
+                actual,
+                'problem with Bullet Block'
+            );
+
+        },
+
+        'test two blocks': function () {
+            const block = `* The princess Leia was an important character
 * Han Solo is a murderer
-    - but cleared
+    - but cleared by technology
 * Force is strong
 
-* Luke Skywalker is strong
-`;
-        let genlex = new GenLex();
-        genlex.setSeparatorsParser(eol().then(eol().rep()));
-        const tkBullets = genlex.tokenize(bulletBlock(), 'bulletBlock',500);
-        const grammar = F.any().debug('any found====>', true).rep();
-
-        let separators = eol().then(eol().rep());
-
-        let any = separators.optrep().then(bulletBlock()).then(separators.optrep());
+* Luke Skywalker is strong`;
 
 
-        let actual = bulletBlock().rep().val(block);
-        console.log(JSON.stringify(actual));
-        /*
+            let genlex = new GenLex();
+            genlex.setSeparatorsParser(eol().then(eol().rep()));
+            const tkBullets = genlex.tokenize(bulletBlock(), 'bulletBlock', 500);
 
-        let parser= genlex.use(grammar);
+            const grammar = tkBullets.rep().array();
+
+            let parser = genlex.use(grammar);
 
 
 
-        let actual = parser.val(block);
+            let actual = parser.val(block);
+            assertEquals(2, actual.length);
 
-        console.log(actual.array());
+        }
 
-         */
-        console.log(actual);
-        //assertTrue(actual > 0);
-
-    }
 };
