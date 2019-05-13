@@ -8,10 +8,10 @@ import {documentTests} from "./document-test";
 export function launchMarkdown(): void {
 
 
-     launch(titleTests);
-     launch(textTests);
-     launch(codeBlockTests);
-     launch(bulletsTests);
+    launch(codeBlockTests);
+    launch(textTests);
+    launch(titleTests);
+    launch(bulletsTests);
     launch(documentTests);
 
 }

@@ -2,7 +2,9 @@
  * Created by Nicolas Zozol on 14/12/2016.
  */
 import {title} from "../lib/title-parser";
-import {assertDeepEquals, assertEquals} from "../../../assert";
+import {assertDeepEquals, assertEquals, assertTrue} from "../../../assert";
+import {bullet} from "../lib/bullet-parser";
+import {Streams} from "@masala/parser";
 
 
 export const titleTests = {
@@ -71,6 +73,33 @@ export const titleTests = {
         let actual = title().val('#Not tile');
 
         assertEquals(actual, undefined, 'Sharp not followed by space shall not be parsed');
+    },
+
+    'Sharp title does not eat eol':function(){
+
+        const text = `### This is a title`;
+        const line = text + '\n';
+
+
+
+
+        let response = title().parse(Streams.ofString(line));
+        assertTrue(response.isAccepted());
+        assertEquals(response.offset, text.length);
+
+    },
+
+
+
+    'Line title does not eat eol':function(){
+
+        const text = `This is a title\n------`;
+        const line = text + '\n';
+
+        let response = title().parse(Streams.ofString(line));
+        assertTrue(response.isAccepted());
+        assertEquals(response.offset, text.length);
+
     }
 };
 

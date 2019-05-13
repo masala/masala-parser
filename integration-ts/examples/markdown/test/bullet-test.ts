@@ -83,9 +83,9 @@ export const bulletsTests = {
             level: 1,
             children: [],
             content: [
-                {type: 'text', text: 'This is a bullet '},
+                {type: 'text', text: 'This is a bullet'},
                 {type: 'italic', text: 'with italic'},
-                {type: 'text', text: ' and even '},
+                {type: 'text', text: 'and even'},
                 {type: 'bold', text: 'bold characters'}
             ]
         };
@@ -129,7 +129,7 @@ export const bulletsTests = {
         let response = bulletBlock().parse(Streams.ofString(text));
         assertTrue(response.isAccepted());
         assertEquals(block.length, response.offset);
-        assertFalse(response.isEos())
+        assertFalse(response.isEos());
 
         let otherResponse=bulletBlock().then(eol()).parse(Streams.ofString(text));
         assertTrue(otherResponse.isAccepted());
@@ -163,14 +163,14 @@ export const bulletsTests = {
                     "children": [{
                         "type": "bullet",
                         "level": 2,
-                        "content": [{"type": "text", "text": "with "}, {"type": "italic", "text": "a"}, {
+                        "content": [{"type": "text", "text": "with"}, {"type": "italic", "text": "a"}, {
                             "type": "text",
-                            "text": " child"
+                            "text": "child"
                         }]
                     }, {
                         "type": "bullet",
                         "level": 2,
-                        "content": [{"type": "text", "text": "and a "}, {"type": "bold", "text": "final point"}]
+                        "content": [{"type": "text", "text": "and a"}, {"type": "bold", "text": "final point"}]
                     }]
                 }]
             };

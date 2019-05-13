@@ -3,7 +3,7 @@
  */
 
 import {F, C, SingleParser, TupleParser} from '@masala/parser'
-import {formattedLine as line} from "./text-parser";
+import {formattedLine} from "./text-parser";
 
 import {blank, eol, spacesBlock} from './token';
 import {BulletBlock, BulletLevel1, BulletLevel2} from "./types";
@@ -16,9 +16,6 @@ function pureText() {
     return F.not(stop()).rep().map(chars => chars.join(''));
 }
 
-function formattedLine() {
-    return line(pureText(), stop());
-}
 
 function bulletLv1():SingleParser<BulletLevel1> {
     return C.charIn('*-') //first character of a bullet is  * or -

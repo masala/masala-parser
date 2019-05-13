@@ -13,62 +13,63 @@
 import {F, C, SingleParser, IParser} from '@masala/parser'
 
 import {FormattedSequence, MdText, Paragraph} from "./types";
-import {blank, lineFeed} from "./token";
+import {blank, eol, lineFeed} from "./token";
 
-
+// For simplicity, bold, italic and code cannot go across different lines
 function stop() {
-    return F.eos().or(lineFeed()).or(C.charIn('*`'));
+    return F.eos().or(eol()).or(C.charIn('*`'));
+    // real case would accept linefeed() instead of eol(), then probably a back parser when last char is '\n'
 }
 
 function pureText() {
     return (
         F.not(stop())
-            .rep() //  ['a','\n','b'] -> 'a b'
-            // But on Windows, we will ignore the \r
-            // inside line break will be put as space, but we clear initial or final \n
-            .map(chars => {
+            .rep()
+            .map(chars => chars.join(''))
+
+            /*.map(chars => {
                 let allChars = chars.join('');
                 return allChars.replace(/\n/g, ' ').replace(/\r/g, '');
-            })
+            })*/
             .map(text => text.trim())
     );
 }
 
-function italic(pureTextParser:SingleParser<string>):SingleParser<MdText> {
+function italic():SingleParser<MdText> {
     return C.char('*').drop()
-        .then(pureTextParser)
+        .then(pureText())
         .then(C.char('*').drop())
         .single()
         .map((s:string) => ({type:'italic', text: s}));
 }
 
-function bold(pureTextParser:SingleParser<string>):SingleParser<MdText> {
+function bold():SingleParser<MdText> {
     return C.string('**').drop()
-        .then(pureTextParser)
+        .then(pureText())
         .then(C.string('**').drop())
         .single()
         .map((s:string) => ({type:'bold', text: s}));
 }
 
-function code(pureTextParser:SingleParser<string>) :SingleParser<MdText>{
+function code() :SingleParser<MdText>{
     return C.char('`').drop()
-        .then(pureTextParser)
+        .then(pureText())
         .then(C.char('`').drop())
         .single()
         .map((s:string) => ({type:'code', text: s}));
 }
 
-function text(pureTextParser:SingleParser<string>):SingleParser<MdText> {
-    return pureTextParser.map(s => ({type:'text', text: s}));
+function text():SingleParser<MdText> {
+    return pureText().map(s => ({type:'text', text: s}));
 }
 
 
 
-export function formattedLine(pureTextParser:SingleParser<string>, stopParser:IParser<any>):SingleParser<MdText[]>{
-    return bold(pureTextParser)
-        .or(italic(pureTextParser))
-        .or(text(pureTextParser))
-        .or(code(pureTextParser))
+export function formattedLine():SingleParser<MdText[]>{
+    return bold()
+        .or(italic())
+        .or(text())
+        .or(code())
         .rep().array();
 }
 /**
@@ -77,21 +78,32 @@ export function formattedLine(pureTextParser:SingleParser<string>, stopParser:IP
  * @returns Parser
  */
 export function formattedSequence(pureTextParser:SingleParser<string>, stopParser:IParser<any>):SingleParser<FormattedSequence> {
-    return bold(pureTextParser)
-        .or(italic(pureTextParser))
-        .or(text(pureTextParser))
-        .or(code(pureTextParser))
+    return bold()
+        .or(italic())
+        .or(text())
+        .or(code())
         .rep()
         .then(stopParser.drop()) // could reuse formattedLine
         .array();
 }
 
 // So last eaten character could be a '\n'
-export function paragraph():SingleParser<Paragraph> {
-    return formattedSequence(pureText(), stop())
-        .map( (array :MdText[]) => {
+export function paragraph():SingleParser<any> {
+    return formattedLine()
+        .then(
+            F.try(eol().drop().then(formattedLine()).single().optrep().array() ))
+        .array()
+        .map( ([firstLine, otherLines] ) => {
 
-           const content = array.filter(mdText => mdText.text.length>0);
+            let result = firstLine as MdText[];
+            otherLines.forEach((line:MdText[])=> result = result.concat(line));
+
+            let a = [ { type: 'text', text: '' },
+                { type: 'italic', text: 'italic' },
+                { type: 'text', text: 'text' },
+                [ { type: 'bold', text: 'then bold' },
+                    { type: 'text', text: '' } ] ]
+           const content = result.filter(mdText => mdText.text.length>0);
 
             return {type: 'paragraph', content};
         });

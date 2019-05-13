@@ -1,4 +1,5 @@
 import {markdown} from "../lib/document-parser";
+import {assertEquals, assertTrue} from "../../../assert";
 
 const document=`
 
@@ -19,6 +20,9 @@ Good to know
     - but it was cleared by technology
 * Luke Skywalker is strong     
 
+  a bit of code
+    here and there
+
 All these characters were very popular. *Jar Jar Bin* is not.
 
 `;
@@ -28,9 +32,14 @@ All these characters were very popular. *Jar Jar Bin* is not.
 export const documentTests = {
 
     'test document': function () {
-        console.log('here');
+
         const actual = markdown().val(document);
-        console.log(JSON.stringify(actual));
+
+        assertEquals(1, actual.array().filter(md => md.type === 'bulletBlock').length);
+        assertEquals(1, actual.array().filter(md => md.type === 'codeBlock').length);
+        assertEquals(3, actual.array().filter(md => md.type === 'title').length);
+        assertEquals(3, actual.array().filter(md => md.type === 'paragraph').length)
     }
 
 };
+
