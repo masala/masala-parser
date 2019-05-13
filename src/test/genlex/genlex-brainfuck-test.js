@@ -11,6 +11,8 @@ function createParser(){
     genlex.keywords(['+', '-', '<', '>', '[', ']', ',', '.']);
     const grammar = F.any().map(token=>token.value).rep();
 
+
+
     return genlex.use(grammar);
 
 }

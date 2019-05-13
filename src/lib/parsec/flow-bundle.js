@@ -8,7 +8,7 @@
 
 import Parser, {eos} from './parser';
 import response from './response';
-import {NEUTRAL} from "../data/tuple";
+import {NEUTRAL, Tuple} from "../data/tuple";
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
 function parse(p) {
@@ -82,8 +82,8 @@ function layer(p) {
             .fold(
                 accept => {
                     // TODO logger
-                    //console.log('response', response.accept(accept.value,input, index, false));
-                    return response.accept(accept.value, input, index, false)
+
+                    return response.accept(new Tuple().append(accept.value), input, index, false)
                 },
                         // Compared to satisfy, we come back to initial offset
                 reject =>  reject

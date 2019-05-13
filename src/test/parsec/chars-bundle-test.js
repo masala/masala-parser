@@ -581,5 +581,18 @@ export default {
         test.done();
     },
 
+    'expect subString to works':function(test){
+        let stream = Streams.ofString('James Bond');
+        let parser = C.subString(6).then(C.string('Bond'));
+
+        const response = parser.parse(stream);
+        test.deepEqual(['James ', 'Bond'], response.value.array()); // Unlike F.subStream, C.subString joins result
+
+        test.ok(response.isEos());
+        test.done()
+
+
+    }
+
 
 };

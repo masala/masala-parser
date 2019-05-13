@@ -7,6 +7,7 @@ import parserResponseTest from './response_test';
 import flowBundleTest from './flow-bundle-test';
 import charsBundleTest from './chars-bundle-test';
 import numberBundleTest from './number-bundle-test';
+import fLayerTest from './f-layer-test';
 
 
 export default {
@@ -18,5 +19,6 @@ export default {
     parserResponseTest,
     flowBundleTest,
     charsBundleTest,
-    numberBundleTest
+    numberBundleTest,
+    fLayerTest
 }

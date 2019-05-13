@@ -14,6 +14,9 @@ export const NEUTRAL = Symbol('MASALA_NEUTRAL');
 export class Tuple {
 
     constructor(array) {
+        if (array === undefined){
+            array = [];
+        }
         this.value = array;
     }
 

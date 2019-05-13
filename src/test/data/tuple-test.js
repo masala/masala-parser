@@ -45,6 +45,16 @@ export default {
         test.done();
     },
 
+
+    'undefined tuple is empty':function(test){
+        let t = new Tuple();
+        test.equal(0, t.size());
+        t = t.append(2);
+        test.deepEqual([2], t.value);
+
+        test.done();
+    },
+
     'single is returning the first element of the tuple' : function(test){
         const l = new Tuple([1, 2]);
 

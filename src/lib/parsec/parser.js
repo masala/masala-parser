@@ -233,7 +233,7 @@ function both(self, f) {
             .parse(input, index)
             .fold(
                 accept => f.parse(input, index)
-                    .map(r => new Tuple([accept.value, r])),
+                    .map(r => accept.value.append(r)),
                 reject => reject
             )
     );
