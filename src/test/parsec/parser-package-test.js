@@ -8,7 +8,7 @@ import flowBundleTest from './flow-bundle-test';
 import charsBundleTest from './chars-bundle-test';
 import numberBundleTest from './number-bundle-test';
 import fLayerTest from './f-layer-test';
-
+import tupleParserTest from './tuple-parser-test';
 
 export default {
     parserChainTest,
@@ -20,5 +20,6 @@ export default {
     flowBundleTest,
     charsBundleTest,
     numberBundleTest,
-    fLayerTest
+    fLayerTest,
+    tupleParserTest
 }

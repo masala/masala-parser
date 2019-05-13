@@ -103,5 +103,19 @@ export default {
         test.done()
     },
 
+    'first() returns the first element': function (test) {
+
+        const result = new Tuple([2,4,6]).first();
+        test.equal(result, 2);
+
+        test.done()
+    },
+
+    'at returns the value at index': function (test){
+        const result = new Tuple([2,4,6]);
+        test.equal(result.at(1), 4);
+
+        test.done()
+    }
 
 };

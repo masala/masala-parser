@@ -170,6 +170,11 @@ export interface Tuple<T> {
     last():T;
 
     /**
+     * Returns the first element of the Tuple
+     */
+    first():T;
+
+    /**
      * Join elements as one string joined by optional separator (ie empty '' separator by default)
      * @param separator join separator
      */

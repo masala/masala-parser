@@ -80,6 +80,10 @@ export default class Parser {
         return this.map(tuple => tuple.last());
     }
 
+    first(){
+        return this.map(tuple => tuple.first());
+    }
+
 
     // Should be called only on ListParser ; Always returns an array
     array() {

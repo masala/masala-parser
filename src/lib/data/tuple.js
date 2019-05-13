@@ -20,11 +20,19 @@ export class Tuple {
         this.value = array;
     }
 
+    at(index){
+        return this.value[index];
+    }
+
     array() {
         return [...this.value];
     }
 
     single() {
+        return this.value[0];
+    }
+
+    first() {
         return this.value[0];
     }
 
