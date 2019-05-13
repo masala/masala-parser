@@ -828,7 +828,9 @@ interface GenLex {
      *
      * @param parser parser of the token
      * @param name token name
-     * @param precedence the highest precedence gives higher priority
+     * @param precedence the token with lowest precedence is taken before others.
+     *
+     * Choice with grammar is made after token selection !
      */
     tokenize<T, P extends IParser<T>>(parser: P, name: string, precedence?: number): P;
 
