@@ -140,6 +140,7 @@ function getTokenParser(def) {
 
 
 // name is for easier debugging
+// eslint-disable-next-line
 function literal(tokenize, name) {
 
     return F.parse((input, index) => {

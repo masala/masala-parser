@@ -1,5 +1,4 @@
-import Streams from '../../lib/stream/index';
-import {F, C} from '../../lib/parsec/index';
+import {C} from '../../lib/parsec/index';
 
 
 export default {
@@ -42,9 +41,8 @@ export default {
         let text = 'abc';
         let parser = C.letters().array();
         let found = false;
-        let response;
         try{
-            response = parser.val(text);
+            parser.val(text);
         }catch (e) {
             found = true;
         }
