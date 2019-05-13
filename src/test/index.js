@@ -14,16 +14,13 @@ import parserTests from './parsec/parser-package-test'
 import genlexTests from './genlex/genlex-package-test';
 import jsonParseTest from './standard/json/jsonparser_test';
 import jsonSampleTest from './standard/json/jsonsample_test';
-/*
-import markdownTest from './standard/markdown/index';
 
-*/
+
 export {
     dataTests,
     streamTests,
     parserTests,
     genlexTests,
     jsonParseTest,
-    jsonSampleTest/*,
-    markdownTest*/
+    jsonSampleTest
 };
