@@ -3,7 +3,7 @@ const {assertFalse} = require('../../assert');
 
 
 function A() {
-    return C.char('A').map(x=>{console.log(x);return x;}).flatMap(B);
+    return C.char('A').flatMap(B);
 }
 
 function B(aVal) {
@@ -17,9 +17,7 @@ const parser = A();
 const str = 'AAAB';
 const stream = Streams.ofString(str);
 const parsing = parser.parse(stream);
-
-console.log(parsing.offset === str.length? true:parsing.offset);
-console.log(parsing.value);
+;
 
 //F.startsWith()
 //F.dropTo()

@@ -17,7 +17,7 @@ import {C, N} from "../../parsec";
 
 let genlex = new GenLex();
 genlex.keywords(['null', 'false', 'true', '{', '}', '[', ']', ':', ',']);
-let number = genlex.tokenize(N.numberLiteral(), 'number', 1100);
+let number = genlex.tokenize(N.number(), 'number', 1100);
 let string = genlex.tokenize(C.stringLiteral(), 'string', 800);
 
 function tkKey(s) {
@@ -33,7 +33,7 @@ function arrayOrNothing() {
         },
         getValue = () => value,
         item = F.lazy(expr).map(addValue);
-    return item.then(tkKey(',').thenRight(item).optrep()).opt().map(getValue);
+    return item.then(tkKey(',').thenRight(item).optrep().array()).opt().map(getValue);
 }
 
 // unit -> Parser ? Token
@@ -47,9 +47,11 @@ function objectOrNothing() {
         attribute = string
             .thenLeft(tkKey(':'))
             .then(F.lazy(expr))
+            .array()
             .map(addValue);
     return attribute
         .thenLeft(tkKey(',').then(attribute).optrep())
+        .array()
         .opt()
         .map(getValue);
 }
@@ -58,18 +60,18 @@ function objectOrNothing() {
 function expr() {
     return number
         .or(string)
-        .or(tkKey('null').thenReturns(null))
-        .or(tkKey('true').thenReturns(true))
-        .or(tkKey('false').thenReturns(false))
-        .or(tkKey('[').thenRight(F.lazy(arrayOrNothing)).thenLeft(tkKey(']')))
-        .or(tkKey('{').thenRight(F.lazy(objectOrNothing)).thenLeft(tkKey('}')));
+        .or(tkKey('null').returns(null))
+        .or(tkKey('true').returns(true))
+        .or(tkKey('false').returns(false))
+        .or(tkKey('[').thenRight(F.lazy(arrayOrNothing)).thenLeft(tkKey(']')).single())
+        .or(tkKey('{').thenRight(F.lazy(objectOrNothing)).thenLeft(tkKey('}')).single());
 }
 
 //const parse =
 export default {
     parse: function (source) {
 
-        const parser = genlex.use(expr().thenLeft(F.eos()));
+        const parser = genlex.use(expr().thenLeft(F.eos()).single());
 
         return parser.parse(source, 0);
     },

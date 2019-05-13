@@ -1,5 +1,6 @@
 import Streams from '../../lib/stream/index';
 import {F, C} from '../../lib/parsec/index';
+import {GenLex} from "../../lib";
 
 let value = undefined;
 let accepted = undefined;
@@ -17,22 +18,82 @@ export default {
         done();
     },
 
+    'subStream is ok on string stream':function (test){
+
+
+        const text = 'Hello World';
+        const parser = F.subStream(6).then(C.string('World'));
+
+        const response = parser.parse(Streams.ofString(text));
+
+        test.ok(response.isAccepted());
+
+        test.equal(7, response.value.size()); // 6 for the stream, one for World
+
+        test.done();
+
+    },
+
+    'subStream is ok on genlex stream':function (test){
+
+        const genlex = new GenLex();
+        genlex.setSeparatorsParser(F.not(C.charIn('+-<>[],.')));
+        genlex.keywords(['+', '-', '<', '>', '[', ']', ',', '.']);
+        const grammar = F.subStream(4).drop().then(F.any().rep());
+
+        const parser = genlex.use(grammar);
+
+
+        const text = '++++ and then >>';
+
+
+        const response = parser.parse(Streams.ofString(text));
+
+        test.ok(response.isAccepted());
+        test.equal(2,response.value.size());
+
+        test.done();
+
+    },
+
+    'not parser should not eat offset':function(test){
+
+        const text = 'this is a line';
+        const line = text+'\n';
+
+        const eol = C.char('\n');
+        const parser = F.not(eol).rep();
+
+        let response = parser.parse(Streams.ofString(line));
+        test.ok(response.isAccepted());
+        test.equal(text.length, response.offset);
+
+        const withParser = F.not(eol).rep().then(eol);
+        response = withParser.parse(Streams.ofString(line));
+        test.ok(response.isAccepted());
+        test.equal(line.length, response.offset);
+
+        test.done();
+
+    },
+
     'expect flatten result to be ok': function(test) {
         const string = 'foobar';
         // tests here
         const parser = C.char('f')
             .then(C.char('o'))
             .then(C.char('o'))
-            .then(C.string('bar'));
+            .then(C.string('bar'))
+            .array();
         testParser(parser, string);
         test.deepEqual(value, ['f', 'o', 'o', 'bar'], 'flatten result not ok');
         test.done();
     },
 
-    'expect thenReturns to be ok when empty': function(test) {
+    'expect returns to be ok when empty': function(test) {
         const string = 'some';
         // tests here
-        const parser = F.any().rep().then(F.eos()).thenReturns([]);
+        const parser = F.any().rep().then(F.eos()).returns([]);
         testParser(parser, string);
         test.ok(accepted);
         test.deepEqual(value, [], 'flatten result not ok');
@@ -73,7 +134,8 @@ export default {
         const combinator = start
             .drop()
             .then(F.moveUntil('XYZ'))
-            .then(C.string('XYZ-continues').drop());
+            .then(C.string('XYZ-continues').drop())
+            .single();
         const parser = combinator.parse(line);
         const value = parser.value;
         const offset = parser.offset;
@@ -91,7 +153,8 @@ export default {
         const combinator = start
             .drop()
             .then(F.moveUntil(['ABC', 'ZE', 'XYZ']))
-            .then(C.string('XYZ-continues').drop());
+            .then(C.string('XYZ-continues').drop())
+            .single();
 
         const parser = combinator.parse(line);
         const value = parser.value;
@@ -171,7 +234,7 @@ export default {
     'test moveUntil': function(test) {
         const line = Streams.ofString('I write until James appears');
 
-        const combinator = F.moveUntil(C.string('James')).then(F.any().drop());
+        const combinator = F.moveUntil(C.string('James')).then(F.any().drop()).single();
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');
@@ -235,7 +298,8 @@ export default {
 
         const combinator = F.moveUntil(C.string('James'))
             .then(F.dropTo('appears'))
-            .then(F.eos().drop());
+            .then(F.eos().drop())
+            .single();
         const value = combinator.parse(line).value;
 
         test.equals(value, 'I write until ');

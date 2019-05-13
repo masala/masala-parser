@@ -1,4 +1,4 @@
-import {Streams, F, C} from '@masala/parser'
+import {Streams, F, C, SingleParser, Option} from '@masala/parser'
 
 
 /*
@@ -37,66 +37,68 @@ function text() {
 
 
 function blank() {
-    return C.char(' ').rep().thenReturns(' ');
+    return C.char(' ').rep().returns(' ');
 }
 
-function operation() {
-    return andOperation().or(plusOperation())
-}
 
 function anyOperation() {
-    return C.string('*').thenReturns(MULT)
-        .or(C.string('+').thenReturns(PLUS));
+    return C.string('*').returns(MULT)
+        .or(C.string('+').returns(PLUS));
 }
 
 
 function andOperation() {
-    return C.string('*').thenReturns(MULT)
+    return C.string('*').returns(MULT)
 }
 
 function plusOperation() {
-    return C.string('+').thenReturns(PLUS)
+    return C.string('+').returns(PLUS)
 }
 
 
-function parenthesis(par) {
+function parenthesis(par:string) {
     return C.char(' ').optrep().drop().then(C.char(par));
 }
 
-function parenthesisExpr() {
+function parenthesisExpr():SingleParser<number> {
     return parenthesis('(').then(blank().opt()).drop()
         .then(F.lazy(expr))
-        .then(parenthesis(')').then(blank().opt()).drop());
+        .then(parenthesis(')').then(blank().opt()).drop())
+        .single();
 }
 
-function expr() {
+function expr():SingleParser<number> {
     return subExpr().then(optionalPlusExpr())
+        .array()
         .map(([left,right]) =>  left + right.orElse(0));
 }
 
 
-function optionalPlusExpr() {
+function optionalPlusExpr():SingleParser<Option<number>> {
     return plusExpr().opt();
 }
 
 function plusExpr() {
     return plusOperation().drop().then(subExpr())
         .then(F.lazy(optionalPlusExpr))
+        .array()
         .map(([left,right])=>left+right.orElse(0));
 }
 
 function subExpr() {
     return terminal().then(optionalMultExpr())
+        .array()
         .map(([left,right]) => left * right.orElse(1));
 }
 
-function optionalMultExpr() {
+function optionalMultExpr():SingleParser<Option<number>> {
     return multExpr().opt();
 }
 
 function multExpr() {
     return andOperation().drop().then(terminal())
         .then(F.lazy(optionalMultExpr))
+        .array()
         .map(([left,right]) => left * right.orElse(1));
 }
 

@@ -78,7 +78,7 @@ export default {
         test.done();
     },
 
-    'get from stream numberLiteral 1': function(test) {
+    'get from stream number 1': function(test) {
         test.expect(1);
         // tests here
         test.equal(
@@ -89,7 +89,7 @@ export default {
         test.done();
     },
 
-    'get from stream numberLiteral is cached': function(test) {
+    'get from stream number is cached': function(test) {
         test.expect(1);
         // tests here
         var s = stream.buffered(stream.ofString('123')), v = s.get(0);

@@ -69,7 +69,7 @@ export default {
             console.error(e);
         }
 
-        test.ok(result.isConsumed(),'should be consumed.');
+        test.ok(result.isEos(),'should be consumed.');
 
         //FIXME #108: Not ok with Error
         test.equal(result.offset, 7, 'should be 7.');

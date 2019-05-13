@@ -1,6 +1,28 @@
 Changelog
 ====
 
+0.7 ->0.8: Using Tuples with then
+---
+
+* Any then() and thenXYZ() function call will return a `Tuple` . This tuple has `single()` and `array()` methods to get value.
+`Parser.drop()`, `F.nop()` methods will produce a *Neutral element* for that Tuple : it will be ignored.
+* Therefore `thenReturns()` is renamed `returns()`.
+* `rep()` and `optrep()` will also produce a Tuple
+    - combination of `rep()` and `then()` will produce one unique Tuple
+    - you can *break apart* this tuple using `Parser.array()` at any point if needed
+* `GenLex` has been totally refactored and simplified for high level parsers on tokens.
+* Typescript interface is operational and `masala-parser.d.ts` documentation will generate Masala Parser reference.
+
+Less important :
+
+* `F.layer()` along with `Parser.and()` produces an array of results when all parsers are satisfied.
+    - it makes backtracking like `F.try()` with `Parser.or()`
+    - warning: it's still experimental for side cases
+* Bug correction on offset for high level parsers.
+    - Random Access in `ParserStream` will result in unpredicted value. Don't do it.
+
+
+
 0.6 -> 0.7: Typescript support
 ----
 

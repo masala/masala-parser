@@ -15,10 +15,13 @@
 import stream from '../stream/index';
 
 import option from '../data/option';
-import list from '../data/list';
+
 
 import response from './response';
 import unit from "../data/unit";
+import {NEUTRAL,Tuple, isTuple} from "../data/tuple";
+
+
 
 /**
  * Parser class
@@ -26,7 +29,11 @@ import unit from "../data/unit";
 export default class Parser {
     // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
     constructor(parse) {
-        this.parse = parse;
+        this.parse = parse.bind(this);
+    }
+
+    val(text){
+        return this.parse(stream.ofString(text)).value;
     }
 
     // Parser 'a 'c => ('a -> Parser 'b 'c) -> Parser 'b 'c
@@ -58,20 +65,39 @@ export default class Parser {
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
+    // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
         return this.flatMap(a =>
-            p.map(b => {
-                let result = list(a).append(list(b)).array();
-                if (result.length === 1) {
-                    return result[0];
-                } else {
-                    return result;
-                }
-            })
+            p.map(b =>  new Tuple([]).append(a).append(b))
         );
     }
 
-    thenEos(){
+    single() {
+        return this.map(tuple => tuple.single());
+    }
+
+    last() {
+        return this.map(tuple => tuple.last());
+    }
+
+    first(){
+        return this.map(tuple => tuple.first());
+    }
+
+
+    // Should be called only on ListParser ; Always returns an array
+    array() {
+
+        return this.map(value => {
+            if (!isTuple(value)) {
+                throw 'array() is called only on TupleParser';
+            }
+            return value.array();
+        });
+    }
+
+
+    thenEos() {
         return this.then(eos().drop());
     }
 
@@ -80,7 +106,7 @@ export default class Parser {
     }
 
     drop() {
-        return this.map(() => []);
+        return this.map(() => NEUTRAL);
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser 'a 'c
@@ -94,8 +120,8 @@ export default class Parser {
     }
 
     // Parser 'a 'c => 'b -> Parser 'b 'c
-    thenReturns(v) {
-        return this.thenRight(returns(v));
+    returns(v) {
+        return this.drop().map( () => v);
     }
 
     // Parser 'a 'c -> Parser 'a 'c
@@ -103,10 +129,20 @@ export default class Parser {
         return choice(this, p);
     }
 
+    /**
+     * Must be used with F.layer()
+     * @param p
+     * @returns {Parser}
+     */
+    and(p) {
+        return both(this, p);
+    }
+
     // Parser 'a 'c => unit -> Parser (Option 'a) 'c
     opt() {
         return this.map(option.some).or(returns(option.none()));
     }
+
 
     // Parser 'a 'c => unit -> Parser (List 'a) 'c
     rep() {
@@ -182,6 +218,7 @@ function bind(self, f) {
 }
 
 // Parser 'a 'c -> Parser 'a 'c -> Parser 'a 'c
+// TODO logger representing which choice is made
 function choice(self, f) {
     return new Parser((input, index = 0) =>
         self
@@ -193,18 +230,31 @@ function choice(self, f) {
     );
 }
 
+// Parser 'a 'c -> Parser 'a 'c -> Parser 'a 'c
+function both(self, f) {
+    return new Parser((input, index = 0) =>
+        self
+            .parse(input, index)
+            .fold(
+                accept => f.parse(input, index)
+                    .map(r => accept.value.append(r)),
+                reject => reject
+            )
+    );
+}
+
 // Parser 'a 'c -> unit -> Parser (List 'a) 'c
 function repeatable(self, occurrences, accept) {
     return new Parser((input, index = 0) => {
         var consumed = false,
-            value = list(),
+            value = new Tuple([]),
             offset = index,
             current = self.parse(input, index),
             occurrence = 0;
 
         while (current.isAccepted() && occurrences(occurrence)) {
             occurrence += 1;
-            value = value.append(list(current.value));
+            value = value.append(current.value);
             consumed = consumed || current.consumed;
             offset = current.offset;
             current = self.parse(input, current.offset);
@@ -238,3 +288,4 @@ export function eos() {
         }
     });
 }
+

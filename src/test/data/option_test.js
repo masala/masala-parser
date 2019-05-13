@@ -96,7 +96,7 @@ export default {
         // tests here
         test.equal(
             option
-                .some()
+                .none()
                 .flatMap(function(a) {
                     return a;
                 })
@@ -151,51 +151,53 @@ export default {
         test.done();
     },
 
-    'option empty filter': function(test) {
-        test.expect(1);
-        // tests here
-        test.equal(
-            option
-                .none()
-                .filter(function(v) {
-                    return v === 1;
-                })
-                .isPresent(),
-            false,
-            'should be empty option.'
-        );
-        test.done();
-    },
+        'option empty filter': function(test) {
+            test.expect(1);
+            // tests here
+            test.equal(
+                option
+                    .none()
+                    .filter(function(v) {
+                        return v === 1;
+                    })
+                    .isPresent(),
+                false,
+                'should be empty option.'
+            );
+            test.done();
+        },
 
-    'option not empty filter': function(test) {
-        test.expect(1);
-        // tests here
-        test.equal(
-            option
-                .some(12)
-                .filter(function(v) {
-                    return v === 12;
-                })
-                .get(),
-            12,
-            'should be not empty option.'
-        );
-        test.done();
-    },
+        'option not empty filter': function(test) {
+            test.expect(1);
+            // tests here
+            test.equal(
+                option
+                    .some(12)
+                    .filter(function(v) {
+                        return v === 12;
+                    })
+                    .get(),
+                12,
+                'should be not empty option.'
+            );
+            test.done();
+        },
 
-    'option not empty wrong filter': function(test) {
-        test.expect(1);
-        // tests here
-        test.equal(
-            option
-                .some(12)
-                .filter(function(v) {
-                    return v === 13;
-                })
-                .isPresent(),
-            false,
-            'should be empty option.'
-        );
-        test.done();
-    },
+            'option not empty wrong filter': function(test) {
+                test.expect(1);
+                // tests here
+                test.equal(
+                    option
+                        .some(12)
+                        .filter(function(v) {
+                            return v === 13;
+                        })
+                        .isPresent(),
+                    false,
+                    'should be empty option.'
+                );
+                test.done();
+            },
+
+
 };

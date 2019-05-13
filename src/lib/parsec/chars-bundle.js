@@ -140,13 +140,14 @@ function stringLiteral() {
     return char('"')
         .thenRight(anyChar.optrep())
         .thenLeft(char('"'))
+        //.array()
         .map(r => r.join(''));
 }
 
 // unit -> Parser char char
 function charLiteral() {
     const anyChar = string("\\'").or(notChar("'"));
-    return char("'").thenRight(anyChar).thenLeft(char("'"));
+    return char("'").thenRight(anyChar).thenLeft(char("'")).single();
 }
 
 // unit -> Parser char char

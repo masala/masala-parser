@@ -1,6 +1,5 @@
 import Streams from '../../lib/stream/index';;
-import {F, C, N} from "../../lib/parsec";
-import unit from "../../lib/data/unit";
+import {F, C} from "../../lib/parsec";
 
 export default {
     setUp: function (done) {
@@ -17,7 +16,7 @@ export default {
         const response = parser.parse(stream, 0);
 
         test.ok(response.isAccepted());
-        test.ok(! response.isConsumed());
+        test.ok(! response.isEos());
         test.equal(response.offset, 3);
 
         test.done();
@@ -31,7 +30,7 @@ export default {
         const response = parser.parse(stream, 4);
 
         test.ok(response.isAccepted());
-        test.ok(! response.isConsumed());
+        test.ok(! response.isEos());
         test.equal(response.offset, 9);
 
         test.done();
@@ -45,7 +44,7 @@ export default {
         const response = parser.parse(stream);
 
         test.ok(response.isAccepted());
-        test.ok(response.isConsumed());
+        test.ok(response.isEos());
         test.equal(response.offset, 22);
 
         test.done();
@@ -87,7 +86,7 @@ export default {
         test.ok(!response.isAccepted());
 
         // because an error has NEVER stream consumed
-        test.ok(!response.isConsumed());
+        test.ok(!response.isEos());
         test.equal(response.offset, stream.source.length);
 
         test.done();
@@ -111,40 +110,5 @@ export default {
 
 
 
-    'ParserStream.get() is idemPotent':function(test){
-        const lower = N.numberLiteral().then(spaces().opt().drop());
-
-
-        const lowerStream = Streams.ofString('10 12 44');
-        const parserStream = Streams.ofParser(lower, lowerStream);
-
-        let tryGet = parserStream.get(0);
-        test.ok(tryGet.isSuccess());
-        test.equal(10, tryGet.value);
-
-        let firstOffset = parserStream.getOffset(1);
-        test.equal(parserStream.offsets[1], 3);
-
-        tryGet = parserStream.get(1);
-        test.ok(tryGet.isSuccess());
-        test.equal(12, tryGet.value);
-
-        test.equal(parserStream.offsets[1], 3);
-
-        let secondOffset = parserStream.getOffset(1);
-
-        test.ok(firstOffset, secondOffset);
-
-
-
-        test.done();
-    }
-
-
-
 }
 
-
-function spaces() {
-    return C.charIn(' \r\n\f\t').optrep().map(() => unit);
-}

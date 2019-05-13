@@ -15,11 +15,15 @@ Masala Parser is a Javascript implementation of the Haskell **Parsec**.
 
 * It can create a full parser from scratch as an alternative for Lex & yacc
 * It can extract data from a big text and replace complex regexp
+* It works in any browser
 * It can validate complete structure with variations
 * It can parse and execute custom operations
+* Great starting point for parser education
 
-Masala Parser keywords are **variations** and **maintainability**. You won't
+Masala Parser keywords are **simplicity**, **variations** and **maintainability**. You won't
 need theoretical bases on languages for extraction or validation use cases.
+
+Masala Parser has relatively good performances, however Javascript is obviously not the fastest machine.
 
 # Usage
 
@@ -34,6 +38,9 @@ Or in the browser
 
 Check the [Change Log](./changelog.md) if you can from a previous version.
 
+# Reference
+
+You will find an [Masala Parser online reference](documentation/typedoc/modules/_masala_parser_d_.html), generated from typescript interface.
 
 # Quick Examples
 
@@ -45,11 +52,12 @@ const {Streams, N, C}= require('@masala/parser');
 
 const stream = Stream.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
-    .then(N.numberLiteral)      // we have ['|', 4.6], we keep 4.6
-    .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
+    .then(N.number())      // we have ['|', 4.6], we drop '|'
+    .then(C.char('|').drop())   // we have [4.6, '|'], we keep [4.6]
+    .single() // we had [4.6], now just 4.6
     .map(x =>Math.floor(x));
 
-// Parsec needs a stream of characters
+// The parser parses a stream of characters
 const parsing = floorCombinator.parse(stream);
 assertEquals( 4, parsing.value, 'Floor parsing');
 ```
@@ -70,7 +78,36 @@ There are many way to analyze this document, for example finding names inside. B
  is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
   What is a starting uppercase word ?
 
-The goal of a parser is to find out. The goal of Parsec is to make this easy.
+The goal of a parser is to find out. The goal of Masala Parser is to make this easy.
+
+
+
+## The Response
+
+By definition, a Parser takes text as an input, and the Response is a structure that represents your problem. 
+After parsing, there are two subtypes of `Response`:
+ 
+* `Accept` when it found something.    
+* `Reject` if it could not.
+
+
+```js
+
+    let response = C.char('a').rep().parse(Streams.ofString('aaaa'));
+    assertEquals(response.value.join(''), 'aaaa' );
+    assertEquals(response.offset, 4 );
+    assertTrue(response.isAccepted());
+    assertTrue(response.isConsumed());
+    
+    // Partially accepted
+    response = C.char('a').rep().parse(Streams.ofString('aabb'));
+    assertEquals(response.value.join(''), 'aa' );
+    assertEquals(response.offset, 2 );
+    assertTrue(response.isAccepted());
+    assertFalse(response.isConsumed());
+
+```
+
 
 ## The Monoid structure
 
@@ -87,7 +124,7 @@ the `Response` after parsing.
 
 ## Hello 'X'
 
-The goal is check that we have Hello 'something', then to grab that *something*
+The goal is check that we have Hello 'someone', then to grab that name
 
 ```js
 // Plain old javascript
@@ -95,13 +132,15 @@ const {Streams,  C}= require('@masala/parser');
 
 var helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
-                    .then(C.char(`'`)).drop()
-                    .then(C.letter.rep()) // keeping repeated ascii letters
-                    .then(C.char(`'`).drop());    // keeping previous letters
+                    .then(C.char(`'`))
+                    .drop()
+                    .then(C.letters()) // succession of A-Za-z letters
+                    .then(C.char(`'`).drop())
+                    .single();    // keeping previous letters
 
 var parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
-// C.letter.rep() will give an array of letters
-assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");
+
+assertEquals(['World'], parsing.value);
 ```
 
 
@@ -118,21 +157,29 @@ import  {Streams, N,C, F} from '@masala/parser';
 const blanks = ()=>C.char(' ').optrep();
 
 function operator(symbol) {
-    return blanks().thenRight(C.char(symbol)).thenLeft(blanks());
+    return blanks().drop()
+        .then(C.char(symbol))   // '+' or '*'
+        .then(blanks().drop())
+        .single();
 }
 
 function sum() {
-    return N.integer.thenLeft(operator('+')).then(N.integer)
-        .map(values => values[0] + values[1]);
+    return N.integer()
+        .then(operator('+').drop())
+        .then(N.integer())
+        .map(values => values[0] + values[1]); 
+        
 }
 
 function multiplication() {
-    return N.integer.thenLeft(operator('*')).then(N.integer)
-        .map(values => values[0] * values[1]);
+    return N.integer()
+        .then(operator('*').drop())
+        .then(N.integer())
+        .map( ([left,right])=> left * right); // more modern js 
 }
 
 function scalar() {
-    return N.integer;
+    return N.integer();
 }
 
 function combinator() {
@@ -173,10 +220,15 @@ accepted `2`, then what could we do with `+2` alone ? It's not a valid sum !
 
 ## try(x).or(y)
 
-`or()` will often be used with `try()`. Like Haskell's Parsec, Masala-Parser can parse infinite look-ahead grammars but
+
+`or()` will often be used with `try()`, that makes [backtracking](https://en.wikipedia.org/wiki/Backtracking) 
+: it saves the current offset, then tries an option. And as soon that it's not satisfied, it goes back to the original 
+offset and use the parser inside the `.or(P)` expression.`.
+
+ Like Haskell's Parsec, Masala Parser can parse infinite look-ahead grammars but
  performs best on predictive (LL[1]) grammars.
 
-With `try()`, we can look a bit ahead of next characters, then go back:
+Let see how with `try()`, we can look a bit ahead of next characters, then go back:
 
         F.try(sum()).or(F.try(multiplication())).or(scalar())
         // try(sum()) parser in action
@@ -189,22 +241,19 @@ Suppose we do not `try()` but use `or()` directly:
         sum().or(multiplication()).or(scalar())
         // testing sum()
         2         *2
-        ..ok..ok  ↑oups: cursor is not going back. Having now to test '*2' ;
-                                                   Is it (multiplication())? No ; or(scalar()) ? neither
+        ..ok..ok  ↑oups: cursor is NOT going back. So now we must test '*2' ;
+                                                   Is it (multiplication())? No ;
+                                                   or(scalar()) ? neither
 
-`try()` has some benefits, but costs more in memory and CPU, as you test things twice.
- You should avoid long sequences of `try()` if memory is constrained. If possible, you can use `or()` without `try()`
-  when there is no *starting ambiguity*.
 
-`N.integer.or(C.letter())` doesn't require a `try()`.
 
 
 # Recursion
 
 Masala-Parser (like Parsec) is a top-down parser and doesn't like [Left Recursion](https://cs.stackexchange.com/a/9971).
 
-However, it is a resolved problem for this kind of parsers, with a lot of documentation. you can read more on []recursion
-with Masala](./documentation/recursion.md), and checkout exemples on our Github repository 
+However, it is a resolved problem for this kind of parsers, with a lot of documentation. You can read more on [recursion
+with Masala](./documentation/recursion.md), and checkout examples on our Github repository 
 ( [simple recursion](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/recursion/aaab-lazy-recursion.js), 
 or [calculous expressions](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/operations/plus-minus.js) ).
 
@@ -219,32 +268,7 @@ Here is a link for [Core functions documentation](./documentation/parser-core-fu
 It will explain `then()`, `drop()`, `map()`, `rep()`, `opt()` and other core functions of the Parser
 with code examples.
 
-
-## The Response
-
-A Parser can parse. When it finished this work, it can return two subtypes of `Response`:
- 
-* `Accept` when it found something.    
-* `Reject` if it could not.
-
-
-```js
-
-    let response = C.char('a').rep().parse(Streams.ofString('aaaa'));
-    assertEquals(response.value.join(''), 'aaaa' );
-    assertEquals(response.offset, 4 );
-    assertTrue(response.isAccepted());
-    assertTrue(response.isConsumed());
-    
-    // Partially accepted
-    response = C.char('a').rep().parse(Streams.ofString('aabb'));
-    assertEquals(response.value.join(''), 'aa' );
-    assertEquals(response.offset, 2 );
-    assertTrue(response.isAccepted());
-    assertFalse(response.isConsumed());
-
-```
-
+### 
 
 ## The Chars Bundle
 
@@ -260,11 +284,11 @@ C.char('-')
 
 [General use](./documentation/chars-bundle.md)
 
-* `letter`: accept a european letter (and moves the cursor)
-* `letters`: accepts many letters and returns a string
+* `letter()`: accept a european letter (and moves the cursor)
+* `letters()`: accepts many letters and returns a string
 * `letterAs(symbol)`: accepts a european(default), ascii, or utf8 Letter. [More here](./documentation/chars-bundle.md)
 * `lettersAs(symbol)`: accepts many letters and returns a string
-* `emoji`: accept any emoji sequence. [Opened Issue](https://github.com/d-plaindoux/masala-parser/issues/86).
+* `emoji()`: accept any emoji sequence. [Opened Issue](https://github.com/d-plaindoux/masala-parser/issues/86).
 * `notChar(x)`: accept if next input is not `x`
 * `char(x)`: accept if next input is `x`
 * `charIn('xyz')`: accept if next input is `x`, `y` or `z`
@@ -293,10 +317,10 @@ C.string('Hello')
 ## The Numbers Bundle
 
 
-* `numberLiteral`: accept any float number, such as -2.3E+24, and returns a float    
-* `digit`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
-* `digits`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
-* `integer`: accept any positive or negative integer
+* `number()`: accept any float number, such as -2.3E+24, and returns a float    
+* `digit()`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
+* `digits()`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
+* `integer()`: accept any positive or negative integer
 
 
 
@@ -313,7 +337,7 @@ All of these functions will return a brand new Parser that you can combine with 
 Most important:
 
 * `F.try(parser).or(otherParser)`: Try a parser and come back to `otherParser` if failed
-* `F.any`: Accept any character (and so moves the cursor)
+* `F.any()`: Accept any character (and so moves the cursor)
 * `F.not(parser)`: Accept anything that is not a parser. Often used to accept until a given *stop*  
 * `F.eos()`: Accepted if the Parser has reached the **E**nd **O**f **S**tream
 * `F.moveUntil(string|stopParser)`: Alternative for **regex**. Will traverse the document **until** the *stop parser*
@@ -335,16 +359,8 @@ Others:
 
 # The Standard bundles
 
-Masala Parser offers a generic Token Bundle, a data Extractor, a Json parser, and an experimental
-and incomplete markdown parser.
+Masala Parser offers a Json parser, and bricks for custom markdown parser.
 
-## The Token Bundle
-
-
-* `email`: accept a very large number of emails
-* `date`: accept a very small number of dates (2017-03-27 or 27/03/2017)
-* `blank(nothing|string|parser)`: accept standard blanks (space, tab), or defined characters, or a combined Parser
-* `eol`: accept **E**nd **O**f **L**ine `\n` or `\r\n`
 
 
 
@@ -360,25 +376,25 @@ The Markdown bundle offers a series of Markdown tokens to build your own **meta-
 
 Tokens are:
 
-* `blank`: blanks in paragraphs, including single end of line
-* `eol`: `\n` or `\r\n`
-* `lineFeed`: At least two EOL
-* `fourSpacesBlock`: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
-* `stop`: End of pure text
-* `pureText`: Pure text, which is inside italic or bold characters
-* `italic`: italic text between `*pureText*` or `_pureText_`
-* `bold`: bold text between `**pureText**`
-* `code`: code text between `` `pureText` `` (double backticks for escape not yet supported)
+* `blank()`: blanks in paragraphs, including single end of line
+* `eol()`: `\n` or `\r\n`
+* `lineFeed()`: At least two EOL
+* `fourSpacesBlock()`: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
+* `stop()`: End of pure text
+* `pureText()`: Pure text, which is inside italic or bold characters
+* `italic()`: italic text between `*pureText*` or `_pureText_`
+* `bold()`: bold text between `**pureText**`
+* `code()`: code text between `` `pureText` `` (double backticks for escape not yet supported)
 * `text (pureTextParser)`: higher level of pureText, if you need to redefine what is pureText
 * `formattedSequence (pureText, stop)`: combination of pureText, italic, bold and code
-* `formattedParagraph`: formattedSequence separated by a lineFeed
-* `titleLine`: `title\n===` or `title\n---` variant of title
-* `titleSharp`: `### title` variant of title
-* `title`: titleLine or titleSharp
-* `bulletLv1`: Level one bullet
-* `bulletLv2`: Level two bullet
-* `bullet`: Level one or two bullets
-* `codeLine`: Four spaces indented code block line
+* `formattedParagraph()`: formattedSequence separated by a lineFeed
+* `titleLine()`: `title\n===` or `title\n---` variant of title
+* `titleSharp()`: `### title` variant of title
+* `title()`: titleLine or titleSharp
+* `bulletLv1()`: Level one bullet
+* `bulletLv2()`: Level two bullet
+* `bullet()`: Level one or two bullets
+* `codeLine()`: Four spaces indented code block line
 
 
 
