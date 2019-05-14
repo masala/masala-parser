@@ -20,6 +20,11 @@ export default {
         test.done();
     },
 
+    'initiated tuple':function(test){
+      test.deepEqual(tuple([2,4,6]).value, [2,4,6]);
+      test.done();
+    },
+
 
 
     'retrieve non empty array': function (test) {
