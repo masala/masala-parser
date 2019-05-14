@@ -13,12 +13,13 @@ Masala Parser is a Javascript implementation of the Haskell **Parsec**.
 
 ### Use cases
 
-* It can create a full parser from scratch as an alternative for Lex & yacc
-* It can extract data from a big text and replace complex regexp
-* It works in any browser
-* It can validate complete structure with variations
-* It can parse and execute custom operations
-* Great starting point for parser education
+* It can create a full parser from scratch
+* It can extract data from a big text and **replace complex regexp**
+* It works in any **browser**
+* There is a good **typescript** type declaration
+* It can validate complete structure with **variations**
+* It's a great starting point for parser education. It's **way simpler than Lex & Yacc**.
+* It's designed to be written in other languages (Python, Java, Rust) with the same interface
 
 Masala Parser keywords are **simplicity**, **variations** and **maintainability**. You won't
 need theoretical bases on languages for extraction or validation use cases.
@@ -109,20 +110,33 @@ After parsing, there are two subtypes of `Response`:
 ```
 
 
-## The Monoid structure
+## Building the Parser, and execution  
 
-A monoid is an object with functions and one single encapsulated value. Have you heard of jQuery ? The `$` object is a monoid, where
- the value is the DOM selection.
-The parser will read through the document and aggregate values. The single value of the monoid will be modified by the document stream,
-  but can also be modified by function calls, such as the `map()` function. The value is the `Response` of your `Parser`.
+Like a language, the parser is built then executed. With Masala, we build using other parsers.
+
+```js
+const parser1 = C.string('hello');
+const white = C.char(' ');
+const parser2 = C.char('world');
+const myNewParser = parser1.then(white.rep()).then(parser2);
+``` 
+
+There is a compiling time when you combine your parser, and an execution time when the parser 
+runs its `parse(stream)` function. You will have the `Response` after parsing. 
+
+
+So after building, the parser is executed against a stream of token. For simplicity, we will use a stream of characters, which is a text :)
+ 
+The parser will read through the document and aggregate a Response, which contains a value and the current offset in the text.
+
+This value will evolve when the parser will meet new characters, 
+but also with some function calls, such as the `map()` function.
 
 ![](./documentation/parsec-monoid.png)
 
-A Http Promise is also a good example. It will give you later the value. Masala does the same: it will give you
-the `Response` after parsing. 
 
 
-## Hello 'X'
+## Hello Gandhi
 
 The goal is check that we have Hello 'someone', then to grab that name
 
@@ -132,15 +146,12 @@ const {Streams,  C}= require('@masala/parser');
 
 var helloParser = C.string("Hello")
                     .then(C.char(' ').rep())
-                    .then(C.char(`'`))
-                    .drop()
                     .then(C.letters()) // succession of A-Za-z letters
-                    .then(C.char(`'`).drop())
-                    .single();    // keeping previous letters
+                    .last();    // keeping previous letters
 
-var parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
+var response = helloParser.val("Hello Gandhi");  // val(x) is a shortcut for parse(Stream.ofString(x));
 
-assertEquals(['World'], parsing.value);
+assertEquals('Gandhi', response.value);
 ```
 
 
@@ -166,8 +177,8 @@ function operator(symbol) {
 function sum() {
     return N.integer()
         .then(operator('+').drop())
-        .then(N.integer())
-        .map(values => values[0] + values[1]); 
+        .then(N.integer())  // then(x) creates a tuple - here, one value was dropped
+        .map(tuple => tuple.at(0) + tuple.at(1)); 
         
 }
 
@@ -175,6 +186,7 @@ function multiplication() {
     return N.integer()
         .then(operator('*').drop())
         .then(N.integer())
+        .array() // we can have access to the value of the tuple
         .map( ([left,right])=> left * right); // more modern js 
 }
 
@@ -216,7 +228,7 @@ console.info('sum: ',parseOperation('2+2').value);
 ```
 
 We will give priority to sum, then multiplication, then scalar. If we had put `scalar()` first, we would have first
-accepted `2`, then what could we do with `+2` alone ? It's not a valid sum !
+accepted `2`, then what could we do with `+2` alone ? It's not a valid sum ! Moreover `+2` and `-2` are acceptable scalars. 
 
 ## try(x).or(y)
 
@@ -311,15 +323,14 @@ C.string('Hello')
 
 // accepts Hello johnny ; value is ['Hello', ' ', 'johnny']
 // rejects Hello Johnny : J is not lowercase ; no value
-// rep() is not easy to handle.
 ```
 
 ## The Numbers Bundle
 
 
 * `number()`: accept any float number, such as -2.3E+24, and returns a float    
-* `digit()`: accept any single digit, and return a **single char** (or in fact string, it's just javascript)
-* `digits()`: accept many digits, and return a **string**. Warning: it does not accept **+-** signs symbols.
+* `digit()`: accept any single digit, and returns a **number**
+* `digits()`: accept many digits, and returns a **number**. Warning: it does not accept **+-** signs symbols.
 * `integer()`: accept any positive or negative integer
 
 
@@ -357,50 +368,12 @@ Others:
 * `F.startsWith(value)`: create a no-op parser with initial value 
 
 
-# The Standard bundles
-
-Masala Parser offers a Json parser, and bricks for custom markdown parser.
-
-
-
-
-## JSON Bundle and Markdown Bundle
-
-The JSON bundle offers an easy to use JSON parser. Obviously you could use native `JSON.parse()` function. So it's more
-  a source of examples to deal with array structure.
-
-**Warning: The Markdown bundle is under active development and will move a lot !**
-
-The Markdown parser will not compile Markdown in HTML, but it will gives you a Javascript object (aka JSON structure).
-The Markdown bundle offers a series of Markdown tokens to build your own **meta-markdown** parser.
-
-Tokens are:
-
-* `blank()`: blanks in paragraphs, including single end of line
-* `eol()`: `\n` or `\r\n`
-* `lineFeed()`: At least two EOL
-* `fourSpacesBlock()`: Four spaces or two tabs (will accept option for x spaces and/or y tabs)
-* `stop()`: End of pure text
-* `pureText()`: Pure text, which is inside italic or bold characters
-* `italic()`: italic text between `*pureText*` or `_pureText_`
-* `bold()`: bold text between `**pureText**`
-* `code()`: code text between `` `pureText` `` (double backticks for escape not yet supported)
-* `text (pureTextParser)`: higher level of pureText, if you need to redefine what is pureText
-* `formattedSequence (pureText, stop)`: combination of pureText, italic, bold and code
-* `formattedParagraph()`: formattedSequence separated by a lineFeed
-* `titleLine()`: `title\n===` or `title\n---` variant of title
-* `titleSharp()`: `### title` variant of title
-* `title()`: titleLine or titleSharp
-* `bulletLv1()`: Level one bullet
-* `bulletLv2()`: Level two bullet
-* `bullet()`: Level one or two bullets
-* `codeLine()`: Four spaces indented code block line
 
 
 
 ## License
 
-Copyright (C)2016-2018 D. Plaindoux.
+Copyright (C)2016-2019 D. Plaindoux.
 
 This program is  free software; you can redistribute  it and/or modify
 it  under the  terms  of  the GNU  Lesser  General  Public License  as

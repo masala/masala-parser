@@ -12,6 +12,8 @@ Changelog
     - you can *break apart* this tuple using `Parser.array()` at any point if needed
 * `GenLex` has been totally refactored and simplified for high level parsers on tokens.
 * Typescript interface is operational and `masala-parser.d.ts` documentation will generate Masala Parser reference.
+* `N.digit()` and `N.digits()` return a number, not a string
+* Markdown bundled is removed from the lib, and put as example in typescript integration
 
 Less important :
 
@@ -20,7 +22,7 @@ Less important :
     - warning: it's still experimental for side cases
 * Bug correction on offset for high level parsers.
     - Random Access in `ParserStream` will result in unpredicted value. Don't do it.
-
+* `response.isConsumed()` is replaced by `response.isEos()`
 
 
 0.6 -> 0.7: Typescript support
