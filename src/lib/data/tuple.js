@@ -70,6 +70,10 @@ export function isTuple(object) {
     return object && object.constructor && object.constructor.name === 'Tuple';
 }
 
-export function tuple(){
-    return new Tuple([]);
+export function tuple(array){
+    if (array===undefined){
+        return new Tuple([]);
+    }else{
+        return new Tuple(array);
+    }
 }

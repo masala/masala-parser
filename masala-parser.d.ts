@@ -175,6 +175,12 @@ export interface Tuple<T> {
     first():T;
 
     /**
+     * Returns value at index
+     * @param index
+     */
+    at(index:number): T;
+
+    /**
      * Join elements as one string joined by optional separator (ie empty '' separator by default)
      * @param separator join separator
      */
@@ -196,6 +202,15 @@ export interface Tuple<T> {
     append<Y>(element: Y): Tuple<T | Y>;
 
 }
+
+/**
+ * Creates an empty or not Tuple, which is the preferred way
+ *
+ * `const t = tuple().append(x)`
+ *
+ * `const t = tuple([2, 4, 5])`;
+ */
+export function tuple<T>(array?:T[]);
 
 /**
  * Represents a **source** of data that will be parsed.
@@ -338,8 +353,8 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
 
-    thenEos():TupleParser<T>;
 
+    or(other: TupleParser<T>): TupleParser<T>;
     or<Y>(other: TupleParser<Y>): TupleParser<T>|TupleParser<Y>;
     or<T, P extends IParser<T>>(other: P): VoidParser|P;
 
@@ -388,15 +403,6 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     last(): SingleParser<T>;
 
 
-
-
-
-
-
-
-
-
-
 }
 
 declare type MASALA_VOID_TYPE = symbol;
@@ -423,7 +429,6 @@ export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
     then<Y>(p: SingleParser<Y>): TupleParser<Y>;
     then<Y>(p: IParser<Y>): TupleParser<Y>;
 
-    thenEos():TupleParser<MASALA_VOID_TYPE>;
 
     or(other: VoidParser): VoidParser;
     or<T, P extends IParser<T>>(other: P): VoidParser|P;
@@ -448,10 +453,11 @@ export interface SingleParser<T> extends IParser<T> {
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
-    thenEos():TupleParser<T>;
 
     or(other: SingleParser<T>): SingleParser<T>;
     or<Y>(other: SingleParser<Y>): SingleParser<T|Y>;
+    or(other: TupleParser<T>): TupleParser<T>;
+    or<Y>(other: TupleParser<Y>): TupleParser<Y>|TupleParser<T>;
     or<Y, P extends IParser<Y>>(other: P): SingleParser<T>|P;
 
 
@@ -861,7 +867,14 @@ interface GenLex {
      */
     setSeparatorRepetition(repeat:boolean):GenLex;
 
+    /**
+     * tonkenize all items, given them the name of the token
+     * Exemple : keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
+     * @param tokens
+     */
+    keywords(tokens: string[]):Token<string>[];
 
+    get(tokenName:string): Token<any>;
 
 
 

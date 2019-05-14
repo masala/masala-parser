@@ -15,7 +15,7 @@ import standard from './standard/index';
 import Streams from './stream/index';
 
 import {accept, reject} from "./parsec/response";
-import {Tuple, isTuple, NEUTRAL} from "./data/tuple";
+import {Tuple, isTuple, NEUTRAL, tuple} from "./data/tuple";
 
 
 const JSON = standard.jsonParser;
@@ -36,5 +36,5 @@ export {
     N,
     JSON,
     MD,
-    Tuple, isTuple, NEUTRAL
+    tuple, Tuple, isTuple, NEUTRAL
 };
