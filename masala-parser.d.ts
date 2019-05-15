@@ -627,6 +627,12 @@ export interface IParser<T> {
      */
     chain<Y, P extends IParser<Y>>(highParser: P): P;
 
+
+    /**
+     * Accept the end of stream. If accepted, it will not change the response
+     */
+    eos():this;
+
 }
 
 /**

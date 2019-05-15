@@ -19,8 +19,7 @@ import option from '../data/option';
 
 import response from './response';
 import unit from "../data/unit";
-import {NEUTRAL,Tuple, isTuple} from "../data/tuple";
-
+import {NEUTRAL, Tuple, isTuple} from "../data/tuple";
 
 
 /**
@@ -32,7 +31,7 @@ export default class Parser {
         this.parse = parse.bind(this);
     }
 
-    val(text){
+    val(text) {
         return this.parse(stream.ofString(text)).value;
     }
 
@@ -68,7 +67,7 @@ export default class Parser {
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
         return this.flatMap(a =>
-            p.map(b =>  new Tuple([]).append(a).append(b))
+            p.map(b => new Tuple([]).append(a).append(b))
         );
     }
 
@@ -80,7 +79,7 @@ export default class Parser {
         return this.map(tuple => tuple.last());
     }
 
-    first(){
+    first() {
         return this.map(tuple => tuple.first());
     }
 
@@ -99,6 +98,19 @@ export default class Parser {
 
     thenEos() {
         return this.then(eos().drop());
+    }
+
+    eos() {
+
+        return new Parser((input, index = 0) =>
+            this.parse(input, index).fold((accept)=>{
+
+                return input.endOfStream(accept.offset)?
+                    response.accept(accept.value, accept.input, accept.offset, true):
+                    response.reject(accept.input, accept.offset, accept.consumed)
+            })
+        );
+
     }
 
     concat(p) {
@@ -121,7 +133,7 @@ export default class Parser {
 
     // Parser 'a 'c => 'b -> Parser 'b 'c
     returns(v) {
-        return this.drop().map( () => v);
+        return this.drop().map(() => v);
     }
 
     // Parser 'a 'c -> Parser 'a 'c
