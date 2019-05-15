@@ -94,6 +94,8 @@
 						<section class="tsd-index-section tsd-is-not-exported">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_masala_parser_d_.genlex.html#get" class="tsd-kind-icon">get</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_masala_parser_d_.genlex.html#keywords" class="tsd-kind-icon">keywords</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_masala_parser_d_.genlex.html#setseparatorrepetition" class="tsd-kind-icon">set<wbr>Separator<wbr>Repetition</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-not-exported"><a href="_masala_parser_d_.genlex.html#setseparators" class="tsd-kind-icon">set<wbr>Separators</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-not-exported"><a href="_masala_parser_d_.genlex.html#setseparatorsparser" class="tsd-kind-icon">set<wbr>Separators<wbr>Parser</a></li>
@@ -108,6 +110,60 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-not-exported">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="get" class="tsd-anchor"></a>
+					<h3>get</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">get<span class="tsd-signature-symbol">(</span>tokenName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_masala_parser_d_.token.html" class="tsd-signature-type">Token</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L883">masala-parser.d.ts:883</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tokenName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_masala_parser_d_.token.html" class="tsd-signature-type">Token</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+					<a name="keywords" class="tsd-anchor"></a>
+					<h3>keywords</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+						<li class="tsd-signature tsd-kind-icon">keywords<span class="tsd-signature-symbol">(</span>tokens<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_masala_parser_d_.token.html" class="tsd-signature-type">Token</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L881">masala-parser.d.ts:881</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>tonkenize all items, given them the name of the token
+									Exemple : keywords([&#39;AND&#39;, &#39;OR&#39;]) will create the tokens named &#39;AND&#39; and &#39;OR&#39; with C.string(&#39;AND&#39;), C.string(&#39;OR)</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>tokens: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_masala_parser_d_.token.html" class="tsd-signature-type">Token</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 					<a name="setseparatorrepetition" class="tsd-anchor"></a>
 					<h3>set<wbr>Separator<wbr>Repetition</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
@@ -117,7 +173,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/da715d0/masala-parser.d.ts#L862">masala-parser.d.ts:862</a></li>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L874">masala-parser.d.ts:874</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -149,7 +205,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/da715d0/masala-parser.d.ts#L846">masala-parser.d.ts:846</a></li>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L858">masala-parser.d.ts:858</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -172,7 +228,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/da715d0/masala-parser.d.ts#L854">masala-parser.d.ts:854</a></li>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L866">masala-parser.d.ts:866</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -210,7 +266,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/da715d0/masala-parser.d.ts#L840">masala-parser.d.ts:840</a></li>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L852">masala-parser.d.ts:852</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -260,7 +316,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/da715d0/masala-parser.d.ts#L844">masala-parser.d.ts:844</a></li>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L856">masala-parser.d.ts:856</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../modules/_masala_parser_d_.html#tokencollection" class="tsd-signature-type">TokenCollection</a></h4>
@@ -277,7 +333,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/da715d0/masala-parser.d.ts#L842">masala-parser.d.ts:842</a></li>
+									<li>Defined in <a href="https://github.com/d-plaindoux/masala-parser/blob/c3af2fd/masala-parser.d.ts#L854">masala-parser.d.ts:854</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
@@ -319,6 +375,12 @@
 					<li class="current tsd-kind-class tsd-parent-kind-external-module tsd-is-not-exported">
 						<a href="_masala_parser_d_.genlex.html" class="tsd-kind-icon">Gen<wbr>Lex</a>
 						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_masala_parser_d_.genlex.html#get" class="tsd-kind-icon">get</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
+								<a href="_masala_parser_d_.genlex.html#keywords" class="tsd-kind-icon">keywords</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-not-exported">
 								<a href="_masala_parser_d_.genlex.html#setseparatorrepetition" class="tsd-kind-icon">set<wbr>Separator<wbr>Repetition</a>
 							</li>
@@ -430,6 +492,9 @@
 					</li>
 					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
 						<a href="../modules/_masala_parser_d_.html#n" class="tsd-kind-icon">N</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="../modules/_masala_parser_d_.html#tuple-1" class="tsd-kind-icon">tuple</a>
 					</li>
 				</ul>
 			</nav>

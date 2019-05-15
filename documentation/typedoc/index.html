@@ -73,12 +73,13 @@
 				It is plain Javascript that works in the browser, is tested with more than 450 unit tests, covering 100% of code lines.</p>
 				<h3 id="use-cases">Use cases</h3>
 				<ul>
-					<li>It can create a full parser from scratch as an alternative for Lex &amp; yacc</li>
-					<li>It can extract data from a big text and replace complex regexp</li>
-					<li>It works in any browser</li>
-					<li>It can validate complete structure with variations</li>
-					<li>It can parse and execute custom operations</li>
-					<li>Great starting point for parser education</li>
+					<li>It can create a <strong>full parser from scratch</strong></li>
+					<li>It can extract data from a big text and <strong>replace complex regexp</strong></li>
+					<li>It works in any <strong>browser</strong></li>
+					<li>There is a good <strong>typescript</strong> type declaration</li>
+					<li>It can validate complete structure with <strong>variations</strong></li>
+					<li>It&#39;s a great starting point for parser education. It&#39;s <strong>way simpler than Lex &amp; Yacc</strong>.</li>
+					<li>It&#39;s designed to be written in other languages (Python, Java, Rust) with the same interface</li>
 				</ul>
 				<p>Masala Parser keywords are <strong>simplicity</strong>, <strong>variations</strong> and <strong>maintainability</strong>. You won&#39;t
 				need theoretical bases on languages for extraction or validation use cases.</p>
@@ -94,6 +95,11 @@
 				<h1 id="reference">Reference</h1>
 				<p>You will find an <a href="documentation/typedoc/modules/_masala_parser_d_.html">Masala Parser online reference</a>, generated from typescript interface.</p>
 				<h1 id="quick-examples">Quick Examples</h1>
+				<h2 id="hello-world">Hello World</h2>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> helloParser = C.string(<span class="hljs-string">'hello'</span>);
+<span class="hljs-keyword">const</span> white = C.char(<span class="hljs-string">' '</span>);
+<span class="hljs-keyword">const</span> worldParser = C.char(<span class="hljs-string">'world'</span>);
+<span class="hljs-keyword">const</span> combinator = helloParser.then(white.rep()).then(worldParser);</code></pre>
 				<h2 id="floor-notation">Floor notation</h2>
 				<pre><code class="language-js"><span class="hljs-comment">// N: Number Bundle, C: Chars Bundle</span>
 <span class="hljs-keyword">const</span> {Streams, N, C}= <span class="hljs-built_in">require</span>(<span class="hljs-string">'@masala/parser'</span>);
@@ -121,10 +127,12 @@ assertEquals( <span class="hljs-number">4</span>, parsing.value, <span class="hl
 						</blockquote>
 					</blockquote>
 				</blockquote>
-				<p>There are many way to analyze this document, for example finding names inside. But what is a name ? We can say that it
-					is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
-				What is a starting uppercase word ?</p>
-				<p>The goal of a parser is to find out. The goal of Masala Parser is to make this easy.</p>
+				<p>The parser could fetch every names, ie two consecutive words starting with uppercase.
+					The parser will read through the document and aggregate a Response,
+				which contains a value and the current offset in the text.</p>
+				<p>This value will evolve when the parser will meet new characters,
+				but also with some function calls, such as the <code>map()</code> function.</p>
+				<p><img src="./documentation/parsec-monoid.png" alt=""></p>
 				<h2 id="the-response">The Response</h2>
 				<p>By definition, a Parser takes text as an input, and the Response is a structure that represents your problem.
 				After parsing, there are two subtypes of <code>Response</code>:</p>
@@ -146,30 +154,29 @@ assertEquals( <span class="hljs-number">4</span>, parsing.value, <span class="hl
     assertTrue(response.isAccepted());
     assertFalse(response.isConsumed());
 </code></pre>
-				<h2 id="the-monoid-structure">The Monoid structure</h2>
-				<p>A monoid is an object with functions and one single encapsulated value. Have you heard of jQuery ? The <code>$</code> object is a monoid, where
-					the value is the DOM selection.
-					The parser will read through the document and aggregate values. The single value of the monoid will be modified by the document stream,
-				but can also be modified by function calls, such as the <code>map()</code> function. The value is the <code>Response</code> of your <code>Parser</code>.</p>
-				<p><img src="./documentation/parsec-monoid.png" alt=""></p>
-				<p>A Http Promise is also a good example. It will give you later the value. Masala does the same: it will give you
-				the <code>Response</code> after parsing. </p>
-				<h2 id="hello-x-">Hello &#39;X&#39;</h2>
+				<h2 id="building-the-parser-and-execution">Building the Parser, and execution</h2>
+				<p>Like a language, the parser is built then executed. With Masala, we build using other parsers.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> helloParser = C.string(<span class="hljs-string">'hello'</span>);
+<span class="hljs-keyword">const</span> white = C.char(<span class="hljs-string">' '</span>);
+<span class="hljs-keyword">const</span> worldParser = C.char(<span class="hljs-string">'world'</span>);
+<span class="hljs-keyword">const</span> combinator = helloParser.then(white.rep()).then(worldParser);</code></pre>
+				<p>There is a compiling time when you combine your parser, and an execution time when the parser
+				runs its <code>parse(stream)</code> function. You will have the <code>Response</code> after parsing. </p>
+				<p>So after building, the parser is executed against a stream of token.
+				For simplicity, we will use a stream of characters, which is a text :)</p>
+				<h2 id="hello-gandhi">Hello Gandhi</h2>
 				<p>The goal is check that we have Hello &#39;someone&#39;, then to grab that name</p>
 				<pre><code class="language-js"><span class="hljs-comment">// Plain old javascript</span>
 <span class="hljs-keyword">const</span> {Streams,  C}= <span class="hljs-built_in">require</span>(<span class="hljs-string">'@masala/parser'</span>);
 
 <span class="hljs-keyword">var</span> helloParser = C.string(<span class="hljs-string">"Hello"</span>)
                     .then(C.char(<span class="hljs-string">' '</span>).rep())
-                    .then(C.char(<span class="hljs-string">`'`</span>))
-                    .drop()
                     .then(C.letters()) <span class="hljs-comment">// succession of A-Za-z letters</span>
-                    .then(C.char(<span class="hljs-string">`'`</span>).drop())
-                    .single();    <span class="hljs-comment">// keeping previous letters</span>
+                    .last();    <span class="hljs-comment">// keeping previous letters</span>
 
-<span class="hljs-keyword">var</span> parsing = helloParser.parse(Streams.ofString(<span class="hljs-string">"Hello 'World'"</span>));
+<span class="hljs-keyword">var</span> value = helloParser.val(<span class="hljs-string">"Hello Gandhi"</span>);  <span class="hljs-comment">// val(x) is a shortcut for parse(Stream.ofString(x)).value;</span>
 
-assertEquals([<span class="hljs-string">'World'</span>], parsing.value);</code></pre>
+assertEquals(<span class="hljs-string">'Gandhi'</span>, value);</code></pre>
 				<h1 id="parser-combinations">Parser Combinations</h1>
 				<p>Let&#39;s use a real example. We combine many functions that returns a new Parser. And each new Parser
 				is a combination of Parsers given by the standard bundles or previous functions.</p>
@@ -187,8 +194,8 @@ assertEquals([<span class="hljs-string">'World'</span>], parsing.value);</code><
 <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sum</span>(<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">return</span> N.integer()
         .then(operator(<span class="hljs-string">'+'</span>).drop())
-        .then(N.integer())
-        .map(<span class="hljs-function"><span class="hljs-params">values</span> =&gt;</span> values[<span class="hljs-number">0</span>] + values[<span class="hljs-number">1</span>]); 
+        .then(N.integer())  <span class="hljs-comment">// then(x) creates a tuple - here, one value was dropped</span>
+        .map(<span class="hljs-function"><span class="hljs-params">tuple</span> =&gt;</span> tuple.at(<span class="hljs-number">0</span>) + tuple.at(<span class="hljs-number">1</span>)); 
 
 }
 
@@ -196,6 +203,7 @@ assertEquals([<span class="hljs-string">'World'</span>], parsing.value);</code><
     <span class="hljs-keyword">return</span> N.integer()
         .then(operator(<span class="hljs-string">'*'</span>).drop())
         .then(N.integer())
+        .array() <span class="hljs-comment">// we can have access to the value of the tuple</span>
         .map( <span class="hljs-function">(<span class="hljs-params">[left,right]</span>)=&gt;</span> left * right); <span class="hljs-comment">// more modern js </span>
 }
 
@@ -228,7 +236,7 @@ assertEquals(<span class="hljs-number">8</span>, parseOperation(<span class="hlj
 
 <span class="hljs-built_in">console</span>.info(<span class="hljs-string">'sum: '</span>,parseOperation(<span class="hljs-string">'2+2'</span>).value);</code></pre>
 				<p>We will give priority to sum, then multiplication, then scalar. If we had put <code>scalar()</code> first, we would have first
-				accepted <code>2</code>, then what could we do with <code>+2</code> alone ? It&#39;s not a valid sum !</p>
+				accepted <code>2</code>, then what could we do with <code>+2</code> alone ? It&#39;s not a valid sum ! Moreover <code>+2</code> and <code>-2</code> are acceptable scalars. </p>
 				<h2 id="try-x-or-y-">try(x).or(y)</h2>
 				<p><code>or()</code> will often be used with <code>try()</code>, that makes <a href="https://en.wikipedia.org/wiki/Backtracking">backtracking</a>
 					: it saves the current offset, then tries an option. And as soon that it&#39;s not satisfied, it goes back to the original
@@ -290,13 +298,12 @@ assertEquals(<span class="hljs-number">8</span>, parseOperation(<span class="hlj
     .then(C.lowerCase().rep().join(<span class="hljs-string">''</span>))
 
 <span class="hljs-comment">// accepts Hello johnny ; value is ['Hello', ' ', 'johnny']</span>
-<span class="hljs-comment">// rejects Hello Johnny : J is not lowercase ; no value</span>
-<span class="hljs-comment">// rep() is not easy to handle.</span></code></pre>
+<span class="hljs-comment">// rejects Hello Johnny : J is not lowercase ; no value</span></code></pre>
 				<h2 id="the-numbers-bundle">The Numbers Bundle</h2>
 				<ul>
 					<li><code>number()</code>: accept any float number, such as -2.3E+24, and returns a float    </li>
-					<li><code>digit()</code>: accept any single digit, and return a <strong>single char</strong> (or in fact string, it&#39;s just javascript)</li>
-					<li><code>digits()</code>: accept many digits, and return a <strong>string</strong>. Warning: it does not accept <strong>+-</strong> signs symbols.</li>
+					<li><code>digit()</code>: accept any single digit, and returns a <strong>number</strong></li>
+					<li><code>digits()</code>: accept many digits, and returns a <strong>number</strong>. Warning: it does not accept <strong>+-</strong> signs symbols.</li>
 					<li><code>integer()</code>: accept any positive or negative integer</li>
 				</ul>
 				<h2 id="the-flow-bundle">The Flow Bundle</h2>
@@ -327,38 +334,8 @@ assertEquals(<span class="hljs-number">8</span>, parseOperation(<span class="hlj
 					<li><code>F.satisfy(predicate)</code>: check if condition is satisfied</li>
 					<li><code>F.startsWith(value)</code>: create a no-op parser with initial value </li>
 				</ul>
-				<h1 id="the-standard-bundles">The Standard bundles</h1>
-				<p>Masala Parser offers a Json parser, and bricks for custom markdown parser.</p>
-				<h2 id="json-bundle-and-markdown-bundle">JSON Bundle and Markdown Bundle</h2>
-				<p>The JSON bundle offers an easy to use JSON parser. Obviously you could use native <code>JSON.parse()</code> function. So it&#39;s more
-				a source of examples to deal with array structure.</p>
-				<p><strong>Warning: The Markdown bundle is under active development and will move a lot !</strong></p>
-				<p>The Markdown parser will not compile Markdown in HTML, but it will gives you a Javascript object (aka JSON structure).
-				The Markdown bundle offers a series of Markdown tokens to build your own <strong>meta-markdown</strong> parser.</p>
-				<p>Tokens are:</p>
-				<ul>
-					<li><code>blank()</code>: blanks in paragraphs, including single end of line</li>
-					<li><code>eol()</code>: <code>\n</code> or <code>\r\n</code></li>
-					<li><code>lineFeed()</code>: At least two EOL</li>
-					<li><code>fourSpacesBlock()</code>: Four spaces or two tabs (will accept option for x spaces and/or y tabs)</li>
-					<li><code>stop()</code>: End of pure text</li>
-					<li><code>pureText()</code>: Pure text, which is inside italic or bold characters</li>
-					<li><code>italic()</code>: italic text between <code>*pureText*</code> or <code>_pureText_</code></li>
-					<li><code>bold()</code>: bold text between <code>**pureText**</code></li>
-					<li><code>code()</code>: code text between <code>`pureText`</code> (double backticks for escape not yet supported)</li>
-					<li><code>text (pureTextParser)</code>: higher level of pureText, if you need to redefine what is pureText</li>
-					<li><code>formattedSequence (pureText, stop)</code>: combination of pureText, italic, bold and code</li>
-					<li><code>formattedParagraph()</code>: formattedSequence separated by a lineFeed</li>
-					<li><code>titleLine()</code>: <code>title\n===</code> or <code>title\n---</code> variant of title</li>
-					<li><code>titleSharp()</code>: <code>### title</code> variant of title</li>
-					<li><code>title()</code>: titleLine or titleSharp</li>
-					<li><code>bulletLv1()</code>: Level one bullet</li>
-					<li><code>bulletLv2()</code>: Level two bullet</li>
-					<li><code>bullet()</code>: Level one or two bullets</li>
-					<li><code>codeLine()</code>: Four spaces indented code block line</li>
-				</ul>
 				<h2 id="license">License</h2>
-				<p>Copyright (C)2016-2018 D. Plaindoux.</p>
+				<p>Copyright (C)2016-2019 D. Plaindoux.</p>
 				<p>This program is  free software; you can redistribute  it and/or modify
 					it  under the  terms  of  the GNU  Lesser  General  Public License  as
 					published by  the Free Software  Foundation; either version 2,  or (at

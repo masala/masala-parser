@@ -3,14 +3,19 @@ import './1-easy/hello-something'
 import './1-easy/number'
 import './1-easy/floor'
 import './1-easy/response'
+import'./2-medium/f-layer'
+import'./2-medium/filter-match'
+import'./2-medium/flat-map'
+import './brainfuck/compiler'
+import './chars/letter-letterAs'
+import './chars/charIn-notChar'
 import './flow/try-with-no-or'
 import './flow/not'
 import './flow/nop-any-eos'
 import './flow/startWith-moveUntil-dropTo'
 import './lazy/transmission'
-import './chars/letter-letterAs'
-
-import './markdown/test/markdown-tests'
+import './markdown/test/markdown-test'
 
 
+import './operations/plus-minus'
 console.log('Integration with Typescript perfect !');

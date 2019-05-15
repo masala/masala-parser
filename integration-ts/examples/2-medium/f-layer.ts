@@ -9,9 +9,9 @@ let response = combinator.parse(Streams.ofString('goodbye'));
 assertTrue(response.isAccepted());
 
 
-const first = C.char('a').then(C.char('a')).thenEos();
+const first = C.char('a').then(C.char('a')).eos();
 
-const second = C.string('aa').thenEos();
+const second = C.string('aa').eos();
 
 const successInput = 'aa';
 

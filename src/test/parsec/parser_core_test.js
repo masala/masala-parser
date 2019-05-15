@@ -437,6 +437,33 @@ export default {
         test.done();
     },
 
+    'expect (eos) to be accepted at the end': function (test) {
+
+
+        const parser = C.string('abc').eos();
+
+        const response =  parser.parse(stream.ofString('abc'));
+
+        test.ok(response.isAccepted(), 'should be accepted.');
+        test.ok(response.isEos());
+        test.equal(response.value, 'abc'); // not tuple([a]) !
+        test.done();
+    },
+/*
+    'expect (eos) to be rejected without eating char': function (test) {
+
+
+        const parser = C.char('a').eos();
+
+        const response =  parser.parse(stream.ofString('ab'));
+
+        test.ok(!response.isAccepted(), 'should not be accepted.');
+        test.ok(!response.isEos());
+        test.equal(response.offset, 1);
+        test.equal(response.value, undefined); // not tuple([a]) !
+        test.done();
+    },
+*/
     'expect (thenEos) to be accepted at the end': function (test) {
         test.expect(1);
         // tests here
