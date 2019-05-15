@@ -1,5 +1,5 @@
-POST Publish doc
-======
+# WARNING: Outdated. Use integrztion-ts
 
-* `integrate.js` will prove that npm package is working correctly
-* Every files in this directory will be used for the documentation, so that it keeps up to date
+This directory needs to be migrated to integration-ts before 1.0
+
+Nevertheless some examples on lazy or recursion may be good 

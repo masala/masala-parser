@@ -157,6 +157,7 @@ function getInput() {
 //simple test
 brainfuck('+++>+');
 
+
 //swap 0,1 values
 brainfuck('+++[>+<-]');
 

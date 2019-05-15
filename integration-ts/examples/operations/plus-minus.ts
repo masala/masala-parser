@@ -1,4 +1,5 @@
 import {Streams, F, C, SingleParser, Option} from '@masala/parser'
+import {assertEquals} from "../../assert";
 
 
 /*
@@ -109,12 +110,13 @@ function terminal() {
 }
 
 function combinator() {
-    return expr().then(F.eos().drop());
+    return expr().eos()
 }
 
 const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
 
 let stream = Streams.ofString(string);
-let parsing = combinator().parse(stream);
-console.log(string+'='+parsing.value);
+let response = combinator().parse(stream);
+
+assertEquals(53,response.value );
 

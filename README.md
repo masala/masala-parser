@@ -13,7 +13,7 @@ Masala Parser is a Javascript implementation of the Haskell **Parsec**.
 
 ### Use cases
 
-* It can create a full parser from scratch
+* It can create a **full parser from scratch**
 * It can extract data from a big text and **replace complex regexp**
 * It works in any **browser**
 * There is a good **typescript** type declaration
@@ -45,6 +45,15 @@ You will find an [Masala Parser online reference](documentation/typedoc/modules/
 
 # Quick Examples
 
+## Hello World
+
+```js
+const helloParser = C.string('hello');
+const white = C.char(' ');
+const worldParser = C.char('world');
+const combinator = helloParser.then(white.rep()).then(worldParser);
+``` 
+
 ## Floor notation
 
 ```js
@@ -75,11 +84,14 @@ Let's say we have a document :
 
 >>> The James Bond series, by writer Ian Fleming, focuses on a fictional British Secret Service agent created in 1953, who featured him in twelve novels and two short-story collections. Since Fleming's death in 1964, eight other authors have written authorised Bond novels or novelizations: Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz.
 
-There are many way to analyze this document, for example finding names inside. But what is a name ? We can say that it
- is a combination of two following words starting with an uppercase. But what is a word ? What are following words ?
-  What is a starting uppercase word ?
+The parser could fetch every names, ie two consecutive words starting with uppercase. 
+The parser will read through the document and aggregate a Response,
+ which contains a value and the current offset in the text.
 
-The goal of a parser is to find out. The goal of Masala Parser is to make this easy.
+This value will evolve when the parser will meet new characters, 
+but also with some function calls, such as the `map()` function.
+
+![](./documentation/parsec-monoid.png)
 
 
 
@@ -115,25 +127,19 @@ After parsing, there are two subtypes of `Response`:
 Like a language, the parser is built then executed. With Masala, we build using other parsers.
 
 ```js
-const parser1 = C.string('hello');
+const helloParser = C.string('hello');
 const white = C.char(' ');
-const parser2 = C.char('world');
-const myNewParser = parser1.then(white.rep()).then(parser2);
+const worldParser = C.char('world');
+const combinator = helloParser.then(white.rep()).then(worldParser);
 ``` 
 
 There is a compiling time when you combine your parser, and an execution time when the parser 
 runs its `parse(stream)` function. You will have the `Response` after parsing. 
 
 
-So after building, the parser is executed against a stream of token. For simplicity, we will use a stream of characters, which is a text :)
+So after building, the parser is executed against a stream of token. 
+For simplicity, we will use a stream of characters, which is a text :)
  
-The parser will read through the document and aggregate a Response, which contains a value and the current offset in the text.
-
-This value will evolve when the parser will meet new characters, 
-but also with some function calls, such as the `map()` function.
-
-![](./documentation/parsec-monoid.png)
-
 
 
 ## Hello Gandhi
@@ -149,9 +155,9 @@ var helloParser = C.string("Hello")
                     .then(C.letters()) // succession of A-Za-z letters
                     .last();    // keeping previous letters
 
-var response = helloParser.val("Hello Gandhi");  // val(x) is a shortcut for parse(Stream.ofString(x));
+var value = helloParser.val("Hello Gandhi");  // val(x) is a shortcut for parse(Stream.ofString(x)).value;
 
-assertEquals('Gandhi', response.value);
+assertEquals('Gandhi', value);
 ```
 
 

@@ -15,3 +15,5 @@ export function launchMarkdown(): void {
     launch(documentTests);
 
 }
+
+launchMarkdown();
