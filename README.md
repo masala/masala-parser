@@ -41,7 +41,7 @@ Check the [Change Log](./changelog.md) if you can from a previous version.
 
 # Reference
 
-You will find an [Masala Parser online reference](documentation/typedoc/modules/_masala_parser_d_.html), generated from typescript interface.
+You will find an [Masala Parser online reference](http://www.robusta.io/masala-parser/ts/modules/_masala_parser_d_.html), generated from typescript interface.
 
 # Quick Examples
 
