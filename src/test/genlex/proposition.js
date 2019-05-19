@@ -15,7 +15,7 @@ export default {
 
 
         const tkDate =  genlex.tokenize(date(), 'date', 500);
-        const tkNumber = genlex.tokenize(N.number(), 'number', 700);
+        const tkNumber = genlex.tokenize(N.number, 'number', 700);
         let grammar = tkDate.then(tkNumber.rep());
         const parser = genlex.use(grammar);
         const parsing = parser.parse(stream.ofString('10/12/2013 34 23'));
@@ -29,11 +29,11 @@ export default {
 
 
 function date() {
-    return N.digits()
+    return N.digits
         .then(C.charIn('-/').returns('-'))
-        .then(N.digits())
+        .then(N.digits)
         .then(C.charIn('-/').returns('-'))
-        .then(N.digits())
+        .then(N.digits)
         .array()
         .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
         .map(dateArray => dateArray.join(''));

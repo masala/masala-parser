@@ -31,7 +31,7 @@ function number() {
 
 // unit -> Parser char int
 function digit() {
-    return F.satisfy(v => '0' <= v && v <= '9').map(c=>parseInt(c));
+    return F.satisfy(v => '0' <= v && v <= '9').map(c => parseInt(c));
 }
 
 
@@ -54,8 +54,8 @@ function integer() {
 }
 
 export default {
-    number,
-    digit,
-    digits,
-    integer
+    number: number(),
+    digit: digit(),
+    digits: digits(),
+    integer: integer()
 };

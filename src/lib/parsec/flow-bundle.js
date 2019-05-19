@@ -69,8 +69,7 @@ function doTry(p) {
             .fold(
                 accept => accept,
                 // Compared to satisfy, we come back to initial offset
-                reject =>  response.reject(input, reject.offset , false)
-
+                reject => response.reject(input, reject.offset, false)
             )
     );
 }
@@ -85,8 +84,8 @@ function layer(p) {
 
                     return response.accept(new Tuple().append(accept.value), input, index, false)
                 },
-                        // Compared to satisfy, we come back to initial offset
-                reject =>  reject
+                // Compared to satisfy, we come back to initial offset
+                reject => reject
             )
     );
 }

@@ -88,7 +88,7 @@ export default {
     'expect (chain) to be accepted again': function (test) {
         test.expect(1);
 
-        var p1 = N.number().thenLeft(C.char(' ').opt()),
+        var p1 = N.number.thenLeft(C.char(' ').opt()),
             p2 = F.any().then(F.any()).thenLeft(F.eos()).map(function (r) {
                 return r[0] + r[1];
             });
@@ -104,7 +104,7 @@ export default {
     'expect (chain) to return 46': function (test) {
         test.expect(1);
         // tests here
-        const p1 = N.number().thenLeft(C.char(' ').opt()),
+        const p1 = N.number.thenLeft(C.char(' ').opt()),
             p2 = F.any().then(F.any()).thenLeft(F.eos())
                 .array().map(function (r) {
                 return r[0] + r[1];
@@ -118,7 +118,7 @@ export default {
     },
 
     'expect (chain) to add multiple numbers ': function (test) {
-        const token = N.number().then(spaces().opt().drop()).single();
+        const token = N.number.then(spaces().opt().drop()).single();
         const lex = F.satisfy(number => number > 0).rep()
             .map(values => values.array().reduce((acc, n) => acc + n, 0 ));
 
@@ -133,7 +133,7 @@ export default {
     },
 
     'expect (chain) to be not satisfied by upper level ': function (test) {
-        const token = N.number().then(spaces().opt().drop());
+        const token = N.number.then(spaces().opt().drop());
         const lex = F.satisfy(number => number > 0).rep()
             .map(values => values.array().reduce((acc, n) => acc + n, 0 ));
 

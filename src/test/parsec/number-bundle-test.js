@@ -18,7 +18,7 @@ export default {
     'expect N.integer() to be ok': function(test) {
         const string = '007';
         // tests here
-        const parser = N.integer();
+        const parser = N.integer;
         testParser(parser, string);
         test.equal(value, 7, 'N.integer()');
         test.done();
@@ -27,7 +27,7 @@ export default {
     'expect N.integer() with sign to be ok': function(test) {
         const string = '-007';
         // tests here
-        const parser = N.integer();
+        const parser = N.integer;
         testParser(parser, string);
         test.equal(value, -7, 'negative N.integer()');
         test.done();
@@ -36,7 +36,7 @@ export default {
     'expect number without sign to be ok': function(test) {
         const string = '007.12';
         // tests here
-        const parser = N.number();
+        const parser = N.number;
         testParser(parser, string);
         test.equal(value, 7.12, 'number');
         test.done();
@@ -45,7 +45,7 @@ export default {
     'expect many digits to be joined and to be a number': function(test) {
         const string = '007';
         // tests here
-        const parser = N.digits();
+        const parser = N.digits;
         testParser(parser, string);
         test.equal(typeof value, 'number', 'N.digits() should be a string');
         test.equal(value, 7, 'N.digits() returns a bad value');

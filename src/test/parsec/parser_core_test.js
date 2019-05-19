@@ -67,9 +67,9 @@ export default {
 
         try {
             const st = stream.ofString('5x8');
-            const combinator = N.integer()
+            const combinator = N.integer
                 .then(C.char('x').drop())
-                .then(N.integer())
+                .then(N.integer)
                 .array()
                 .map(values => values[0] * values[1]);
 

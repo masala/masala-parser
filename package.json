@@ -54,6 +54,7 @@
     "safeformat": "prettier-eslint --prettier.tab-width 4 \"src/**/*.js\"",
     "lint": "eslint \"src/**/*.js\"",
     "test": "npm run compile && nodeunit build/test/index.js",
+    "bench": "npm run compile && nodeunit build/benches/index.js",
     "cover": "rimraf ./coverage && mkdirp coverage && babel-node  ./node_modules/.bin/babel-istanbul cover --dir coverage/istanbul node_modules/.bin/nodeunit src/test/index.js",
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover",

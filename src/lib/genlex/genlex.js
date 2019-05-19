@@ -198,7 +198,7 @@ export function getMathGenLex() {
     const basicGenlex = new GenLex();
 
     // We try first to have digits
-    basicGenlex.tokenize(N.number(), 'number', 1100);
+    basicGenlex.tokenize(N.number, 'number', 1100);
     basicGenlex.tokenize(C.char('+'), 'plus', 1000);
     basicGenlex.tokenize(C.char('-'), 'minus', 1000);
     basicGenlex.tokenize(C.char('*'), 'mult', 800);

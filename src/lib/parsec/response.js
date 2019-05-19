@@ -52,11 +52,11 @@ class ParserResponse {
         return false; //overridden by Accept
     }
 
-    getOffset(){
+    getOffset() {
         return this.offset;
     }
 
-    location(){
+    location() {
         return this.input.location(this.getOffset());
     }
 
@@ -71,7 +71,7 @@ class ParserResponse {
 /**
  * Reject response class
  */
-class Reject extends ParserResponse  {
+class Reject extends ParserResponse {
     constructor(input, offset, consumed) {
         super(input, offset, consumed);
     }
@@ -94,14 +94,14 @@ class Reject extends ParserResponse  {
 
     // Response 'a 'c => ('a -> bool) -> Response 'b 'c
     filter() {
-        return new Reject(this.input,this.offset, false);
+        return new Reject(this.input, this.offset, false);
     }
 }
 
 /**
  * Accept response class
  */
-class Accept extends ParserResponse  {
+class Accept extends ParserResponse {
     constructor(value, input, offset, consumed) {
         super(input, offset, consumed);
         this.value = value;
@@ -151,4 +151,4 @@ const response = {accept, reject};
 
 export default response;
 
-export {accept,reject}
+export {accept, reject}

@@ -5,8 +5,7 @@
  * Copyright (c) 2016 Didier Plaindoux
  * Licensed under the LGPL2 license.
  */
-import F from './flow-bundle';
-import {string} from './flow-bundle';
+import F, {string} from './flow-bundle';
 
 const ASCII_LETTER = Symbol('ASCII');
 const OCCIDENTAL_LETTER = Symbol('OCCIDENTAL');
@@ -46,8 +45,8 @@ function letter(symbol = null) {
     }
 
     throw 'Parameter ' +
-        symbol.toString() +
-        ' has wrong type : Should be C.OCCIDENTAL_LETTER, C.ASCII_LETTER or C.UTF8_LETTER';
+    symbol.toString() +
+    ' has wrong type : Should be C.OCCIDENTAL_LETTER, C.ASCII_LETTER or C.UTF8_LETTER';
 }
 
 function utf8Letter() {

@@ -290,7 +290,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.digit().parse(stream.ofString('1'), 0).isAccepted(),
+            N.digit.parse(stream.ofString('1'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -301,7 +301,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.digit().parse(stream.ofString('a'), 0).isAccepted(),
+            N.digit.parse(stream.ofString('a'), 0).isAccepted(),
             false,
             'should be rejected.'
         );
@@ -312,7 +312,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('123'), 0).isAccepted(),
+            N.number.parse(stream.ofString('123'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -323,7 +323,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('123'), 0).value,
+            N.number.parse(stream.ofString('123'), 0).value,
             123,
             'should be accepted.'
         );
@@ -334,7 +334,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('-123'), 0).isAccepted(),
+            N.number.parse(stream.ofString('-123'), 0).isAccepted(),
             true,
             'should be accepted.'
         );
@@ -345,7 +345,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('-123'), 0).value,
+            N.number.parse(stream.ofString('-123'), 0).value,
             -123,
             'should be accepted.'
         );
@@ -356,7 +356,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.number()
+            N.number
                 .parse(stream.ofString('123.34e-34'), 0)
                 .isAccepted(),
             true,
@@ -369,7 +369,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('123.34e-34'), 0).value,
+            N.number.parse(stream.ofString('123.34e-34'), 0).value,
             123.34e-34,
             'should be accepted.'
         );
@@ -549,9 +549,9 @@ export default {
         const string = '2+2';
         const expected = [2, '+', 2];
 
-        const parsing = N.number()
+        const parsing = N.number
             .then(C.char('+'))
-            .then(N.number()).array()
+            .then(N.number).array()
             .parse(stream.ofString(string), 0);
 
         test.deepEqual(parsing.value, expected, 'should be equal');
@@ -565,9 +565,9 @@ export default {
         const string = '2+2';
         const expected = [];
 
-        const parsing = N.number()
+        const parsing = N.number
             .then(C.char('+'))
-            .then(N.number())
+            .then(N.number)
             .returns([])
             .parse(stream.ofString(string), 0);
 
