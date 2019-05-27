@@ -50,7 +50,7 @@ You will find an [Masala Parser online reference](http://www.robusta.io/masala-p
 ```js
 const helloParser = C.string('hello');
 const white = C.char(' ');
-const worldParser = C.char('world');
+const worldParser = C.string('world');
 const combinator = helloParser.then(white.rep()).then(worldParser);
 ``` 
 
