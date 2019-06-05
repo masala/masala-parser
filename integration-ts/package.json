@@ -11,7 +11,7 @@
     "typescript": "3.2.4"
   },
   "scripts": {
-    "test": "ts-node ./examples/index.ts",
+    "test": "rm -r examples/*.js && rm -r examples/*.map && ts-node ./examples/index.ts",
     "specific": "ts-node ./examples/markdown/test/markdown-tests.ts"
   },
   "author": "",
