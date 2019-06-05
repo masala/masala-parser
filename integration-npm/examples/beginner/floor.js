@@ -3,8 +3,9 @@ const {assertEquals} = require('../../assert');
 
 const stream = Streams.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
-    .then(N.numberLiteral())    // we have ['|',4.6], we keep 4.6
+    .then(N.number())    // we have ['|',4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
+    .single()
     .map(x =>Math.floor(x));
 
 // Parsec needs a stream of characters

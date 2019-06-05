@@ -40,12 +40,13 @@ Usually, you would **NOT** create a Parser from its constructor. You will combin
 * the `parseFunction` function will determine the behaviour of the Parser
 
 
+Here is an example of a home-made parser for going back after an Accept: [https://github.com/d-plaindoux/masala-parser/issues/138#issuecomment-49162720 5]
+
 # Essential Parser functions
 
 ### then
 
-* difficulty : 1
-* Construct an array of values from previous accepted values
+* Construct a Tuple of values from previous accepted values
 
 ```js
 
@@ -66,7 +67,7 @@ assertEquals(parsing.value, 'abc');
 ```js
 const stream = Streams.ofString('|4.6|');
 const floorCombinator = C.char('|').drop()
-    .then(N.numberLiteral())    // we have ['|',4.6], we keep 4.6
+    .then(N.number())    // we have ['|',4.6], we keep 4.6
     .then(C.char('|').drop())   // we have [4.6, '|'], we keep 4.6
     .map(x =>Math.floor(x));
 
@@ -95,7 +96,7 @@ const combinator = N.integer()
 assertEquals(combinator.parse(stream).value, 40)
 ```
 
-### thenReturns(value)
+### returns(value)
 
 * difficulty : 1
 * Forces the value at a given point
@@ -293,57 +294,4 @@ TODO : Is it possible to have a value for this error ? It would give a
 * If predicate is false, the element is not consumed
 
  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

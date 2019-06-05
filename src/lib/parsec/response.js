@@ -48,7 +48,7 @@ class ParserResponse {
         );
     }
 
-    isConsumed() {
+    isEos() {
         return false; //overridden by Accept
     }
 
@@ -107,7 +107,7 @@ class Accept extends ParserResponse  {
         this.value = value;
     }
 
-    isConsumed() {
+    isEos() {
         return this.input.endOfStream(this.offset);
     }
 
@@ -150,3 +150,5 @@ const reject = (input, offset, consumed) => new Reject(input, offset, consumed);
 const response = {accept, reject};
 
 export default response;
+
+export {accept,reject}

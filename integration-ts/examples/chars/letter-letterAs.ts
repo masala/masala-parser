@@ -1,5 +1,5 @@
-import {Streams, F, C, Option, N, SingleParser} from '@masala/parser'
-import {assertFalse, assertTrue} from '../../assert';
+import {Streams, F, C} from '@masala/parser'
+import {assertTrue} from '../../assert';
 
 
 const string = 'The quick brown fox jumps over the lazy dog';

@@ -217,7 +217,7 @@ export default {
         // tests here
         const myStream = stream.ofString('abc');
         const acceptance = response.accept('c', myStream, 3, false);
-        const consumed = acceptance.isConsumed();
+        const consumed = acceptance.isEos();
         test.equal(
             consumed,
             true,
@@ -230,7 +230,7 @@ export default {
         // tests here
         const myStream = stream.ofString('abc');
         test.equal(
-            response.accept('b', myStream, 2, false).isConsumed(),
+            response.accept('b', myStream, 2, false).isEos(),
             false,
             'should be consumed'
         );
@@ -252,7 +252,7 @@ export default {
         test.expect(1);
         // tests here
         test.equal(
-            response.reject().isConsumed(),
+            response.reject().isEos(),
             false,
             'should be not consumed.'
         );

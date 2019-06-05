@@ -8,6 +8,7 @@
 
 import Parser, {eos} from './parser';
 import response from './response';
+import {NEUTRAL, Tuple} from "../data/tuple";
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
 function parse(p) {
@@ -38,8 +39,10 @@ function returns(v) {
 
 // unit -> Parser 'a 'c
 function error() {
-    return new Parser((input, index = 0) =>
-        response.reject(input, index, false)
+    return new Parser((input, index = 0) => {
+            // TODO: add an optional logger parameter, and log
+            return response.reject(input, index, false)
+        }
     );
 }
 
@@ -66,13 +69,28 @@ function doTry(p) {
             .fold(
                 accept => accept,
                 // Compared to satisfy, we come back to initial offset
-                reject => {
-                    // FIXME: better ES6 hnadling
-                    return response.reject(input, reject.offset , false)
-                }
+                reject =>  response.reject(input, reject.offset , false)
+
             )
     );
 }
+
+function layer(p) {
+    return new Parser((input, index = 0) =>
+        p
+            .parse(input, index)
+            .fold(
+                accept => {
+                    // TODO logger
+
+                    return response.accept(new Tuple().append(accept.value), input, index, false)
+                },
+                        // Compared to satisfy, we come back to initial offset
+                reject =>  reject
+            )
+    );
+}
+
 
 // unit -> Parser 'a 'c
 function any() {
@@ -82,7 +100,7 @@ function any() {
 // unit -> Parser 'a 'c
 function nop() {
     return new Parser((input, index = 0) =>
-        response.accept([], input, index, true)
+        response.accept(NEUTRAL, input, index, true)
     );
 }
 
@@ -98,7 +116,7 @@ function subStream(length) {
 
 
 function startWith(value) {
-    return nop().thenReturns(value);
+    return nop().returns(value);
 }
 
 function moveUntil(stop) {
@@ -110,9 +128,12 @@ function moveUntil(stop) {
         return searchArrayStringStart(stop);
     }
 
-    return doTry(not(stop).rep().then(eos()).thenReturns(undefined))
+    // TODO: change undefined by a Symbol
+    // TODO: for better performance, maybe check in the map if the symbol is included, and remove the or
+    const foundEos = Symbol('found-eos');
+    return doTry(not(stop).rep().then(eos()).returns(foundEos))
         .or(not(stop).rep().map(chars => chars.join('')))
-        .filter(v => v !== undefined);
+        .filter(v => v !== foundEos);
 }
 
 function dropTo(stop) {
@@ -130,6 +151,7 @@ export default {
     any,
     subStream,
     not: not,
+    layer,
     lazy,
     returns,
     error,

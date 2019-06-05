@@ -5,16 +5,18 @@ const {assertEquals} = require('../../integration-npm/assert');
 const blanks = ()=>C.char(' ').optrep();
 
 function operator(symbol) {
-    return blanks().thenRight(C.char(symbol)).thenLeft(blanks());
+    return blanks().thenRight(C.char(symbol)).thenLeft(blanks()).single();
 }
 
 function sum() {
     return N.integer().thenLeft(operator('+')).then(N.integer())
+        .array()
         .map(values => values[0] + values[1]);
 }
 
 function multiplication() {
     return N.integer().thenLeft(operator('*')).then(N.integer())
+        .array()
         .map(values => values[0] * values[1]);
 }
 

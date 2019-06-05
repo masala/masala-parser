@@ -12,11 +12,9 @@ function B(){
 
 
 let hasException =false;
-console.log('=== Building Parser ====');
 
 try {
     const parser = A();
-    console.log('=== GETTING THERE ====');
 } catch (error) {
     hasException = true;
 }

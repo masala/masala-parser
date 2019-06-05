@@ -2,7 +2,7 @@
   "name": "@masala/parser",
   "description": "Masala Parser",
   "license": "LGPL-2.1",
-  "version": "0.8.0-rc1",
+  "version": "0.8.1",
   "keywords": [
     "parser",
     "parsec",
@@ -58,10 +58,11 @@
     "coveralls": "cat ./coverage/istanbul/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "check": "npm run lint && npm run test && npm run cover",
     "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",
-    "dist": "rimraf dist/ && mkdirp dist && npm run test && browserify -t uglifyify build/lib/index.js --standalone masala-parser -o dist/masala-parser.min.js",
-    "copy-to-ts":"",
-    "prepublish": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
-    "postpublish": "cd integration-npm && rimraf node_modules && sleep 5 && npm install && node integrate.js"
+    "dist": "rimraf dist/ && mkdirp dist && npm run test && browserify -t uglifyify build/lib/index.js --standalone masalaParser -o dist/masala-parser.min.js",
+    "integrate": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
+    "copy-ts": "npm run compile && node tasks/copy-to-ts",
+    "integration": "npm run copy-ts && cd integration-ts && npm run test",
+    "doc":"typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",
@@ -78,6 +79,8 @@
     "prettier": "^1.3.1",
     "prettier-eslint-cli": "^3.4.3",
     "rimraf": "^2.6.1",
+    "rmfr": "^2.0.0",
+    "typedoc": "^0.13.0",
     "uglifyify": "^3.0.2"
   }
 }

@@ -38,11 +38,11 @@ function terminal() {
 }
 
 function negative() {
-    return minus.drop().then(F.lazy(terminal)).map(x => -x);
+    return minus.drop().then(F.lazy(terminal)).single().map(x => -x);
 }
 
 function parenthesis() {
-    return open.drop().then(F.lazy(expression)).then(close.drop())
+    return open.drop().then(F.lazy(expression)).then(close.drop()).single()
 }
 
 function expression() {
@@ -59,6 +59,7 @@ function optYieldExpr(left) {
 function yieldExpr(left) {
     return yieldToken()
         .then(priorExpr())
+        .array()
         .map(([token, right]) =>
             token === '+' ? left + right : left - right)
         .flatMap(optYieldExpr);
@@ -78,6 +79,7 @@ function optSubPriorExp(priorValue) {
 function subPriorExpr(priorValue) {
 
     return priorToken().then(terminal())
+        .array()
         .map(([token, left]) => token === '*' ? priorValue * left : priorValue / left)
         .flatMap(optSubPriorExp)
 }
@@ -87,7 +89,7 @@ function multParser() {
 
     const parser = expression();
 
-    return genlex.use(parser.then(F.eos().drop()));
+    return genlex.use(parser.then(F.eos().drop()).single());
 }
 
 export default {

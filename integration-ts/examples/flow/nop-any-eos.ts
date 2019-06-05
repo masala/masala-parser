@@ -1,13 +1,10 @@
 import {Streams, F, C} from '@masala/parser'
-import {assertFalse, assertTrue} from '../../assert';
+import { assertTrue} from '../../assert';
 
 function day() {
     return C.stringIn(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']);
 }
 
-function a(){
-    return C.char('a');
-}
 
 const string = '-MONDAY-';
 
@@ -21,5 +18,5 @@ let stream = Streams.ofString(string);
 let parsing = combinator().parse(stream);
 
 assertTrue(parsing.isAccepted());
-assertTrue(parsing.isConsumed());
+assertTrue(parsing.isEos());
 

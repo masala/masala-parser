@@ -360,6 +360,7 @@ export default {
         // tests here
         const parsing = C.letters()
             .thenLeft(F.eos())
+            .single()
             .parse(Streams.ofString('someLetters'), 0);
         test.equal(parsing.isAccepted(), true, 'should be accepted.');
         test.deepEqual(parsing.value, 'someLetters', 'should be equal.');
@@ -394,6 +395,7 @@ export default {
         // tests here
         const parsing = C.letters()
             .thenLeft(F.eos())
+            .single()
             .parse(Streams.ofString('someLetters'), 0);
         test.equal(parsing.value, 'someLetters', 'not a string');
         test.done();
@@ -578,6 +580,19 @@ export default {
         test.ok(C.emoji().then(F.eos()).parse(Streams.ofString('🥪')).isAccepted());
         test.done();
     },
+
+    'expect subString to works':function(test){
+        let stream = Streams.ofString('James Bond');
+        let parser = C.subString(6).then(C.string('Bond'));
+
+        const response = parser.parse(stream);
+        test.deepEqual(['James ', 'Bond'], response.value.array()); // Unlike F.subStream, C.subString joins result
+
+        test.ok(response.isEos());
+        test.done()
+
+
+    }
 
 
 };

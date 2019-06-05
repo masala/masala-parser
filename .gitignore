@@ -10,3 +10,5 @@ coverage
 *.iml
 **/parser-combinator.js
 **/parser-combinator.min.js
+
+quick-test*

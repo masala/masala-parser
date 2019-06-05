@@ -20,7 +20,7 @@ export default {
 
         const text = '+ + - --';
         const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isConsumed(), 'input is consumed');
+        test.ok(parsing.isEos(), 'input is consumed');
         test.equal(5, parsing.offset, 'there are 5 keywords');
         test.equal(8, parsing.input.location(parsing.offset), 'there are 8 chars')
         test.done()
@@ -40,7 +40,7 @@ export default {
         //            0  1  23
         const parsing = parser.parse(stream.ofString(text));
 
-        test.ok(! parsing.isConsumed(), 'an error should have occurred');
+        test.ok(! parsing.isEos(), 'an error should have occurred');
         test.equal(3, parsing.getOffset(), 'Failed at the third token');
         test.equal(7, parsing.location(), 'fail is not 3: it must be the char offset before the error');
 
@@ -59,13 +59,13 @@ export default {
 
     'expect tokenize() to add on definition': function (test) {
         const genlex = new GenLex();
-        genlex.tokenize(N.numberLiteral(), 'number', 500);
+        genlex.tokenize(N.number(), 'number', 500);
         test.ok(genlex.definitions.length === 1);
         test.done();
     },
     'expect use() to sort definitions by revert precedence': function (test) {
         const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkNumber = genlex.tokenize(N.number(), 'number');
         const tkDate = genlex.tokenize(date(), 'date', 800);
         const tkChar = genlex.tokenize(C.charLiteral(), 'char', 1200);
         let grammar = tkDate.then(tkNumber.rep().or(tkChar));
@@ -80,7 +80,7 @@ export default {
     'expect use() to create an easy tokenizer': function (test) {
 
         const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkNumber = genlex.tokenize(N.number(), 'number');
         let grammar = tkNumber.rep();
 
         const parser = genlex.use(grammar);
@@ -94,7 +94,7 @@ export default {
     'a Genlex can update its precedence': function (test) {
 
         const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.numberLiteral(), 'number');
+        const tkNumber = genlex.tokenize(N.number(), 'number');
         const tkDate = genlex.tokenize(date(), 'date', 800);
 
         let content = '10/05/2014 34 23';
@@ -125,14 +125,14 @@ export default {
 
     'tokenize mixes with keywords': function (test) {
         const genlex = new GenLex();
-        const number = genlex.tokenize(N.numberLiteral(), 'number');
+        const number = genlex.tokenize(N.number(), 'number');
         const plus = genlex.tokenize('+');
 
         let grammar = plus.or(number).rep().then(F.eos().drop());
         const parser = genlex.use(grammar);
         const text = '++77++4+';
         const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isConsumed(), 'tokenize mixes with keywords');
+        test.ok(parsing.isEos(), 'tokenize mixes with keywords');
         test.done()
     },
     'getMathGenLex() gives a simple genlex': function (test) {
@@ -183,7 +183,7 @@ export default {
 
         const parsing = parser.parse(stream.ofString(text));
 
-        test.ok(parsing.isConsumed());
+        test.ok(parsing.isEos());
         test.done()
 
     }, 'getMathGenLex can be enhanced with a string and no name': function (test) {
@@ -197,7 +197,7 @@ export default {
         const text = '15 $ ';
         const parsing = genlex.use(grammar).parse(stream.ofString(text));
 
-        test.ok(parsing.isConsumed());
+        test.ok(parsing.isEos());
         test.done()
 
     },
@@ -244,8 +244,7 @@ export default {
         let grammar = number.rep().then(F.eos().drop());
 
         const separatorParser = C.char('-')
-            .then(C.char('/').opt())
-            .optrep();
+            .then(C.char('/').opt());
 
         genlex.setSeparatorsParser(separatorParser);
         const text = '15-12-/35--10';
@@ -288,9 +287,9 @@ export default {
 function date() {
 
     return N.digits()
-        .then(C.charIn('-/').thenReturns('-'))
+        .then(C.charIn('-/').returns('-'))
         .then(N.digits())
-        .then(C.charIn('-/').thenReturns('-'))
+        .then(C.charIn('-/').returns('-'))
         .then(N.digits())
         .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
         .map(dateArray => dateArray.join(''));

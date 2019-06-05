@@ -7,6 +7,11 @@
  */
 
 /**
+ * Need a reference object in memory for uniqueness. Symbols causes troubles.
+ */
+const empty = {__MASALA_EMPTY__:'empty'};
+
+/**
  * Private class Option, accessible from someOrNone() or none()
  */
 class Option {
@@ -15,7 +20,7 @@ class Option {
     }
 
     isPresent() {
-        return this.value !== null && this.value !== undefined;
+        return this.value !== empty;
     }
 
     map(bindCall) {
@@ -41,7 +46,7 @@ class Option {
 
         // equivalent of return none() without cyclic creation
         // eslint : no-use-before-define
-        return new Option();
+        return new Option(empty);
     }
 
     get() {
@@ -70,7 +75,7 @@ function someOrNone(value) {
 }
 
 function none() {
-    return new Option();
+    return new Option(empty);
 }
 
 export default {
