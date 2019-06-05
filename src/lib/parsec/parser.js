@@ -108,7 +108,11 @@ export default class Parser {
                 return input.endOfStream(accept.offset)?
                     response.accept(accept.value, accept.input, accept.offset, true):
                     response.reject(accept.input, accept.offset, accept.consumed)
-            })
+            },
+                reject =>
+                    response.reject(
+                        reject.input, reject.offset, reject.consumed
+                    ))
         );
 
     }
