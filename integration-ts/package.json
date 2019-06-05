@@ -4,7 +4,7 @@
   "description": "used to test npm publications",
   "main": "index.js",
   "dependencies": {
-    "@masala/parser": "0.7.0"
+    "@masala/parser": "0.8.1"
   },
   "devDependencies": {
     "ts-node": "8.1.0",

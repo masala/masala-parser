@@ -1,6 +1,12 @@
 Changelog
 ====
 
+0.8.1: better ts support
+---
+
+Minor change on ts and bug fix 
+
+
 0.7 ->0.8: Using Tuples with then
 ---
 

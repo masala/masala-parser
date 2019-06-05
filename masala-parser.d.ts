@@ -402,6 +402,18 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      */
     last(): SingleParser<T>;
 
+    first():SingleParser<T>;
+
+    /**
+     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     */
+    rep(): TupleParser<T>;
+
+    /**
+     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     */
+    optrep(): TupleParser<T>;
+
 
 }
 
@@ -435,6 +447,16 @@ export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
 
 
     opt(): SingleParser<Option<MASALA_VOID_TYPE>>;
+
+    /**
+     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     */
+    rep(): TupleParser<MASALA_VOID_TYPE>;
+
+    /**
+     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     */
+    optrep(): TupleParser<MASALA_VOID_TYPE>;
 }
 
 export interface SingleParser<T> extends IParser<T> {
@@ -462,6 +484,16 @@ export interface SingleParser<T> extends IParser<T> {
 
 
     opt(): SingleParser<Option<T>>
+
+    /**
+     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     */
+    rep(): TupleParser<T>;
+
+    /**
+     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     */
+    optrep(): TupleParser<T>;
 }
 
 
@@ -593,12 +625,12 @@ export interface IParser<T> {
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
      */
-    rep(): TupleParser<T>;
+    rep(): TupleParser<any>;
 
     /**
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
      */
-    optrep(): TupleParser<T>;
+    optrep(): TupleParser<any>;
 
 
     /**
