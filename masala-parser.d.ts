@@ -402,6 +402,8 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      */
     last(): SingleParser<T>;
 
+    first():SingleParser<T>;
+
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
      */
