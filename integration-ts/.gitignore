@@ -1,3 +1,5 @@
 *.js
 #!/examples/beginner/chars.ts
 !/examples/**/*.ts
+
+*.map
