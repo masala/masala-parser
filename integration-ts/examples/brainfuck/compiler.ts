@@ -120,10 +120,6 @@ function interpret(instruction: Instruction) {
                 interpretAll(loop.values);
             }
             break;
-
-        case undefined: // We have reached the end of the program
-
-            break;
         default: // We ignore any character that are not part of regular Brainfuck syntax
             break;
 

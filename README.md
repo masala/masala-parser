@@ -50,7 +50,7 @@ You will find an [Masala Parser online reference](http://www.robusta.io/masala-p
 ```js
 const helloParser = C.string('hello');
 const white = C.char(' ');
-const worldParser = C.char('world');
+const worldParser = C.string('world');
 const combinator = helloParser.then(white.rep()).then(worldParser);
 ``` 
 
@@ -379,7 +379,7 @@ Others:
 
 ## License
 
-Copyright (C)2016-2019 D. Plaindoux.
+Copyright (C)2016-2019 Didier Plaindoux & Nicolas Zozol
 
 This program is  free software; you can redistribute  it and/or modify
 it  under the  terms  of  the GNU  Lesser  General  Public License  as

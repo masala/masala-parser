@@ -11,7 +11,7 @@ const string = '-MONDAY-';
 
 
 function combinator() {
-    return F.any().then(day()).then(F.nop()).then(F.any()).thenEos();
+    return F.any().then(day()).then(F.nop()).then(F.any()).eos();
 }
 
 let stream = Streams.ofString(string);
