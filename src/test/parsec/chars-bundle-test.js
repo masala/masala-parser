@@ -374,7 +374,7 @@ export default {
             .then(F.eos())
             .parse(Streams.ofString('some Letters'), 0);
         test.equal(parsing.isAccepted(), false, 'should be rejected.');
-        test.notDeepEqual(parsing.value, 'some Letters', 'should be equal.');
+        test.equal(parsing.offset, 4);
         test.done();
     },
 

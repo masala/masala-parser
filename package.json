@@ -65,11 +65,12 @@
     "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts"
   },
   "devDependencies": {
-    "babel-cli": "^6.10.1",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.10.4",
     "babel-eslint": "^6.1.2",
     "babel-istanbul": "^0.12.2",
     "babel-preset-es2015": "^6.9.0",
+    "coveralls": "^3.0.6",
     "eslint": "^3.3.0",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
@@ -78,7 +79,6 @@
     "prettier-eslint-cli": "^3.4.3",
     "rimraf": "^2.6.1",
     "rmfr": "^2.0.0",
-    "typedoc": "0.14.2",
-    "uglifyify": "^3.0.2"
+    "typedoc": "^0.15.0"
   }
 }
