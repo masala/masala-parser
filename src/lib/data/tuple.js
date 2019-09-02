@@ -67,7 +67,7 @@ export class Tuple {
 
 
 export function isTuple(object) {
-    return object && object.constructor && object.constructor.name === 'Tuple';
+    return object instanceof Tuple;
 }
 
 export function tuple(array){
