@@ -24,7 +24,7 @@ Masala Parser is a Javascript implementation of the Haskell **Parsec**.
 Masala Parser keywords are **simplicity**, **variations** and **maintainability**. You won't
 need theoretical bases on languages for extraction or validation use cases.
 
-Masala Parser has relatively good performances, however Javascript is obviously not the fastest machine.
+Masala Parser has relatively good performances, however, Javascript is obviously not the fastest machine.
 
 # Usage
 
@@ -84,7 +84,7 @@ Let's say we have a document :
 
 >>> The James Bond series, by writer Ian Fleming, focuses on a fictional British Secret Service agent created in 1953, who featured him in twelve novels and two short-story collections. Since Fleming's death in 1964, eight other authors have written authorised Bond novels or novelizations: Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz.
 
-The parser could fetch every names, ie two consecutive words starting with uppercase. 
+The parser could fetch every name, ie two consecutive words starting with uppercase. 
 The parser will read through the document and aggregate a Response,
  which contains a value and the current offset in the text.
 
@@ -144,7 +144,7 @@ For simplicity, we will use a stream of characters, which is a text :)
 
 ## Hello Gandhi
 
-The goal is check that we have Hello 'someone', then to grab that name
+The goal is to check that we have Hello 'someone', then to grab that name
 
 ```js
 // Plain old javascript
@@ -165,7 +165,7 @@ assertEquals('Gandhi', value);
 
 # Parser Combinations
 
-Let's use a real example. We combine many functions that returns a new Parser. And each new Parser
+Let's use a real example. We combine many functions that return a new Parser. And each new Parser
 is a combination of Parsers given by the standard bundles or previous functions.
 
 ```js
@@ -215,7 +215,7 @@ assertEquals(6, parseOperation('2 * 3').value, 'multiplication: ');
 assertEquals(8, parseOperation('8').value, 'scalar: ');
 ```
 
-A curry paste is an higher order ingredient made from a good combination of spices.
+A curry paste is a higher-order ingredient made from a good combination of spices.
 
 ![](./documentation/images/curry-paste.jpg)
 
@@ -346,7 +346,7 @@ C.string('Hello')
 
 The flow bundle will mix ingredients together.
 
-For example if you have a Parser `p`, `F.not(p)` will accept anything
+For example, if you have a Parser `p`, `F.not(p)` will accept anything
 that does not satisfy `p`
 
 All of these functions will return a brand new Parser that you can combine with others.
@@ -392,6 +392,6 @@ MERCHANTABILITY  or FITNESS  FOR  A PARTICULAR  PURPOSE.  See the  GNU
 Lesser General Public License for more details.
 
 You  should have  received a  copy of  the GNU  Lesser General  Public
-License along with  this program; see the file COPYING.  If not, write
+License along with this program; see the file COPYING.  If not, write
 to the  Free Software Foundation,  675 Mass Ave, Cambridge,  MA 02139,
 USA.
