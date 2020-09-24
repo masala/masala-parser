@@ -4,7 +4,6 @@
 export interface Unit {
 }
 
-
 /**
  * Represents an Option/Optional/Maybe/Either type
  */
@@ -14,7 +13,6 @@ export interface Option<T> {
      * The inner value wrapped by the Option
      */
     value: T;
-
 
     /**
      * Returns true if value is present
@@ -33,12 +31,12 @@ export interface Option<T> {
      */
     flatMap<Y>(bindCall: (y: Y) => Option<Y>): Option<Y>;
 
-    filter(f: (value: T) => boolean): T | Option<T>
+    filter(f: (value: T) => boolean): T | Option<T>;
 
     /**
      * Returns the inner value when present.
      */
-    get(): T
+    get(): T;
 
     /**
      * Returns the inner value or another one
@@ -64,7 +62,7 @@ export interface Option<T> {
 export interface Try<V, E> {
     isSuccess(): boolean;
 
-    isFailure(): boolean
+    isFailure(): boolean;
 
     /**
      * Acts like a mapper called only in case of success
@@ -115,7 +113,7 @@ export interface Try<V, E> {
      * AND is the predicate is accepted on the value
      * @param f
      */
-    filter(predicate: (value: V) => boolean): Try<V, E>
+    filter(predicate: (value: V) => boolean): Try<V, E>;
 
 }
 
@@ -130,7 +128,7 @@ export interface Tuple<T> {
     /**
      * Wrapped array
      */
-    value:T[]
+    value: T[];
 
     isEmpty: boolean;
     /**
@@ -162,23 +160,23 @@ export interface Tuple<T> {
      * ```
      * See [[single]]
      */
-    array(): Array<T>
+    array(): T[];
 
     /**
      * Returns the last element of the Tuple
      */
-    last():T;
+    last(): T;
 
     /**
      * Returns the first element of the Tuple
      */
-    first():T;
+    first(): T;
 
     /**
      * Returns value at index
      * @param index
      */
-    at(index:number): T;
+    at(index: number): T;
 
     /**
      * Join elements as one string joined by optional separator (ie empty '' separator by default)
@@ -210,7 +208,7 @@ export interface Tuple<T> {
  *
  * `const t = tuple([2, 4, 5])`;
  */
-export function tuple<T>(array?:T[]);
+export function tuple<T>(array?: T[]): Tuple<T>;
 
 /**
  * Represents a **source** of data that will be parsed.
@@ -237,7 +235,7 @@ export interface Stream<Data> {
      */
     get(index: number): Try<Data, void>;
 
-    subStreamAt(index: number, stream: Stream<Data>)
+    subStreamAt(index: number, stream: Stream<Data>): any;
 
 }
 
@@ -247,7 +245,7 @@ export interface Stream<Data> {
 interface Streams {
     ofString(string: string): Stream<string>;
 
-    ofArray<X>(): Stream<Array<X>>;
+    ofArray<X>(): Stream<X[]>;
 
     ofParser<T, D>(tokenParser: IParser<T>, lowerStream: Stream<D>): Stream<IParser<T>>;
 
@@ -270,14 +268,19 @@ export interface Response<T> {
     value: T;
 
     /**
+     * Index in the stream. See [[location]].
+     */
+    offset: number;
+
+    /**
      * True if the parser succeed all steps, false if parser stopped
      */
-    isAccepted(): boolean
+    isAccepted(): boolean;
 
     /**
      * Returns true if parser has reached end of stream to build the Response
      */
-    isEos(): boolean
+    isEos(): boolean;
 
     /**
      * Execute accept if response in an Accept, or reject and create a new
@@ -285,13 +288,13 @@ export interface Response<T> {
      * @param accept
      * @param reject
      */
-    fold(accept:()=>Response<T>, reject?:()=>Response<T>): Response<T>;
+    fold(accept: () => Response<T>, reject?: () => Response<T>): Response<T>;
 
     /**
      * Transform the response **in case of** success. Won't touch a Reject.
      * @param f
      */
-    map<Y>(f:(v:T)=>Y): Response<Y>;
+    map<Y>(f: (v: T) => Y): Response<Y>;
 
     /**
      * ```js
@@ -302,14 +305,9 @@ export interface Response<T> {
      *
      * @param f mapping function
      */
-    flatMap<Y>(f:(v:T)=>Response<Y>): Response<Y>;
+    flatMap<Y>(f: (v: T) => Response<Y>): Response<Y>;
 
-    filter(predicate: (value) => boolean): Response<T>;
-
-    /**
-     * Index in the stream. See [[location]].
-     */
-    offset: number;
+    filter(predicate: (value: any) => boolean): Response<T>;
 
     /**
      * Index in the final text. Is equal to
@@ -322,17 +320,13 @@ export interface Response<T> {
  * Response rejected. Can be transformed in
  * `Accept` using [[fold]]
  */
-export interface Reject<T> extends Response<T>{
+export interface Reject<T> extends Response<T> {
 
 }
 
-export interface Accept<T> extends Response<T>{
+export interface Accept<T> extends Response<T> {
 
 }
-
-
-
-
 
 /* Array with different values*/
 export interface TupleParser<T> extends IParser<Tuple<T>> {
@@ -352,11 +346,9 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
-
-
     or(other: TupleParser<T>): TupleParser<T>;
-    or<Y>(other: TupleParser<Y>): TupleParser<T>|TupleParser<Y>;
-    or<T, P extends IParser<T>>(other: P): VoidParser|P;
+    or<Y>(other: TupleParser<Y>): TupleParser<T> | TupleParser<Y>;
+    or<T, P extends IParser<T>>(other: P): VoidParser | P;
 
     /**
      * Map the response value as an array
@@ -369,8 +361,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * ```
      *
      */
-    array(): SingleParser<T[]>
-
+    array(): SingleParser<T[]>;
 
     /**
      * Map the response value as the **first** Tuple element.
@@ -402,7 +393,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      */
     last(): SingleParser<T>;
 
-    first():SingleParser<T>;
+    first(): SingleParser<T>;
 
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
@@ -413,7 +404,6 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
      */
     optrep(): TupleParser<T>;
-
 
 }
 
@@ -441,10 +431,8 @@ export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
     then<Y>(p: SingleParser<Y>): TupleParser<Y>;
     then<Y>(p: IParser<Y>): TupleParser<Y>;
 
-
     or(other: VoidParser): VoidParser;
-    or<T, P extends IParser<T>>(other: P): VoidParser|P;
-
+    or<T, P extends IParser<T>>(other: P): VoidParser | P;
 
     opt(): SingleParser<Option<MASALA_VOID_TYPE>>;
 
@@ -475,15 +463,13 @@ export interface SingleParser<T> extends IParser<T> {
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
-
     or(other: SingleParser<T>): SingleParser<T>;
-    or<Y>(other: SingleParser<Y>): SingleParser<T|Y>;
+    or<Y>(other: SingleParser<Y>): SingleParser<T | Y>;
     or(other: TupleParser<T>): TupleParser<T>;
-    or<Y>(other: TupleParser<Y>): TupleParser<Y>|TupleParser<T>;
-    or<Y, P extends IParser<Y>>(other: P): SingleParser<T>|P;
+    or<Y>(other: TupleParser<Y>): TupleParser<Y> | TupleParser<T>;
+    or<Y, P extends IParser<Y>>(other: P): SingleParser<T> | P;
 
-
-    opt(): SingleParser<Option<T>>
+    opt(): SingleParser<Option<T>>;
 
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
@@ -495,7 +481,6 @@ export interface SingleParser<T> extends IParser<T> {
      */
     optrep(): TupleParser<T>;
 }
-
 
 /**
  * Parsers are most of the time made by combination of Parsers given by
@@ -517,7 +502,7 @@ export interface IParser<T> {
      * Parses the text and returns the value, or **undefined** if parsing has failed.
      * @param text text to parse
      */
-    val(text:string):T
+    val(text: string): T;
 
     /**
      * Creates a sequence of tokens accepted by the parser
@@ -530,9 +515,6 @@ export interface IParser<T> {
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): TupleParser<T | Y>;
 
-
-
-
     /**
      * Transforms the Response value
      *
@@ -544,7 +526,7 @@ export interface IParser<T> {
      *
      * @param f
      */
-    map<Y>(f: (value:T) => Y): SingleParser<Y>;
+    map<Y>(f: (value: T) => Y): SingleParser<Y>;
 
     /**
      * Create a new parser value *knowing* the current parsing value
@@ -595,16 +577,14 @@ export interface IParser<T> {
      * Filtering a rejected parser will always results in a rejected response.
      * @param predicate : predicate applied on the response value
      */
-    filter(predicate: (value:T) => boolean): this
-
-
+    filter(predicate: (value: T) => boolean): this;
 
     /**
      * If this parser is not accepted, the other will be used. It's often use with `F.try()` to
      * make backtracking.
      * @param other
      */
-    or<Y, P extends IParser<Y>>(other: P): IParser<T>|IParser<Y>;
+    or<Y, P extends IParser<Y>>(other: P): IParser<T> | IParser<Y>;
 
     /**
      * If all parsers are accepted, the response value will be a Tuple of these values.
@@ -613,14 +593,13 @@ export interface IParser<T> {
      * @param p
      */
     and<P extends IParser<T>>(p: P): TupleParser<T>;
-    and<Y, P extends IParser<Y>>(p: P): TupleParser<T|Y>;
+    and<Y, P extends IParser<Y>>(p: P): TupleParser<T | Y>;
 
     /**
      * When `parser()` is rejected, then `parser().opt()` is accepted with an empty Option as response value.
      * If `parser()` is accepted with a value `X`, then `parser().opt()` is accepted with an `Option.of(X)`
      */
-    opt(): IParser<Option<T>>
-
+    opt(): IParser<Option<T>>;
 
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
@@ -631,7 +610,6 @@ export interface IParser<T> {
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
      */
     optrep(): TupleParser<any>;
-
 
     /**
      * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
@@ -659,20 +637,19 @@ export interface IParser<T> {
      */
     chain<Y, P extends IParser<Y>>(highParser: P): P;
 
-
     /**
      * Accept the end of stream. If accepted, it will not change the response
      */
-    eos():this;
+    eos(): this;
 
 }
 
 /**
  * A `parseFunction` is a function that returns a parser. To build this parser at runtime, any params are available.
  */
-export type parseFunction<X,T> = (stream: Stream<X>, index?: number)=> Response<T>;
+export type parseFunction<X, T> = (stream: Stream<X>, index?: number) => Response<T>;
 
-interface Parser<T> extends IParser<T>{
+interface Parser<T> extends IParser<T> {
 
 }
 
@@ -680,15 +657,14 @@ interface Parser<T> extends IParser<T>{
  * Note: the documentation shows two parametric arguments `T` for `Parser<T,T>`, but it's really
  * one argument. Looks like the only tooling bug, but sadly on the first line.
  */
-export class Parser<T>{
-    new<D> (f:parseFunction<D,T>);
+export class Parser<T> {
+    new<D>(f: parseFunction<D, T>): Parser<T>;
 }
 
-
 interface CharBundle {
-    UTF8_LETTER: symbol,
-    OCCIDENTAL_LETTER: symbol,
-    ASCII_LETTER: symbol,
+    UTF8_LETTER: symbol;
+    OCCIDENTAL_LETTER: symbol;
+    ASCII_LETTER: symbol;
 
     /**
      * Accepts any letter, including one character emoji. Issue on two characters emoji
@@ -810,7 +786,7 @@ interface FlowBundle {
 
     subStream(length: number): VoidParser;
 
-    not<Y, P extends IParser<Y>>(P): SingleParser<any>;
+    not<Y, P extends IParser<Y>>(parser: P): SingleParser<any>;
 
     lazy<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>, args?: any[]): P;
 
@@ -820,7 +796,7 @@ interface FlowBundle {
 
     eos(): SingleParser<Unit>;
 
-    satisfy<V>(predicate: Predicate<V>): SingleParser<any>
+    satisfy<V>(predicate: Predicate<V>): SingleParser<any>;
 
     startWith<V>(value: V): SingleParser<V>;
 
@@ -858,21 +834,17 @@ interface Token<T> extends SingleParser<T> {
 
 }
 
-
-
 type TokenCollection = {
     [key: string]: Token<any>
+};
+
+export interface TokenResult<T> {
+    name: string;
+    value: T;
 }
-
-
-export interface TokenResult<T>{
-    name:string;
-    value:T
-}
-
 
 interface GenLex {
-    //TODO: make overload here
+    // TODO: make overload here
     /**
      *
      * @param parser parser of the token
@@ -887,7 +859,7 @@ interface GenLex {
 
     tokens(): TokenCollection;
 
-    setSeparators(spacesCharacters:string):GenLex;
+    setSeparators(spacesCharacters: string): GenLex;
 
     /**
      * Select the parser used by genlex. It will be used as `separator.optrep().then(token).then(separator.optrep())`.
@@ -895,7 +867,7 @@ interface GenLex {
      * The separation in your text can't be a strict one-time separation with Genlex.
      * @param parser
      */
-    setSeparatorsParser<T>(parser: IParser<T>):GenLex;
+    setSeparatorsParser<T>(parser: IParser<T>): GenLex;
 
     /**
      * Should separators be repeated ?
@@ -903,25 +875,22 @@ interface GenLex {
      * `separators.optrep().then(myToken()).then(separators.optrep())`
      * @param repeat default is true
      */
-    setSeparatorRepetition(repeat:boolean):GenLex;
+    setSeparatorRepetition(repeat: boolean): GenLex;
 
     /**
      * tonkenize all items, given them the name of the token
      * Exemple : keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
      * @param tokens
      */
-    keywords(tokens: string[]):Token<string>[];
+    keywords(tokens: string[]): Array<Token<string>>;
 
-    get(tokenName:string): Token<any>;
-
-
+    get(tokenName: string): Token<any>;
 
 }
 
-export class GenLex implements GenLex{
+export class GenLex implements GenLex {
 
 }
-
 
 export declare const F: FlowBundle;
 export declare const C: CharBundle;
