@@ -8,13 +8,6 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "environment": {
-    "node": true,
-    "es6": true
-  },
-  "ecmaFeatures": {
-    "modules": true
-  },
   "globals": {
     "define": true
   },
