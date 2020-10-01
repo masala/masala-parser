@@ -7,7 +7,7 @@ export default {
         done();
     },
 
-    'expect val to be a nice shortcut':function(test){
+    'expect val to be a nice shortcut': function (test) {
 
         const parser = C.string('xyz');
         const val = parser.val('xyz');
@@ -436,26 +436,24 @@ export default {
         );
         test.done();
     },
-
     'expect (eos) to be accepted at the end': function (test) {
 
 
         const parser = C.string('abc').eos();
 
-        const response =  parser.parse(stream.ofString('abc'));
+        const response = parser.parse(stream.ofString('abc'));
 
         test.ok(response.isAccepted(), 'should be accepted.');
         test.ok(response.isEos());
         test.equal(response.value, 'abc'); // not tuple([a]) !
         test.done();
     },
-/*
     'expect (eos) to be rejected without eating char': function (test) {
 
 
         const parser = C.char('a').eos();
 
-        const response =  parser.parse(stream.ofString('ab'));
+        const response = parser.parse(stream.ofString('ab'));
 
         test.ok(!response.isAccepted(), 'should not be accepted.');
         test.ok(!response.isEos());
@@ -463,7 +461,20 @@ export default {
         test.equal(response.value, undefined); // not tuple([a]) !
         test.done();
     },
-*/
+    'expect rejected (eos) to be rejected keeping previous offset': function (test) {
+
+
+        const parser = C.char('a').then(C.char('a')).eos();
+
+        // this will pass by the reject argument function of .eos()
+        const response = parser.parse(stream.ofString('ab is ending at 1'));
+
+        test.ok(!response.isAccepted(), 'should not be accepted.');
+        test.ok(!response.isEos());
+        test.equal(response.offset, 1);
+        test.equal(response.value, undefined); // not tuple([a]) !
+        test.done();
+    },
     'expect (thenEos) to be accepted at the end': function (test) {
         test.expect(1);
         // tests here
@@ -476,7 +487,8 @@ export default {
             'should be accepted.'
         );
         test.done();
-    }, 'expect (thenEos) to be rejected if not the end': function (test) {
+    },
+    'expect (thenEos) to be rejected if not the end': function (test) {
         test.expect(1);
         // tests here
         test.equal(
