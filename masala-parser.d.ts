@@ -782,6 +782,8 @@ interface FlowBundle {
 
     try<Y, P extends IParser<Y>>(parser: P): P;
 
+    tryAll(parsers: IParser<any>[]): IParser<any>;
+
     any(): SingleParser<any>;
 
     subStream(length: number): VoidParser;

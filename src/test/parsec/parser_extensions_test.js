@@ -286,6 +286,30 @@ export default {
         test.done();
     },
 
+    'expect chaining tries':function(test){
+
+        const p1 = C.char('1');
+        const p2 = C.char('2');
+        const p3 = C.string('33');
+        const parser = C.string("start").then(
+            F.try(p1).or(F.try(p2)).or(F.try(p3))
+        );
+
+        // should fail
+        let response = parser.parse(stream.ofString("start3"));
+        test.equal(response.isAccepted(), false)
+        test.equal(response.offset, 5);
+
+
+        // should succeed
+        response = parser.parse(stream.ofString("start2"));
+        test.equal(response.isAccepted(), true)
+        test.equal(response.offset, 6);
+
+        test.done()
+
+    },
+
     'expect (digit) to be accepted': function(test) {
         test.expect(1);
         // tests here

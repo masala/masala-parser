@@ -1,6 +1,7 @@
 import Streams from '../../lib/stream/index';
 import {F, C} from '../../lib/parsec/index';
 import {GenLex} from "../../lib";
+import stream from '../../lib/stream'
 
 let value = undefined;
 let accepted = undefined;
@@ -330,6 +331,29 @@ export default {
 
         test.equals(value.join(''), 'ababa');
         test.done();
+    },
+    'expect chaining tries':function(test){
+
+        const p1 = C.char('1');
+        const p2 = C.string('22');
+        const p3 = C.string('33');
+        const parser = C.string("start").then(
+            F.tryAll([p1,p2,p3])
+        );
+
+        // should fail
+        let response = parser.parse(stream.ofString("start3"));
+        test.equal(response.isAccepted(), false)
+        test.equal(response.offset, 5);
+
+
+        // should succeed
+        response = parser.parse(stream.ofString("start22"));
+        test.equal(response.isAccepted(), true)
+        test.equal(response.offset, 7);
+
+        test.done()
+
     },
 };
 
