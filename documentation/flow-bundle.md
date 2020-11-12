@@ -111,3 +111,27 @@ So it logically fails, and unfortunately these types of failures are pretty hard
 
 
 Moreover repeating an optional repeat can cause never-ending running code: https://github.com/d-plaindoux/masala-parser/issues/81
+
+
+F.try().or()
+----
+
+Masala is a low level library. It's up to you to mix these functions. It's very common for some kind
+of job to mix `F.try(x).or(F.try(y)).or(z)`
+
+A useful snippet is this `tryAll` function
+
+```javascript
+function tryAll(array){
+    if (array.length === 0){
+        return F.nop();
+    }
+    let parser = F.try(array[0]);
+    for (let i=1; i < array.length; i++){
+        parser  = parser.or(F.try(array[i]));
+    }
+
+    return parser;
+}
+```
+

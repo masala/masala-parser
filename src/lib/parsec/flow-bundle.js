@@ -75,19 +75,6 @@ function doTry(p) {
     );
 }
 
-
-function tryAll(array){
-    if (array.length === 0){
-        return nop();
-    }
-    let parser = doTry(array[0]);
-    for (let i=1; i < array.length; i++){
-        parser  = parser.or(doTry(array[i]));
-    }
-
-    return parser;
-}
-
 function layer(p) {
     return new Parser((input, index = 0) =>
         p
@@ -172,8 +159,7 @@ export default {
     satisfy,
     startWith,
     moveUntil,
-    dropTo,
-    tryAll
+    dropTo
 };
 
 /**Optimization functions */
