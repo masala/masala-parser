@@ -658,7 +658,7 @@ interface Parser<T> extends IParser<T> {
  * one argument. Looks like the only tooling bug, but sadly on the first line.
  */
 export class Parser<T> {
-    new<D>(f: parseFunction<D, T>): Parser<T>;
+    constructor(f: parseFunction<any, T>);
 }
 
 interface CharBundle {

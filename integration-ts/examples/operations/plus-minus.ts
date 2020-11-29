@@ -8,7 +8,7 @@ import {assertEquals} from "../../assert";
  E' -> + TE'  |  eps
  T -> F T'
  T' -> * FT'  |  eps
- F -> DAY | ( E )
+ F -> U | ( E )
 
  E== expr
  T == subExpr
