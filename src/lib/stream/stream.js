@@ -11,6 +11,7 @@ import atry from '../data/try';
 /**
  * Abstract methods:
  * - unsafeGet(index)
+ * - lineAt(offset)
  */
 class Stream {
     constructor() {}
@@ -44,6 +45,8 @@ class Stream {
 
         return true;
     }
+
+    lineAt(offset){return 0}
 }
 
 export default Stream;

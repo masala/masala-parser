@@ -66,6 +66,9 @@ class ParserResponse {
      *
      * flatMap is a specialization of fold
      */
+    line(){
+        return this.input.lineAt(this.getOffset())
+    }
 }
 
 /**
