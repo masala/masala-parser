@@ -45,8 +45,6 @@ class Stream {
 
         return true;
     }
-
-    lineAt(offset){return 0}
 }
 
 export default Stream;
