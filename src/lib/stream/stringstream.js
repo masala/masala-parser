@@ -28,7 +28,8 @@ class StringStream extends Stream {
 
     lineAt(offset){
         const str= this.source.substring(0, offset+1);
-        return (str.match(/\n/g) || '').length + 1
+        const res =  (str.match(/\n/g) || '').length + 1
+        return res;
     }
 }
 
