@@ -17,10 +17,10 @@ import jsonSampleTest from './standard/json/jsonsample_test';
 
 
 export {
-    parserTests,/*
+    parserTests,
     dataTests,
     streamTests,
     genlexTests,
     jsonParseTest,
-    jsonSampleTest*/
+    jsonSampleTest
 };

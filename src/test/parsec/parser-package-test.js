@@ -12,7 +12,7 @@ import tupleParserTest from './tuple-parser-test';
 import lineTest from './line-test';
 
 export default {
-   /* parserChainTest,
+    parserChainTest,
     parserCoreTest,
     parserCoreDefaultTest,
     parserExtensionTest,
@@ -22,6 +22,6 @@ export default {
     charsBundleTest,
     numberBundleTest,
     fLayerTest,
-    tupleParserTest,*/
+    tupleParserTest,
     lineTest
 }
