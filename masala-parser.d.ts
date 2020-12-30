@@ -294,7 +294,7 @@ export interface Response<T> {
      * Transform the response **in case of** success. Won't touch a Reject.
      * @param f
      */
-    map<Y>(f: (v: T) => Y): Response<Y>;
+    map<Y>(f: (v: T, r: readonly this) => Y): Response<Y>;
 
     /**
      * ```js
@@ -526,7 +526,7 @@ export interface IParser<T> {
      *
      * @param f
      */
-    map<Y>(f: (value: T) => Y): SingleParser<Y>;
+    map<Y>(f: (value: T, response: readonly Response<T>) => Y): SingleParser<Y>;
 
     /**
      * Create a new parser value *knowing* the current parsing value

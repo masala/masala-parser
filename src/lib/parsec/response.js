@@ -119,7 +119,7 @@ class Accept extends ParserResponse  {
     // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
     map(callback) {
         return new Accept(
-            callback(this.value),
+            callback(this.value, this),
             this.input,
             this.offset,
             this.consumed
