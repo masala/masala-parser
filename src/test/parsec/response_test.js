@@ -68,6 +68,19 @@ export default {
         test.done();
     },
 
+    'response accepted map to pass in response as second argument': function (test) {
+        test.expect(1);
+        // tests here
+        test.deepEqual(
+            response.accept('a').map(function (_, response) {
+                return response;
+            }).value,
+            response.accept('a'),
+            'should return the response.'
+        );
+        test.done();
+    },
+
     'response accepted flatMap to accepted': function (test) {
         test.expect(1);
         // tests here
@@ -131,6 +144,21 @@ export default {
         test.done();
     },
 
+    'response rejected map callback not called': function (test) {
+        test.expect(1);
+        // tests here
+        let calls = 0;
+        response.reject().map(function () {
+            calls++;
+        });
+        test.equal(
+            calls,
+            0,
+            'should not have called the callback.'
+        );
+        test.done();
+    },
+
     'response rejected flatMap to rejected': function (test) {
         test.expect(1);
         // tests here
@@ -143,6 +171,21 @@ export default {
                 .isAccepted(),
             false,
             'should be rejected.'
+        );
+        test.done();
+    },
+
+    'response rejected flatMap callback not called': function (test) {
+        test.expect(1);
+        // tests here
+        let calls = 0;
+        response.reject().flatMap(function () {
+            calls++;
+        });
+        test.equal(
+            calls,
+            0,
+            'should not have called the callback.'
         );
         test.done();
     },
