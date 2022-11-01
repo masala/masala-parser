@@ -1,5 +1,5 @@
 import response from "../parsec/response.js";
-import {F, C, N} from "../parsec.js";
+import {F, C, N} from "../parsec/index.js";
 import unit from "../data/unit.js";
 import option from "../data/option.js";
 
