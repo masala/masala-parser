@@ -8,8 +8,8 @@
 
 import {GenLex} from '../../genlex/genlex.js';
 
-import {F} from '../../parsec/index.js';
-import {C, N} from "../../parsec.js";
+import {F,C,N} from '../../parsec/index.js';
+
 
 //
 // Facilities
