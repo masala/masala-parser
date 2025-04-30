@@ -2,7 +2,7 @@
   "name": "@masala/parser",
   "description": "Masala Parser",
   "license": "LGPL-2.1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": [
     "parser",
     "parsec",
