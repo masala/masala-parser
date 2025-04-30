@@ -553,6 +553,11 @@ export interface IParser<T> {
     drop(): VoidParser;
 
     /**
+     * Verify that the stream is ended
+     */
+    thenEos():this
+
+    /**
      * If accepted, the parser will return the given value
      * @param value
      */
