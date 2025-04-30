@@ -96,6 +96,21 @@ export default {
         test.done();
     },
 
+    'response accepted flatMap knows the offset': function (test) {
+        test.expect(1);
+        // tests here
+        const responseOffset = response
+          .accept('a', 'abc', 1, false)
+          .flatMap(function (a, response) {
+              return response.offset;
+          })
+
+        test.ok(responseOffset === 1,
+          'found the offset'
+        );
+        test.done();
+    },
+
     'response accepted flatMap to return the value': function (test) {
         test.expect(1);
         // tests here

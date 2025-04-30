@@ -43,7 +43,7 @@ export default {
         let found = false;
         try{
             parser.val(text);
-        }catch (e) {
+        }catch {
             found = true;
         }
 
