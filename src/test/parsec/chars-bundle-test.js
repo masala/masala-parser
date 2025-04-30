@@ -348,7 +348,7 @@ export default {
         try {
             const combinator = C.lettersAs(Symbol('UNKNOWN')).then(F.eos());
             combinator.parse(line);
-        } catch (error) {
+        } catch {
             errorFound = true;
         }
         test.ok(errorFound);

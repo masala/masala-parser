@@ -228,7 +228,7 @@ export default {
         let found = false;
         try{
             genlex.setSeparators(C.char('-'));
-        }catch(e){
+        }catch {
             found = true;
         }
 
