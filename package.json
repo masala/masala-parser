@@ -12,7 +12,7 @@
     "functional",
     "composable"
   ],
-  "homepage": "https://github.com/d-plaindoux/masala-parser",
+  "homepage": "https://github.com/masala/masala-parser",
   "author": {
     "name": "Didier Plaindoux",
     "email": "d.plaindoux@free.fr",
@@ -21,25 +21,20 @@
   "contributors": [
     {
       "name": "Nicolas Zozol",
-      "email": "nicolas@robusta.io",
-      "url": "http://www.robusta.io"
-    },
-    {
-      "name": "Simon Zozol",
-      "url": "http://www.robusta.io"
+      "url": "https://www.robusta.build"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/d-plaindoux/masala-parser"
+    "url": "https://github.com/masala/masala-parser"
   },
   "bugs": {
-    "url": "https://github.com/d-plaindoux/masala-parser/issues"
+    "url": "https://github.com/masala/masala-parser/issues"
   },
   "licenses": [
     {
       "type": "LGPL2",
-      "url": "https://github.com/d-plaindoux/masala-parser/blob/master/LICENSE-LGPL2"
+      "url": "https://github.com/masala/masala-parser/blob/master/LICENSE-LGPL2"
     }
   ],
   "main": "build/lib/index.js",
