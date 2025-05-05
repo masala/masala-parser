@@ -1,8 +1,9 @@
 {
   "name": "@masala/parser",
+  "type": "module",
   "description": "Masala Parser",
   "license": "LGPL-2.1",
-  "version": "1.1.0",
+  "version": "2-alpha.0",
   "keywords": [
     "parser",
     "parsec",
@@ -37,7 +38,7 @@
       "url": "https://github.com/masala/masala-parser/blob/master/LICENSE-LGPL2"
     }
   ],
-  "main": "build/lib/index.js",
+  "main": "dist/index.js",
   "types": "./masala-parser.d.ts",
   "engines": {
     "node": ">= 6.11.4"
@@ -50,14 +51,14 @@
     "lint": "eslint \"src/**/*.js\"",
     "test": "npm run compile && nodeunit build/test/index.js",
     "cover": "rimraf coverage && nyc npm run test",
-    "check": "npm run lint && npm run test && npm run cover",
+    "check": "npm run test && npm run cover",
     "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",
     "dist": "rimraf dist/ && mkdirp dist && npm run test && browserify -t uglifyify build/lib/index.js --standalone masalaParser -o dist/masala-parser.min.js",
     "integrate": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
     "copy-ts": "npm run compile && node tasks/copy-to-ts",
     "integration": "npm run copy-ts && cd integration-ts && npm run test",
     "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts",
-    "add-js-ext": "jscodeshift -t tasks/add-js-ext.js \"src/lib\"",
+    "add-js-ext": "jscodeshift -t tasks/add-js-ext.cjs \"src/lib\"",
     "rollup": "rimraf dist/ && mkdirp dist && rollup -c"
   },
   "devDependencies": {

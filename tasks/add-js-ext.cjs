@@ -1,3 +1,8 @@
+/**
+ * jscodeshift requires cjs module format to avoid ERR_REQUIRE_ESM errors
+ * See: https://github.com/TanStack/query/pull/7333 for example
+ */
+
 import path from 'path';
 import fs from 'fs';
 
