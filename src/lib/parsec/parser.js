@@ -187,6 +187,7 @@ export default class Parser {
     /**
      * Prints a hint if the parser enters in this step
      * @param hint
+     * @param details
      * @returns the equivalent Parser
      */
     // TODO: set details default at false; check tests

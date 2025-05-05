@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-export default function (file, api, options) {
+export default function (file, api) {
   const j = api.jscodeshift;
   const dir = path.dirname(file.path);
 
