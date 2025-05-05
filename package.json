@@ -56,7 +56,8 @@
     "integrate": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
     "copy-ts": "npm run compile && node tasks/copy-to-ts",
     "integration": "npm run copy-ts && cd integration-ts && npm run test",
-    "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts"
+    "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts",
+    "add-js-ext": "jscodeshift -t tasks/add-js-ext.js \"src/lib\""
   },
   "devDependencies": {
     "@babel/cli": "^7.27.0",
@@ -66,6 +67,7 @@
     "browserify": "^17.0.0",
     "coveralls": "^3.0.6",
     "eslint": "^9.25.1",
+    "jscodeshift": "^17.3.0",
     "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
     "nodeunit": "^0.11.3",
