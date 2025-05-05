@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Web</title>
+
+    <script type="module">
+
+      import {F} from '../src/lib';
+
+      const text = 'Hello, world!';
+      const startsWithHparser = F.satisfy(str => {
+        return str.includes('H')
+      }).returns('Success');
+
+      document.addEventListener('readystatechange', (evt) => {
+        const result = startsWithHparser.val(text) ? 'Masala Parser ESM Integration Success' : 'Masala Parser ESM Integration Failure'
+        console.log({evt, result})
+        document.querySelector('body').append(result);
+      })
+
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>
