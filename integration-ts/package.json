@@ -13,7 +13,7 @@
   },
   "scripts": {
     "clean":"rm -r examples/*.js && rm -r examples/*.map",
-    "test": "ts-node ./examples/index.ts",
+    "test": "vitest",
     "specific": "ts-node ./examples/markdown/test/markdown-tests.ts"
   },
   "author": "",
