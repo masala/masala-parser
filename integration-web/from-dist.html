@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,15 +6,12 @@
 
     <script type="module">
 
-      import {F} from '../src/lib';
+      import {F, standard, Streams} from '../dist/index.js';
+      import {testEsm} from "./test-esm.js";
 
-      const text = 'Hello, world!';
-      const startsWithHparser = F.satisfy(str => {
-        return str.includes('H')
-      }).returns('Success');
 
       document.addEventListener('readystatechange', (evt) => {
-        const result = startsWithHparser.val(text) ? 'Masala Parser ESM Integration Success' : 'Masala Parser ESM Integration Failure'
+        const result = testEsm(F, standard, Streams);
         console.log({evt, result})
         document.querySelector('body').append(result);
       })

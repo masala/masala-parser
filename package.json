@@ -57,12 +57,14 @@
     "copy-ts": "npm run compile && node tasks/copy-to-ts",
     "integration": "npm run copy-ts && cd integration-ts && npm run test",
     "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts",
-    "add-js-ext": "jscodeshift -t tasks/add-js-ext.js \"src/lib\""
+    "add-js-ext": "jscodeshift -t tasks/add-js-ext.js \"src/lib\"",
+    "rollup": "rimraf dist/ && mkdirp dist && rollup -c"
   },
   "devDependencies": {
     "@babel/cli": "^7.27.0",
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
+    "@rollup/plugin-terser": "^0.4.4",
     "babel-preset-es2019": "^1.0.0",
     "browserify": "^17.0.0",
     "coveralls": "^3.0.6",
@@ -76,6 +78,7 @@
     "prettier-eslint-cli": "^3.4.3",
     "rimraf": "^2.6.1",
     "rmfr": "^2.0.0",
+    "rollup": "^4.40.1",
     "typedoc": "^0.28.3",
     "uglifyify": "^5.0.0"
   }
