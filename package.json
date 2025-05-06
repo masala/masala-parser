@@ -2,7 +2,8 @@
   "name": "@masala/parser",
   "type": "module",
   "description": "Masala Parser",
-  "license": "LGPL-2.1",
+  "license": "LGPL‑3.0",
+  "licence-meaning": "You are free to use, modify and distribute this software under the terms of the LGPL-3.0 license. However, if you modify the library (/src/lib) and distribute it, you must also distribute the source code of your modifications under the same license. If you want to modify without distributing, just pay us legit royalties 😇",
   "version": "2-alpha.0",
   "keywords": [
     "parser",
