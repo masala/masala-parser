@@ -49,7 +49,7 @@
     "format": "prettier-eslint --prettier.tab-width 4 --write \"src/**/*.js\"",
     "safeformat": "prettier-eslint --prettier.tab-width 4 \"src/**/*.js\"",
     "lint": "eslint \"src/**/*.js\"",
-    "test": "npm run compile && nodeunit build/test/index.js",
+    "test": "vitest run ./src/test/**/*.spec.js",
     "cover": "rimraf coverage && nyc npm run test",
     "check": "npm run test && npm run cover",
     "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",

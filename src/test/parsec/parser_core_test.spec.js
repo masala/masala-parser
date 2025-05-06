@@ -531,7 +531,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('b')
                 .optrep().array()
-                .then(C.char('a').optrep())
+                .then(C.char('a').optrep().array())
                 .array()
                 .parse(stream.ofString('bbba'), 0).value
         ).toEqual([['b', 'b', 'b'], ['a']]);
