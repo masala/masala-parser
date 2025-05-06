@@ -17,8 +17,6 @@ describe('Character Combinators (letters, lowerCase, notString)', () => {
         let stream = Streams.ofString(inputString);
         let parsing = combinator().parse(stream);
 
-        // Based on original assertTrue(parsing.isAccepted());
-        // The parser accepts the sequence up to just before 'o' in 'brown'
         expect(parsing.isAccepted()).toBe(true);
         const structure = parsing.value.array() as string[];
         expect(structure[0]).toBe('The'); // Check the number of parsed elements

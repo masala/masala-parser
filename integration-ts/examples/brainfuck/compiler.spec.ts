@@ -1,4 +1,4 @@
-import {C, F, GenLex, SingleParser, Streams, tuple, TupleParser, Tuple} from "@masala/parser";
+import {C, F, GenLex, SingleParser, Streams, tuple, TupleParser} from "@masala/parser";
 import { describe, it, expect } from 'vitest';
 
 

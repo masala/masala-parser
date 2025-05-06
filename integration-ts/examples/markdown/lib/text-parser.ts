@@ -15,7 +15,7 @@ import {F, C, SingleParser, IParser} from '@masala/parser'
 import {FormattedSequence, MdText, Paragraph} from "./types";
 import {blank, eol, lineFeed} from "./token";
 
-// For simplicity, bold, italic and code cannot go across different lines
+//TODO: no good at all=> For simplicity, bold, italic and code cannot go across different lines
 function stop() {
     return F.eos().or(eol()).or(C.charIn('*`'));
     // real case would accept linefeed() instead of eol(), then probably a back parser when last char is '\n'
