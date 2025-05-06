@@ -10,8 +10,8 @@ import {CodeBlock, CodeLine} from "./types";
 /* TODO mix spaces &  tab bug  "  \t  " will not be accepted
  known issue: non-breakable spaces are not recognised
   */
-export function codeLine() {
-    return spacesBlock(2).drop()
+export function codeLine(spaces=2) {
+    return spacesBlock(spaces).drop()
         .then(F.not(eol()).rep())
         .array()
         .map((s: string[]) => s.join('').trim())
@@ -19,10 +19,10 @@ export function codeLine() {
 }
 
 
-export function codeBlock(): SingleParser<CodeBlock> {
+export function codeBlock(spaces=2): SingleParser<CodeBlock> {
 
 
-    let parser = codeLine().then(
+    let parser = codeLine(spaces).then(
         F.try(eol().drop().then(codeLine()).single().optrep().array())
     ).array()
         .map(([firstLine, otherLines]) => {

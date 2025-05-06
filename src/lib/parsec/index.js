@@ -1,16 +1,16 @@
 /*
- * Parsec
- * https://github.com/d-plaindoux/parsec
+ * Masala Parser
+ * https://github.com/masala/masala-parser
  *
- * Copyright (c) 2016 Didier Plaindoux
- * Licensed under the LGPL2 license.
+ * Copyright (c) 2016-2025 Didier Plaindoux & Nicolas Zozol
+ * Licensed under the LGPL3 license.
  */
 
-import parser from './parser';
-import response from './response';
-import flow from './flow-bundle';
-import chars from './chars-bundle';
-import numbers from './numbers-bundle';
+import parser from "./parser.js";
+import response from "./response.js";
+import flow from "./flow-bundle.js";
+import chars from "./chars-bundle.js";
+import numbers from "./numbers-bundle.js";
 
 export const C = chars;
 export const F = flow;

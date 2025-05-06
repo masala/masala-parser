@@ -1,9 +1,9 @@
 /*
- * Parsec
- * https://github.com/d-plaindoux/parsec
+ * Masala Parser
+ * https://github.com/masala/masala-parser
  *
- * Copyright (c) 2016 Didier Plaindoux
- * Licensed under the LGPL2 license.
+ * Copyright (c) 2016-2025 Didier Plaindoux & Nicolas Zozol
+ * Licensed under the LGPL3 license.
  */
 
 import atry from '../data/try.js';
@@ -16,7 +16,7 @@ import atry from '../data/try.js';
  * location() is the character count of the input stream.
  *
  *
- * consumed is a boolean describing if the offest has moved forward. It doesn't mean
+ * consumed is a boolean describing if the offset has moved forward. It doesn't mean
  * that the stream is fully consumed. See parser.eos() for that.
  */
 class ParserResponse {
@@ -128,7 +128,7 @@ class Accept extends ParserResponse  {
 
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
     flatMap(callback) {
-        return callback(this.value);
+        return callback(this.value, this);
     }
 
     // Response 'a 'c => ('a -> bool) -> Response 'b 'c

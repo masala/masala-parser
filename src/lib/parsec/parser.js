@@ -1,9 +1,9 @@
 /*
- * Parsec
- * https://github.com/d-plaindoux/parsec
+ * Masala Parser
+ * https://github.com/masala/masala-parser
  *
- * Copyright (c) 2016 Didier Plaindoux
- * Licensed under the LGPL2 license.
+ * Copyright (c) 2016-2025 Didier Plaindoux & Nicolas Zozol
+ * Licensed under the LGPL3 license.
  */
 
 /*
@@ -12,14 +12,14 @@
  * http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf
  */
 
-import stream from '../stream/index';
+import stream from "../stream/index.js";
 
-import option from '../data/option';
+import option from "../data/option.js";
 
 
-import response from './response';
-import unit from "../data/unit";
-import {NEUTRAL, Tuple, isTuple} from "../data/tuple";
+import response from "./response.js";
+import unit from "../data/unit.js";
+import {NEUTRAL, Tuple, isTuple} from "../data/tuple.js";
 
 
 /**
@@ -187,6 +187,7 @@ export default class Parser {
     /**
      * Prints a hint if the parser enters in this step
      * @param hint
+     * @param details
      * @returns the equivalent Parser
      */
     // TODO: set details default at false; check tests

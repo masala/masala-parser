@@ -1,13 +1,13 @@
 /*
- * Parsec
- * https://github.com/d-plaindoux/parsec
+ * Masala Parser
+ * https://github.com/masala/masala-parser
  *
- * Copyright (c) 2016 Didier Plaindoux
- * Licensed under the LGPL2 license.
+ * Copyright (c) 2016-2025 Didier Plaindoux & Nicolas Zozol
+ * Licensed under the LGPL3 license.
  */
 
-import C from './chars-bundle';
-import F from './flow-bundle';
+import C from "./chars-bundle.js";
+import F from "./flow-bundle.js";
 
 // unit -> Parser number char
 function number() {

@@ -156,7 +156,7 @@ export default {
 
         try{
             test.equal(0, parserStream.location(4));
-        }catch(e){
+        }catch{
             foundError = true;
         }
 
@@ -212,7 +212,7 @@ export default {
 
         try {
             parserStream.unsafeGet(1);
-        } catch (e) {
+        } catch {
             found = true;
         }
         test.ok(found);

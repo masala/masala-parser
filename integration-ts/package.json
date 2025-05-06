@@ -4,15 +4,16 @@
   "description": "used to test npm publications",
   "main": "index.js",
   "dependencies": {
-    "@masala/parser": "1.0.0"
+    "@masala/parser": "2-alpha.0"
   },
   "devDependencies": {
     "ts-node": "8.1.0",
-    "typescript": "3.2.4"
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
   },
   "scripts": {
     "clean":"rm -r examples/*.js && rm -r examples/*.map",
-    "test": "ts-node ./examples/index.ts",
+    "test": "vitest run",
     "specific": "ts-node ./examples/markdown/test/markdown-tests.ts"
   },
   "author": "",

@@ -1,0 +1,25 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Web</title>
+
+    <script type="module">
+
+      import {F, standard, Streams} from '../dist/index.js';
+      import {testEsm} from "./test-esm.js";
+
+
+      document.addEventListener('readystatechange', (evt) => {
+        const result = testEsm(F, standard, Streams);
+        console.log({evt, result})
+        document.querySelector('body').append(result);
+      })
+
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

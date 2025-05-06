@@ -1,4 +1,4 @@
-var ncp = require('ncp');
+import  ncp from 'ncp';
 
 console.log('\n\n==== Copying samples for tests===');
 ncp('./src/test/standard/json/samples/', './build/test/standard/json/samples/');

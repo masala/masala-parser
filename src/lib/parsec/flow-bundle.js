@@ -1,14 +1,14 @@
 /*
- * Parsec
- * https://github.com/d-plaindoux/parsec
+ * Masala Parser
+ * https://github.com/masala/masala-parser
  *
- * Copyright (c) 2016 Didier Plaindoux
- * Licensed under the LGPL2 license.
+ * Copyright (c) 2016-2025 Didier Plaindoux & Nicolas Zozol
+ * Licensed under the LGPL3 license.
  */
 
-import Parser, {eos} from './parser';
-import response from './response';
-import {NEUTRAL, Tuple} from "../data/tuple";
+import Parser, {eos} from "./parser.js";
+import response from "./response.js";
+import {NEUTRAL, Tuple} from "../data/tuple.js";
 
 // (Stream 'c -> number -> Response 'a 'c) -> Parser 'a 'c
 function parse(p) {
