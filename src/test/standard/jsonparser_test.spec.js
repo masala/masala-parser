@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import stream from '../../../lib/stream/index';
-import jsonparser from '../../../lib/standard/json/jsonparser';
+import stream from '../../lib/stream/index.js';
+import jsonparser from '../../lib/standard/json/jsonparser.js';
+
 
 describe('JSON Parser Tests', () => {
     it('number accepted', () => {

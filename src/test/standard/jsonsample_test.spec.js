@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
-import jsonparser from '../../../lib/standard/json/jsonparser';
-import stream from '../../../lib/stream/index';
+import jsonparser from '../../lib/standard/json/jsonparser.js';
+import stream from '../../lib/stream/index.js';
 
 async function sampleTest(sample) {
     const data = await fs.promises.readFile('./src/test/standard/json/samples/' + sample);
