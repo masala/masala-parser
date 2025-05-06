@@ -1,4 +1,5 @@
-import {C, F, GenLex, SingleParser, Streams, tuple, TupleParser} from "@masala/parser";
+import {C, F, GenLex, SingleParser, Streams, tuple, TupleParser, Tuple} from "@masala/parser";
+import { describe, it, expect } from 'vitest';
 
 
 const genlex = new GenLex();
@@ -46,6 +47,7 @@ function loopExpr(): SingleParser<Loop> {
 
 
 function expr(): TupleParser<Instruction> {
+    //TODO: typing error
     return terminal().then(
         subExpr().opt().map(option => option.isPresent() ? option.get() : tuple())
     )
@@ -149,7 +151,50 @@ function getInput() {
     return 42;
 }
 
+describe('Brainfuck Interpreter', () => {
 
+    it('should handle simple increment and move', () => {
+        const program = '+++>+';
+        resetState();
+        const parser = createParser();
+        let response = parser.parse(Streams.ofString(program));
+        interpretAll(response.value.array());
+
+        expect(memory.slice(0, max + 1)).toEqual([3, 1]);
+        expect(output).toBe('');
+        expect(pointer).toBe(1);
+    });
+
+    it('should handle a simple loop for swap', () => {
+        const program = '+++[>+<-]';
+        resetState();
+        const parser = createParser();
+        let response = parser.parse(Streams.ofString(program));
+        interpretAll(response.value.array());
+
+        // Memory: [0, 3] (values swapped), Pointer: 0
+        expect(memory.slice(0, max + 1)).toEqual([0, 3]);
+        expect(output).toBe('');
+        expect(pointer).toBe(0);
+    });
+
+    it('should print \"Hello World!\\n\"' , () => {
+        // Hello World program from https://esolangs.org/wiki/Brainfuck#Hello,_World!
+        const program = '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.';
+        resetState();
+        const parser = createParser();
+        let response = parser.parse(Streams.ofString(program));
+        interpretAll(response.value.array());
+
+        expect(output).toBe('Hello World!\n');
+        // Memory state check might be complex, focusing on output
+    });
+
+    // Add more tests for comma, period, edge cases etc.
+});
+
+
+/* Original direct calls - commented out
 //simple test
 brainfuck('+++>+');
 
@@ -159,3 +204,4 @@ brainfuck('+++[>+<-]');
 
 let hW = '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.';
 brainfuck(hW);
+*/
