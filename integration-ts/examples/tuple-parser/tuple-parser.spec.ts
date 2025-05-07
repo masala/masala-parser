@@ -17,7 +17,7 @@ describe('Tuple typescript integration', () => {
         expect(valueLast).toBe(0)
     })
 
-    it('should create a same parser with append', () => {
+    it('should create a same parser with then', () => {
         const a = C.char('a')
         const b = C.char('b')
         const mixed = a.then(b).then(F.any().drop())
@@ -31,17 +31,31 @@ describe('Tuple typescript integration', () => {
         expect(valueLast).toBe('b')
     })
 
-    it('Appending from dropped, it should create a same parser with append', () => {
+    it('Appending from dropped, it should create a string parser with then', () => {
         const a = C.char('a')
         const b = C.char('b')
-        const mixed = F.any().drop().then(a).then(b)
+        const stringsParser = F.any().drop().then(a).then(b)
 
-        const first = mixed.first()
-        const valueFirst = first.val('ab0')
+        const first = stringsParser.first()
+        const valueFirst = first.val('0ab')
         expect(valueFirst).toBe('a')
 
-        const last = mixed.last()
-        const valueLast = last.val('ab0')
+        const last = stringsParser.last()
+        const valueLast = last.val('0ab')
         expect(valueLast).toBe('b')
+    })
+
+    it('Appending from dropped, it should create a mixedParser with then', () => {
+        const a = C.char('a')
+        const b = N.number()
+        const stringsParser = F.any().drop().then(a).then(b)
+
+        const first = stringsParser.first()
+        const valueFirst = first.val('Xa45')
+        expect(valueFirst).toBe('a')
+
+        const last = stringsParser.last()
+        const valueLast = last.val('Xa45')
+        expect(valueLast).toBe(45)
     })
 })
