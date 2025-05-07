@@ -12,7 +12,7 @@ export interface SingleParser<T> extends IParser<T> {
     then(sameTuple: TupleParser<T>): TupleParser<T>;
     then<FIRST, LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<T, LAST>;
 
-    then<T>(same: SingleParser<T>): TupleParser<T>;
+    then(same: SingleParser<T>): TupleParser<T>;
     then<Y>(other: SingleParser<Y>): MixedParser<T, Y>;
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): MixedParser<T, Y>;
