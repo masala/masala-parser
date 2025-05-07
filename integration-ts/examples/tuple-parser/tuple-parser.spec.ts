@@ -1,4 +1,4 @@
-import {C, N} from "@masala/parser";
+import {C, N, F} from "@masala/parser";
 import {describe, it, expect} from "vitest";
 
 describe('Tuple typescript integration', () => {
@@ -6,12 +6,30 @@ describe('Tuple typescript integration', () => {
 
         const c = C.char('a')
         const n = N.number()
-        const merge = c.then(n)
+        const mixed = c.then(n)
 
-        const value = merge.val('a0')
+        const first = mixed.first()
+        const valueFirst = first.val('a0')
+        expect(valueFirst).toBe('a')
 
-        expect(value.first()).toBe('a')
-        expect(value.last()).toBe(0)
-
+        const last = mixed.last()
+        const valueLast = last.val('a0')
+        expect(valueLast).toBe(0)
     })
+
+    it('should create a same parser with append', () => {
+        const a = C.char('a')
+        const b = C.char('b')
+        const mixed = a.then(b).then(F.any().drop())
+
+        const first = mixed.first()
+        const valueFirst = first.val('ab0')
+        expect(valueFirst).toBe('a')
+
+        const last = mixed.last()
+        const valueLast = last.val('ab0')
+        expect(valueLast).toBe('b')
+    })
+
+
 })

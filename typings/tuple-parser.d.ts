@@ -12,6 +12,7 @@ export interface SingleParser<T> extends IParser<T> {
     then(sameTuple: TupleParser<T>): TupleParser<T>;
     then<FIRST, LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<T, LAST>;
 
+    then<T>(same: SingleParser<T>): TupleParser<T>;
     then<Y>(other: SingleParser<Y>): MixedParser<T, Y>;
     then(p: IParser<T>): TupleParser<T>;
     then<Y>(p: IParser<Y>): MixedParser<T, Y>;
@@ -25,6 +26,8 @@ export interface SingleParser<T> extends IParser<T> {
 
     rep(): TupleParser<T>;
     optrep(): TupleParser<T>;*/
+
+    val(text: string): T;
 }
 
 export interface TupleParser<T> extends IParser<Tuple<T>> {
@@ -57,6 +60,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     optrep(): TupleParser<T>;
 
      */
+    val(text: string): Tuple<T>;
 
 }
 
