@@ -1,3 +1,5 @@
+import type {EmptyTuple, Tuple} from "./typings/tuple.d.ts";
+import type {GenLex} from "./typings/genlex.d.ts";
 /**
  * Written by Nicolas Zozol
  */
@@ -117,89 +119,9 @@ export interface Try<V, E> {
 
 }
 
-export declare type NEUTRAL = symbol;
 
-/**
- * Represents the sequence of tokens found by the parser.
- * A Tuple accepts a `NEUTRAL` element
- */
-export interface Tuple<T> {
 
-    /**
-     * Wrapped array
-     */
-    value: T[];
 
-    isEmpty: boolean;
-    /**
-     * Number of elements in the wrapped array
-     */
-    size(): number;
-
-    /**
-     * Returns the first token. It's up to the coder to know
-     * if there is only one token
-     *  * ```js
-     *  const parser = C.char('a')
-     *      .then(C.char('b'))
-     *      .drop()
-     *      .then(C.char('c')
-     *      .single(); // Parsing will return 'c'
-     * ```
-     * See [[array]]
-     */
-    single(): T;
-
-    /**
-     * Returns all tokens in an array
-     * ```js
-     *  const parser = C.char('a')
-     *      .then(C.char('b'))
-     *      .then(C.char('c')
-     *      .array(); // Parsing will return ['a','b','c']
-     * ```
-     * See [[single]]
-     */
-    array(): T[];
-
-    /**
-     * Returns the last element of the Tuple
-     */
-    last(): T;
-
-    /**
-     * Returns the first element of the Tuple
-     */
-    first(): T;
-
-    /**
-     * Returns value at index
-     * @param index
-     */
-    at(index: number): T;
-
-    /**
-     * Join elements as one string joined by optional separator (ie empty '' separator by default)
-     * @param separator join separator
-     */
-    join(separator?: string): string;
-
-    /**
-     * The tuple will not change with the NEUTRAL element.
-     * It will concatenate the two tuples as one, or add
-     * a single element if it's not a Tuple.
-     * Therefore a Tuple can wrap multiple arrays.
-     * @param neutral : neutral element
-     *
-     * See [[TupleParser]]
-     */
-    append(neutral: NEUTRAL): this;
-
-    append<Y>(other: Tuple<Y>): Tuple<T | Y>;
-
-    append<Y>(element: Y): Tuple<T | Y>;
-
-}
 
 /**
  * Creates an empty or not Tuple, which is the preferred way
@@ -208,7 +130,8 @@ export interface Tuple<T> {
  *
  * `const t = tuple([2, 4, 5])`;
  */
-export function tuple<T>(array?: T[]): Tuple<T>;
+export function tuple(): EmptyTuple;
+export function tuple<T>(array: T[]): Tuple<T>;
 
 /**
  * Represents a **source** of data that will be parsed.
@@ -654,17 +577,14 @@ export interface IParser<T> {
  */
 export type parseFunction<X, T> = (stream: Stream<X>, index?: number) => Response<T>;
 
-interface Parser<T> extends IParser<T> {
-
-}
-
 /**
  * Note: the documentation shows two parametric arguments `T` for `Parser<T,T>`, but it's really
  * one argument. Looks like the only tooling bug, but sadly on the first line.
  */
-export class Parser<T> {
-    new<D>(f: parseFunction<D, T>): Parser<T>;
+export class Parser<D, T> {
+    constructor(f: parseFunction<D, T>);
 }
+
 
 interface CharBundle {
     UTF8_LETTER: symbol;
@@ -835,69 +755,11 @@ interface NumberBundle {
 
 type ParserOrString<T> = IParser<T> | string;
 
-interface Token<T> extends SingleParser<T> {
-
-}
-
-type TokenCollection = {
-    [key: string]: Token<any>
-};
-
-export interface TokenResult<T> {
-    name: string;
-    value: T;
-}
-
-interface GenLex {
-    // TODO: make overload here
-    /**
-     *
-     * @param parser parser of the token
-     * @param name token name
-     * @param precedence the token with lowest precedence is taken before others.
-     *
-     * Choice with grammar is made after token selection !
-     */
-    tokenize<T, P extends IParser<T>>(parser: P, name: string, precedence?: number): P;
-
-    use<T, P extends IParser<T>>(grammar: P): P;
-
-    tokens(): TokenCollection;
-
-    setSeparators(spacesCharacters: string): GenLex;
-
-    /**
-     * Select the parser used by genlex. It will be used as `separator.optrep().then(token).then(separator.optrep())`.
-     * So the separator must not be optional or it will make an infinite loop.
-     * The separation in your text can't be a strict one-time separation with Genlex.
-     * @param parser
-     */
-    setSeparatorsParser<T>(parser: IParser<T>): GenLex;
-
-    /**
-     * Should separators be repeated ?
-     *
-     * `separators.optrep().then(myToken()).then(separators.optrep())`
-     * @param repeat default is true
-     */
-    setSeparatorRepetition(repeat: boolean): GenLex;
-
-    /**
-     * tonkenize all items, given them the name of the token
-     * Exemple : keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
-     * @param tokens
-     */
-    keywords(tokens: string[]): Array<Token<string>>;
-
-    get(tokenName: string): Token<any>;
-
-}
-
-export class GenLex implements GenLex {
-
-}
 
 export declare const F: FlowBundle;
 export declare const C: CharBundle;
 export declare const N: NumberBundle;
 export declare const Streams: Streams;
+
+export { Tuple };
+export {GenLex};
