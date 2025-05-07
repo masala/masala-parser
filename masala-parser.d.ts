@@ -316,16 +316,6 @@ export interface IParser<T> {
      * const abParser = C.char('a').then(C.char('b'))
      * ```
      */
-
-    /*then(dropped: VoidParser): IParser<T>;
-    then(emptyAA: EmptyTupleParser): IParser<T>;
-
-    then<Y>(otherTuple: TupleParser<Y>): IParser<T|Y>;
-    then(sameTuple: TupleParser<T>): TupleParser<T>;
-    then<FIRST,LAST>(mixed: MixedParser<FIRST, LAST>): IParser<any>;
-
-    then<Y>(other: SingleParser<Y>): IParser<T|Y>;
-    then(p: IParser<T>): IParser<T>;*/
     then<Y>(p: IParser<Y>): IParser<T| Y>;
 
     /**
