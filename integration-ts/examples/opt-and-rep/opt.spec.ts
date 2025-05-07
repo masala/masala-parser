@@ -1,4 +1,4 @@
-import {C, N, F, Tuple, Streams} from "@masala/parser";
+import {C, N, Tuple, Streams} from "@masala/parser";
 import {describe, it, expect} from "vitest";
 
 describe('Optional parser', () => {

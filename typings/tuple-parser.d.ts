@@ -1,6 +1,7 @@
 /* Array with different values*/
-import type {IParser, VoidParser, Option} from "../masala-parser.d.ts";
-import type {Tuple, NEUTRAL} from "./tuple.d.ts";
+import type {IParser, Option} from "../masala-parser.d.ts";
+import type {Tuple, NEUTRAL, MixedTuple} from "./tuple.d.ts";
+import type {VoidParser} from "./void-parser.js";
 
 // A SingleParser is really a IParser that don't have weird Neutral or Void value
 export interface SingleParser<T> extends IParser<T> {
@@ -68,6 +69,7 @@ export interface EmptyTupleParser extends TupleParser<NEUTRAL> {
     first(): SingleParser<undefined>; // will be undefined
     last(): SingleParser<undefined>;
 
+    then<Y>(other: SingleParser<Y>): TupleParser<Y>;
     then(dropped: VoidParser): EmptyTupleParser;
     then(empty: EmptyTupleParser): EmptyTupleParser;
 
@@ -89,5 +91,7 @@ export interface MixedParser<FIRST, LAST> extends TupleParser<FIRST | LAST | any
     then<Y>(other: TupleParser<Y>): MixedParser<FIRST, Y>;
     then<F, L>(other: MixedParser<F, L>): MixedParser<FIRST, L>;
     then<Y>(other: SingleParser<Y>): MixedParser<FIRST, Y>;
+
+    val(text: string): MixedTuple<FIRST, LAST>;
 
 }

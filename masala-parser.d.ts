@@ -1,4 +1,5 @@
 import type {EmptyTuple, Tuple} from "./typings/tuple.d.ts";
+import type {VoidParser} from "./typings/void-parser.js";
 import type {GenLex} from "./typings/genlex.d.ts";
 import type {TupleParser, SingleParser, EmptyTupleParser, MixedParser} from "./typings/tuple-parser.d.ts";
 
@@ -250,42 +251,6 @@ export interface Accept<T> extends Response<T> {
 
 }
 
-
-declare type MASALA_VOID_TYPE = symbol;
-
-/**
- * Special case of a [[SingleParser]], but easier to write.
- * Note that `VoidParser.then(VoidParser)` will produce a [[TupleParser]] where
- * inner value is `[]`. Same result with `optrep()` and `rep()`
- */
-export interface VoidParser extends IParser<MASALA_VOID_TYPE> {
-
-    then(dropped: VoidParser): VoidParser;
-    then(empty: EmptyTupleParser): EmptyTupleParser;
-
-    then<Y>(otherTuple: TupleParser<Y>): TupleParser<Y>;
-    then<FIRST,LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<FIRST, LAST>;
-
-    then<Y>(other: SingleParser<Y>): SingleParser<Y>;
-    then<T>(p: IParser<T>): IParser<T>;
-
-
-    /*
-    or(other: VoidParser): VoidParser;
-
-    or<T, P extends IParser<T>>(other: P): VoidParser | P;
-
-    opt(): IParser<Option<MASALA_VOID_TYPE>>;
-
-
-    // Accepted with one or more occurrences.Will produce an Tuple of at least one T
-    rep(): VoidParser;
-
-    // Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
-    //optrep(): VoidParser;
-*/
-
-}
 
 
 /**

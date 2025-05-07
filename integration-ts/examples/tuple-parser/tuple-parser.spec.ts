@@ -58,4 +58,6 @@ describe('Tuple typescript integration', () => {
         const valueLast = last.val('Xa45')
         expect(valueLast).toBe(45)
     })
+
+
 })
