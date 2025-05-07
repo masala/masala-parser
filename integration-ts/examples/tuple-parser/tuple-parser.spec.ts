@@ -31,5 +31,17 @@ describe('Tuple typescript integration', () => {
         expect(valueLast).toBe('b')
     })
 
+    it('Appending from dropped, it should create a same parser with append', () => {
+        const a = C.char('a')
+        const b = C.char('b')
+        const mixed = F.any().drop().then(a).then(b)
 
+        const first = mixed.first()
+        const valueFirst = first.val('ab0')
+        expect(valueFirst).toBe('a')
+
+        const last = mixed.last()
+        const valueLast = last.val('ab0')
+        expect(valueLast).toBe('b')
+    })
 })

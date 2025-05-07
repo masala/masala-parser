@@ -261,16 +261,12 @@ declare type MASALA_VOID_TYPE = symbol;
 export interface VoidParser extends IParser<MASALA_VOID_TYPE> {
 
     then(dropped: VoidParser): VoidParser;
-
-    /* specializations
     then(empty: EmptyTupleParser): EmptyTupleParser;
+
     then<Y>(otherTuple: TupleParser<Y>): TupleParser<Y>;
-    //then(sameTuple: TupleParser<T>): TupleParser<T>;
     then<FIRST,LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<FIRST, LAST>;
 
     then<Y>(other: SingleParser<Y>): SingleParser<Y>;
-
-     */
     then<T>(p: IParser<T>): IParser<T>;
 
 
