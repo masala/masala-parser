@@ -1,5 +1,7 @@
 import type {EmptyTuple, Tuple} from "./typings/tuple.d.ts";
 import type {GenLex} from "./typings/genlex.d.ts";
+import type {TupleParser, SingleParser, EmptyTupleParser, MixedParser} from "./typings/tuple-parser.d.ts";
+
 /**
  * Written by Nicolas Zozol
  */
@@ -120,9 +122,6 @@ export interface Try<V, E> {
 }
 
 
-
-
-
 /**
  * Creates an empty or not Tuple, which is the preferred way
  *
@@ -228,7 +227,7 @@ export interface Response<T> {
      *
      * @param f mapping function
      */
-    flatMap<Y>(f: (v: T, r:  this) => Response<Y>): Y;
+    flatMap<Y>(f: (v: T, r: this) => Response<Y>): Y;
 
     filter(predicate: (value: any) => boolean): Response<T>;
 
@@ -251,84 +250,6 @@ export interface Accept<T> extends Response<T> {
 
 }
 
-/* Array with different values*/
-export interface TupleParser<T> extends IParser<Tuple<T>> {
-
-    /**
-     * Combine two parsers for reading the stream
-     * ```js
-     * const parser = C.char('a')
-     *   .then(C.char('b')) // first TupleParser
-     *   .then(C.char('c'));
-     * const value = parser.parse(Streams.ofString('abc')).value;
-     * test.deepEqual(value, new Tuple(['a','b','c']));
-     * ```
-     * @param p next parser
-     */
-    then(p: VoidParser): TupleParser<T>;
-    then(p: IParser<T>): TupleParser<T>;
-    then<Y>(p: IParser<Y>): TupleParser<T | Y>;
-
-    or(other: TupleParser<T>): TupleParser<T>;
-    or<Y>(other: TupleParser<Y>): TupleParser<T> | TupleParser<Y>;
-    or<T, P extends IParser<T>>(other: P): VoidParser | P;
-
-    /**
-     * Map the response value as an array
-     * ```js
-     * const parser = C.char('a')
-     *   .then(C.char('b'))
-     *   .array();
-     * const value = parser.parse(Streams.ofString('abcd')).value;
-     * test.deepEqual(value, ['a','b']); // parsing stopped at index 2
-     * ```
-     *
-     */
-    array(): SingleParser<T[]>;
-
-    /**
-     * Map the response value as the **first** Tuple element.
-     * ```js
-     * const parser = C.char('a')
-     *    // 'b' is dropped, but we still have a Tuple
-     *   .then(C.char('b').drop())
-     *   .single();
-     * const value = parser.parse(Streams.ofString('ab')).value;
-     * test.equal(value, 'a');
-     * ```
-     *
-     * WARNING: This may change and throw an exception if it's not a single value.
-     * `first()` may appear.
-     */
-    single(): SingleParser<T>;
-
-    /**
-     * Map the response value as the last value
-     * ```js
-     * const parser = C.char('a')
-     *   .then(C.char('b'))
-     *   .then(C.char('c'))
-     *   .last();
-     * const value = parser.parse(Streams.ofString('abc')).value;
-     * test.deepEqual(value, ['a','b']); // parsing stopped at index 2
-     * ```
-     *
-     */
-    last(): SingleParser<T>;
-
-    first(): SingleParser<T>;
-
-    /**
-     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
-     */
-    rep(): TupleParser<T>;
-
-    /**
-     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
-     */
-    optrep(): TupleParser<T>;
-
-}
 
 declare type MASALA_VOID_TYPE = symbol;
 
@@ -337,73 +258,39 @@ declare type MASALA_VOID_TYPE = symbol;
  * Note that `VoidParser.then(VoidParser)` will produce a [[TupleParser]] where
  * inner value is `[]`. Same result with `optrep()` and `rep()`
  */
-export interface VoidParser extends SingleParser<MASALA_VOID_TYPE> {
+export interface VoidParser extends IParser<MASALA_VOID_TYPE> {
 
-    /**
-     * Combine two parsers for reading the stream
-     * ```js
-     * const parser = C.char('a').drop()
-     *   .then(C.char('b').drop());
-     *   const value = parser.parse(Streams.ofString('ab')).value;
-     *   test.ok(value.size() === 0 );
-     * ```
-     * @param p next parser
+    then(dropped: VoidParser): VoidParser;
+
+    /* specializations
+    then(empty: EmptyTupleParser): EmptyTupleParser;
+    then<Y>(otherTuple: TupleParser<Y>): TupleParser<Y>;
+    //then(sameTuple: TupleParser<T>): TupleParser<T>;
+    then<FIRST,LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<FIRST, LAST>;
+
+    then<Y>(other: SingleParser<Y>): SingleParser<Y>;
+
      */
-    then(p: VoidParser): TupleParser<MASALA_VOID_TYPE>;
-    then<Y>(p: TupleParser<Y>): TupleParser<Y>;
-    then<Y>(p: SingleParser<Y>): TupleParser<Y>;
-    then<Y>(p: IParser<Y>): TupleParser<Y>;
+    then<T>(p: IParser<T>): IParser<T>;
 
+
+    /*
     or(other: VoidParser): VoidParser;
+
     or<T, P extends IParser<T>>(other: P): VoidParser | P;
 
-    opt(): SingleParser<Option<MASALA_VOID_TYPE>>;
+    opt(): IParser<Option<MASALA_VOID_TYPE>>;
 
-    /**
-     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
-     */
-    rep(): TupleParser<MASALA_VOID_TYPE>;
 
-    /**
-     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
-     */
-    optrep(): TupleParser<MASALA_VOID_TYPE>;
+    // Accepted with one or more occurrences.Will produce an Tuple of at least one T
+    rep(): VoidParser;
+
+    // Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+    //optrep(): VoidParser;
+*/
+
 }
 
-export interface SingleParser<T> extends IParser<T> {
-
-    /**
-     * Combine two parsers for reading the stream
-     * ```js
-     * const parser = C.char('a')
-     *   .then(C.char('b'));
-     *   const value = parser.parse(Streams.ofString('ab')).value;
-     *   test.equal(value.size(), 2 );
-     * ```
-     * @param p next parser
-     */
-    then(p: VoidParser): TupleParser<T>;
-    then(p: IParser<T>): TupleParser<T>;
-    then<Y>(p: IParser<Y>): TupleParser<T | Y>;
-
-    or(other: SingleParser<T>): SingleParser<T>;
-    or<Y>(other: SingleParser<Y>): SingleParser<T | Y>;
-    or(other: TupleParser<T>): TupleParser<T>;
-    or<Y>(other: TupleParser<Y>): TupleParser<Y> | TupleParser<T>;
-    or<Y, P extends IParser<Y>>(other: P): SingleParser<T> | P;
-
-    opt(): SingleParser<Option<T>>;
-
-    /**
-     * Accepted with one or more occurrences.Will produce an Tuple of at least one T
-     */
-    rep(): TupleParser<T>;
-
-    /**
-     * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
-     */
-    optrep(): TupleParser<T>;
-}
 
 /**
  * Parsers are most of the time made by combination of Parsers given by
@@ -432,11 +319,18 @@ export interface IParser<T> {
      * ```js
      * const abParser = C.char('a').then(C.char('b'))
      * ```
-     * @param p
      */
-    then(p: VoidParser): TupleParser<T>;
-    then(p: IParser<T>): TupleParser<T>;
-    then<Y>(p: IParser<Y>): TupleParser<T | Y>;
+
+    /*then(dropped: VoidParser): IParser<T>;
+    then(emptyAA: EmptyTupleParser): IParser<T>;
+
+    then<Y>(otherTuple: TupleParser<Y>): IParser<T|Y>;
+    then(sameTuple: TupleParser<T>): TupleParser<T>;
+    then<FIRST,LAST>(mixed: MixedParser<FIRST, LAST>): IParser<any>;
+
+    then<Y>(other: SingleParser<Y>): IParser<T|Y>;
+    then(p: IParser<T>): IParser<T>;*/
+    then<Y>(p: IParser<Y>): IParser<T| Y>;
 
     /**
      * Transforms the Response value
@@ -478,7 +372,7 @@ export interface IParser<T> {
     /**
      * Verify that the stream is ended
      */
-    thenEos():this
+    thenEos(): this
 
     /**
      * If accepted, the parser will return the given value
@@ -521,6 +415,7 @@ export interface IParser<T> {
      * @param p
      */
     and<P extends IParser<T>>(p: P): TupleParser<T>;
+
     and<Y, P extends IParser<Y>>(p: P): TupleParser<T | Y>;
 
     /**
@@ -532,12 +427,12 @@ export interface IParser<T> {
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
      */
-    rep(): TupleParser<any>;
+    rep(): TupleParser<T>;
 
     /**
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
      */
-    optrep(): TupleParser<any>;
+    optrep(): TupleParser<T>;
 
     /**
      * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
@@ -731,7 +626,9 @@ interface FlowBundle {
      * @param stop
      */
     moveUntil(stop: string): SingleParser<string>;
+
     moveUntil(stops: string[]): SingleParser<string>;
+
     moveUntil<Y>(p: IParser<Y>): SingleParser<string>;
 
     /**
@@ -739,6 +636,7 @@ interface FlowBundle {
      * @param s
      */
     dropTo(s: string): VoidParser;
+
     dropTo<Y>(p: IParser<Y>): VoidParser;
 
 }
@@ -761,5 +659,5 @@ export declare const C: CharBundle;
 export declare const N: NumberBundle;
 export declare const Streams: Streams;
 
-export { Tuple };
+export {Tuple};
 export {GenLex};
