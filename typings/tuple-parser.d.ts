@@ -6,8 +6,8 @@ import type {VoidParser} from "./void-parser.js";
 // A SingleParser is really a IParser that don't have weird Neutral or Void value
 export interface SingleParser<T> extends IParser<T> {
 
-    then(dropped: VoidParser): SingleParser<T>;
-    then(empty: EmptyTupleParser): SingleParser<T>;
+    then(dropped: VoidParser): TupleParser<T>;
+    then(empty: EmptyTupleParser): TupleParser<T>;
 
     then<Y>(otherTuple: TupleParser<Y>): MixedParser<T, Y>;
     then(sameTuple: TupleParser<T>): TupleParser<T>;
@@ -29,6 +29,7 @@ export interface SingleParser<T> extends IParser<T> {
     optrep(): TupleParser<T>;*/
 
     rep(): TupleParser<T>;
+    opt(): SingleParser<Option<T>>;
 
     val(text: string): T;
 }
@@ -36,6 +37,7 @@ export interface SingleParser<T> extends IParser<T> {
 export interface TupleParser<T> extends IParser<Tuple<T>> {
     first(): SingleParser<T>; // will be undefined
     last(): SingleParser<T>;
+    single(): SingleParser<T>; // alias of first()
     then(dropped: VoidParser): TupleParser<T>;
     then(empty: EmptyTupleParser): TupleParser<T>;
     then<Y>(otherTuple: TupleParser<Y>): MixedParser<T, Y>;
@@ -69,6 +71,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     map<Y, TUPLE extends Tuple<T>>(f: (value: TUPLE, response: Response<TUPLE>) => Y): SingleParser<Y>;
 
     rep(): TupleParser<T>;
+    opt(): SingleParser<Option<Tuple<T>>>;
 
 }
 

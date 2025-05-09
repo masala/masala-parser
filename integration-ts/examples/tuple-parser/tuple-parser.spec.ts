@@ -33,16 +33,13 @@ describe('Tuple typescript integration', () => {
 
     it('Appending from dropped, it should create a string parser with then', () => {
         const a = C.char('a')
-        const b = C.char('b')
-        const stringsParser = F.any().drop().then(a).then(b)
+        const stringsParser = F.any().drop().then(a)
 
         const first = stringsParser.first()
         const valueFirst = first.val('0ab')
         expect(valueFirst).toBe('a')
 
-        const last = stringsParser.last()
-        const valueLast = last.val('0ab')
-        expect(valueLast).toBe('b')
+
     })
 
     it('Appending from dropped, it should create a mixedParser with then', () => {

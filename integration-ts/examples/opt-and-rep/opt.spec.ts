@@ -34,4 +34,34 @@ describe('Optional parser', () => {
 
     })
 
+    it('should merge tuple options nicely', () => {
+        const tupleParser = C.char('a').then(C.char('b')).opt()
+        const stringParser = C.string('!!!')
+
+        const mixed = tupleParser.then(stringParser)
+
+        // First case: the tuple is not here
+        const data = mixed.val('!!!')
+        const first = data.first()
+        const last = data.last()
+        expect(first.isPresent()).toBeFalsy()
+        expect(last).toBe('!!!')
+
+    })
+
+    it('should merge void nicely', () => {
+        const tupleParser = C.char('a').then(C.char('b')).drop().opt()
+        const stringParser = C.string('!!!')
+
+        const mixed = tupleParser.then(stringParser)
+
+        // First case: the tuple is not here
+        const data = mixed.val('ab!!!')
+        const first = data.first()
+        const last = data.last()
+        expect(first.isPresent()).toBeTruthy()
+        expect(last).toBe('!!!')
+
+    })
+
 })

@@ -1,4 +1,4 @@
-import type {IParser} from "../masala-parser.js";
+import type {IParser, Option} from "../masala-parser.js";
 import type {EmptyTupleParser, MixedParser, SingleParser, TupleParser} from "./tuple-parser.js";
 
 declare type MASALA_VOID_TYPE = symbol;
@@ -10,16 +10,17 @@ declare type MASALA_VOID_TYPE = symbol;
  */
 export interface VoidParser extends IParser<MASALA_VOID_TYPE> {
 
-    then(dropped: VoidParser): VoidParser;
+    then(dropped: VoidParser): EmptyTupleParser;
     then(empty: EmptyTupleParser): EmptyTupleParser;
 
     then<Y>(otherTuple: TupleParser<Y>): TupleParser<Y>;
     then<FIRST,LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<FIRST, LAST>;
 
-    then<Y>(other: SingleParser<Y>): SingleParser<Y>;
-    then<T>(p: IParser<T>): IParser<T>;
+    then<Y>(other: SingleParser<Y>): TupleParser<Y>;
+    then<T>(p: IParser<T>): TupleParser<T>;
 
     rep(): EmptyTupleParser;
+    opt(): SingleParser<Option<MASALA_VOID_TYPE>>;
 
     /*
     or(other: VoidParser): VoidParser;

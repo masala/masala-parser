@@ -281,7 +281,7 @@ export interface IParser<T> {
      * const abParser = C.char('a').then(C.char('b'))
      * ```
      */
-    then<Y>(p: IParser<Y>): IParser<T| Y>;
+    then<Y>(p: IParser<Y>): TupleParser<T| Y>;
 
     /**
      * Transforms the Response value
@@ -377,14 +377,15 @@ export interface IParser<T> {
 
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
-     * The TupleParser dont respect rep(): TupleParser<T>; so any is important here
+     * The TupleParser don't respect same rule as SingleParser.rep() as tuple is flattened, so any is important here
      */
     rep(): TupleParser<any|T>;
 
     /**
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
+     * The TupleParser don't respect same rule as SingleParser.rep() as tuple is flattened, so any is important here
      */
-    optrep(): TupleParser<T>;
+    optrep(): TupleParser<any|T>;
 
     /**
      * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
@@ -404,7 +405,7 @@ export interface IParser<T> {
     match(val: T): this;
 
     /**
-     * Build a new High Leven parser that parses a ParserStream of tokens.
+     * Build a new High Level parser that parses a ParserStream of tokens.
      * Tokens are defined by `this` parser.
      * It's internally used by [[GenLex]] which is more easy to work with
      *
