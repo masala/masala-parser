@@ -1,5 +1,5 @@
 /* Array with different values*/
-import type {IParser, Option} from "../masala-parser.d.ts";
+import type {IParser, Option, Response} from "../masala-parser.d.ts";
 import type {Tuple, NEUTRAL, MixedTuple} from "./tuple.d.ts";
 import type {VoidParser} from "./void-parser.js";
 
@@ -28,6 +28,8 @@ export interface SingleParser<T> extends IParser<T> {
     rep(): TupleParser<T>;
     optrep(): TupleParser<T>;*/
 
+    rep(): TupleParser<T>;
+
     val(text: string): T;
 }
 
@@ -53,15 +55,20 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      * single() is an alias of first(), expressing that the
      * parser had only a single value.
      */
+    rep(): TupleParser<T>;
     /*
     single(): SingleParser<T>;
     last(): SingleParser<T>;
     first(): SingleParser<T>;
-    rep(): TupleParser<T>;
+
     optrep(): TupleParser<T>;
 
      */
     val(text: string): Tuple<T>;
+
+    map<Y, TUPLE extends Tuple<T>>(f: (value: TUPLE, response: Response<TUPLE>) => Y): SingleParser<Y>;
+
+    rep(): TupleParser<T>;
 
 }
 

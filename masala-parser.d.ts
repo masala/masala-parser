@@ -377,8 +377,9 @@ export interface IParser<T> {
 
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
+     * The TupleParser dont respect rep(): TupleParser<T>; so any is important here
      */
-    rep(): TupleParser<T>;
+    rep(): TupleParser<any|T>;
 
     /**
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T

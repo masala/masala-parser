@@ -1,4 +1,4 @@
-import {C, N, Tuple, Streams} from "@masala/parser";
+import {C, N, Streams} from "@masala/parser";
 import {describe, it, expect} from "vitest";
 
 describe('rep parser', () => {
@@ -29,10 +29,59 @@ describe('rep parser', () => {
     it('should create support TupleParser', () => {
         const n = N.number().then(C.char('/')).rep()
 
-        const stream = Streams.ofString('1/2/3/4/5/')
+        const string = '1/2/3/4/5/'
+        const stream = Streams.ofString(string)
         const response = n.parse(stream)
         const data = response.value
+
+        expect(response.isAccepted()).toBeTruthy()
+        expect(data.size()).toEqual(string.length)
     })
 
+    it('rep support structure', () => {
+        type Struct={
+            value: number,
+            separator: string
+        }
+        const separator = C.charIn('#/')
+        const n = N.number().then(separator).array().map(([value,separator])=>
+            ({value,separator} as Struct)
+        ).rep()
+
+        const string = '1#2#3/4/5/'
+        const stream = Streams.ofString(string)
+        const response = n.parse(stream)
+        const data = response.value
+
+        expect(response.isAccepted()).toBeTruthy()
+        expect(data.size()).toEqual(string.length/2)
+        expect(data.at(0).value).toEqual(1)
+        expect(data.at(0).separator).toEqual("#")
+    })
+
+
+    it('should rep rep', () => {
+        const n = N.number().then(C.char('/')).rep().rep()
+
+        const string = '1/2/3/4/5/'
+        const stream = Streams.ofString(string)
+        const response = n.parse(stream)
+        const data = response.value
+
+        expect(response.isAccepted()).toBeTruthy()
+        expect(data.size()).toEqual(string.length)
+    })
+
+    it('should rep singleParser cleanly', () => {
+        const n = N.digit().rep()
+
+        const string = '12345'
+        const stream = Streams.ofString(string)
+        const response = n.parse(stream)
+        const data = response.value
+
+        expect(response.isAccepted()).toBeTruthy()
+        expect(data.size()).toEqual(string.length)
+    })
 
 })

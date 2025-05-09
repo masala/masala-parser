@@ -1,5 +1,5 @@
 export declare type NEUTRAL = symbol;
-
+import type {Response} from "../masala-parser.d.ts";
 
 /**
  * Represents the sequence of tokens found by the parser.
@@ -83,6 +83,7 @@ export interface Tuple<T> {
      * See [[TupleParser]]
      */
     append(neutral: NEUTRAL): this;
+
 
 }
 
