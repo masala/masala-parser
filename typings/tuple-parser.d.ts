@@ -54,12 +54,20 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     array(): SingleParser<T[]>;
 
     /**
+     * Join the content of the tuple into a string, using the separator ('' by default)
+     * @param separator
+     */
+    join(separator?: string): SingleParser<string>;
+
+    /**
      * single() is an alias of first(), expressing that the
      * parser had only a single value.
      */
+    single(): SingleParser<T>;
+
     rep(): TupleParser<T>;
     /*
-    single(): SingleParser<T>;
+
     last(): SingleParser<T>;
     first(): SingleParser<T>;
 

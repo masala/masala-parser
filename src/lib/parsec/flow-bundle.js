@@ -118,20 +118,23 @@ function startWith(value) {
   return nop().returns(value);
 }
 
-function moveUntil(stop) {
+function moveUntil(stop, include = false) {
   if (typeof stop === 'string') {
-    return searchStringStart(stop);
+    return searchStringStart(stop, include);
   }
 
   if (Array.isArray(stop)) {
-    return searchArrayStringStart(stop);
+    return searchArrayStringStart(stop, include);
   }
 
-  // TODO: change undefined by a Symbol
-  // TODO: for better performance, maybe check in the map if the symbol is included, and remove the or
+  let findParser = not(stop).rep()
+  if(include) {
+    return findParser.then(stop);
+  }
+
   const foundEos = Symbol('found-eos');
-  return doTry(not(stop).rep().then(eos()).returns(foundEos))
-    .or(not(stop).rep().map(chars => chars.join('')))
+  return doTry(findParser.then(eos()).returns(foundEos))
+    .or(findParser)
     .filter(v => v !== foundEos);
 }
 
@@ -154,14 +157,14 @@ function regex(rg) {
   const sticky = new RegExp(rg.source, flags);
 
 
-  return new Parser((input, index=0) => {
+  return new Parser((input, index = 0) => {
     sticky.lastIndex = index;           // 1. park at current cursor
     const matches = sticky.exec(input.source); // 2. attempt match
     if (!matches) {
       return response.reject(input, index, false);
     } else {
       const text = matches[0];                   // 3. what we consumed
-      return response.accept(text, input, sticky.lastIndex , true);
+      return response.accept(text, input, sticky.lastIndex, true);
     }
   })
 }
@@ -190,20 +193,27 @@ export default {
 /**
  * Will work only if input.source is a String
  * @param string
+ * @param include
  * @returns {Parser}
  */
-function searchStringStart(string) {
+function searchStringStart(string, include = false) {
   return new Parser((input, index = 0) => {
     if (typeof input.source !== 'string') {
       throw 'Input source must be a String';
     }
 
     const sourceIndex = input.source.indexOf(string, index);
+    let offset = sourceIndex;
+    let result = input.source.substring(index, sourceIndex)
+    if(include) {
+      result += string;
+      offset += string.length;
+    }
     if (sourceIndex > 0) {
       return response.accept(
-        input.source.substring(index, sourceIndex),
+        result,
         input,
-        sourceIndex,
+        offset,
         true
       );
     } else {
@@ -215,13 +225,14 @@ function searchStringStart(string) {
 /**
  * Will work only if input.source is a String
  */
-function searchArrayStringStart(array) {
+function searchArrayStringStart(array, include = false) {
   return new Parser((input, index = 0) => {
     if (typeof input.source !== 'string') {
       throw 'Input source must be a String';
     }
 
     let sourceIndex = -1;
+    let offset, result;
 
     let i = 0;
     while (sourceIndex < 0 && i < array.length) {
@@ -229,6 +240,12 @@ function searchArrayStringStart(array) {
       sourceIndex = input.source.indexOf(needle, index);
       i++;
       if (sourceIndex > 0) {
+        offset = sourceIndex;
+        result = input.source.substring(index, sourceIndex);
+        if(include) {
+          result += needle;
+          offset += needle.length;
+        }
         break;
       }
     }
@@ -237,9 +254,9 @@ function searchArrayStringStart(array) {
 
     if (sourceIndex > 0) {
       return response.accept(
-        input.source.substring(index, sourceIndex),
+        result,
         input,
-        sourceIndex,
+        offset,
         true
       );
     } else {
