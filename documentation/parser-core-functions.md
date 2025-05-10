@@ -171,7 +171,7 @@ test.deepEqual(parsing.value.array(),['a', 'a', 'a']);
 
 ### optrep
 
-* difficulty : 0
+* difficulty : 3
 * A Parser can be repeated zero or many times  
 
 ```js        
@@ -180,6 +180,11 @@ test.deepEqual(parsing.value.array(),['a', 'a', 'a']);
 C.char('a').optrep( C.char('b') ).char('c')
 
 ```
+
+There is a MAJOR issue with optrep: optrep().optrep() or optrep().rep() will 
+cause an infinite loop.
+
+
 
 
 # Useful but touchy
