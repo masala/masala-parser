@@ -143,10 +143,12 @@ function dropTo(stop) {
   }
 }
 
+/**
+ * Accept a pure JS regex, not a string
+ * @param rg
+ * @returns {Parser}
+ */
 function regex(rg) {
-  if (typeof rg !== 'object' && !(rg instanceof RegExp)) {
-    throw 'regex function expect a pure javascript RegExp (ex: /(a-z*)/i)';
-  }
   // clone with 'y' (sticky) and preserve all the existing flags
   const flags = rg.flags.includes('y') ? rg.flags : rg.flags + 'y';
   const sticky = new RegExp(rg.source, flags);
