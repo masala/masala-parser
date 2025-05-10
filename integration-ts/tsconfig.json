@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "lib": ["dom", "es2015", "es2017"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["es2015", "es2017"],
     "strict": true,
-    "noEmit": false,
+    "noEmit": true,
     "isolatedModules": true,
     "skipLibCheck": true,
     "noImplicitAny": true,

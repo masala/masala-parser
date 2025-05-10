@@ -160,6 +160,14 @@ function upperCase() {
     return F.satisfy(v => 'A' <= v && v <= 'Z');
 }
 
+/**
+ * Accept a string like 'a-zA-Z_'. The code will assign it into /[a-zA-Z_]/ RegExp
+ */
+function inRegexRange(regexRange) {
+    const regExp = new RegExp(`^[${regexRange}]$`);
+    return F.satisfy(c => regExp.test(c));
+}
+
 export default {
     utf8Letter,
     letter,
@@ -170,6 +178,7 @@ export default {
     notChar,
     char,
     charIn,
+    inRegexRange,
     charNotIn,
     subString,
     string,

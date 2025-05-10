@@ -71,3 +71,21 @@ const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
 parsing = combinator.parse(stream);
 assertEquals('James', parsing.value);
 ```
+
+### inRegexRange
+
+C.inRegexRange(range) converts one character-class into a single–character parser.
+The argument can be either a raw range string `a-zA-Z_` or a RegExp `/[0-9A-Fa-f]/`.
+Internally it is anchored with ^…$, so the parser always consumes exactly one code unit.
+
+
+```js
+let stream = Streams.ofString('myUser');
+
+//identifier parser-> myUser: ok ; 0myUser: not ok
+const firstChar = C.inRegexRange('a-zA-Z_');
+const restChars = C.inRegexRange('a-zA-Z0-9_').rep();
+const identifier = firstChar.then(restChars);
+```
+
+For complex regex, you will probably prefer `F.regex()`.

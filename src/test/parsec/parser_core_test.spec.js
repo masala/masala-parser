@@ -581,4 +581,19 @@ describe('Parser Core Tests', () => {
         console.log = original;
         expect(sideEffect).toBe(false);
     });
+
+    it('joins a TupleParser resulting in a string', ()=>{
+        const st = stream.ofString('5x8');
+        let combinator = F.any().rep().join('')
+        expect(combinator.parse(st).value).toBe('5x8');
+
+        combinator = F.any().rep().join('-')
+        expect(combinator.parse(st).value).toBe('5-x-8');
+    })
+
+    it('fails with join() if it is not a TupleParser', ()=>{
+        const st = stream.ofString('5x8');
+        let combinator = F.any().rep().first().join('')
+        expect(()=>combinator.parse(st)).toThrow()
+    })
 }); 
