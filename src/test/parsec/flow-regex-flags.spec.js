@@ -68,4 +68,21 @@ describe('F.regex – behaviour of individual RegExp flags', () => {
         parsing = F.regex(/\u{1F600}/).parse(stream);
         expect(parsing.isAccepted()).toBe(false);
     });
+
+    it('matches only when the cursor is exactly on the pattern', () => {
+        const stickyB = /b/y;
+
+        // cursor on the b  → accepted
+        let stream  = Streams.ofString('ab');
+        let parsing = F.regex(stickyB).parse(stream, 1);   // start at index 1
+        expect(parsing.isAccepted()).toBe(true);
+        expect(parsing.value).toBe('b');
+        expect(parsing.offset).toBe(2);                    // consumed one char
+
+        // cursor before the b → rejected (sticky prevents look-ahead)
+        stream  = Streams.ofString('ab');
+        parsing = F.regex(stickyB).parse(stream, 0);       // start at index 0
+        expect(parsing.isAccepted()).toBe(false);
+        expect(parsing.offset).toBe(0);                    // untouched on failure
+    });
 });

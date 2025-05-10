@@ -155,15 +155,12 @@ function regex(rg) {
 
 
   return new Parser((input, index=0) => {
-    console.log(`regex(${sticky})`, input, index);
     sticky.lastIndex = index;           // 1. park at current cursor
     const matches = sticky.exec(input.source); // 2. attempt match
     if (!matches) {
-      console.log('reject: ',{lastIndex: sticky.lastIndex, matches});
       return response.reject(input, index, false);
     } else {
       const text = matches[0];                   // 3. what we consumed
-      console.log('accept: ',{lastIndex: sticky.lastIndex, text, length:text.length});
       return response.accept(text, input, sticky.lastIndex , true);
     }
   })
