@@ -1,11 +1,19 @@
 Changelog
 ====
 
+2.0.0
+----
+
+* Full ESM support
+* Strong typescript support
+* moveUntil don't join values by default
+* parser.join(sep) is supported, only for TupleParser
+* thenLeft and thenRight are not supported in typescript, too many combinations
+
 0.8.1: better ts support
 ---
 
-Minor change on ts and bug fix 
-
+Minor change on ts and bug fix
 
 0.7 ->0.8: Using Tuples with then
 ---
