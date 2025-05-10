@@ -1,3 +1,4 @@
+import type {FlowBundle} from "./typings/flow-bundle.js";
 import type {EmptyTuple, Tuple} from "./typings/tuple.d.ts";
 import type {VoidParser} from "./typings/void-parser.js";
 import type {GenLex} from "./typings/genlex.d.ts";
@@ -540,59 +541,12 @@ interface CharBundle {
 
 }
 
-type parserBuilder<Y, P extends IParser<Y>> = (...rest: any[]) => P;
+export type parserBuilder<Y, P extends IParser<Y>> = (...rest: any[]) => P;
 
 type extension<Y, T extends IParser<Y>> = T;
 
-type Predicate<V> = (value: V) => boolean;
+export type Predicate<V> = (value: V) => boolean;
 
-interface FlowBundle {
-    parse<Y, P extends IParser<Y>>(parser: P): P;
-
-    nop(): VoidParser;
-
-    layer<Y, P extends IParser<Y>>(parser: P): P;
-
-    try<Y, P extends IParser<Y>>(parser: P): P;
-
-    any(): SingleParser<any>;
-
-    subStream(length: number): VoidParser;
-
-    not<Y, P extends IParser<Y>>(parser: P): SingleParser<any>;
-
-    lazy<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>, args?: any[]): P;
-
-    returns<T>(value: T): SingleParser<T>;
-
-    error(): VoidParser;
-
-    eos(): SingleParser<Unit>;
-
-    satisfy<V>(predicate: Predicate<V>): SingleParser<any>;
-
-    startWith<V>(value: V): SingleParser<V>;
-
-    /**
-     * moveUntil moves the offset until stop is found and returns the text found between.
-     * The *stop* is **not** read
-     * @param stop
-     */
-    moveUntil(stop: string): SingleParser<string>;
-
-    moveUntil(stops: string[]): SingleParser<string>;
-
-    moveUntil<Y>(p: IParser<Y>): SingleParser<string>;
-
-    /**
-     * Move until the stop, stop **included**, and drops it.
-     * @param s
-     */
-    dropTo(s: string): VoidParser;
-
-    dropTo<Y>(p: IParser<Y>): VoidParser;
-
-}
 
 interface NumberBundle {
     number(): SingleParser<number>;
