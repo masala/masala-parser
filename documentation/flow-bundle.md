@@ -2,10 +2,26 @@ Parser Combinator: Flow Bundle
 =====
 
 
+regex
+-----
 
-### List
+F.regex(rgx) turns a JavaScript RegExp into a primitive parser. It supports flags, look-ahead
+and all native JavaScript regex features.
 
-rep() will produce a List of values. You can get the more standard array value by calling `list.array()` 
+```js
+function assignParser() {
+  const identifier = F.regex(/[a-zA-Z_][a-zA-Z0-9_]*/);
+  const space = F.regex(/\s+/);
+  const assign = C.string(':=');
+  return identifier
+    .then(space.optrep().drop())
+    .then(assign)
+    .then(space.optrep().drop())
+    .then(identifier);
+}
+```
+
+ 
 
 
 
@@ -13,9 +29,14 @@ rep() will produce a List of values. You can get the more standard array value b
 Lazy
 -----
 
+In functional programming, we call a lazy function a function that does not evaluate immediately its argument.
+It's called lazy because it will run only when needed.
 
-`F.Lazy(parser, [params], self)` is used in case of recursion. Parsers are combined before parsing, 
-so immediate recursion is not possible: we need Lazyness().
+In masala-parser, we use this concept to avoid infinite recursion. When we build the
+parser, we don't know what is the input. And the recursion will end depending on the input offset.
+
+
+In that example, we would have an infinite recursion without lazy:
  
 ```js
 
@@ -110,4 +131,4 @@ So it logically fails, and unfortunately these types of failures are pretty hard
 
 
 
-Moreover repeating an optional repeat can cause never-ending running code: https://github.com/d-plaindoux/masala-parser/issues/81
+Moreover, repeating an optional repeat can cause never-ending running code: https://github.com/masala/masala-parser/issues/81

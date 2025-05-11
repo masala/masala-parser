@@ -95,6 +95,15 @@ export default class Parser {
         });
     }
 
+    join(j = '') {
+        return this.map(value => {
+            if (!isTuple(value)) {
+                throw 'Error: join() is called only on TupleParser';
+            }
+            return value.join(j);
+        });
+    }
+
 
     thenEos() {
         return this.then(eos().drop());
