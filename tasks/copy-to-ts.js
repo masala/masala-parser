@@ -45,7 +45,8 @@ function copy() {
 
 const destinations = [
   './integration-ts/node_modules/@masala/parser',
-  './integration-npm/node_modules/@masala/parser'
+  './integration-npm/node_modules/@masala/parser',
+  './dist'
 ]
 
 function copyDeclaration(){
