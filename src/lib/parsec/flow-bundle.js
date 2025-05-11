@@ -63,14 +63,15 @@ function satisfy(predicate) {
 
 // Parser 'a 'c -> Parser 'a 'c
 function doTry(p) {
-  return new Parser((input, index = 0) =>
-    p
-      .parse(input, index)
-      .fold(
-        accept => accept,
-        // Compared to satisfy, we come back to initial offset
-        reject => response.reject(input, reject.offset, false)
-      )
+  return new Parser((input, index = 0) => {
+    return p
+        .parse(input, index)
+        .fold(
+          accept => accept,
+          // we come back to initial offset
+          (_) =>  response.reject(input, index, false)
+        )
+    }
   );
 }
 
@@ -128,7 +129,7 @@ function moveUntil(stop, include = false) {
   }
 
   let findParser = not(stop).rep()
-  if(include) {
+  if (include) {
     return findParser.then(stop);
   }
 
@@ -169,6 +170,18 @@ function regex(rg) {
   })
 }
 
+function tryAll(parsers) {
+  if (parsers.length === 0) {
+    return nop();
+  }
+  let combinator = doTry(parsers[0]);
+  for (let i = 1; i < parsers.length; i++) {
+    combinator = doTry(combinator.or(doTry(parsers[i])));
+  }
+
+  return combinator;
+}
+
 export default {
   parse,
   nop,
@@ -186,6 +199,7 @@ export default {
   moveUntil,
   dropTo,
   regex,
+  tryAll
 };
 
 /**Optimization functions */
@@ -205,7 +219,7 @@ function searchStringStart(string, include = false) {
     const sourceIndex = input.source.indexOf(string, index);
     let offset = sourceIndex;
     let result = input.source.substring(index, sourceIndex)
-    if(include) {
+    if (include) {
       result += string;
       offset += string.length;
     }
@@ -242,7 +256,7 @@ function searchArrayStringStart(array, include = false) {
       if (sourceIndex > 0) {
         offset = sourceIndex;
         result = input.source.substring(index, sourceIndex);
-        if(include) {
+        if (include) {
           result += needle;
           offset += needle.length;
         }

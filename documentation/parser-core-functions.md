@@ -192,21 +192,54 @@ cause an infinite loop.
 `try()` and `or()` are useful, and work often together. `or()` alone is not difficult, but it's harder to understand
 when it must work with `try()`
 
-### try() and or()
+### or()
+
+* Essential
+* difficulty : 3
+
+`or()` is used to test a parser, and if it fails, it will try the next one
+
+```js
+const endLiner = C.char('\n').or(F.eos())
+const parser = F.moveUntil(endLiner.drop())
+```
+
+This case is straightforward, but it can be more complex when the parser eats while testing or(). 
+
+````js
+
+const eater= C.char('a').then( C.char('a'))
+const parser = eater.or( C.char('b'))
+
+const stream = Streams.ofString('ab');
+const parsing = parser.parse(stream);
+expect(parsing.isAccepted()).toBe(false);
+expect(parsing.offset).toBe(1); // ✨ this is the point ! one 'a' is consumed
+
+const nonEater= F.try(eater).or( C.char('b')); // use this to allow backtracking
+````
+
+Because Masala is a fast LL(1) parser, it will try to move forward by default.
+
+
+
+
+### partial and full backtracking: F.try().or() and F.tryAll()
 
 * Essential !
-* difficulty : 1
+* difficulty : 3
 * Try a succession of parsers
 * If success, then continues
 * If not, jump after the succession, and continues with `or()`
  
-         try(   x().then(y())  ).or(...)
+```js
+const typical = F.try(x).or(y) // still no backtrack on or(y)
+const manyOr = F.tryAll([x,y,z]) // same as try(x).or(try(y)).or(try(z))
+```
+         
 
 
-TODO : what's the difference with : (  x().then(y())  ).or()
-TODO : There is a story of consumed input
-    - in tests : 'expect (then.or) left to be consumed'
-TODO : missing a pertinent test for using try()
+
 
 
 
