@@ -56,4 +56,6 @@ export interface FlowBundle {
      */
     regex(regex: RegExp): SingleParser<string>;
 
+    tryAll(parsers: IParser<any>[]): IParser<any>;
+
 }

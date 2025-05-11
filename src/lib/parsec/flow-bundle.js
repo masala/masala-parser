@@ -128,9 +128,9 @@ function moveUntil(stop, include = false) {
     return searchArrayStringStart(stop, include);
   }
 
-  let findParser = not(stop).rep()
+  let findParser = not(stop).rep().join()
   if (include) {
-    return findParser.then(stop);
+    return findParser.then(stop).join();
   }
 
   const foundEos = Symbol('found-eos');

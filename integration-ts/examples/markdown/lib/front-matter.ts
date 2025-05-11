@@ -8,7 +8,7 @@ interface FrontMatterLine{
 export type FrontMatterParser =TupleParser<FrontMatterLine>
 
 function identifier():SingleParser<string> {
-    return F.regex(/^[a-zA-Z_][a-zA-Z0-9_]*$/)
+    return F.regex(/[a-zA-Z_][a-zA-Z0-9_]*/)
 }
 
 function stopper(){
@@ -24,7 +24,7 @@ function lineSeparator(){
 }
 
 function leftText():SingleParser<string> {
-    return identifier().rep().then(stopper().drop()).map(
+    return identifier().then(stopper().drop()).map(
         s=>(s.join(''))
     )
 }

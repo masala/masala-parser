@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import {NEUTRAL, tuple} from "../../lib/index.js";
 import Streams from '../../lib/stream/index';
 import { C,F } from '../../lib/parsec/index';
 
@@ -6,7 +7,7 @@ describe('combining F.try() and p.or()', () => {
 
     it('works straightforward with a single or()', () => {
         const endLiner = C.char('\n').or(F.eos())
-        const parser = F.moveUntil(endLiner.drop()).join()
+        const parser = F.moveUntil(endLiner.drop())
 
         const document = 'hello world\n';
         const stream = Streams.ofString(document);
@@ -104,6 +105,29 @@ describe('combining F.try() and p.or()', () => {
         const parsing = parser.parse(stream);
         expect(parsing.isAccepted()).toBe(false);
         expect(parsing.offset).toBe(0);
+    })
+
+    it('use tryAll with empty array, mapping empty tuple', () => {
+
+        const parser = F.tryAll([])
+
+        const stream = Streams.ofString('ab');
+        const parsing = parser.parse(stream);
+        expect(parsing.isAccepted()).toBe(true);
+        expect(parsing.offset).toBe(0);
+        expect(parsing.value).toBe(NEUTRAL);
+    })
+
+    it('use tryAll with empty array in a series', () => {
+
+        const parser = F.tryAll([]).then(C.char('a'))
+          .then(F.tryAll([])).then(C.char('b')).join()
+
+        const stream = Streams.ofString('ab');
+        const parsing = parser.parse(stream);
+        expect(parsing.isAccepted()).toBe(true);
+        expect(parsing.offset).toBe(2);
+        expect(parsing.value).toBe('ab');
     })
 
 
