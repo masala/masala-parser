@@ -32,14 +32,15 @@ export interface FlowBundle {
 
     /**
      * moveUntil moves the offset until stop is found and returns the text found between.
-     * The *stop* is **not** read
+     * The *stop* is **not** read except if include is set to true.
      * @param stop
+     * @param include if true, the stop is included in the result
      */
-    moveUntil(stop: string): SingleParser<string>;
+    moveUntil(stop: string, include?:boolean): SingleParser<string>;
 
-    moveUntil(stops: string[]): SingleParser<string>;
+    moveUntil(stops: string[], include?:boolean): SingleParser<string>;
 
-    moveUntil<Y>(p: IParser<Y>): SingleParser<string>;
+    moveUntil<Y>(p: IParser<Y>, include?:boolean): SingleParser<string>;
 
     /**
      * Move until the stop, stop **included**, and drops it.

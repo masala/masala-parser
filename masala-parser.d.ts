@@ -566,5 +566,6 @@ export declare const C: CharBundle;
 export declare const N: NumberBundle;
 export declare const Streams: Streams;
 
-export {Tuple};
 export {GenLex};
+export type {EmptyTuple, Tuple};
+export type {VoidParser,TupleParser, SingleParser, EmptyTupleParser, MixedParser};
