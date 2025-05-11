@@ -10,7 +10,7 @@
     "specific": "ts-node ./examples/markdown/test/markdown-tests.ts"
   },
   "dependencies": {
-    "@masala/parser": "^2.0.0-alpha.2"
+    "@masala/parser": "^2.0.0-alpha.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.17",
