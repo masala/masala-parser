@@ -1,5 +1,5 @@
-import { markdown } from '../lib/document-parser'
-import { assertEquals, assertTrue } from '../../../assert'
+import { markdown } from '../lib/document-parser.js'
+import { assertEquals, assertTrue } from '../../../assert.js'
 
 const document = `
 

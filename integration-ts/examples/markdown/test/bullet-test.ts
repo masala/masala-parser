@@ -1,13 +1,12 @@
-import { title } from '../lib/title-parser'
 import {
     assertDeepEquals,
     assertEquals,
     assertFalse,
     assertTrue,
-} from '../../../assert'
-import { bullet, bulletBlock } from '../lib/bullet-parser'
+} from '../../../assert.js'
+import { bullet, bulletBlock } from '../lib/bullet-parser.js'
 import { F, GenLex, Streams } from '@masala/parser'
-import { eol } from '../lib/token'
+import { eol } from '../lib/token.js'
 
 export const bulletsTests = {
     'test text normal': function () {

@@ -1,6 +1,5 @@
-import { title } from '../lib/title-parser'
-import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert'
-import { codeBlock, codeLine } from '../lib/code-line-parser'
+import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert.js'
+import { codeBlock, codeLine } from '../lib/code-line-parser.js'
 
 export const codeBlockTests = {
     'test simple code 1ine': function () {

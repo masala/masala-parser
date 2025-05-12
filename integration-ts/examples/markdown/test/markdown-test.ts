@@ -1,9 +1,9 @@
-import { launch } from '../../../assert'
-import { textTests } from './text-test'
-import { titleTests } from './title-test'
-import { codeBlockTests } from './code-block-test'
-import { bulletsTests } from './bullet-test'
-import { documentTests } from './document-test'
+import { launch } from '../../../assert.js'
+import { textTests } from './text-test.js'
+import { titleTests } from './title-test.js'
+import { codeBlockTests } from './code-block-test.js'
+import { bulletsTests } from './bullet-test.js'
+import { documentTests } from './document-test.js'
 
 export function launchMarkdown(): void {
     launch(codeBlockTests)

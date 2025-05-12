@@ -2,8 +2,11 @@ import {
     C,
     F,
     GenLex,
+    IParser,
+    Option,
     SingleParser,
     Streams,
+    Tuple,
     tuple,
     TupleParser,
 } from '@masala/parser'
@@ -38,7 +41,7 @@ interface Instruction {
 }
 
 interface Loop extends Instruction {
-    values: Instruction[]
+    values: Tuple<Instruction>
 }
 
 function terminal(): TupleParser<Instruction> {
@@ -48,39 +51,47 @@ function terminal(): TupleParser<Instruction> {
         .or(gt)
         .or(comma)
         .or(period)
-        .map((type) => ({ type }))
+        .map((type) => ({ type }) as Instruction)
         .rep()
 }
 
 function loopExpr(): SingleParser<Loop> {
-    return open
-        .drop()
-        .then(F.lazy(expr))
-        .then(close.drop())
-        .array()
-        .map((values) => {
-            return {
-                type: 'loop',
-                values: [...values],
-            }
-        })
+    return (
+        open
+            .drop()
+            .then(F.lazy(expr))
+            .then(close.drop())
+            //.array()
+            .map((values) => {
+                return {
+                    type: 'loop',
+                    values,
+                }
+            })
+    )
 }
 
 function expr(): TupleParser<Instruction> {
     //TODO: typing error
-    return terminal().then(
-        subExpr()
-            .opt()
-            .map((option) => (option.isPresent() ? option.get() : tuple())),
-    )
+
+    const empty = tuple() as Tuple<Instruction>
+    const sub: IParser<Option<Tuple<Instruction>>> = subExpr().opt()
+
+    const mappedSub = sub.map((option) =>
+        option.isPresent() ? option.get() : empty,
+    ) as IParser<Tuple<Instruction>>
+
+    return terminal().then(mappedSub) as TupleParser<Instruction>
 }
 
 function subExpr(): TupleParser<Instruction> {
-    return loopExpr().then(
-        F.lazy(expr)
-            .opt()
-            .map((option) => (option.isPresent() ? option.get() : tuple())),
-    )
+    const lazy = F.lazy(expr)
+        .opt()
+        .map((option) =>
+            option.isPresent() ? option.get() : tuple(),
+        ) as IParser<Tuple<Instruction>>
+
+    return loopExpr().then(lazy) as unknown as TupleParser<Instruction>
 }
 
 export function createParser() {
@@ -96,15 +107,15 @@ function brainfuck(program: string) {
 
     let response = parser.parse(Streams.ofString(program))
 
-    interpretAll(response.value.array())
+    interpretAll(response.value)
 
     console.log({ memory: memory.slice(0, max + 1), output, executed })
 
     console.log('\n\n\n\n')
 }
 
-function interpretAll(instructions: Instruction[]) {
-    instructions.forEach(interpret)
+function interpretAll(instructions: Tuple<Instruction>) {
+    instructions.array().forEach(interpret)
 }
 
 function interpret(instruction: Instruction) {
@@ -146,7 +157,7 @@ function interpret(instruction: Instruction) {
 }
 
 function resetState() {
-    console.log('----- new brainfuck ------ \n\n  ')
+    //console.log('----- new brainfuck ------ \n\n  ')
     // Clear memory, reset pointers to zero.
     memory.fill(0)
     max = 0
@@ -170,7 +181,7 @@ describe('Brainfuck Interpreter', () => {
         resetState()
         const parser = createParser()
         let response = parser.parse(Streams.ofString(program))
-        interpretAll(response.value.array())
+        interpretAll(response.value)
 
         expect(memory.slice(0, max + 1)).toEqual([3, 1])
         expect(output).toBe('')
@@ -182,7 +193,7 @@ describe('Brainfuck Interpreter', () => {
         resetState()
         const parser = createParser()
         let response = parser.parse(Streams.ofString(program))
-        interpretAll(response.value.array())
+        interpretAll(response.value)
 
         // Memory: [0, 3] (values swapped), Pointer: 0
         expect(memory.slice(0, max + 1)).toEqual([0, 3])
@@ -197,7 +208,7 @@ describe('Brainfuck Interpreter', () => {
         resetState()
         const parser = createParser()
         let response = parser.parse(Streams.ofString(program))
-        interpretAll(response.value.array())
+        interpretAll(response.value)
 
         expect(output).toBe('Hello World!\n')
         // Memory state check might be complex, focusing on output

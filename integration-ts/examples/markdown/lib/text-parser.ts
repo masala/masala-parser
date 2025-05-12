@@ -12,8 +12,8 @@
  */
 import { F, C, SingleParser, IParser } from '@masala/parser'
 
-import { FormattedSequence, MdText, Paragraph } from './types'
-import { blank, eol, lineFeed } from './token'
+import { FormattedSequence, MdText, Paragraph } from './types.js'
+import { blank, eol, lineFeed } from './token.js'
 
 //TODO: no good at all=> For simplicity, bold, italic and code cannot go across different lines
 function stop() {
