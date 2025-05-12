@@ -1,5 +1,5 @@
-import response from '../../lib/parsec/response';
-import stream from '../../lib/stream/index';
+import response from '../../lib/parsec/response'
+import stream from '../../lib/stream/index'
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -23,358 +23,339 @@ import stream from '../../lib/stream/index';
 
 export default {
     setUp: function (done) {
-        done();
+        done()
     },
 
     'response accepted': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.ok(response.accept().isAccepted(), 'should be accepted.');
-        test.done();
+        test.ok(response.accept().isAccepted(), 'should be accepted.')
+        test.done()
     },
 
     'response as a success': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.ok(response.accept().toTry().isSuccess(), 'should be success.');
-        test.done();
+        test.ok(response.accept().toTry().isSuccess(), 'should be success.')
+        test.done()
     },
 
     'response accepted map to accepted': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.ok(
             response
                 .accept()
                 .map(function (a) {
-                    return a;
+                    return a
                 })
                 .isAccepted(),
-            'should be accepted.'
-        );
-        test.done();
+            'should be accepted.',
+        )
+        test.done()
     },
 
     'response accepted map to return the value': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response.accept('a').map(function (a) {
-                return a;
+                return a
             }).value,
             'a',
-            'should be accepted.'
-        );
-        test.done();
+            'should be accepted.',
+        )
+        test.done()
     },
 
-    'response accepted map to pass in response as second argument': function (test) {
-        test.expect(1);
+    'response accepted map to pass in response as second argument': function (
+        test,
+    ) {
+        test.expect(1)
         // tests here
         test.deepEqual(
             response.accept('a').map(function (_, response) {
-                return response;
+                return response
             }).value,
             response.accept('a'),
-            'should return the response.'
-        );
-        test.done();
+            'should return the response.',
+        )
+        test.done()
     },
 
     'response accepted flatMap to accepted': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.ok(
             response
                 .accept('a')
                 .flatMap(function (a) {
-                    return response.accept(a);
+                    return response.accept(a)
                 })
                 .isAccepted(),
-            'should be accepted.'
-        );
-        test.done();
+            'should be accepted.',
+        )
+        test.done()
     },
 
     'response accepted flatMap knows the offset': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         const responseOffset = response
-          .accept('a', 'abc', 1, false)
-          .flatMap(function (a, response) {
-              return response.offset;
-          })
+            .accept('a', 'abc', 1, false)
+            .flatMap(function (a, response) {
+                return response.offset
+            })
 
-        test.ok(responseOffset === 1,
-          'found the offset'
-        );
-        test.done();
+        test.ok(responseOffset === 1, 'found the offset')
+        test.done()
     },
 
     'response accepted flatMap to return the value': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.ok(
             response
                 .accept('a')
                 .flatMap(function (a) {
-                    return response.accept(a);
+                    return response.accept(a)
                 })
                 .isAccepted(),
             'a',
-            'should be accepted.'
-        );
-        test.done();
+            'should be accepted.',
+        )
+        test.done()
     },
 
     'response accepted flatMap to reject': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response
                 .accept()
                 .flatMap(function () {
-                    return response.reject();
+                    return response.reject()
                 })
                 .isAccepted(),
             false,
-            'should be rejected.'
-        );
-        test.done();
+            'should be rejected.',
+        )
+        test.done()
     },
 
     'response rejected map to rejected': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
                 .map(function (t) {
-                    return t;
+                    return t
                 })
                 .isAccepted(),
             false,
-            'should be rejected.'
-        );
-        test.done();
+            'should be rejected.',
+        )
+        test.done()
     },
 
     'response rejected map callback not called': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        let calls = 0;
+        let calls = 0
         response.reject().map(function () {
-            calls++;
-        });
-        test.equal(
-            calls,
-            0,
-            'should not have called the callback.'
-        );
-        test.done();
+            calls++
+        })
+        test.equal(calls, 0, 'should not have called the callback.')
+        test.done()
     },
 
     'response rejected flatMap to rejected': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
                 .flatMap(function () {
-                    return response.accept();
+                    return response.accept()
                 })
                 .isAccepted(),
             false,
-            'should be rejected.'
-        );
-        test.done();
+            'should be rejected.',
+        )
+        test.done()
     },
 
     'response rejected flatMap callback not called': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        let calls = 0;
+        let calls = 0
         response.reject().flatMap(function () {
-            calls++;
-        });
-        test.equal(
-            calls,
-            0,
-            'should not have called the callback.'
-        );
-        test.done();
+            calls++
+        })
+        test.equal(calls, 0, 'should not have called the callback.')
+        test.done()
     },
 
     'response accepted fold': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response.accept('a').fold(function (a) {
-                return a.value;
+                return a.value
             }),
             'a',
-            'should retrieve the value.'
-        );
-        test.done();
+            'should retrieve the value.',
+        )
+        test.done()
     },
 
-    'fold takes a function to map the value depending on result': function (test) {
-
-        let value = response.accept('a')
-            .fold(accept => accept.value + '-potato', // Accept has value, input, offset, consumed
-                reject => reject.offset + '-tomato'); // Reject has offset, consumed
+    'fold takes a function to map the value depending on result': function (
+        test,
+    ) {
+        let value = response.accept('a').fold(
+            (accept) => accept.value + '-potato', // Accept has value, input, offset, consumed
+            (reject) => reject.offset + '-tomato',
+        ) // Reject has offset, consumed
 
         // we accept, so it should be a-potato
-        test.equal(value, 'a-potato');
+        test.equal(value, 'a-potato')
 
-        value = response.reject()
-            .fold(accept => accept.value + '-potato',
-                reject =>  reject.offset + '-tomato');
+        value = response.reject().fold(
+            (accept) => accept.value + '-potato',
+            (reject) => reject.offset + '-tomato',
+        )
 
         // we reject, so it should use the second function
         // Offset is undefined because it's up to the parser to know which offset it's parsing
-        test.equal(value, 'undefined-tomato');
+        test.equal(value, 'undefined-tomato')
 
-
-        test.done();
-
+        test.done()
     },
 
     'response filter accepted': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.ok(
             response
                 .accept('a')
                 .filter(function (a) {
-                    return a === 'a';
+                    return a === 'a'
                 })
                 .isAccepted(),
-            'should filter the response.'
-        );
-        test.done();
+            'should filter the response.',
+        )
+        test.done()
     },
 
     'response not filter accepted ': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response
                 .accept('a')
                 .filter(function (a) {
-                    return a !== 'a';
+                    return a !== 'a'
                 })
                 .isAccepted(),
             false,
-            'should not filter the response.'
-        );
-        test.done();
+            'should not filter the response.',
+        )
+        test.done()
     },
     'accept can be consumed': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        const myStream = stream.ofString('abc');
-        const acceptance = response.accept('c', myStream, 3, false);
-        const consumed = acceptance.isEos();
-        test.equal(
-            consumed,
-            true,
-            'should be consumed'
-        );
-        test.done();
+        const myStream = stream.ofString('abc')
+        const acceptance = response.accept('c', myStream, 3, false)
+        const consumed = acceptance.isEos()
+        test.equal(consumed, true, 'should be consumed')
+        test.done()
     },
     'accept should not be yet consumed': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        const myStream = stream.ofString('abc');
+        const myStream = stream.ofString('abc')
         test.equal(
             response.accept('b', myStream, 2, false).isEos(),
             false,
-            'should be consumed'
-        );
-        test.done();
+            'should be consumed',
+        )
+        test.done()
     },
 
     'response rejected': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.equal(
-            response.reject().isAccepted(),
-            false,
-            'should be rejected.'
-        );
-        test.done();
+        test.equal(response.reject().isAccepted(), false, 'should be rejected.')
+        test.done()
     },
 
     'response rejected should not be consumed': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.equal(
-            response.reject().isEos(),
-            false,
-            'should be not consumed.'
-        );
-        test.done();
+        test.equal(response.reject().isEos(), false, 'should be not consumed.')
+        test.done()
     },
 
     'response as a failure': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response.reject().toTry().isSuccess(),
             false,
-            'should be failure.'
-        );
-        test.done();
+            'should be failure.',
+        )
+        test.done()
     },
 
     'response rejected fold': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response.reject().fold(
                 function (a) {
-                    return a.value;
+                    return a.value
                 },
                 function () {
-                    return 'b';
-                }
+                    return 'b'
+                },
             ),
             'b',
-            'should generate the value.'
-        );
-        test.done();
+            'should generate the value.',
+        )
+        test.done()
     },
 
     'response filter rejected': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
                 .filter(function () {
-                    return true;
+                    return true
                 })
                 .isAccepted(),
             false,
-            'should not filter the response.'
-        );
-        test.done();
+            'should not filter the response.',
+        )
+        test.done()
     },
 
     'response not filter rejected': function (test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
                 .filter(function () {
-                    return false;
+                    return false
                 })
                 .isAccepted(),
             false,
-            'should not filter the response.'
-        );
-        test.done();
+            'should not filter the response.',
+        )
+        test.done()
     },
-};
+}
