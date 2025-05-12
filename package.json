@@ -1,77 +1,81 @@
 {
-  "name": "@masala/parser",
-  "type": "module",
-  "description": "Masala Parser",
-  "version": "2.0.0-alpha.4",
-  "license": "LGPL‑3.0",
-  "licence-meaning": "You are free to use, modify and distribute this software under the terms of the LGPL-3.0 license. However, if you modify the library (/src/lib) and distribute it, you must also distribute the source code of your modifications under the same license. If you want to modify without distributing, just pay us legit royalties 😇",
-  "keywords": [
-    "parser",
-    "parsec",
-    "javascript",
-    "ll",
-    "combinator",
-    "functional",
-    "composable"
-  ],
-  "homepage": "https://github.com/masala/masala-parser",
-  "author": {
-    "name": "Didier Plaindoux",
-    "email": "d.plaindoux@free.fr",
-    "url": "d.plaindoux.free.fr"
-  },
-  "contributors": [
-    {
-      "name": "Nicolas Zozol",
-      "url": "https://www.robusta.build"
+    "name": "@masala/parser",
+    "type": "module",
+    "description": "Masala Parser",
+    "version": "2.0.0-alpha.4",
+    "license": "LGPL‑3.0",
+    "licence-meaning": "You are free to use, modify and distribute this software under the terms of the LGPL-3.0 license. However, if you modify the library (/src/lib) and distribute it, you must also distribute the source code of your modifications under the same license. If you want to modify without distributing, just pay us legit royalties 😇",
+    "keywords": [
+        "parser",
+        "parsec",
+        "javascript",
+        "ll",
+        "combinator",
+        "functional",
+        "composable"
+    ],
+    "homepage": "https://github.com/masala/masala-parser",
+    "author": {
+        "name": "Didier Plaindoux",
+        "email": "d.plaindoux@free.fr",
+        "url": "d.plaindoux.free.fr"
+    },
+    "contributors": [
+        {
+            "name": "Nicolas Zozol",
+            "url": "https://www.robusta.build"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/masala/masala-parser"
+    },
+    "bugs": {
+        "url": "https://github.com/masala/masala-parser/issues"
+    },
+    "licenses": [
+        {
+            "type": "LGPL2",
+            "url": "https://github.com/masala/masala-parser/blob/master/LICENSE-LGPL2"
+        }
+    ],
+    "main": "dist/masala-parser.js",
+    "types": "./masala-parser.d.ts",
+    "engines": {
+        "node": ">= 6.11.4"
+    },
+    "scripts": {
+        "format": "prettier --write \"src/**/*.js\"",
+        "safeformat": "prettier \"src/**/*.js\"",
+        "lint": "eslint \"src/**/*.js\"",
+        "test": "vitest run src/test/**/*.spec.js",
+        "cover": "rimraf coverage && vitest run --coverage",
+        "check": "npm run test && npm run cover",
+        "dist": "npm run rollup && npm run ingest",
+        "copy-ts": "node tasks/copy-to-ts",
+        "integration": "npm run copy-ts && cd integration-ts && npm run test",
+        "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts",
+        "add-js-ext": "jscodeshift -t tasks/add-js-ext.cjs \"src/lib\"",
+        "ingest": "node tasks/ingest.js",
+        "rollup": "rimraf dist/ && mkdir -p dist && rollup -c"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.17",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@vitest/coverage-v8": "^3.1.3",
+        "eslint": "^9.25.1",
+        "jscodeshift": "^17.3.0",
+        "lint-staged": "^16.0.0",
+        "ncp": "^2.0.0",
+        "nodeunit": "^0.11.3",
+        "prettier": "^3.5.3",
+        "prettier-eslint-cli": "^3.4.3",
+        "rimraf": "^6.0.1",
+        "rmfr": "^2.0.0",
+        "rollup": "^4.40.1",
+        "typedoc": "^0.28.3"
+    },
+    "lint-staged": {
+        "**/*.{js,ts,json,md}": "npm run format"
     }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/masala/masala-parser"
-  },
-  "bugs": {
-    "url": "https://github.com/masala/masala-parser/issues"
-  },
-  "licenses": [
-    {
-      "type": "LGPL2",
-      "url": "https://github.com/masala/masala-parser/blob/master/LICENSE-LGPL2"
-    }
-  ],
-  "main": "dist/masala-parser.js",
-  "types": "./masala-parser.d.ts",
-  "engines": {
-    "node": ">= 6.11.4"
-  },
-  "scripts": {
-    "format": "prettier --write \"src/**/*.js\"",
-    "safeformat": "prettier \"src/**/*.js\"",
-    "lint": "eslint \"src/**/*.js\"",
-    "test": "vitest run src/test/**/*.spec.js",
-    "cover": "rimraf coverage && vitest run --coverage",
-    "check": "npm run test && npm run cover",
-    "dist": "npm run rollup && npm run ingest",
-    "copy-ts": "node tasks/copy-to-ts",
-    "integration": "npm run copy-ts && cd integration-ts && npm run test",
-    "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts",
-    "add-js-ext": "jscodeshift -t tasks/add-js-ext.cjs \"src/lib\"",
-    "ingest": "node tasks/ingest.js",
-    "rollup": "rimraf dist/ && mkdir -p dist && rollup -c"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.17",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@vitest/coverage-v8": "^3.1.3",
-    "eslint": "^9.25.1",
-    "jscodeshift": "^17.3.0",
-    "ncp": "^2.0.0",
-    "nodeunit": "^0.11.3",
-    "prettier": "^3.5.3",
-    "prettier-eslint-cli": "^3.4.3",
-    "rimraf": "^6.0.1",
-    "rmfr": "^2.0.0",
-    "rollup": "^4.40.1",
-    "typedoc": "^0.28.3"
-  }
 }
