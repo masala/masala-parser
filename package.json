@@ -39,52 +39,39 @@
       "url": "https://github.com/masala/masala-parser/blob/master/LICENSE-LGPL2"
     }
   ],
-  "main": "dist/index.js",
+  "main": "dist/masala-parser.js",
   "types": "./masala-parser.d.ts",
   "engines": {
     "node": ">= 6.11.4"
   },
   "scripts": {
-    "compile": "rimraf build/ && mkdirp build && babel src --out-dir build --source-maps true && node tasks/post-compile.js ",
-    "dev": "babel --watch src --out-dir dist",
     "format": "prettier-eslint --prettier.tab-width 4 --write \"src/**/*.js\"",
     "safeformat": "prettier-eslint --prettier.tab-width 4 \"src/**/*.js\"",
     "lint": "eslint \"src/**/*.js\"",
     "test": "vitest run src/test/**/*.spec.js",
     "cover": "rimraf coverage && vitest run --coverage",
     "check": "npm run test && npm run cover",
-    "concat": "rimraf dist/ && mkdirp dist && npm run compile && browserify build/lib/index.js --standalone masala -o dist/masala-parser.js",
     "dist": "npm run rollup && npm run ingest",
-    "integrate": "npm run check && npm run dist && node tasks/integrate.js && echo 'prepuplished OK'",
-    "copy-ts": "npm run compile && node tasks/copy-to-ts",
+    "copy-ts": "node tasks/copy-to-ts",
     "integration": "npm run copy-ts && cd integration-ts && npm run test",
     "doc": "typedoc --includeDeclarations --excludeExternals --out documentation/typedoc masala-parser.d.ts",
     "add-js-ext": "jscodeshift -t tasks/add-js-ext.cjs \"src/lib\"",
     "ingest": "node tasks/ingest.js",
-    "rollup": "rimraf dist/ && mkdirp dist && rollup -c"
+    "rollup": "rimraf dist/ && mkdir -p dist && rollup -c"
   },
   "devDependencies": {
     "@types/node": "^22.15.17",
-    "@babel/cli": "^7.27.0",
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
     "@rollup/plugin-terser": "^0.4.4",
     "@vitest/coverage-v8": "^3.1.3",
-    "babel-preset-es2019": "^1.0.0",
-    "browserify": "^17.0.0",
-    "coveralls": "^3.0.6",
     "eslint": "^9.25.1",
     "jscodeshift": "^17.3.0",
-    "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
     "nodeunit": "^0.11.3",
-    "nyc": "^17.1.0",
     "prettier": "^1.3.1",
     "prettier-eslint-cli": "^3.4.3",
-    "rimraf": "^2.6.1",
+    "rimraf": "^6.0.1",
     "rmfr": "^2.0.0",
     "rollup": "^4.40.1",
-    "typedoc": "^0.28.3",
-    "uglifyify": "^5.0.0"
+    "typedoc": "^0.28.3"
   }
 }
