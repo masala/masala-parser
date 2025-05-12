@@ -1,9 +1,8 @@
-import {C, N, F} from "@masala/parser";
-import {describe, it, expect} from "vitest";
+import { C, N, F } from '@masala/parser'
+import { describe, it, expect } from 'vitest'
 
 describe('Tuple typescript integration', () => {
     it('should create mixed parser that handle first and last object', () => {
-
         const c = C.char('a')
         const n = N.number()
         const mixed = c.then(n)
@@ -38,8 +37,6 @@ describe('Tuple typescript integration', () => {
         const first = stringsParser.first()
         const valueFirst = first.val('0ab')
         expect(valueFirst).toBe('a')
-
-
     })
 
     it('Appending from dropped, it should create a mixedParser with then', () => {
@@ -55,6 +52,4 @@ describe('Tuple typescript integration', () => {
         const valueLast = last.val('Xa45')
         expect(valueLast).toBe(45)
     })
-
-
 })

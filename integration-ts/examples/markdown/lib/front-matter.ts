@@ -1,49 +1,49 @@
-import {F, C, Streams, Tuple, TupleParser} from '@masala/parser'
+import { F, C, Streams, Tuple, TupleParser } from '@masala/parser'
 import { SingleParser } from '@masala/parser'
 
-interface FrontMatterLine{
-    name:string,
-    value:string
+interface FrontMatterLine {
+    name: string
+    value: string
 }
-export type FrontMatterParser =TupleParser<FrontMatterLine>
+export type FrontMatterParser = TupleParser<FrontMatterLine>
 
-function identifier():SingleParser<string> {
+function identifier(): SingleParser<string> {
     return F.regex(/[a-zA-Z_][a-zA-Z0-9_]*/)
 }
 
-function stopper(){
+function stopper() {
     return C.char(':')
 }
 
-function endLiner(){
+function endLiner() {
     return C.char('\n').or(F.eos())
 }
 
-function lineSeparator(){
+function lineSeparator() {
     return C.char('\n')
 }
 
-function leftText():SingleParser<string> {
-    return identifier().then(stopper().drop()).map(
-        s=>(s.join(''))
-    )
+function leftText(): SingleParser<string> {
+    return identifier()
+        .then(stopper().drop())
+        .map((s) => s.join(''))
 }
 
-
-function rightText():SingleParser<string> {
+function rightText(): SingleParser<string> {
     return F.moveUntil(endLiner().drop(), true)
 }
 
-function frontMatterLine():SingleParser<FrontMatterLine> {
-    return leftText().then(rightText()).array().map(
-        ([name, value])=>({
+function frontMatterLine(): SingleParser<FrontMatterLine> {
+    return leftText()
+        .then(rightText())
+        .array()
+        .map(([name, value]) => ({
             name,
-            value
-        })
-    )
+            value,
+        }))
 }
 
-
-export const frontMatterParser:FrontMatterParser = frontMatterLine()
-    .then(lineSeparator().optrep().drop()).single()
+export const frontMatterParser: FrontMatterParser = frontMatterLine()
+    .then(lineSeparator().optrep().drop())
+    .single()
     .rep()

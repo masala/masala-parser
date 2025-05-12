@@ -5,6 +5,8 @@
   "description": "used to test npm publications",
   "main": "index.js",
   "scripts": {
+    "format": "prettier --write \"**/*.ts\"",
+    "safeformat": "prettier \"**/*.ts\"",
     "clean":"rm -r examples/*.js && rm -r examples/*.map",
     "test": "vitest run",
     "specific": "ts-node ./examples/markdown/test/markdown-tests.ts"

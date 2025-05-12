@@ -1,46 +1,37 @@
-import {GenLex} from '../../lib/genlex/genlex';
-import {F, C} from '../../lib/parsec/index';
-import Streams from "../../lib/stream";
+import { GenLex } from '../../lib/genlex/genlex'
+import { F, C } from '../../lib/parsec/index'
+import Streams from '../../lib/stream'
 
+function createParser() {
+    const genlex = new GenLex()
+    genlex.setSeparatorsParser(F.not(C.charIn('+-<>[],.')))
+    genlex.keywords(['+', '-', '<', '>', '[', ']', ',', '.'])
+    const grammar = F.any()
+        .map((token) => token.value)
+        .rep()
 
-
-function createParser(){
-
-    const genlex = new GenLex();
-    genlex.setSeparatorsParser(F.not(C.charIn('+-<>[],.')));
-    genlex.keywords(['+', '-', '<', '>', '[', ']', ',', '.']);
-    const grammar = F.any().map(token=>token.value).rep();
-
-
-
-    return genlex.use(grammar);
-
+    return genlex.use(grammar)
 }
-
-
 
 export default {
     setUp: function (done) {
-        done();
+        done()
     },
 
+    'parser is valid': function (test) {
+        let hW =
+            '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
 
-    'parser is valid':function (test){
+        let parser = createParser()
+        const response = parser.parse(Streams.ofString(hW))
 
-        let hW = '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.';
+        test.ok(response.isAccepted())
+        test.equals(response.offset, hW.length)
 
-
-        let parser = createParser();
-        const response = parser.parse(Streams.ofString(hW));
-
-        test.ok(response.isAccepted());
-        test.equals(response.offset, hW.length);
-
-        test.done();
+        test.done()
     },
 
-    'comments are accepted':function(test){
-
+    'comments are accepted': function (test) {
         // Taken from Wikipedia documentation
         let hW = `++++++++               Set Cell #0 to 8
 [
@@ -74,19 +65,14 @@ Pointer :   ^
 <.                      Cell #3 was set to 'o' from the end of 'Hello'
 +++.------.--------.    Cell #3 for 'rl' and 'd'
 >>+.                    Add 1 to Cell #5 gives us an exclamation point
->++.                    And finally a newline from Cell #6`;
+>++.                    And finally a newline from Cell #6`
 
+        let parser = createParser()
+        const response = parser.parse(Streams.ofString(hW))
 
-        let parser = createParser();
-        const response = parser.parse(Streams.ofString(hW));
+        test.ok(response.isAccepted())
+        test.equals(response.offset, 106) // there is 111 tokens
 
-        test.ok(response.isAccepted());
-        test.equals(response.offset, 106); // there is 111 tokens
-
-
-        test.done();
-    }
-
-
-
+        test.done()
+    },
 }
