@@ -1,5 +1,5 @@
-import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert'
-import { paragraph } from '../lib/text-parser'
+import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert.js'
+import { paragraph } from '../lib/text-parser.js'
 import { Streams } from '@masala/parser'
 
 export const textTests = {

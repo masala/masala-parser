@@ -3,10 +3,10 @@
  */
 
 import { F, C, SingleParser, TupleParser } from '@masala/parser'
-import { formattedLine } from './text-parser'
+import { formattedLine } from './text-parser.js'
 
-import { blank, eol, spacesBlock } from './token'
-import { BulletBlock, BulletLevel1, BulletLevel2 } from './types'
+import { blank, eol, spacesBlock } from './token.js'
+import { BulletBlock, BulletLevel1, BulletLevel2 } from './types.js'
 
 function stop() {
     return F.eos().or(C.charIn('\r\n*`'))

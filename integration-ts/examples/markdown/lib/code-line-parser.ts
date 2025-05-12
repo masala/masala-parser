@@ -2,9 +2,9 @@
  * Created by Simon on 03/01/2017.
  */
 
-import { C, F, GenLex, SingleParser, TokenResult } from '@masala/parser'
-import { eol, spacesBlock } from './token'
-import { CodeBlock, CodeLine } from './types'
+import { C, F, GenLex, SingleParser } from '@masala/parser'
+import { eol, spacesBlock } from './token.js'
+import { CodeBlock, CodeLine } from './types.js'
 
 /* TODO mix spaces &  tab bug  "  \t  " will not be accepted
  known issue: non-breakable spaces are not recognised

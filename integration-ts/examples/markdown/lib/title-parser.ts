@@ -10,8 +10,8 @@
  */
 import { F, C, SingleParser } from '@masala/parser'
 
-import { MdTitle } from './types'
-import { blank, eol } from './token'
+import { MdTitle } from './types.js'
+import { blank, eol } from './token.js'
 
 let end = () => F.eos().or(eol())
 

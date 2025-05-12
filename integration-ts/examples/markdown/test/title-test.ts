@@ -1,9 +1,9 @@
 /**
  * Created by Nicolas Zozol on 14/12/2016.
  */
-import { title } from '../lib/title-parser'
-import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert'
-import { bullet } from '../lib/bullet-parser'
+import { title } from '../lib/title-parser.js'
+import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert.js'
+import { bullet } from '../lib/bullet-parser.js'
 import { Streams } from '@masala/parser'
 
 export const titleTests = {
