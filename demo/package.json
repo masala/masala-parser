@@ -1,0 +1,25 @@
+{
+    "name": "demos-ts",
+    "type": "module",
+    "version": "1.0.0",
+    "description": "used to make simple demos",
+    "main": "index.js",
+    "scripts": {
+        "compile": "tsc -p .",
+        "format": "prettier --write \"**/*.ts\"",
+        "safeformat": "prettier \"**/*.ts\"",
+        "clean": "rm -r src/*.js && rm -r src/*.map",
+        "test": "vitest run",
+        "add-js-ext": "jscodeshift  -t ../tasks/add-js-ext.cjs  examples --extensions=js,ts --parser=ts --ignore-pattern '**/*.d.ts' --ignore-pattern '**/node_modules/**'"
+    },
+    "dependencies": {
+        "@masala/parser": "^2.0.0-alpha.4"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.17",
+        "typescript": "^5.8.3",
+        "vitest": "^3.1.3"
+    },
+    "author": "",
+    "license": "ISC"
+}
