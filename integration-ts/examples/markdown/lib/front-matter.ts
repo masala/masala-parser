@@ -24,9 +24,7 @@ function lineSeparator() {
 }
 
 function leftText(): SingleParser<string> {
-    return identifier()
-        .then(stopper().drop())
-        .map((s) => s.join(''))
+    return identifier().then(stopper()).first()
 }
 
 function rightText(): SingleParser<string> {
