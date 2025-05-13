@@ -3,9 +3,9 @@ import './1-easy/hello-something'
 import './1-easy/number'
 import './1-easy/floor'
 import './1-easy/response'
-import'./2-medium/f-layer'
-import'./2-medium/filter-match'
-import'./2-medium/flat-map'
+import './2-medium/f-layer'
+import './2-medium/filter-match'
+import './2-medium/flat-map'
 import './brainfuck/compiler'
 import './chars/letter-letterAs'
 import './chars/charIn-notChar'
@@ -16,6 +16,5 @@ import './flow/startWith-moveUntil-dropTo'
 import './lazy/transmission'
 import './markdown/test/markdown-test'
 
-
 import './operations/plus-minus'
-console.log('Integration with Typescript perfect !');
+console.log('Integration with Typescript perfect !')

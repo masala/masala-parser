@@ -1,304 +1,290 @@
-import {F, C, N} from "../../lib/parsec";
-import {GenLex, getMathGenLex} from '../../lib/genlex/genlex';
-import stream from "../../lib/stream";
-
+import { F, C, N } from '../../lib/parsec'
+import { GenLex, getMathGenLex } from '../../lib/genlex/genlex'
+import stream from '../../lib/stream'
 
 export default {
     setUp: function (done) {
-        done();
+        done()
     },
 
     'genlex find offsets when success': function (test) {
-        const genlex = new GenLex();
+        const genlex = new GenLex()
 
-        const plus = genlex.tokenize('+');
-        const minus = genlex.tokenize('-');
+        const plus = genlex.tokenize('+')
+        const minus = genlex.tokenize('-')
 
-        let grammar = plus.or(minus).rep().thenEos();
+        let grammar = plus.or(minus).rep().thenEos()
 
-        const parser = genlex.use(grammar);
+        const parser = genlex.use(grammar)
 
-        const text = '+ + - --';
-        const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isEos(), 'input is consumed');
-        test.equal(5, parsing.offset, 'there are 5 keywords');
-        test.equal(8, parsing.input.location(parsing.offset), 'there are 8 chars')
+        const text = '+ + - --'
+        const parsing = parser.parse(stream.ofString(text))
+        test.ok(parsing.isEos(), 'input is consumed')
+        test.equal(5, parsing.offset, 'there are 5 keywords')
+        test.equal(
+            8,
+            parsing.input.location(parsing.offset),
+            'there are 8 chars',
+        )
         test.done()
     },
 
     'genlex find offsets when fail': function (test) {
-        const genlex = new GenLex();
+        const genlex = new GenLex()
 
-        const plus = genlex.tokenize('+');
-        const minus = genlex.tokenize('-');
+        const plus = genlex.tokenize('+')
+        const minus = genlex.tokenize('-')
 
-        let grammar = plus.or(minus).rep().thenEos();
+        let grammar = plus.or(minus).rep().thenEos()
 
-        const parser = genlex.use(grammar);
+        const parser = genlex.use(grammar)
 
-        const text = '+  +  +* --';
+        const text = '+  +  +* --'
         //            0  1  23
-        const parsing = parser.parse(stream.ofString(text));
+        const parsing = parser.parse(stream.ofString(text))
 
-        test.ok(! parsing.isEos(), 'an error should have occurred');
-        test.equal(3, parsing.getOffset(), 'Failed at the third token');
-        test.equal(7, parsing.location(), 'fail is not 3: it must be the char offset before the error');
+        test.ok(!parsing.isEos(), 'an error should have occurred')
+        test.equal(3, parsing.getOffset(), 'Failed at the third token')
+        test.equal(
+            7,
+            parsing.location(),
+            'fail is not 3: it must be the char offset before the error',
+        )
 
-        test.done();
+        test.done()
     },
 
-
     'expect Genlex to be constructed with spaces ': function (test) {
-
-        const genlex = new GenLex();
-        test.ok(genlex.spaces !== undefined);
-        test.ok(genlex.definitions.length === 0);
-        test.done();
-
+        const genlex = new GenLex()
+        test.ok(genlex.spaces !== undefined)
+        test.ok(genlex.definitions.length === 0)
+        test.done()
     },
 
     'expect tokenize() to add on definition': function (test) {
-        const genlex = new GenLex();
-        genlex.tokenize(N.number(), 'number', 500);
-        test.ok(genlex.definitions.length === 1);
-        test.done();
+        const genlex = new GenLex()
+        genlex.tokenize(N.number(), 'number', 500)
+        test.ok(genlex.definitions.length === 1)
+        test.done()
     },
     'expect use() to sort definitions by revert precedence': function (test) {
-        const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.number(), 'number');
-        const tkDate = genlex.tokenize(date(), 'date', 800);
-        const tkChar = genlex.tokenize(C.charLiteral(), 'char', 1200);
-        let grammar = tkDate.then(tkNumber.rep().or(tkChar));
+        const genlex = new GenLex()
+        const tkNumber = genlex.tokenize(N.number(), 'number')
+        const tkDate = genlex.tokenize(date(), 'date', 800)
+        const tkChar = genlex.tokenize(C.charLiteral(), 'char', 1200)
+        let grammar = tkDate.then(tkNumber.rep().or(tkChar))
 
-        test.notEqual(genlex.definitions[0].name, 'date');
-        genlex.use(grammar);
-        test.equal(genlex.definitions[2].name, 'date');
-        test.equal(genlex.definitions[0].name, 'char');
-        test.done();
+        test.notEqual(genlex.definitions[0].name, 'date')
+        genlex.use(grammar)
+        test.equal(genlex.definitions[2].name, 'date')
+        test.equal(genlex.definitions[0].name, 'char')
+        test.done()
     },
 
     'expect use() to create an easy tokenizer': function (test) {
+        const genlex = new GenLex()
+        const tkNumber = genlex.tokenize(N.number(), 'number')
+        let grammar = tkNumber.rep()
 
-        const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.number(), 'number');
-        let grammar = tkNumber.rep();
+        const parser = genlex.use(grammar)
+        const parsing = parser.parse(stream.ofString('34 23'))
 
-        const parser = genlex.use(grammar);
-        const parsing = parser.parse(stream.ofString('34 23'));
-
-        test.ok(parsing.isAccepted());
+        test.ok(parsing.isAccepted())
         test.done()
-
-
     },
     'a Genlex can update its precedence': function (test) {
+        const genlex = new GenLex()
+        const tkNumber = genlex.tokenize(N.number(), 'number')
+        const tkDate = genlex.tokenize(date(), 'date', 800)
 
-        const genlex = new GenLex();
-        const tkNumber = genlex.tokenize(N.number(), 'number');
-        const tkDate = genlex.tokenize(date(), 'date', 800);
+        let content = '10/05/2014 34 23'
+        genlex.setSeparators(' /')
+        genlex.updatePrecedence('number', 10)
 
-        let content = '10/05/2014 34 23';
-        genlex.setSeparators(' /');
-        genlex.updatePrecedence('number', 10);
+        let grammar = tkDate.or(tkNumber).rep()
 
-        let grammar = tkDate.or(tkNumber).rep();
+        const parser = genlex.use(grammar)
+        const parsing = parser.parse(stream.ofString(content))
 
-
-        const parser = genlex.use(grammar);
-        const parsing = parser.parse(stream.ofString(content));
-
-        test.deepEqual(parsing.value.array(), [10,5,2014,34,23]);
+        test.deepEqual(parsing.value.array(), [10, 5, 2014, 34, 23])
         test.done()
     },
 
     'GenLex can tokenize keywords': function (test) {
-        const genlex = new GenLex();
-        const plus = genlex.tokenize('+');
+        const genlex = new GenLex()
+        const plus = genlex.tokenize('+')
 
-        let grammar = plus.rep().then(F.eos().drop());
-        const parser = genlex.use(grammar);
-        const text = '+++++';
-        const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isAccepted(), 'GenLex can tokenize keywords');
+        let grammar = plus.rep().then(F.eos().drop())
+        const parser = genlex.use(grammar)
+        const text = '+++++'
+        const parsing = parser.parse(stream.ofString(text))
+        test.ok(parsing.isAccepted(), 'GenLex can tokenize keywords')
         test.done()
     },
 
     'tokenize mixes with keywords': function (test) {
-        const genlex = new GenLex();
-        const number = genlex.tokenize(N.number(), 'number');
-        const plus = genlex.tokenize('+');
+        const genlex = new GenLex()
+        const number = genlex.tokenize(N.number(), 'number')
+        const plus = genlex.tokenize('+')
 
-        let grammar = plus.or(number).rep().then(F.eos().drop());
-        const parser = genlex.use(grammar);
-        const text = '++77++4+';
-        const parsing = parser.parse(stream.ofString(text));
-        test.ok(parsing.isEos(), 'tokenize mixes with keywords');
+        let grammar = plus.or(number).rep().then(F.eos().drop())
+        const parser = genlex.use(grammar)
+        const text = '++77++4+'
+        const parsing = parser.parse(stream.ofString(text))
+        test.ok(parsing.isEos(), 'tokenize mixes with keywords')
         test.done()
     },
     'getMathGenLex() gives a simple genlex': function (test) {
-        const genlex = getMathGenLex();
-        const number = genlex.get('number');
+        const genlex = getMathGenLex()
+        const number = genlex.get('number')
 
+        let grammar = number.rep()
 
-        let grammar = number.rep();
+        const text = '15 14'
+        const parser = genlex.use(grammar)
 
-        const text = '15 14';
-        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString(text))
 
-        const parsing = parser.parse(stream.ofString(text));
-
-
-        test.deepEqual(parsing.value.array(), ['15', '14'], 'getMathGenLex() gives a simple genlex');
+        test.deepEqual(
+            parsing.value.array(),
+            ['15', '14'],
+            'getMathGenLex() gives a simple genlex',
+        )
         test.done()
-
-    }, 'getMathGenLex can be enhanced with a parser': function (test) {
-        const genlex = getMathGenLex();
-        genlex.remove('-');
-        const number = genlex.get('number');
+    },
+    'getMathGenLex can be enhanced with a parser': function (test) {
+        const genlex = getMathGenLex()
+        genlex.remove('-')
+        const number = genlex.get('number')
         //const digits = genlex.get('digits');
-        const tkDate = genlex.tokenize(date(), 'date', 800);
+        const tkDate = genlex.tokenize(date(), 'date', 800)
 
+        let grammar = tkDate.rep().then(number).then(F.eos())
 
-        let grammar = tkDate.rep()
-            .then(number)
-            .then(F.eos());
+        const text = '15-12-2018      12-02-2020   12 '
+        const parser = genlex.use(grammar)
 
-        const text = '15-12-2018      12-02-2020   12 ';
-        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString(text))
 
-        const parsing = parser.parse(stream.ofString(text));
-
-        test.ok(parsing.isAccepted());
+        test.ok(parsing.isAccepted())
         test.done()
+    },
+    'getMathGenLex can be enhanced with a string': function (test) {
+        const genlex = getMathGenLex()
+        const number = genlex.get('number')
+        const dol = genlex.tokenize('$', 'dol')
 
-    }, 'getMathGenLex can be enhanced with a string': function (test) {
-        const genlex = getMathGenLex();
-        const number = genlex.get('number');
-        const dol = genlex.tokenize('$', 'dol');
+        let grammar = number.then(dol).rep().then(F.eos())
 
-        let grammar = number.then(dol).rep().then(F.eos());
+        const text = '15 $ '
+        const parser = genlex.use(grammar)
 
-        const text = '15 $ ';
-        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString(text))
 
-        const parsing = parser.parse(stream.ofString(text));
-
-        test.ok(parsing.isEos());
+        test.ok(parsing.isEos())
         test.done()
+    },
+    'getMathGenLex can be enhanced with a string and no name': function (test) {
+        const genlex = getMathGenLex()
+        const number = genlex.get('number')
+        genlex.tokenize('$')
+        const dol = genlex.get('$')
 
-    }, 'getMathGenLex can be enhanced with a string and no name': function (test) {
-        const genlex = getMathGenLex();
-        const number = genlex.get('number');
-        genlex.tokenize('$');
-        const dol = genlex.get('$');
+        let grammar = number.then(dol).rep().then(F.eos())
 
-        let grammar = number.then(dol).rep().then(F.eos());
+        const text = '15 $ '
+        const parsing = genlex.use(grammar).parse(stream.ofString(text))
 
-        const text = '15 $ ';
-        const parsing = genlex.use(grammar).parse(stream.ofString(text));
-
-        test.ok(parsing.isEos());
+        test.ok(parsing.isEos())
         test.done()
-
     },
 
     'genlex can change separators with a given string': function (test) {
-        const genlex = getMathGenLex();
-        const number = genlex.get('number');
+        const genlex = getMathGenLex()
+        const number = genlex.get('number')
 
-        let grammar = number.rep().then(F.eos().drop());
+        let grammar = number.rep().then(F.eos().drop())
 
-        genlex.setSeparators('-');
-        const text = '15-12-35--';
+        genlex.setSeparators('-')
+        const text = '15-12-35--'
 
-        const parser = genlex.use(grammar);
+        const parser = genlex.use(grammar)
 
-        const parsing = parser.parse(stream.ofString(text));
+        const parsing = parser.parse(stream.ofString(text))
 
-        test.ok(parsing.isAccepted());
-        test.deepEqual(parsing.value.array(), [15, 12, 35]);
+        test.ok(parsing.isAccepted())
+        test.deepEqual(parsing.value.array(), [15, 12, 35])
         test.done()
-
     },
 
-
     'genlex separators must be a string': function (test) {
-        const genlex = getMathGenLex();
+        const genlex = getMathGenLex()
 
-        let found = false;
-        try{
-            genlex.setSeparators(C.char('-'));
-        }catch {
-            found = true;
+        let found = false
+        try {
+            genlex.setSeparators(C.char('-'))
+        } catch {
+            found = true
         }
 
-        test.ok(found);
+        test.ok(found)
         test.done()
-
     },
 
     'genlex can change separators with a full Parser': function (test) {
-        const genlex = getMathGenLex();
-        const number = genlex.get('number');
+        const genlex = getMathGenLex()
+        const number = genlex.get('number')
 
-        let grammar = number.rep().then(F.eos().drop());
+        let grammar = number.rep().then(F.eos().drop())
 
-        const separatorParser = C.char('-')
-            .then(C.char('/').opt());
+        const separatorParser = C.char('-').then(C.char('/').opt())
 
-        genlex.setSeparatorsParser(separatorParser);
-        const text = '15-12-/35--10';
+        genlex.setSeparatorsParser(separatorParser)
+        const text = '15-12-/35--10'
 
-        const parser = genlex.use(grammar);
+        const parser = genlex.use(grammar)
 
-        const parsing = parser.parse(stream.ofString(text));
+        const parsing = parser.parse(stream.ofString(text))
 
-        test.ok(parsing.isAccepted());
-        test.deepEqual(parsing.value.array(), [15, 12, 35,10]);
+        test.ok(parsing.isAccepted())
+        test.deepEqual(parsing.value.array(), [15, 12, 35, 10])
         test.done()
-
     },
 
     'genlex provide all named tokens': function (test) {
-        const genlex = getMathGenLex();
+        const genlex = getMathGenLex()
 
-        const {number, plus, mult, open, close} = genlex.tokens();
+        const { number, plus, mult, open, close } = genlex.tokens()
         //const number = genlex.get('number');
 
-        let grammar = number.or(plus).or(open).or(close).or(mult).rep().then(F.eos().drop());
+        let grammar = number
+            .or(plus)
+            .or(open)
+            .or(close)
+            .or(mult)
+            .rep()
+            .then(F.eos().drop())
 
+        const text = '12+ 35'
 
-        const text = '12+ 35';
+        const parser = genlex.use(grammar)
 
-        const parser = genlex.use(grammar);
+        const parsing = parser.parse(stream.ofString(text))
 
-        const parsing = parser.parse(stream.ofString(text));
-
-        test.ok(parsing.isAccepted());
-        test.deepEqual(parsing.value.array(), [12, '+', 35]);
+        test.ok(parsing.isAccepted())
+        test.deepEqual(parsing.value.array(), [12, '+', 35])
         test.done()
-
-    }
-
-
+    },
 }
 
-
 function date() {
-
     return N.digits()
         .then(C.charIn('-/').returns('-'))
         .then(N.digits())
         .then(C.charIn('-/').returns('-'))
         .then(N.digits())
-        .map(dateValues => dateValues[4] > 2000 ? dateValues.reverse() : dateValues)
-        .map(dateArray => dateArray.join(''));
+        .map((dateValues) =>
+            dateValues[4] > 2000 ? dateValues.reverse() : dateValues,
+        )
+        .map((dateArray) => dateArray.join(''))
 }
-
-
-
-
-
-
-
-

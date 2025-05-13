@@ -8,4 +8,4 @@
 
 class Unit {}
 
-export default new Unit();
+export default new Unit()

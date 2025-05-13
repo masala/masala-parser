@@ -1,7 +1,7 @@
-import {markdown} from "../lib/document-parser";
-import {assertEquals, assertTrue} from "../../../assert";
+import { markdown } from '../lib/document-parser.js'
+import { assertEquals, assertTrue } from '../../../assert.js'
 
-const document=`
+const document = `
 
 # Star Wars rocks
 
@@ -25,21 +25,27 @@ Good to know
 
 All these characters were very popular. *Jar Jar Bin* is not.
 
-`;
-
-
+`
 
 export const documentTests = {
-
     'test document': function () {
+        const actual = markdown().val(document)
 
-        const actual = markdown().val(document);
-
-        assertEquals(1, actual.array().filter(md => md.type === 'bulletBlock').length);
-        assertEquals(1, actual.array().filter(md => md.type === 'codeBlock').length);
-        assertEquals(3, actual.array().filter(md => md.type === 'title').length);
-        assertEquals(3, actual.array().filter(md => md.type === 'paragraph').length)
-    }
-
-};
-
+        assertEquals(
+            1,
+            actual.array().filter((md) => md.type === 'bulletBlock').length,
+        )
+        assertEquals(
+            1,
+            actual.array().filter((md) => md.type === 'codeBlock').length,
+        )
+        assertEquals(
+            3,
+            actual.array().filter((md) => md.type === 'title').length,
+        )
+        assertEquals(
+            3,
+            actual.array().filter((md) => md.type === 'paragraph').length,
+        )
+    },
+}

@@ -1,5 +1,5 @@
-import {tuple} from "@masala/parser";
-import {describe, expect, it} from "vitest";
+import { tuple } from '@masala/parser'
+import { describe, expect, it } from 'vitest'
 
 describe('Tuple typescript integration', () => {
     it('should create mixed tuple that handle first and last object', () => {
@@ -13,7 +13,6 @@ describe('Tuple typescript integration', () => {
 
         const stillMixedTuple = nTuple.append('a').append('b')
         expect(stillMixedTuple.last()).toBe('b')
-
     })
 
     it('should create a same Tuple with append', () => {
@@ -43,14 +42,13 @@ describe('Tuple typescript integration', () => {
         expect(merged.last()).toBe('c')
     })
 
-    it ('merges empty tuples correctly', () => {
+    it('merges empty tuples correctly', () => {
         const tuple1 = tuple()
         const tuple2 = tuple()
         const merged = tuple1.append(tuple2)
         expect(merged.first()).toBe(undefined)
         expect(merged.last()).toBe(undefined)
         expect(merged.isEmpty()).toBe(true)
-
     })
 
     it('merges empty tuple with different types', () => {
@@ -67,12 +65,11 @@ describe('Tuple typescript integration', () => {
         expect(merged.first()).toBe(4)
     })
 
-
     it('merges mixed tuples correctly', () => {
-        type T1 = "T1"
-        type T2 = "T2"
-        const t1:T1 = "T1"
-        const t2:T2 = "T2"
+        type T1 = 'T1'
+        type T2 = 'T2'
+        const t1: T1 = 'T1'
+        const t2: T2 = 'T2'
 
         const tuple1 = tuple().append(1).append('b')
         const tuple2 = tuple().append(t1).append(t2)
@@ -81,7 +78,7 @@ describe('Tuple typescript integration', () => {
         expect(merged.last()).toBe('T2')
     })
 
-    it("merges empty tuple with mixed tuple", () => {
+    it('merges empty tuple with mixed tuple', () => {
         const tuple1 = tuple()
         const tuple2 = tuple().append(1).append('b')
         const merged = tuple1.append(tuple2)
@@ -89,13 +86,11 @@ describe('Tuple typescript integration', () => {
         expect(merged.last()).toBe('b')
     })
 
-    it("merges mixed tuple with empty tuple, other side", () => {
+    it('merges mixed tuple with empty tuple, other side', () => {
         const tuple1 = tuple().append(1).append('b')
         const tuple2 = tuple()
         const merged = tuple1.append(tuple2)
         expect(merged.first()).toBe(1)
         expect(merged.last()).toBe('b')
     })
-
-
 })

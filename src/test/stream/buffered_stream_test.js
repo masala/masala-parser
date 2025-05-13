@@ -1,4 +1,4 @@
-import stream from '../../lib/stream/index';
+import stream from '../../lib/stream/index'
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -21,80 +21,81 @@ import stream from '../../lib/stream/index';
 */
 
 export default {
-    setUp: function(done) {
-        done();
+    setUp: function (done) {
+        done()
     },
 
-    'endOfStream for empty stream': function(test) {
-        test.expect(1);
+    'endOfStream for empty stream': function (test) {
+        test.expect(1)
         // tests here
         test.ok(
             stream.buffered(stream.ofString('')).endOfStream(0),
-            'should be endOfStream.'
-        );
-        test.done();
+            'should be endOfStream.',
+        )
+        test.done()
     },
 
-    'endOfStream for non empty stream': function(test) {
-        test.expect(1);
+    'endOfStream for non empty stream': function (test) {
+        test.expect(1)
         // tests here
         test.ok(
             stream.buffered(stream.ofString('1')).endOfStream(1),
-            'should be endOfStream.'
-        );
-        test.done();
+            'should be endOfStream.',
+        )
+        test.done()
     },
 
-    'no endOfStream for non empty stream': function(test) {
-        test.expect(1);
+    'no endOfStream for non empty stream': function (test) {
+        test.expect(1)
         // tests here
         test.equal(
             stream.buffered(stream.ofString('1')).endOfStream(0),
             false,
-            'should be endOfStream.'
-        );
-        test.done();
+            'should be endOfStream.',
+        )
+        test.done()
     },
 
-    'get from stream': function(test) {
-        test.expect(1);
+    'get from stream': function (test) {
+        test.expect(1)
         // tests here
         test.equal(
             stream.buffered(stream.ofString('1')).get(0).isSuccess(),
             true,
-            'should be a success.'
-        );
-        test.done();
+            'should be a success.',
+        )
+        test.done()
     },
 
-    'do not get from empty stream': function(test) {
-        test.expect(1);
+    'do not get from empty stream': function (test) {
+        test.expect(1)
         // tests here
         test.equal(
             stream.buffered(stream.ofString('1')).get(1).isSuccess(),
             false,
-            'should be a failure.'
-        );
-        test.done();
+            'should be a failure.',
+        )
+        test.done()
     },
 
-    'get from stream number 1': function(test) {
-        test.expect(1);
+    'get from stream number 1': function (test) {
+        test.expect(1)
         // tests here
         test.equal(
             stream.buffered(stream.ofString('123')).get(0).success(),
             '1',
-            'should be a 1.'
-        );
-        test.done();
+            'should be a 1.',
+        )
+        test.done()
     },
 
-    'get from stream number is cached': function(test) {
-        test.expect(1);
+    'get from stream number is cached': function (test) {
+        test.expect(1)
         // tests here
-        var s = stream.buffered(stream.ofString('123')), v = s.get(0);
+        var s = stream.buffered(stream.ofString('123')),
+            v = s.get(0)
 
-        test.strictEqual(s.get(0), v, 'should be a the same object.');
-        test.done();
+        test.strictEqual(s.get(0), v, 'should be a the same object.')
+        test.done()
     },
-};
+}

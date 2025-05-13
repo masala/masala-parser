@@ -6,7 +6,7 @@
  * Licensed under the LGPL3 license.
  */
 
-import atry from '../data/try.js';
+import atry from '../data/try.js'
 
 /**
  * ParserResponse basic type
@@ -20,44 +20,43 @@ import atry from '../data/try.js';
  * that the stream is fully consumed. See parser.eos() for that.
  */
 class ParserResponse {
-
     constructor(input, offset, consumed) {
-        this.input = input;
-        this.offset = offset;
-        this.consumed = consumed;
+        this.input = input
+        this.offset = offset
+        this.consumed = consumed
     }
 
     // Response 'a 'c => unit -> bool
     isAccepted() {
         return this.fold(
             function () {
-                return true;
+                return true
             },
             function () {
-                return false;
-            }
-        );
+                return false
+            },
+        )
     }
 
     // Response 'a 'c => unit -> bool
     toTry() {
         return this.fold(
-            accept => atry.success(accept.value),
-            reject =>
-                atry.failure(new Error('parser error at ' + reject.offset))
-        );
+            (accept) => atry.success(accept.value),
+            (reject) =>
+                atry.failure(new Error('parser error at ' + reject.offset)),
+        )
     }
 
     isEos() {
-        return false; //overridden by Accept
+        return false //overridden by Accept
     }
 
-    getOffset(){
-        return this.offset;
+    getOffset() {
+        return this.offset
     }
 
-    location(){
-        return this.input.location(this.getOffset());
+    location() {
+        return this.input.location(this.getOffset())
     }
 
     /**
@@ -71,49 +70,48 @@ class ParserResponse {
 /**
  * Reject response class
  */
-class Reject extends ParserResponse  {
+class Reject extends ParserResponse {
     constructor(input, offset, consumed) {
-        super(input, offset, consumed);
+        super(input, offset, consumed)
     }
-
 
     // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
     fold(_, reject) {
-        return reject(this);
+        return reject(this)
     }
 
     // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
     map() {
-        return this;
+        return this
     }
 
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
     flatMap() {
-        return this;
+        return this
     }
 
     // Response 'a 'c => ('a -> bool) -> Response 'b 'c
     filter() {
-        return new Reject(this.input,this.offset, false);
+        return new Reject(this.input, this.offset, false)
     }
 }
 
 /**
  * Accept response class
  */
-class Accept extends ParserResponse  {
+class Accept extends ParserResponse {
     constructor(value, input, offset, consumed) {
-        super(input, offset, consumed);
-        this.value = value;
+        super(input, offset, consumed)
+        this.value = value
     }
 
     isEos() {
-        return this.input.endOfStream(this.offset);
+        return this.input.endOfStream(this.offset)
     }
 
     // Response 'a 'c => (Accept 'a 'c -> 'a) -> (Reject 'a 'c -> 'a) -> 'a
     fold(accept) {
-        return accept(this);
+        return accept(this)
     }
 
     // Response 'a 'c => ('a -> 'b) -> Response 'b 'c
@@ -122,21 +120,21 @@ class Accept extends ParserResponse  {
             callback(this.value, this),
             this.input,
             this.offset,
-            this.consumed
-        );
+            this.consumed,
+        )
     }
 
     // Response 'a 'c => ('a -> Response 'b 'c) -> Response 'b 'c
     flatMap(callback) {
-        return callback(this.value, this);
+        return callback(this.value, this)
     }
 
     // Response 'a 'c => ('a -> bool) -> Response 'b 'c
     filter(predicate) {
         if (predicate(this.value)) {
-            return this;
+            return this
         } else {
-            return new Reject(this.input, this.offset, false);
+            return new Reject(this.input, this.offset, false)
         }
     }
 }
@@ -145,10 +143,10 @@ class Accept extends ParserResponse  {
  * Constructors
  */
 const accept = (value, input, offset, consumed) =>
-    new Accept(value, input, offset, consumed);
-const reject = (input, offset, consumed) => new Reject(input, offset, consumed);
-const response = {accept, reject};
+    new Accept(value, input, offset, consumed)
+const reject = (input, offset, consumed) => new Reject(input, offset, consumed)
+const response = { accept, reject }
 
-export default response;
+export default response
 
-export {accept,reject}
+export { accept, reject }

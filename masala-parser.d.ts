@@ -1,62 +1,69 @@
-import type {FlowBundle} from "./typings/flow-bundle.js";
-import type {EmptyTuple, Tuple} from "./typings/tuple.d.ts";
-import type {VoidParser} from "./typings/void-parser.js";
-import type {GenLex} from "./typings/genlex.d.ts";
-import type {TupleParser, SingleParser, EmptyTupleParser, MixedParser} from "./typings/tuple-parser.d.ts";
+import type { FlowBundle } from './typings/flow-bundle.js'
+import type { EmptyTuple, Tuple } from './typings/tuple.d.ts'
+import type { VoidParser } from './typings/void-parser.js'
+import type {
+    IGenLex,
+    Token,
+    TokenCollection,
+    TokenResult,
+} from './typings/genlex.d.ts'
+import type {
+    TupleParser,
+    SingleParser,
+    EmptyTupleParser,
+    MixedParser,
+} from './typings/tuple-parser.d.ts'
 
 /**
  * Written by Nicolas Zozol
  */
-export interface Unit {
-}
+export interface Unit {}
 
 /**
  * Represents an Option/Optional/Maybe/Either type
  */
 export interface Option<T> {
-
     /**
      * The inner value wrapped by the Option
      */
-    value: T;
+    value: T
 
     /**
      * Returns true if value is present
      */
-    isPresent(): boolean;
+    isPresent(): boolean
 
     /**
      * Transform the result
      * @param mapper : the map function
      */
-    map<Y>(mapper: (t: T) => Y): Option<Y>;
+    map<Y>(mapper: (t: T) => Y): Option<Y>
 
     /**
      * The flatmap mapper must returns an option
      * @param bindCall
      */
-    flatMap<Y>(bindCall: (y: Y) => Option<Y>): Option<Y>;
+    flatMap<Y>(bindCall: (y: Y) => Option<Y>): Option<Y>
 
-    filter(f: (value: T) => boolean): T | Option<T>;
+    filter(f: (value: T) => boolean): T | Option<T>
 
     /**
      * Returns the inner value when present.
      */
-    get(): T;
+    get(): T
 
     /**
      * Returns the inner value or another one
      * @param value
      */
-    orElse<Y>(value: Y): T | Y;
+    orElse<Y>(value: Y): T | Y
 
     /**
      * Accepts a provider function called with no params. Will
      * return the inner value when present, or call the provider.
      * @param provider
      */
-    orLazyElse<Y>(provider: () => Y): T | Y;
-
+    orLazyElse<Y>(provider: () => Y): T | Y
 }
 
 /**
@@ -66,63 +73,61 @@ export interface Option<T> {
  *
  */
 export interface Try<V, E> {
-    isSuccess(): boolean;
+    isSuccess(): boolean
 
-    isFailure(): boolean;
+    isFailure(): boolean
 
     /**
      * Acts like a mapper called only in case of success
      * @param f
      */
-    onSuccess<T>(f: (v: V) => void): Try<V, E>;
+    onSuccess<T>(f: (v: V) => void): Try<V, E>
 
     /**
      * Acts like a mapper called only in case of failure
      * @param f
      */
-    onFailure(f: (e: E) => void): Try<V, E>;
+    onFailure(f: (e: E) => void): Try<V, E>
 
     /**
      * Transform the success value. If `map()` throws an error,
      * then we have a failure.
      * @param bindCall
      */
-    map<T>(bindCall: (v: V) => T): Try<T, E>;
+    map<T>(bindCall: (v: V) => T): Try<T, E>
 
-    flatMap<T>(bindCall: (v: V) => Try<T, E>): Try<T, E>;
+    flatMap<T>(bindCall: (v: V) => Try<T, E>): Try<T, E>
 
     /**
      * Returns the success value
      */
-    success(): V;
+    success(): V
 
     /**
      * Returns the failure value
      */
-    failure(): E;
+    failure(): E
 
     /**
      * Will provide another value in case of failure
      * @param otherValue
      */
-    recoverWith<T>(otherValue: T): V | T;
+    recoverWith<T>(otherValue: T): V | T
 
     /**
      * Will call a provider accepting the error as argument when the
      * try as failed, or the success value.
      * @param recoverFunction
      */
-    lazyRecoverWith<T>(recoverFunction: (error?: E) => T): V | T;
+    lazyRecoverWith<T>(recoverFunction: (error?: E) => T): V | T
 
     /**
      * Returns a new Try that will succeed only if first is a success
      * AND is the predicate is accepted on the value
      * @param f
      */
-    filter(predicate: (value: V) => boolean): Try<V, E>;
-
+    filter(predicate: (value: V) => boolean): Try<V, E>
 }
-
 
 /**
  * Creates an empty or not Tuple, which is the preferred way
@@ -131,8 +136,8 @@ export interface Try<V, E> {
  *
  * `const t = tuple([2, 4, 5])`;
  */
-export function tuple(): EmptyTuple;
-export function tuple<T>(array: T[]): Tuple<T>;
+export function tuple(): EmptyTuple
+export function tuple<T>(array: T[]): Tuple<T>
 
 /**
  * Represents a **source** of data that will be parsed.
@@ -151,33 +156,35 @@ export interface Stream<Data> {
      * For low-level, returns the same value as index.
      * @param index
      */
-    location(index: number): number;
+    location(index: number): number
 
     /**
      * Return the token at the index.
      * @param index
      */
-    get(index: number): Try<Data, void>;
+    get(index: number): Try<Data, void>
 
-    subStreamAt(index: number, stream: Stream<Data>): any;
-
+    subStreamAt(index: number, stream: Stream<Data>): any
 }
 
 /**
  * Data parsed by the parser
  */
 interface Streams {
-    ofString(string: string): Stream<string>;
+    ofString(string: string): Stream<string>
 
-    ofArray<X>(): Stream<X[]>;
+    ofArray<X>(): Stream<X[]>
 
-    ofParser<T, D>(tokenParser: IParser<T>, lowerStream: Stream<D>): Stream<IParser<T>>;
+    ofParser<T, D>(
+        tokenParser: IParser<T>,
+        lowerStream: Stream<D>,
+    ): Stream<IParser<T>>
 
     /**
      * Creates a bufferedStream that checks into a cache
      * @param source
      */
-    buffered<D>(source: D): Stream<D>;
+    buffered<D>(source: D): Stream<D>
 }
 
 /**
@@ -185,26 +192,25 @@ interface Streams {
  * This response can be an Accept, or a Reject
  */
 export interface Response<T> {
-
     /**
      * The value built by the parsing
      */
-    value: T;
+    value: T
 
     /**
      * Index in the stream. See [[location]].
      */
-    offset: number;
+    offset: number
 
     /**
      * True if the parser succeed all steps, false if parser stopped
      */
-    isAccepted(): boolean;
+    isAccepted(): boolean
 
     /**
      * Returns true if parser has reached end of stream to build the Response
      */
-    isEos(): boolean;
+    isEos(): boolean
 
     /**
      * Execute accept if response in an Accept, or reject and create a new
@@ -212,13 +218,13 @@ export interface Response<T> {
      * @param accept
      * @param reject
      */
-    fold(accept: () => Response<T>, reject?: () => Response<T>): Response<T>;
+    fold(accept: () => Response<T>, reject?: () => Response<T>): Response<T>
 
     /**
      * Transform the response **in case of** success. Won't touch a Reject.
      * @param f
      */
-    map<Y>(f: (v: T, r: this) => Y): Response<Y>;
+    map<Y>(f: (v: T, r: this) => Y): Response<Y>
 
     /**
      * ```js
@@ -229,30 +235,24 @@ export interface Response<T> {
      *
      * @param f mapping function
      */
-    flatMap<Y>(f: (v: T, r: this) => Response<Y>): Y;
+    flatMap<Y>(f: (v: T, r: this) => Response<Y>): Y
 
-    filter(predicate: (value: any) => boolean): Response<T>;
+    filter(predicate: (value: any) => boolean): Response<T>
 
     /**
      * Index in the final text. Is equal to
      * [[offset]] for low level parsers.
      */
-    location(): number;
+    location(): number
 }
 
 /**
  * Response rejected. Can be transformed in
  * `Accept` using [[fold]]
  */
-export interface Reject<T> extends Response<T> {
+export interface Reject<T> extends Response<T> {}
 
-}
-
-export interface Accept<T> extends Response<T> {
-
-}
-
-
+export interface Accept<T> extends Response<T> {}
 
 /**
  * Parsers are most of the time made by combination of Parsers given by
@@ -261,20 +261,19 @@ export interface Accept<T> extends Response<T> {
  * T is the type of the Response
  */
 export interface IParser<T> {
-
     /**
      * Parses a stream of items (usually characters or tokens) and returns a Response
      * @param stream
      * @param index optional, index start in the stream
      */
-    parse<D>(stream: Stream<D>, index?: number): Response<T>;
+    parse<D>(stream: Stream<D>, index?: number): Response<T>
 
     /**
      * Mainly designed for quick debugging or unit tests
      * Parses the text and returns the value, or **undefined** if parsing has failed.
      * @param text text to parse
      */
-    val(text: string): T;
+    val(text: string): T
 
     /**
      * Creates a sequence of tokens accepted by the parser
@@ -282,7 +281,7 @@ export interface IParser<T> {
      * const abParser = C.char('a').then(C.char('b'))
      * ```
      */
-    then<Y>(p: IParser<Y>): TupleParser<T| Y>;
+    then<Y>(p: IParser<Y>): TupleParser<T | Y>
 
     /**
      * Transforms the Response value
@@ -295,7 +294,7 @@ export interface IParser<T> {
      *
      * @param f
      */
-    map<Y>(f: (value: T, response: Response<T>) => Y): SingleParser<Y>;
+    map<Y>(f: (value: T, response: Response<T>) => Y): SingleParser<Y>
 
     /**
      * Create a new parser value *knowing* the current parsing value
@@ -314,12 +313,12 @@ export interface IParser<T> {
      *
      * @param builder: the function building the parser
      */
-    flatMap<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>): P;
+    flatMap<Y, P extends IParser<Y>>(builder: parserBuilder<Y, P>): P
 
     /**
      * The parser will return the Neutral element for the Tuple
      */
-    drop(): VoidParser;
+    drop(): VoidParser
 
     /**
      * Verify that the stream is ended
@@ -330,7 +329,7 @@ export interface IParser<T> {
      * If accepted, the parser will return the given value
      * @param value
      */
-    returns<Y>(value: Y): SingleParser<Y>;
+    returns<Y>(value: Y): SingleParser<Y>
 
     /**
      * Will display debug info when the previous parser is accepted.
@@ -343,7 +342,7 @@ export interface IParser<T> {
      * @param hint: an indication that the previous parser attempted to parse
      * @param showValue: if true, will display the response value given by the previous parser. true by default.
      */
-    debug(hint: string, showValue?: boolean): this;
+    debug(hint: string, showValue?: boolean): this
 
     /**
      * Given an accepted parser and a response value, this parser.filter(predicate) could be rejected depending on
@@ -351,14 +350,14 @@ export interface IParser<T> {
      * Filtering a rejected parser will always results in a rejected response.
      * @param predicate : predicate applied on the response value
      */
-    filter(predicate: (value: T) => boolean): this;
+    filter(predicate: (value: T) => boolean): this
 
     /**
      * If this parser is not accepted, the other will be used. It's often use with `F.try()` to
-     * make backtracking.
+     * make backtracking, avoiding some input is definitely eaten.
      * @param other
      */
-    or<Y, P extends IParser<Y>>(other: P): IParser<T> | IParser<Y>;
+    or(other: IParser<any>): IParser<any>
 
     /**
      * If all parsers are accepted, the response value will be a Tuple of these values.
@@ -366,27 +365,27 @@ export interface IParser<T> {
      * Warning: still experimental
      * @param p
      */
-    and<P extends IParser<T>>(p: P): TupleParser<T>;
+    and<P extends IParser<T>>(p: P): TupleParser<T>
 
-    and<Y, P extends IParser<Y>>(p: P): TupleParser<T | Y>;
+    and<Y, P extends IParser<Y>>(p: P): TupleParser<T | Y>
 
     /**
      * When `parser()` is rejected, then `parser().opt()` is accepted with an empty Option as response value.
      * If `parser()` is accepted with a value `X`, then `parser().opt()` is accepted with an `Option.of(X)`
      */
-    opt(): IParser<Option<T>>;
+    opt(): IParser<Option<T>>
 
     /**
      * Accepted with one or more occurrences.Will produce an Tuple of at least one T
      * The TupleParser don't respect same rule as SingleParser.rep() as tuple is flattened, so any is important here
      */
-    rep(): TupleParser<any|T>;
+    rep(): TupleParser<any | T>
 
     /**
      * Accepted with zero or more occurrences. Will produce a Tuple of zero or more T
      * The TupleParser don't respect same rule as SingleParser.rep() as tuple is flattened, so any is important here
      */
-    optrep(): TupleParser<any|T>;
+    optrep(): TupleParser<any | T>
 
     /**
      * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
@@ -397,13 +396,13 @@ export interface IParser<T> {
      * ```
      * @param n
      */
-    occurrence(n: number): TupleParser<T>;
+    occurrence(n: number): TupleParser<T>
 
     /**
      * Specialized version of [[filter]] using `val` equality as predicate
      * @param val the parser is rejected if it's response value is not `val`
      */
-    match(val: T): this;
+    match(val: T): this
 
     /**
      * Build a new High Level parser that parses a ParserStream of tokens.
@@ -412,73 +411,74 @@ export interface IParser<T> {
      *
      * @highParser high level parser
      */
-    chain<Y, P extends IParser<Y>>(highParser: P): P;
+    chain<Y, P extends IParser<Y>>(highParser: P): P
 
     /**
      * Accept the end of stream. If accepted, it will not change the response
      */
-    eos(): this;
-
+    eos(): this
 }
 
 /**
  * A `parseFunction` is a function that returns a parser. To build this parser at runtime, any params are available.
  */
-export type parseFunction<X, T> = (stream: Stream<X>, index?: number) => Response<T>;
+export type parseFunction<X, T> = (
+    stream: Stream<X>,
+    index?: number,
+) => Response<T>
 
 /**
  * Note: the documentation shows two parametric arguments `T` for `Parser<T,T>`, but it's really
  * one argument. Looks like the only tooling bug, but sadly on the first line.
  */
 export class Parser<D, T> {
-    constructor(f: parseFunction<D, T>);
+    constructor(f: parseFunction<D, T>)
 }
 
-
 interface CharBundle {
-    UTF8_LETTER: symbol;
-    OCCIDENTAL_LETTER: symbol;
-    ASCII_LETTER: symbol;
+    UTF8_LETTER: symbol
+    OCCIDENTAL_LETTER: symbol
+    ASCII_LETTER: symbol
 
     /**
      * Accepts any letter, including one character emoji. Issue on two characters emoji
      */
-    utf8Letter(): SingleParser<string>;
+    utf8Letter(): SingleParser<string>
 
     /**
      * Accepts any occidental letter, including most accents
      */
-    letter(): SingleParser<string>;
+    letter(): SingleParser<string>
 
     /**
      * Choose s in [[UTF8_LETTER]], [[OCCIDENTAL_LETTER]], [[ASCII_LETTER]]
      * Ascii letters are A-Za-z letters, excluding any accent
      * @param s
      */
-    letterAs(s: symbol): SingleParser<string>;
+    letterAs(s: symbol): SingleParser<string>
 
     /**
      * Accepts a sequence of letters, joined as a string text
      */
-    letters(): SingleParser<string>;
+    letters(): SingleParser<string>
 
     /**
      * Sequence of letters, joined as a string text. See [[letterAs]]
      */
-    lettersAs(s: symbol): SingleParser<string>;
+    lettersAs(s: symbol): SingleParser<string>
 
     /**
      * Accepts an emoji
      *
      * WARNING: experimental, help needed; Working on emoji is a full-time specialist job.
      */
-    emoji(): SingleParser<string>;
+    emoji(): SingleParser<string>
 
     /**
      * Accepts any character that is not the `exclude` character
      * @param exclude one character exclude
      */
-    notChar(exclude: string): SingleParser<string>;
+    notChar(exclude: string): SingleParser<string>
 
     /**
      * Accepts any character that is not listed in the `exclude` chain
@@ -486,86 +486,129 @@ interface CharBundle {
      *
      * WARNING: might be issues on emoji
      */
-    charNotIn(exclude: string): SingleParser<string>;
+    charNotIn(exclude: string): SingleParser<string>
 
     /**
      * Accepts a char
      * @param c
      */
-    char(c: string): SingleParser<string>;
+    char(c: string): SingleParser<string>
 
     /**
      * Accepts any char listed in
      * @param strings
      */
-    charIn(strings: string): SingleParser<string>;
+    charIn(strings: string): SingleParser<string>
 
     /**
      * Accepts a string
      * @param string
      */
-    string(string: string): SingleParser<string>;
+    string(string: string): SingleParser<string>
 
     /**
      * Accept one of these strings
      * @param strings
      */
-    stringIn(strings: string[]): SingleParser<string>;
+    stringIn(strings: string[]): SingleParser<string>
 
     /**
      * Accept anything that is not this string. Useful to build *stop*. See also [[FlowBundle.moveUntil]],
      * [[FlowBundle.dropTo]]
      * @param string
      */
-    notString(string: string): SingleParser<string>;
+    notString(string: string): SingleParser<string>
 
     /**
      * Single character inside single quote, like C/Java characters: `'a'`, `'x'`
      */
-    charLiteral(): SingleParser<string>;
+    charLiteral(): SingleParser<string>
 
     /**
      * String characters inside double quotes, like Java strings : `"Hello"`, `"World"`
      */
-    stringLiteral(): SingleParser<string>;
+    stringLiteral(): SingleParser<string>
 
     /**
      * a-z single letter. WARNING: doesn't work yet on accents or utf-8 characters
      */
-    lowerCase(): SingleParser<string>;
+    lowerCase(): SingleParser<string>
 
     /**
      * A-Z single letter. WARNING: doesn't work yet on accents or utf-8 characters
      */
-    upperCase(): SingleParser<string>;
-
+    upperCase(): SingleParser<string>
 }
 
-export type parserBuilder<Y, P extends IParser<Y>> = (...rest: any[]) => P;
+export type parserBuilder<Y, P extends IParser<Y>> = (...rest: any[]) => P
 
-type extension<Y, T extends IParser<Y>> = T;
+type extension<Y, T extends IParser<Y>> = T
 
-export type Predicate<V> = (value: V) => boolean;
-
+export type Predicate<V> = (value: V) => boolean
 
 interface NumberBundle {
-    number(): SingleParser<number>;
+    number(): SingleParser<number>
 
-    integer(): SingleParser<number>;
+    integer(): SingleParser<number>
 
-    digit(): SingleParser<number>;
+    digit(): SingleParser<number>
 
-    digits(): SingleParser<number>;
+    digits(): SingleParser<number>
 }
 
-type ParserOrString<T> = IParser<T> | string;
+type ParserOrString<T> = IParser<T> | string
 
+export declare const F: FlowBundle
+export declare const C: CharBundle
+export declare const N: NumberBundle
+export declare const Streams: Streams
 
-export declare const F: FlowBundle;
-export declare const C: CharBundle;
-export declare const N: NumberBundle;
-export declare const Streams: Streams;
+export declare class GenLex implements IGenLex {
+    constructor()
+    tokenize<T, P extends IParser<T>>(
+        parser: P,
+        name: string,
+        precedence?: number,
+    ): P
 
-export {GenLex};
-export type {EmptyTuple, Tuple};
-export type {VoidParser,TupleParser, SingleParser, EmptyTupleParser, MixedParser};
+    use<T, P extends IParser<T>>(grammar: P): P
+
+    tokens(): TokenCollection
+
+    setSeparators(spacesCharacters: string): GenLex
+
+    /**
+     * Select the parser used by genlex. It will be used as `separator.optrep().then(token).then(separator.optrep())`.
+     * So the separator must not be optional or it will make an infinite loop.
+     * The separation in your text can't be a strict one-time separation with Genlex.
+     * @param parser
+     */
+    setSeparatorsParser<T>(parser: IParser<T>): GenLex
+
+    /**
+     * Should separators be repeated ?
+     *
+     * `separators.optrep().then(myToken()).then(separators.optrep())`
+     * @param repeat default is true
+     */
+    setSeparatorRepetition(repeat: boolean): GenLex
+
+    /**
+     * tonkenize all items, given them the name of the token
+     * Exemple : keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
+     * @param tokens
+     */
+    keywords(tokens: string[]): Array<Token<string>>
+
+    get(tokenName: string): Token<any>
+}
+
+export type { Token, TokenCollection, TokenResult }
+export type { EmptyTuple, Tuple }
+export type {
+    VoidParser,
+    TupleParser,
+    SingleParser,
+    EmptyTupleParser,
+    MixedParser,
+}

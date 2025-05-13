@@ -6,7 +6,7 @@
  * Licensed under the LGPL3 license.
  */
 
-import atry from "../data/try.js";
+import atry from '../data/try.js'
 
 /**
  * Abstract methods:
@@ -17,33 +17,33 @@ class Stream {
 
     // Stream 'a => number -> number
     location(index) {
-        return index;
+        return index
     }
 
     // Stream 'a => number -> Try 'a
     get(index) {
         try {
             if (this.endOfStream(index)) {
-                return atry.failure(new Error('End of stream reached'));
+                return atry.failure(new Error('End of stream reached'))
             } else {
-                return atry.success(this.unsafeGet(index));
+                return atry.success(this.unsafeGet(index))
             }
         } catch (e) {
-            return atry.failure(e);
+            return atry.failure(e)
         }
     }
 
     // Stream 'a => [Comparable 'a] -> number -> boolean
     subStreamAt(s, index) {
         for (var i = 0; i < s.length; i++) {
-            var value = this.get(i + index);
+            var value = this.get(i + index)
             if (!value.isSuccess() || value.success() !== s[i]) {
-                return false;
+                return false
             }
         }
 
-        return true;
+        return true
     }
 }
 
-export default Stream;
+export default Stream
