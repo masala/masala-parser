@@ -124,4 +124,11 @@ export interface MixedParser<FIRST, LAST>
 
     or(other: MixedParser<FIRST, LAST>): MixedParser<FIRST, LAST>
     or(other: IParser<any>): IParser<any>
+
+    map<Y, TUPLE extends MixedTuple<FIRST, LAST>>(
+        f: (value: TUPLE, response: Response<TUPLE>) => Y,
+    ): SingleParser<Y>
+    map<Y, TUPLE extends Tuple<any>>(
+        f: (value: TUPLE, response: Response<TUPLE>) => Y,
+    ): SingleParser<Y>
 }
