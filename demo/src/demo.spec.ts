@@ -19,7 +19,7 @@ year: 2023
 
 const leftText = F.regex(/[a-zA-Z_][a-zA-Z0-9_]*/)
 const separator = C.char(':')
-const rightText = F.moveUntil(C.char('\n')).debug('r')
+const rightText = F.moveUntil(C.char('\n'))
 
 const line = leftText
     .then(separator.drop())
@@ -27,7 +27,7 @@ const line = leftText
     .array()
     .map(([name, value]) => ({
         name,
-        value,
+        value: value.trim(),
     }))
 
 describe('Parser Combinator demonstration', () => {
@@ -35,7 +35,7 @@ describe('Parser Combinator demonstration', () => {
         const stream = Streams.ofString(document)
         const parsing = line.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
-        expect(parsing.value).toBe({
+        expect(parsing.value).toEqual({
             name: 'author',
             value: 'Nicolas',
         })

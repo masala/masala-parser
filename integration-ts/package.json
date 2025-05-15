@@ -14,7 +14,7 @@
         "add-js-ext": "jscodeshift  -t ../tasks/add-js-ext.cjs  examples --extensions=js,ts --parser=ts --ignore-pattern '**/*.d.ts' --ignore-pattern '**/node_modules/**'"
     },
     "dependencies": {
-        "@masala/parser": "^2.0.0-alpha.4"
+        "@masala/parser": "^2.0.0-alpha.5"
     },
     "devDependencies": {
         "@types/node": "^22.15.17",
