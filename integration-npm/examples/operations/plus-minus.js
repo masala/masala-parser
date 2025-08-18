@@ -1,6 +1,4 @@
-const {Streams, F, N, C, X} = require('@masala/parser');
-
-
+const { Streams, F, N, C, X } = require('@masala/parser')
 
 /*
  Implementing general solution :
@@ -8,7 +6,7 @@ const {Streams, F, N, C, X} = require('@masala/parser');
  E' -> + TE'  |  eps
  T -> F T'
  T' -> * FT'  |  eps
- F -> DAY | ( E )
+ F -> NUMBER | ( E )
 
  E== expr
  T == subExpr
@@ -24,21 +22,17 @@ const {Streams, F, N, C, X} = require('@masala/parser');
 
  */
 
-
-const MULT = Symbol('MULT');
-const PLUS = Symbol('PLUS');
-
-
+const MULT = Symbol('MULT')
+const PLUS = Symbol('PLUS')
 
 function text() {
-    return (F.not(anyOperation().or(C.charIn('()'))))
+    return F.not(anyOperation().or(C.charIn('()')))
         .rep()
-        .map(v => parseInt(v.join('').trim()));
+        .map((v) => parseInt(v.join('').trim()))
 }
 
-
 function blank() {
-    return C.char(' ').rep().returns(' ');
+    return C.char(' ').rep().returns(' ')
 }
 
 function operation() {
@@ -46,10 +40,8 @@ function operation() {
 }
 
 function anyOperation() {
-    return C.string('*').returns(MULT)
-        .or(C.string('+').returns(PLUS));
+    return C.string('*').returns(MULT).or(C.string('+').returns(PLUS))
 }
-
 
 function andOperation() {
     return C.string('*').returns(MULT)
@@ -59,61 +51,64 @@ function plusOperation() {
     return C.string('+').returns(PLUS)
 }
 
-
 function parenthesis(par) {
-    return C.char(' ').optrep().drop().then(C.char(par));
+    return C.char(' ').optrep().drop().then(C.char(par))
 }
 
 function parenthesisExpr() {
-    return parenthesis('(').then(blank().opt()).drop()
+    return parenthesis('(')
+        .then(blank().opt())
+        .drop()
         .then(F.lazy(expr))
-        .then(parenthesis(')').then(blank().opt()).drop());
+        .then(parenthesis(')').then(blank().opt()).drop())
 }
 
 function expr() {
-    return subExpr().then(optionalPlusExpr())
-        .map(([left,right]) =>  left + right.orElse(0));
+    return subExpr()
+        .then(optionalPlusExpr())
+        .map(([left, right]) => left + right.orElse(0))
 }
 
-
 function optionalPlusExpr() {
-    return plusExpr().opt();
+    return plusExpr().opt()
 }
 
 function plusExpr() {
-    return plusOperation().drop().then(subExpr())
+    return plusOperation()
+        .drop()
+        .then(subExpr())
         .then(F.lazy(optionalPlusExpr))
-        .map(([left,right])=>left+right.orElse(0));
+        .map(([left, right]) => left + right.orElse(0))
 }
 
 function subExpr() {
-    return terminal().then(optionalMultExpr())
-        .map(([left,right]) => left * right.orElse(1));
+    return terminal()
+        .then(optionalMultExpr())
+        .map(([left, right]) => left * right.orElse(1))
 }
 
 function optionalMultExpr() {
-    return multExpr().opt();
+    return multExpr().opt()
 }
 
 function multExpr() {
-    return andOperation().drop().then(terminal())
+    return andOperation()
+        .drop()
+        .then(terminal())
         .then(F.lazy(optionalMultExpr))
-        .map(([left,right]) => left * right.orElse(1));
+        .map(([left, right]) => left * right.orElse(1))
 }
 
-
-
 function terminal() {
-    return F.try(parenthesisExpr()).or(text());
+    return F.try(parenthesisExpr()).or(text())
 }
 
 function combinator() {
-    return expr().then(F.eos().drop());
+    return expr().then(F.eos().drop())
 }
 
-const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
+const string = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3'
 
-let stream = Streams.ofString(string);
-let parsing = combinator().parse(stream);
-console.log(string+'='+parsing.value);
-
+let stream = Streams.ofString(string)
+let parsing = combinator().parse(stream)
+console.log(string + '=' + parsing.value)

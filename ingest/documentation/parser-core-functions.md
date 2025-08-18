@@ -248,7 +248,6 @@ It can help you to read your document knowing what happen previously
 - To be used once a value is defined
 - `predicate` is a function pVal -> boolean
 - Check if the stream satisfies the predicate
-
     - Parse will be `Rejected` if filter is `false`
 
         'expect (filter) to be accepted': function(test) {
