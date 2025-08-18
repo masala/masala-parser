@@ -1,5 +1,32 @@
 // lib/debug/trace.js
 import atry from '../../lib/data/try.js'
+
+// lib/debug/trace-registry.js
+// A tiny global registry for named parser instances.
+
+export const TRACE_REGISTRY = new Set() // holds parser instances
+export const TRACE_META = new WeakMap() // parser -> { name, opts }
+export const TRACE_NAME_SYM = Symbol('masala.trace.name')
+
+export function registerTrace(parser, name, opts = {}) {
+    if (typeof name !== 'string' || !name) {
+        throw new Error('Parser.trace(name): name must be a non-empty string')
+    }
+    TRACE_REGISTRY.add(parser)
+    TRACE_META.set(parser, { name, opts })
+    // decorate instance for convenient devtools debugging
+    try {
+        Object.defineProperty(parser, TRACE_NAME_SYM, {
+            value: name,
+            configurable: true,
+            enumerable: false,
+            writable: false,
+        })
+    } catch (_) {
+        /* non-fatal */
+    }
+}
+
 /**
  * Create a tracer that instruments chosen Parser instances.
  *
@@ -109,6 +136,30 @@ export function createTracer({
         }
     }
 
+    function resolvePerParserOpts(name, metaOpts, options) {
+        let base = { ...metaOpts }
+        if (!options) return base
+        if (options.byName && options.byName[name]) {
+            return { ...base, ...options, ...options.byName[name] }
+        }
+        // treat options as global defaults if no byName match
+        return { ...base, ...options }
+    }
+
+    function traceAll(options) {
+        for (const parser of TRACE_REGISTRY) {
+            const meta = TRACE_META.get(parser)
+            if (!meta) continue
+            const per = resolvePerParserOpts(
+                meta.name,
+                meta.opts || {},
+                options,
+            )
+            wrapOne(parser, meta.name, per)
+        }
+        return (rootParser) => rootParser // pass-through to keep pipeline style
+    }
+
     return {
         /**
          * Instruments a specific Parser instance and returns a function
@@ -123,6 +174,8 @@ export function createTracer({
             wrapOne(targetParser, name, opts)
             return (rootParser) => rootParser
         },
+
+        traceAll,
 
         /**
          * Remove all wrappers (optional)
