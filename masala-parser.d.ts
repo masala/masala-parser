@@ -538,6 +538,8 @@ interface CharBundle {
      * A-Z single letter. WARNING: doesn't work yet on accents or utf-8 characters
      */
     upperCase(): SingleParser<string>
+
+    inRegexRange(range: string): SingleParser<string>
 }
 
 export type parserBuilder<Y, P extends IParser<Y>> = (...rest: any[]) => P
