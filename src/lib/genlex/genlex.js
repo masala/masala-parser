@@ -3,6 +3,11 @@ import { F, C, N } from '../parsec/index.js'
 import unit from '../data/unit.js'
 import option from '../data/option.js'
 
+/**
+ * In Masala, a Token IS a parser
+ * And its value is the parsed text
+ * Example: C.char(':') -> name = 'colon' or ':', value = ':'
+ */
 export class TokenDefinition {
     // value will be determined at runtime while parsing
     constructor(parser, name, precedence) {
@@ -13,14 +18,15 @@ export class TokenDefinition {
 }
 
 // a Token object is instantiated at runtime, with a value given by the parsed text
-export class Token {
+export class TokenValue {
     constructor(name, value) {
         this.name = name
         this.value = value
     }
 
+    // TODO: not sure it's ever called
     accept(name) {
-        // TODO logger console.log('accepting', name, this.name===name, this.value);
+        console.log('###accepting', name, this.name === name, this.value)
         return this.name === name ? option.some(this.value) : option.none()
     }
 }
@@ -45,10 +51,12 @@ export class GenLex {
         const definition = new TokenDefinition(parser, name, precedence)
         this.definitions.push(definition)
 
-        // probably a bad name
-        const token = literal((token) => token.accept(name), name)
-        this.tokensMap[name] = token
-        return token
+        const tokenParser = expectToken(
+            (tokenValue) => tokenValue.accept(name),
+            name,
+        )
+        this.tokensMap[name] = tokenParser
+        return tokenParser
     }
 
     keywords(keys, precedence = 1000) {
@@ -127,37 +135,47 @@ export class GenLex {
 }
 
 function getTokenParser(def) {
-    return def.parser.map((value) => new Token(def.name, value))
+    return def.parser.map((value) => new TokenValue(def.name, value))
 }
 
 // name is for easier debugging
+// expectToken consumes exactly one token of this name and give me its value.
 // eslint-disable-next-line
-function literal(tokenize, name) {
+function expectToken(tokenize, name) {
     return F.parse((input, index) => {
         // TODO logger console.log('testing ', {name, input:input.get(index), index});
-        // console.log('trying ', {index, name});
+        //console.log('trying ', { index, name, input })
 
         return (
             input
                 .get(index)
                 // FIXME= value is the token, token is the value
                 .map((value) => {
-                    /* TODO: keep for logger
-                    let token = value;
+                    //TODO: keep for logger
+                    let token = value
 
                     try {
-                        console.log('in map', {value, name, index});
-                        console.log('tokenizing', tokenize(token));
+                        /*console.log('1: in map', {
+                            value: JSON.stringify(value),
+                            name,
+                            index,
+                        })*/
+                        //console.log('tokenizing', tokenize(token))
                     } catch (e) {
                         console.error('failed', e)
-                    }*/
+                    }
 
                     return tokenize(value)
-                        .map((token) => {
+                        .map((tokenValue) => {
                             // TODO logger console.log('accept with ', name, index);
-                            //console.log('accept:', token,index, input.location(index));
+                            console.log(
+                                'accept:',
+                                tokenValue,
+                                index,
+                                input.location(index),
+                            )
                             return response.accept(
-                                token,
+                                tokenValue,
                                 input,
                                 index + 1,
                                 true,
