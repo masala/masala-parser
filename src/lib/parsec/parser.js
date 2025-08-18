@@ -12,6 +12,7 @@
  * http://research.microsoft.com/en-us/um/people/daan/download/papers/parsec-paper.pdf
  */
 
+import { registerTrace } from '../debug/trace.js'
 import stream from '../stream/index.js'
 
 import option from '../data/option.js'
@@ -222,7 +223,6 @@ export default class Parser {
      * @param details
      * @returns the equivalent Parser
      */
-    // TODO: set details default at false; check tests
     debug(hint, details = true) {
         var f = (p) => {
             if (details) {
@@ -234,6 +234,11 @@ export default class Parser {
             return p
         }
         return this.map(f)
+    }
+
+    trace(name, opts = {}) {
+        registerTrace(this, name, opts)
+        return this
     }
 }
 
