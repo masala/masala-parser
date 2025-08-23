@@ -24,9 +24,8 @@ export class TokenValue {
         this.value = value
     }
 
-    // TODO: not sure it's ever called
     accept(name) {
-        console.log('###accepting', name, this.name === name, this.value)
+        //console.log('###accepting', name, this.name === name, this.value)
         return this.name === name ? option.some(this.value) : option.none()
     }
 }
@@ -45,6 +44,7 @@ export class GenLex {
             if (name === undefined) {
                 name = parser
             }
+            console.log('string token', name)
             return this.tokenize(C.string(parser), name, precedence)
         }
 
@@ -168,12 +168,12 @@ function expectToken(tokenize, name) {
                     return tokenize(value)
                         .map((tokenValue) => {
                             // TODO logger console.log('accept with ', name, index);
-                            console.log(
-                                'accept:',
+                            /*console.log(
+                                '### accept:',
                                 tokenValue,
                                 index,
                                 input.location(index),
-                            )
+                            )*/
                             return response.accept(
                                 tokenValue,
                                 input,

@@ -38,7 +38,7 @@ export function registerTrace(parser, name, opts = {}) {
  */
 export function createTracer({
     window = [0, Number.MAX_SAFE_INTEGER],
-    includeValues = false,
+    includeValues = true,
     includeRejects = true,
     snippet = true, // include a text snippet for the consumed span
     snippetMax = 80, // truncate long snippets
