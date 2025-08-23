@@ -5,12 +5,14 @@ import Streams from '../../lib/stream'
 import unit from '../../lib/data/unit'
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'endOfStream for empty stream': function (test) {
-        var p = C.char(' ').optrep().thenRight(N.number())
+    'endOfStream for empty stream': function(test) {
+        var p = C.char(' ')
+            .optrep()
+            .thenRight(N.number())
         test.ok(
             stream.ofParser(p, stream.ofString('')).endOfStream(0),
             'should be endOfStream.',
@@ -18,8 +20,10 @@ export default {
         test.done()
     },
 
-    'endOfStream for non empty stream': function (test) {
-        var p = C.char(' ').optrep().thenRight(N.number())
+    'endOfStream for non empty stream': function(test) {
+        var p = C.char(' ')
+            .optrep()
+            .thenRight(N.number())
         test.ok(
             stream.ofParser(p, stream.ofString('1')).endOfStream(1),
             'should be endOfStream.',
@@ -27,8 +31,10 @@ export default {
         test.done()
     },
 
-    'no endOfStream for non empty stream': function (test) {
-        var p = C.char(' ').optrep().thenRight(N.number())
+    'no endOfStream for non empty stream': function(test) {
+        var p = C.char(' ')
+            .optrep()
+            .thenRight(N.number())
         test.equal(
             stream.ofParser(p, stream.ofString('1')).endOfStream(0),
             false,
@@ -37,38 +43,60 @@ export default {
         test.done()
     },
 
-    'get from stream': function (test) {
-        var p = C.char(' ').optrep().thenRight(N.number())
+    'get from stream': function(test) {
+        var p = C.char(' ')
+            .optrep()
+            .thenRight(N.number())
         test.equal(
-            stream.ofParser(p, stream.ofString('1')).get(0).isSuccess(),
+            stream
+                .ofParser(p, stream.ofString('1'))
+                .get(0)
+                .isSuccess(),
             true,
             'should be a success.',
         )
         test.done()
     },
 
-    'do not get from empty stream': function (test) {
-        var p = C.char(' ').optrep().thenRight(N.number())
+    'do not get from empty stream': function(test) {
+        var p = C.char(' ')
+            .optrep()
+            .thenRight(N.number())
         test.equal(
-            stream.ofParser(p, stream.ofString('1')).get(1).isSuccess(),
+            stream
+                .ofParser(p, stream.ofString('1'))
+                .get(1)
+                .isSuccess(),
             false,
             'should be a failure.',
         )
         test.done()
     },
 
-    'get from stream number 123': function (test) {
-        var p = C.char(' ').optrep().thenRight(N.number()).single()
+    'get from stream number 123': function(test) {
+        var p = C.char(' ')
+            .optrep()
+            .thenRight(N.number())
+            .single()
         test.equal(
-            stream.ofParser(p, stream.ofString('123')).get(0).success(),
+            stream
+                .ofParser(p, stream.ofString('123'))
+                .get(0)
+                .success(),
             123,
             'should be a 123.',
         )
         test.done()
     },
 
-    'Offset are found in series of numbers': function (test) {
-        const p = N.number().then(C.char(' ').optrep().drop()).single()
+    'Offset are found in series of numbers': function(test) {
+        const p = N.number()
+            .then(
+                C.char(' ')
+                    .optrep()
+                    .drop(),
+            )
+            .single()
 
         const parserStream = stream.ofParser(p, stream.ofString('123   14137'))
         // index: ^0    ^6
@@ -86,8 +114,14 @@ export default {
         test.done()
     },
 
-    'failing series of numbers': function (test) {
-        const p = N.number().then(C.char(' ').optrep().drop()).single()
+    'failing series of numbers': function(test) {
+        const p = N.number()
+            .then(
+                C.char(' ')
+                    .optrep()
+                    .drop(),
+            )
+            .single()
         const parserStream = stream.ofParser(p, stream.ofString('123   a'))
         //                                                index: ^0    ^6
 
@@ -103,8 +137,14 @@ export default {
         test.done()
     },
 
-    'having correct location when success': function (test) {
-        const p = N.number().then(C.char(' ').optrep().drop()).single()
+    'having correct location when success': function(test) {
+        const p = N.number()
+            .then(
+                C.char(' ')
+                    .optrep()
+                    .drop(),
+            )
+            .single()
 
         const parserStream = stream.ofParser(p, stream.ofString('123   14137'))
         //                                                index: ^0    ^6
@@ -120,8 +160,14 @@ export default {
         test.done()
     },
 
-    'searching illegal location will fail': function (test) {
-        const p = N.number().then(C.char(' ').optrep().drop()).single()
+    'searching illegal location will fail': function(test) {
+        const p = N.number()
+            .then(
+                C.char(' ')
+                    .optrep()
+                    .drop(),
+            )
+            .single()
 
         const parserStream = stream.ofParser(p, stream.ofString('123   14137'))
         //                                                index: ^0    ^6
@@ -141,7 +187,7 @@ export default {
         test.done()
     },
 
-    'having correct location when fail': function (test) {
+    'having correct location when fail': function(test) {
         const p = N.number()
 
         const parserStream = stream.ofParser(p, stream.ofString('1234   14137'))
@@ -157,8 +203,14 @@ export default {
         test.done()
     },
 
-    'unsafe_get can see next element': function (test) {
-        const lower = N.number().then(spaces().opt().drop()).single()
+    'unsafe_get can see next element': function(test) {
+        const lower = N.number()
+            .then(
+                spaces()
+                    .opt()
+                    .drop(),
+            )
+            .single()
 
         const lowerStream = Streams.ofString('10 12 44')
         const parserStream = Streams.ofParser(lower, lowerStream)
@@ -172,8 +224,12 @@ export default {
         test.done()
     },
 
-    'unsafe_get cannot see beyond next element': function (test) {
-        const lower = N.number().then(spaces().opt().drop())
+    'unsafe_get cannot see beyond next element': function(test) {
+        const lower = N.number().then(
+            spaces()
+                .opt()
+                .drop(),
+        )
 
         const lowerStream = Streams.ofString('10 12 44')
         const parserStream = Streams.ofParser(lower, lowerStream)

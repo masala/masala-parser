@@ -2,206 +2,246 @@ import Streams from '../../lib/stream/index'
 import { F, C } from '../../lib/parsec/index'
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'expect (char) to be accepted': function (test) {
+    'expect (char) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').parse(Streams.ofString('a'), 0).isAccepted(),
+            C.char('a')
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (char) to be rejected': function (test) {
+    'expect (char) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').parse(Streams.ofString('b'), 0).isAccepted(),
+            C.char('a')
+                .parse(Streams.ofString('b'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (char) to be refused': function (test) {
+    'expect (char) to be refused': function(test) {
         test.expect(1)
         // tests here
-        test.throws(function () {
+        test.throws(function() {
             C.char('aa')
         })
         test.done()
     },
 
-    'expect (notChar) to be accepted': function (test) {
+    'expect (notChar) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.notChar('a').parse(Streams.ofString('b'), 0).isAccepted(),
+            C.notChar('a')
+                .parse(Streams.ofString('b'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (notChar) to be rejected': function (test) {
+    'expect (notChar) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.notChar('a').parse(Streams.ofString('a'), 0).isAccepted(),
+            C.notChar('a')
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (notChar) to be refused': function (test) {
+    'expect (notChar) to be refused': function(test) {
         test.expect(1)
         // tests here
-        test.throws(function () {
+        test.throws(function() {
             C.notChar('aa')
         })
         test.done()
     },
 
-    'expect (charNotIn) to be accepted': function (test) {
+    'expect (charNotIn) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charNotIn('a').parse(Streams.ofString('b'), 0).isAccepted(),
+            C.charNotIn('a')
+                .parse(Streams.ofString('b'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (charNotIn) to be rejected': function (test) {
+    'expect (charNotIn) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charNotIn('a').parse(Streams.ofString('a'), 0).isAccepted(),
+            C.charNotIn('a')
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (charIn) to be accepted': function (test) {
+    'expect (charIn) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charIn('a').parse(Streams.ofString('a'), 0).isAccepted(),
+            C.charIn('a')
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (charIn) to be rejected': function (test) {
+    'expect (charIn) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charIn('a').parse(Streams.ofString('b'), 0).isAccepted(),
+            C.charIn('a')
+                .parse(Streams.ofString('b'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (lowerCase) to be accepted': function (test) {
+    'expect (lowerCase) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.lowerCase().parse(Streams.ofString('a'), 0).isAccepted(),
+            C.lowerCase()
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (lowerCase) to be rejected': function (test) {
+    'expect (lowerCase) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.lowerCase().parse(Streams.ofString('A'), 0).isAccepted(),
+            C.lowerCase()
+                .parse(Streams.ofString('A'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (upperCase) to be accepted': function (test) {
+    'expect (upperCase) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.upperCase().parse(Streams.ofString('A'), 0).isAccepted(),
+            C.upperCase()
+                .parse(Streams.ofString('A'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (upperCase) to be rejected': function (test) {
+    'expect (upperCase) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.upperCase().parse(Streams.ofString('z'), 0).isAccepted(),
+            C.upperCase()
+                .parse(Streams.ofString('z'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect upper (letter) to be accepted': function (test) {
+    'expect upper (letter) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.letter().parse(Streams.ofString('A'), 0).isAccepted(),
+            C.letter()
+                .parse(Streams.ofString('A'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect lower (letter) to be accepted': function (test) {
+    'expect lower (letter) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.letter().parse(Streams.ofString('z'), 0).isAccepted(),
+            C.letter()
+                .parse(Streams.ofString('z'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
-    'expect space (letter) to be rejected': function (test) {
+    'expect space (letter) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.letter().parse(Streams.ofString(' '), 0).isAccepted(),
+            C.letter()
+                .parse(Streams.ofString(' '), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect non (letter) to be rejected': function (test) {
+    'expect non (letter) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.letter().parse(Streams.ofString('0'), 0).isAccepted(),
+            C.letter()
+                .parse(Streams.ofString('0'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect occidental letter to be accepted': function (test) {
-        test.ok(C.letter().parse(Streams.ofString('a'), 0).isAccepted())
-        test.ok(C.letterAs().parse(Streams.ofString('a'), 0).isAccepted())
+    'expect occidental letter to be accepted': function(test) {
+        test.ok(
+            C.letter()
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
+        )
+        test.ok(
+            C.letterAs()
+                .parse(Streams.ofString('a'), 0)
+                .isAccepted(),
+        )
         test.ok(
             C.letterAs(C.OCCIDENTAL_LETTER)
                 .parse(Streams.ofString('a'))
@@ -225,7 +265,7 @@ export default {
         test.done()
     },
 
-    'expect occidental letters to be accepted': function (test) {
+    'expect occidental letters to be accepted': function(test) {
         test.ok(
             C.letters()
                 .then(F.eos())
@@ -258,7 +298,7 @@ export default {
         test.done()
     },
 
-    'expect ascii letter to be accepted': function (test) {
+    'expect ascii letter to be accepted': function(test) {
         test.ok(
             C.letterAs(C.ASCII_LETTER)
                 .parse(Streams.ofString('a'), 0)
@@ -277,7 +317,7 @@ export default {
         test.done()
     },
 
-    'expect ascii letters to be accepted': function (test) {
+    'expect ascii letters to be accepted': function(test) {
         test.ok(
             C.lettersAs(C.ASCII_LETTER)
                 .then(F.eos())
@@ -300,15 +340,21 @@ export default {
         test.done()
     },
 
-    'expect utf8 letter to be accepted': function (test) {
+    'expect utf8 letter to be accepted': function(test) {
         test.ok(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('a')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER)
+                .parse(Streams.ofString('a'))
+                .isAccepted(),
         )
         test.ok(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('é')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER)
+                .parse(Streams.ofString('é'))
+                .isAccepted(),
         )
         test.ok(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('Б')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER)
+                .parse(Streams.ofString('Б'))
+                .isAccepted(),
         )
         test.ok(
             !C.letterAs(C.UTF8_LETTER)
@@ -317,7 +363,7 @@ export default {
         )
         test.done()
     },
-    'expect utf8 letters to be accepted': function (test) {
+    'expect utf8 letters to be accepted': function(test) {
         test.ok(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos())
@@ -345,7 +391,7 @@ export default {
         test.done()
     },
 
-    'expect unknown letters to be rejected': function (test) {
+    'expect unknown letters to be rejected': function(test) {
         const line = Streams.ofString('a')
         let errorFound = false
         try {
@@ -358,7 +404,7 @@ export default {
         test.done()
     },
 
-    'expect (letters) to be accepted': function (test) {
+    'expect (letters) to be accepted': function(test) {
         test.expect(2)
         // tests here
         const parsing = C.letters()
@@ -370,7 +416,7 @@ export default {
         test.done()
     },
 
-    'expect (letters) with space to be rejected': function (test) {
+    'expect (letters) with space to be rejected': function(test) {
         test.expect(2)
         // tests here
         const parsing = C.letters()
@@ -381,7 +427,7 @@ export default {
         test.done()
     },
 
-    'expect (letters) with number to be rejected': function (test) {
+    'expect (letters) with number to be rejected': function(test) {
         test.expect(1)
         // tests here
         const parsing = C.letters()
@@ -391,7 +437,7 @@ export default {
         test.done()
     },
 
-    'expect (letters) to return a string, not an array of letters': function (
+    'expect (letters) to return a string, not an array of letters': function(
         test,
     ) {
         test.expect(1)
@@ -404,29 +450,33 @@ export default {
         test.done()
     },
 
-    'expect (string) to be accepted': function (test) {
+    'expect (string) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.string('Hello').parse(Streams.ofString('Hello'), 0).isAccepted(),
+            C.string('Hello')
+                .parse(Streams.ofString('Hello'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (string) to be rejected': function (test) {
+    'expect (string) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.string('hello').parse(Streams.ofString('hell'), 0).isAccepted(),
+            C.string('hello')
+                .parse(Streams.ofString('hell'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'test stringIn': function (test) {
+    'test stringIn': function(test) {
         let line = Streams.ofString('James Bond')
 
         const combinator = C.stringIn(['The', 'James', 'Bond', 'series'])
@@ -436,7 +486,7 @@ export default {
         test.done()
     },
 
-    'test stringIn Similar': function (test) {
+    'test stringIn Similar': function(test) {
         // Checks the search comes back after each search
         let line = Streams.ofString('Jack James Jane')
 
@@ -449,7 +499,7 @@ export default {
         test.done()
     },
 
-    'test stringIn one string sidecase': function (test) {
+    'test stringIn one string sidecase': function(test) {
         let line = Streams.ofString('James')
 
         const combinator = C.stringIn(['James'])
@@ -459,7 +509,7 @@ export default {
         test.done()
     },
 
-    'test stringIn empty sidecase': function (test) {
+    'test stringIn empty sidecase': function(test) {
         let line = Streams.ofString('James')
 
         const combinator = C.stringIn([]).then(F.eos())
@@ -468,7 +518,7 @@ export default {
         test.done()
     },
 
-    'test stringIn empty accept nothing sidecase': function (test) {
+    'test stringIn empty accept nothing sidecase': function(test) {
         let line = Streams.ofString('')
 
         const combinator = C.stringIn([]).then(F.eos())
@@ -477,18 +527,20 @@ export default {
         test.done()
     },
 
-    'expect (notString) to be accepted': function (test) {
+    'expect (notString) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.notString('**').parse(Streams.ofString('hello'), 0).isAccepted(),
+            C.notString('**')
+                .parse(Streams.ofString('hello'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (notString) to be h': function (test) {
+    'expect (notString) to be h': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -499,7 +551,7 @@ export default {
         test.done()
     },
 
-    'expect (notString) to be rejected': function (test) {
+    'expect (notString) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -512,55 +564,65 @@ export default {
         test.done()
     },
 
-    'expect accent to be accepted': function (test) {
+    'expect accent to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.utf8Letter().parse(Streams.ofString('é'), 0).isAccepted(),
+            C.utf8Letter()
+                .parse(Streams.ofString('é'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
-    'expect cyriliq to be accepted': function (test) {
+    'expect cyriliq to be accepted': function(test) {
         test.expect(2)
         // tests here
         //Белград
         //български
         test.equal(
-            C.utf8Letter().parse(Streams.ofString('Б'), 0).isAccepted(),
+            C.utf8Letter()
+                .parse(Streams.ofString('Б'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.equal(
-            C.utf8Letter().parse(Streams.ofString('б'), 0).isAccepted(),
+            C.utf8Letter()
+                .parse(Streams.ofString('б'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
-    'expect dash to be rejected': function (test) {
+    'expect dash to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.utf8Letter().parse(Streams.ofString('-'), 0).isAccepted(),
+            C.utf8Letter()
+                .parse(Streams.ofString('-'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
-    'expect "nothing" to be rejected': function (test) {
+    'expect "nothing" to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.utf8Letter().parse(Streams.ofString(''), 0).isAccepted(),
+            C.utf8Letter()
+                .parse(Streams.ofString(''), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect emoji to be accepted': function (test) {
+    'expect emoji to be accepted': function(test) {
         // It's super important for emoji to test there is EOS just after,
         // because some emoji takes two \uWXYZ codes, where utf_8 does not
         test.ok(
@@ -590,12 +652,15 @@ export default {
         )
         // Emoji 5.0 released in June 2017.
         test.ok(
-            C.emoji().then(F.eos()).parse(Streams.ofString('🥪')).isAccepted(),
+            C.emoji()
+                .then(F.eos())
+                .parse(Streams.ofString('🥪'))
+                .isAccepted(),
         )
         test.done()
     },
 
-    'expect subString to works': function (test) {
+    'expect subString to works': function(test) {
         let stream = Streams.ofString('James Bond')
         let parser = C.subString(6).then(C.string('Bond'))
 

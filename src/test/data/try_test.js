@@ -21,31 +21,31 @@ import atry from '../../lib/data/try'
 */
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'atry success': function (test) {
+    'atry success': function(test) {
         test.expect(1)
         // tests here
         test.ok(atry.success(1).isSuccess(), 'should be success.')
         test.done()
     },
 
-    'atry failure': function (test) {
+    'atry failure': function(test) {
         test.expect(1)
         // tests here
         test.ok(atry.failure(1).isFailure(), 'should be failure.')
         test.done()
     },
 
-    'atry success map can be a success': function (test) {
+    'atry success map can be a success': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             atry
                 .success(1)
-                .map(function (i) {
+                .map(function(i) {
                     return i + 1
                 })
                 .isSuccess(),
@@ -54,13 +54,13 @@ export default {
         test.done()
     },
 
-    'atry success map can be a failure': function (test) {
+    'atry success map can be a failure': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             atry
                 .success(1)
-                .map(function () {
+                .map(function() {
                     throw new Error()
                 })
                 .isFailure(),
@@ -69,13 +69,13 @@ export default {
         test.done()
     },
 
-    'atry success map': function (test) {
+    'atry success map': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .success(1)
-                .map(function (i) {
+                .map(function(i) {
                     return i + 1
                 })
                 .success(),
@@ -85,13 +85,13 @@ export default {
         test.done()
     },
 
-    'atry failure map is a failure': function (test) {
+    'atry failure map is a failure': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             atry
                 .failure(1)
-                .map(function (i) {
+                .map(function(i) {
                     return i + 1
                 })
                 .isFailure(),
@@ -100,13 +100,13 @@ export default {
         test.done()
     },
 
-    'atry failure map': function (test) {
+    'atry failure map': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .failure(1)
-                .map(function (i) {
+                .map(function(i) {
                     return i + 1
                 })
                 .failure(),
@@ -116,13 +116,13 @@ export default {
         test.done()
     },
 
-    'atry success flatMap of atry': function (test) {
+    'atry success flatMap of atry': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .success(1)
-                .flatMap(function (i) {
+                .flatMap(function(i) {
                     return atry.success(i + 1)
                 })
                 .success(),
@@ -132,13 +132,13 @@ export default {
         test.done()
     },
 
-    'atry failure flatMap of int': function (test) {
+    'atry failure flatMap of int': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .failure(1)
-                .flatMap(function (i) {
+                .flatMap(function(i) {
                     return i + 1
                 })
                 .failure(),
@@ -148,13 +148,13 @@ export default {
         test.done()
     },
 
-    'atry failure flatMap of Error': function (test) {
+    'atry failure flatMap of Error': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .success(1)
-                .flatMap(function () {
+                .flatMap(function() {
                     throw 1
                 })
                 .failure(),
@@ -164,25 +164,25 @@ export default {
         test.done()
     },
 
-    'atry success recoverWith': function (test) {
+    'atry success recoverWith': function(test) {
         test.expect(1)
         // tests here
         test.equal(atry.success(1).recoverWith(2), 1, 'should be success.')
         test.done()
     },
 
-    'atry failure recoverWith': function (test) {
+    'atry failure recoverWith': function(test) {
         test.expect(1)
         // tests here
         test.equal(atry.failure(1).recoverWith(2), 2, 'should be failure.')
         test.done()
     },
 
-    'atry success lazyRecoverWith': function (test) {
+    'atry success lazyRecoverWith': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            atry.success(1).lazyRecoverWith(function () {
+            atry.success(1).lazyRecoverWith(function() {
                 return 2
             }),
             1,
@@ -191,11 +191,11 @@ export default {
         test.done()
     },
 
-    'atry failure lazyRecoverWith': function (test) {
+    'atry failure lazyRecoverWith': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            atry.failure(1).lazyRecoverWith(function () {
+            atry.failure(1).lazyRecoverWith(function() {
                 return 2
             }),
             2,
@@ -204,13 +204,13 @@ export default {
         test.done()
     },
 
-    'atry success filter': function (test) {
+    'atry success filter': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .success(1)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 1
                 })
                 .isSuccess(),
@@ -220,13 +220,13 @@ export default {
         test.done()
     },
 
-    'atry success wrong filter': function (test) {
+    'atry success wrong filter': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .success(1)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 2
                 })
                 .isFailure(),
@@ -236,13 +236,13 @@ export default {
         test.done()
     },
 
-    'atry failure filter': function (test) {
+    'atry failure filter': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             atry
                 .failure(1)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 1
                 })
                 .isFailure(),
@@ -252,44 +252,44 @@ export default {
         test.done()
     },
 
-    'atry success onSuccess': function (test) {
+    'atry success onSuccess': function(test) {
         test.expect(1)
         // tests here
         var success = false
-        atry.success(1).onSuccess(function () {
+        atry.success(1).onSuccess(function() {
             success = true
         })
         test.equal(success, true, 'should be true.')
         test.done()
     },
 
-    'atry failure onSuccess': function (test) {
+    'atry failure onSuccess': function(test) {
         test.expect(1)
         // tests here
         var success = false
-        atry.failure().onSuccess(function () {
+        atry.failure().onSuccess(function() {
             success = true
         })
         test.equal(success, false, 'should be false.')
         test.done()
     },
 
-    'atry success onFailure': function (test) {
+    'atry success onFailure': function(test) {
         test.expect(1)
         // tests here
         var failure = false
-        atry.success(1).onFailure(function () {
+        atry.success(1).onFailure(function() {
             failure = true
         })
         test.equal(failure, false, 'should be false.')
         test.done()
     },
 
-    'atry failure onFailure': function (test) {
+    'atry failure onFailure': function(test) {
         test.expect(1)
         // tests here
         var failure = false
-        atry.failure().onFailure(function () {
+        atry.failure().onFailure(function() {
             failure = true
         })
         test.equal(failure, true, 'should be true.')

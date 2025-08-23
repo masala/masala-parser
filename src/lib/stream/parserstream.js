@@ -12,7 +12,7 @@ import option from '../data/option.js'
 /**
  * ParserStream stream class
  * Compared to StringStream, it is NOT a RandomAccess.
- * You must use a substream before making an access to a unreached point.
+ * You must use a substream before making access to an unreached point.
  */
 class ParserStream extends Stream {
     constructor(parser, lowerStream) {

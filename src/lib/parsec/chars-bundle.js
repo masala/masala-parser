@@ -25,7 +25,7 @@ function letter(symbol = null) {
     // For performance, we do not factorize mainstream letters in function
     if (symbol === null || symbol === OCCIDENTAL_LETTER) {
         return F.satisfy(
-            (c) =>
+            c =>
                 ('a' <= c && c <= 'z') ||
                 ('A' <= c && c <= 'Z') ||
                 isExtendedOccidental(c),
@@ -33,25 +33,21 @@ function letter(symbol = null) {
     }
 
     if (symbol === ASCII_LETTER) {
-        return F.satisfy(
-            (c) => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'),
-        )
+        return F.satisfy(c => ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))
     }
 
     if (symbol === UTF8_LETTER) {
         return F.satisfy(
-            (c) =>
+            c =>
                 ('a' <= c && c <= 'z') ||
                 ('A' <= c && c <= 'Z') ||
                 isUtf8Letter(c),
         )
     }
 
-    throw (
-        'Parameter ' +
+    throw 'Parameter ' +
         symbol.toString() +
         ' has wrong type : Should be C.OCCIDENTAL_LETTER, C.ASCII_LETTER or C.UTF8_LETTER'
-    )
 }
 
 function utf8Letter() {
@@ -59,13 +55,13 @@ function utf8Letter() {
 }
 
 function emoji() {
-    return F.satisfy((c) => !isUtf8Letter(c) && isEmojiRegex(c)).rep()
+    return F.satisfy(c => !isUtf8Letter(c) && isEmojiRegex(c)).rep()
 }
 
 function letters(symbolOrTestFunctionOrRegex) {
     return letter(symbolOrTestFunctionOrRegex)
         .rep()
-        .map((values) => values.join(''))
+        .map(values => values.join(''))
 }
 
 // char -> Parser char char
@@ -74,7 +70,7 @@ function char(c) {
         throw new Error('Char parser must contains one character')
     }
 
-    return F.satisfy((v) => c === v)
+    return F.satisfy(v => c === v)
 }
 
 // char -> Parser char char
@@ -83,22 +79,22 @@ function notChar(c) {
         throw new Error('Char parser must contains one character')
     }
 
-    return F.satisfy((v) => c !== v)
+    return F.satisfy(v => c !== v)
 }
 
 // string -> Parser char char
 function charIn(c) {
-    return F.satisfy((v) => c.indexOf(v) !== -1)
+    return F.satisfy(v => c.indexOf(v) !== -1)
 }
 
 // string -> Parser char char
 function charNotIn(c) {
-    return F.satisfy((v) => c.indexOf(v) === -1)
+    return F.satisfy(v => c.indexOf(v) === -1)
 }
 
 // int -> Parser string char
 function subString(length) {
-    return F.subStream(length).map((s) => s.join(''))
+    return F.subStream(length).map(s => s.join(''))
 }
 
 // string -> Parser string char
@@ -114,7 +110,7 @@ function subString(length) {
 }*/
 
 function stringIn(array) {
-    const tryString = (s) => F.try(string(s))
+    const tryString = s => F.try(string(s))
 
     if (array.length === 0) {
         return F.nop()
@@ -146,24 +142,27 @@ function stringLiteral() {
             .thenRight(anyChar.optrep())
             .thenLeft(char('"'))
             //.array()
-            .map((r) => r.join(''))
+            .map(r => r.join(''))
     )
 }
 
 // unit -> Parser char char
 function charLiteral() {
     const anyChar = string("\\'").or(notChar("'"))
-    return char("'").thenRight(anyChar).thenLeft(char("'")).single()
+    return char("'")
+        .thenRight(anyChar)
+        .thenLeft(char("'"))
+        .single()
 }
 
 // unit -> Parser char char
 function lowerCase() {
-    return F.satisfy((v) => 'a' <= v && v <= 'z')
+    return F.satisfy(v => 'a' <= v && v <= 'z')
 }
 
 // unit -> Parser char char
 function upperCase() {
-    return F.satisfy((v) => 'A' <= v && v <= 'Z')
+    return F.satisfy(v => 'A' <= v && v <= 'Z')
 }
 
 /**
@@ -171,7 +170,7 @@ function upperCase() {
  */
 function inRegexRange(regexRange) {
     const regExp = new RegExp(`^[${regexRange}]$`)
-    return F.satisfy((c) => regExp.test(c))
+    return F.satisfy(c => regExp.test(c))
 }
 
 export default {

@@ -11,11 +11,11 @@ function testParser(parser, string) {
 }
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'expect N.integer() to be ok': function (test) {
+    'expect N.integer() to be ok': function(test) {
         const string = '007'
         // tests here
         const parser = N.integer()
@@ -24,7 +24,7 @@ export default {
         test.done()
     },
 
-    'expect N.integer() with sign to be ok': function (test) {
+    'expect N.integer() with sign to be ok': function(test) {
         const string = '-007'
         // tests here
         const parser = N.integer()
@@ -33,7 +33,7 @@ export default {
         test.done()
     },
 
-    'expect number without sign to be ok': function (test) {
+    'expect number without sign to be ok': function(test) {
         const string = '007.12'
         // tests here
         const parser = N.number()
@@ -42,7 +42,7 @@ export default {
         test.done()
     },
 
-    'expect many digits to be joined and to be a number': function (test) {
+    'expect many digits to be joined and to be a number': function(test) {
         const string = '007'
         // tests here
         const parser = N.digits()

@@ -5,14 +5,18 @@ import { F, C } from '../../lib/parsec/index'
 describe('Tuple Parser Tests', () => {
     it('expect p.first() to work', () => {
         let text = 'abc'
-        let parser = C.letter().rep().first()
+        let parser = C.letter()
+            .rep()
+            .first()
 
         expect(parser.val(text)).toBe('a')
     })
 
     it('expect p.last() to work', () => {
         let text = 'abc'
-        let parser = C.letter().rep().last()
+        let parser = C.letter()
+            .rep()
+            .last()
 
         expect(parser.val(text)).toBe('c')
     })
@@ -21,7 +25,7 @@ describe('Tuple Parser Tests', () => {
         let text = 'abc'
         let parser = C.letter()
             .rep()
-            .map((t) => t.at(2))
+            .map(t => t.at(2))
 
         expect(parser.val(text)).toBe('c')
     })
@@ -36,7 +40,10 @@ describe('Tuple Parser Tests', () => {
     it('expect F.nop to be like a empty tuple', () => {
         let text = 'ab'
         const stream = Streams.ofString(text)
-        let parser = C.char('a').then(F.nop()).then(C.char('b')).join()
+        let parser = C.char('a')
+            .then(F.nop())
+            .then(C.char('b'))
+            .join()
         let parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual('ab')

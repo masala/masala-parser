@@ -22,31 +22,37 @@ import stream from '../../lib/stream/index'
 */
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'response accepted': function (test) {
+    'response accepted': function(test) {
         test.expect(1)
         // tests here
         test.ok(response.accept().isAccepted(), 'should be accepted.')
         test.done()
     },
 
-    'response as a success': function (test) {
-        test.expect(1)
-        // tests here
-        test.ok(response.accept().toTry().isSuccess(), 'should be success.')
-        test.done()
-    },
-
-    'response accepted map to accepted': function (test) {
+    'response as a success': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             response
                 .accept()
-                .map(function (a) {
+                .toTry()
+                .isSuccess(),
+            'should be success.',
+        )
+        test.done()
+    },
+
+    'response accepted map to accepted': function(test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            response
+                .accept()
+                .map(function(a) {
                     return a
                 })
                 .isAccepted(),
@@ -55,11 +61,11 @@ export default {
         test.done()
     },
 
-    'response accepted map to return the value': function (test) {
+    'response accepted map to return the value': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            response.accept('a').map(function (a) {
+            response.accept('a').map(function(a) {
                 return a
             }).value,
             'a',
@@ -68,13 +74,13 @@ export default {
         test.done()
     },
 
-    'response accepted map to pass in response as second argument': function (
+    'response accepted map to pass in response as second argument': function(
         test,
     ) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            response.accept('a').map(function (_, response) {
+            response.accept('a').map(function(_, response) {
                 return response
             }).value,
             response.accept('a'),
@@ -83,13 +89,13 @@ export default {
         test.done()
     },
 
-    'response accepted flatMap to accepted': function (test) {
+    'response accepted flatMap to accepted': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             response
                 .accept('a')
-                .flatMap(function (a) {
+                .flatMap(function(a) {
                     return response.accept(a)
                 })
                 .isAccepted(),
@@ -98,12 +104,12 @@ export default {
         test.done()
     },
 
-    'response accepted flatMap knows the offset': function (test) {
+    'response accepted flatMap knows the offset': function(test) {
         test.expect(1)
         // tests here
         const responseOffset = response
             .accept('a', 'abc', 1, false)
-            .flatMap(function (a, response) {
+            .flatMap(function(a, response) {
                 return response.offset
             })
 
@@ -111,13 +117,13 @@ export default {
         test.done()
     },
 
-    'response accepted flatMap to return the value': function (test) {
+    'response accepted flatMap to return the value': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             response
                 .accept('a')
-                .flatMap(function (a) {
+                .flatMap(function(a) {
                     return response.accept(a)
                 })
                 .isAccepted(),
@@ -127,13 +133,13 @@ export default {
         test.done()
     },
 
-    'response accepted flatMap to reject': function (test) {
+    'response accepted flatMap to reject': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response
                 .accept()
-                .flatMap(function () {
+                .flatMap(function() {
                     return response.reject()
                 })
                 .isAccepted(),
@@ -143,13 +149,13 @@ export default {
         test.done()
     },
 
-    'response rejected map to rejected': function (test) {
+    'response rejected map to rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
-                .map(function (t) {
+                .map(function(t) {
                     return t
                 })
                 .isAccepted(),
@@ -159,24 +165,24 @@ export default {
         test.done()
     },
 
-    'response rejected map callback not called': function (test) {
+    'response rejected map callback not called': function(test) {
         test.expect(1)
         // tests here
         let calls = 0
-        response.reject().map(function () {
+        response.reject().map(function() {
             calls++
         })
         test.equal(calls, 0, 'should not have called the callback.')
         test.done()
     },
 
-    'response rejected flatMap to rejected': function (test) {
+    'response rejected flatMap to rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
-                .flatMap(function () {
+                .flatMap(function() {
                     return response.accept()
                 })
                 .isAccepted(),
@@ -186,22 +192,22 @@ export default {
         test.done()
     },
 
-    'response rejected flatMap callback not called': function (test) {
+    'response rejected flatMap callback not called': function(test) {
         test.expect(1)
         // tests here
         let calls = 0
-        response.reject().flatMap(function () {
+        response.reject().flatMap(function() {
             calls++
         })
         test.equal(calls, 0, 'should not have called the callback.')
         test.done()
     },
 
-    'response accepted fold': function (test) {
+    'response accepted fold': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            response.accept('a').fold(function (a) {
+            response.accept('a').fold(function(a) {
                 return a.value
             }),
             'a',
@@ -210,20 +216,20 @@ export default {
         test.done()
     },
 
-    'fold takes a function to map the value depending on result': function (
+    'fold takes a function to map the value depending on result': function(
         test,
     ) {
         let value = response.accept('a').fold(
-            (accept) => accept.value + '-potato', // Accept has value, input, offset, consumed
-            (reject) => reject.offset + '-tomato',
+            accept => accept.value + '-potato', // Accept has value, input, offset, consumed
+            reject => reject.offset + '-tomato',
         ) // Reject has offset, consumed
 
         // we accept, so it should be a-potato
         test.equal(value, 'a-potato')
 
         value = response.reject().fold(
-            (accept) => accept.value + '-potato',
-            (reject) => reject.offset + '-tomato',
+            accept => accept.value + '-potato',
+            reject => reject.offset + '-tomato',
         )
 
         // we reject, so it should use the second function
@@ -233,13 +239,13 @@ export default {
         test.done()
     },
 
-    'response filter accepted': function (test) {
+    'response filter accepted': function(test) {
         test.expect(1)
         // tests here
         test.ok(
             response
                 .accept('a')
-                .filter(function (a) {
+                .filter(function(a) {
                     return a === 'a'
                 })
                 .isAccepted(),
@@ -248,13 +254,13 @@ export default {
         test.done()
     },
 
-    'response not filter accepted ': function (test) {
+    'response not filter accepted ': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response
                 .accept('a')
-                .filter(function (a) {
+                .filter(function(a) {
                     return a !== 'a'
                 })
                 .isAccepted(),
@@ -263,7 +269,7 @@ export default {
         )
         test.done()
     },
-    'accept can be consumed': function (test) {
+    'accept can be consumed': function(test) {
         test.expect(1)
         // tests here
         const myStream = stream.ofString('abc')
@@ -272,7 +278,7 @@ export default {
         test.equal(consumed, true, 'should be consumed')
         test.done()
     },
-    'accept should not be yet consumed': function (test) {
+    'accept should not be yet consumed': function(test) {
         test.expect(1)
         // tests here
         const myStream = stream.ofString('abc')
@@ -284,40 +290,43 @@ export default {
         test.done()
     },
 
-    'response rejected': function (test) {
+    'response rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(response.reject().isAccepted(), false, 'should be rejected.')
         test.done()
     },
 
-    'response rejected should not be consumed': function (test) {
+    'response rejected should not be consumed': function(test) {
         test.expect(1)
         // tests here
         test.equal(response.reject().isEos(), false, 'should be not consumed.')
         test.done()
     },
 
-    'response as a failure': function (test) {
+    'response as a failure': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            response.reject().toTry().isSuccess(),
+            response
+                .reject()
+                .toTry()
+                .isSuccess(),
             false,
             'should be failure.',
         )
         test.done()
     },
 
-    'response rejected fold': function (test) {
+    'response rejected fold': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response.reject().fold(
-                function (a) {
+                function(a) {
                     return a.value
                 },
-                function () {
+                function() {
                     return 'b'
                 },
             ),
@@ -327,13 +336,13 @@ export default {
         test.done()
     },
 
-    'response filter rejected': function (test) {
+    'response filter rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
-                .filter(function () {
+                .filter(function() {
                     return true
                 })
                 .isAccepted(),
@@ -343,13 +352,13 @@ export default {
         test.done()
     },
 
-    'response not filter rejected': function (test) {
+    'response not filter rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             response
                 .reject()
-                .filter(function () {
+                .filter(function() {
                     return false
                 })
                 .isAccepted(),

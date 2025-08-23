@@ -17,7 +17,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .none()
-                .map(function (a) {
+                .map(function(a) {
                     return a
                 })
                 .isPresent(),
@@ -29,7 +29,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .some(12)
-                .map(function (a) {
+                .map(function(a) {
                     return a
                 })
                 .get(),
@@ -41,7 +41,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .some(12)
-                .flatMap(function (a) {
+                .flatMap(function(a) {
                     return option.some(a)
                 })
                 .get(),
@@ -53,7 +53,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .none()
-                .flatMap(function (a) {
+                .flatMap(function(a) {
                     return a // This function wouldn't be called for none()
                 })
                 .isPresent(),
@@ -73,7 +73,7 @@ describe('Option Data Type Tests', () => {
     // Original test: 'option empty or lazy else'
     it('option empty or lazy else', () => {
         expect(
-            option.none().orLazyElse(function () {
+            option.none().orLazyElse(function() {
                 return 12
             }),
         ).toBe(12)
@@ -82,7 +82,7 @@ describe('Option Data Type Tests', () => {
     // Original test: 'option not empty or lazy else'
     it('option not empty or lazy else', () => {
         expect(
-            option.some(12).orLazyElse(function () {
+            option.some(12).orLazyElse(function() {
                 return 14
             }),
         ).toBe(12)
@@ -93,7 +93,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .none()
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 1
                 })
                 .isPresent(),
@@ -105,7 +105,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .some(12)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 12
                 })
                 .get(),
@@ -117,7 +117,7 @@ describe('Option Data Type Tests', () => {
         expect(
             option
                 .some(12)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 13
                 })
                 .isPresent(),

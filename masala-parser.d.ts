@@ -1,3 +1,4 @@
+import type { Tracer } from './typings/debugger.js'
 import type { FlowBundle } from './typings/flow-bundle.js'
 import type { EmptyTuple, Tuple } from './typings/tuple.d.ts'
 import type { VoidParser } from './typings/void-parser.js'
@@ -417,6 +418,8 @@ export interface IParser<T> {
      * Accept the end of stream. If accepted, it will not change the response
      */
     eos(): this
+
+    trace(name: string): this
 }
 
 /**
@@ -567,6 +570,7 @@ export declare const Streams: Streams
 
 export declare class GenLex implements IGenLex {
     constructor()
+    tokenize(string: string): SingleParser<string>
     tokenize<T, P extends IParser<T>>(
         parser: P,
         name: string,
@@ -614,3 +618,13 @@ export type {
     EmptyTupleParser,
     MixedParser,
 }
+
+/* Debugger */
+interface TracerOptions {
+    window?: number[]
+    includeValues?: boolean
+    includeRejects?: boolean
+    snippet?: boolean
+    snippetMax?: number
+}
+export declare function createTracer(options?: TracerOptions): Tracer

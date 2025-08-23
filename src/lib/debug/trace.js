@@ -38,7 +38,7 @@ export function registerTrace(parser, name, opts = {}) {
  */
 export function createTracer({
     window = [0, Number.MAX_SAFE_INTEGER],
-    includeValues = false,
+    includeValues = true,
     includeRejects = true,
     snippet = true, // include a text snippet for the consumed span
     snippetMax = 80, // truncate long snippets
@@ -157,7 +157,7 @@ export function createTracer({
             )
             wrapOne(parser, meta.name, per)
         }
-        return (rootParser) => rootParser // pass-through to keep pipeline style
+        return rootParser => rootParser // pass-through to keep pipeline style
     }
 
     return {
@@ -172,7 +172,7 @@ export function createTracer({
          */
         trace(targetParser, name, opts) {
             wrapOne(targetParser, name, opts)
-            return (rootParser) => rootParser
+            return rootParser => rootParser
         },
 
         traceAll,

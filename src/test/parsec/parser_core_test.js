@@ -2,22 +2,22 @@ import stream from '../../lib/stream/index'
 import { F, C, N } from '../../lib/parsec/index'
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'expect val to be a nice shortcut': function (test) {
+    'expect val to be a nice shortcut': function(test) {
         const parser = C.string('xyz')
         const val = parser.val('xyz')
         test.equal(val, 'xyz')
         test.done()
     },
-    'expect (map) to be accepted': function (test) {
+    'expect (map) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .map(function (a) {
+                .map(function(a) {
                     return a + 'b'
                 })
                 .parse(stream.ofString('a'), 0)
@@ -28,12 +28,12 @@ export default {
         test.done()
     },
 
-    'expect (map) to be rejected': function (test) {
+    'expect (map) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .map(function (a) {
+                .map(function(a) {
                     return a + 'b'
                 })
                 .parse(stream.ofString('b'), 0)
@@ -44,12 +44,12 @@ export default {
         test.done()
     },
 
-    'expect (map) to be return ab': function (test) {
+    'expect (map) to be return ab': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .map(function (a) {
+                .map(function(a) {
                     return a + 'b'
                 })
                 .parse(stream.ofString('a'), 0).value,
@@ -59,7 +59,7 @@ export default {
         test.done()
     },
 
-    'expect (map) to be return 5x8': function (test) {
+    'expect (map) to be return 5x8': function(test) {
         test.expect(1)
 
         try {
@@ -68,7 +68,7 @@ export default {
                 .then(C.char('x').drop())
                 .then(N.integer())
                 .array()
-                .map((values) => values[0] * values[1])
+                .map(values => values[0] * values[1])
 
             test.equal(combinator.parse(st).value, 40, 'should be accepted.')
         } catch (e) {
@@ -78,12 +78,12 @@ export default {
         test.done()
     },
 
-    'expect (flatMap) to be accepted': function (test) {
+    'expect (flatMap) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .flatMap(function () {
+                .flatMap(function() {
                     return F.returns('b')
                 })
                 .parse(stream.ofString('a'), 0)
@@ -94,12 +94,12 @@ export default {
         test.done()
     },
 
-    'expect (flatMap) to be rejected ': function (test) {
+    'expect (flatMap) to be rejected ': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .flatMap(function () {
+                .flatMap(function() {
                     return F.returns('b')
                 })
                 .parse(stream.ofString('b'), 0)
@@ -110,12 +110,12 @@ export default {
         test.done()
     },
 
-    'expect (flatMap) to be return ab': function (test) {
+    'expect (flatMap) to be return ab': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .flatMap(function () {
+                .flatMap(function() {
                     return C.char('b')
                 })
                 .parse(stream.ofString('ab'), 0).value,
@@ -125,12 +125,12 @@ export default {
         test.done()
     },
 
-    'expect (filter) to be accepted': function (test) {
+    'expect (filter) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .filter(function (a) {
+                .filter(function(a) {
                     return a === 'a'
                 })
                 .parse(stream.ofString('a'), 0)
@@ -141,12 +141,12 @@ export default {
         test.done()
     },
 
-    'expect (filter) to be rejected': function (test) {
+    'expect (filter) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             C.char('a')
-                .filter(function (a) {
+                .filter(function(a) {
                     return a === 'b'
                 })
                 .parse(stream.ofString('a'), 0)
@@ -157,29 +157,35 @@ export default {
         test.done()
     },
 
-    'expect (match) to be accepted': function (test) {
+    'expect (match) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').match('a').parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a')
+                .match('a')
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (match) to be rejected': function (test) {
+    'expect (match) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').match('b').parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a')
+                .match('b')
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (then) to be accepted': function (test) {
+    'expect (then) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -193,7 +199,7 @@ export default {
         test.done()
     },
 
-    'expect (then) left to be rejected': function (test) {
+    'expect (then) left to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -207,7 +213,7 @@ export default {
         test.done()
     },
 
-    'expect (then) right to be rejected': function (test) {
+    'expect (then) right to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -221,7 +227,7 @@ export default {
         test.done()
     },
 
-    'expect (then) to return [a,b]': function (test) {
+    'expect (then) to return [a,b]': function(test) {
         test.expect(1)
         // tests here
         // const stream = stream.ofString("ab");
@@ -236,13 +242,17 @@ export default {
         test.done()
     },
 
-    'expect (then) to return [a,b,d]': function (test) {
+    'expect (then) to return [a,b,d]': function(test) {
         test.expect(1)
         // tests here
         // const stream = stream.ofString("ab");
         test.deepEqual(
             C.char('a')
-                .then(C.char('b').then(C.char('c').drop()).then(C.char('d')))
+                .then(
+                    C.char('b')
+                        .then(C.char('c').drop())
+                        .then(C.char('d')),
+                )
                 .array()
                 .parse(stream.ofString('abcd'), 0).value,
             ['a', 'b', 'd'],
@@ -251,8 +261,10 @@ export default {
         test.done()
     },
 
-    'expect (then) to be empty with two drops ': function (test) {
-        const parser = C.char('a').drop().then(C.char('b').drop())
+    'expect (then) to be empty with two drops ': function(test) {
+        const parser = C.char('a')
+            .drop()
+            .then(C.char('b').drop())
 
         const value = parser.parse(stream.ofString('ab')).value.value
 
@@ -262,7 +274,7 @@ export default {
         test.done()
     },
 
-    'expect (then) to be associative ': function (test) {
+    'expect (then) to be associative ': function(test) {
         test.expect(1)
 
         const first = C.char('a')
@@ -273,7 +285,11 @@ export default {
 
         const second = C.char('a')
             .then(C.char('b'))
-            .then(C.char('c').drop().then(C.char('d')))
+            .then(
+                C.char('c')
+                    .drop()
+                    .then(C.char('d')),
+            )
             .array()
 
         test.deepEqual(
@@ -283,7 +299,7 @@ export default {
         test.done()
     },
 
-    'expect (then) to be replaced by concat ': function (test) {
+    'expect (then) to be replaced by concat ': function(test) {
         test.expect(1)
         // tests here
         // const stream = stream.ofString("ab");
@@ -300,7 +316,7 @@ export default {
         test.done()
     },
 
-    'expect (thenLeft) to be accepted': function (test) {
+    'expect (thenLeft) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -314,7 +330,7 @@ export default {
         test.done()
     },
 
-    'expect (thenLeft) to return a': function (test) {
+    'expect (thenLeft) to return a': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -328,7 +344,7 @@ export default {
         test.done()
     },
 
-    'expect (thenLeft) to be rejected': function (test) {
+    'expect (thenLeft) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -342,7 +358,7 @@ export default {
         test.done()
     },
 
-    'expect (thenRight) to be accepted': function (test) {
+    'expect (thenRight) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -356,7 +372,7 @@ export default {
         test.done()
     },
 
-    'expect (thenRight) to return a': function (test) {
+    'expect (thenRight) to return a': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -370,7 +386,7 @@ export default {
         test.done()
     },
 
-    'expect (thenRight) to be rejected': function (test) {
+    'expect (thenRight) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -384,7 +400,7 @@ export default {
         test.done()
     },
 
-    'expect (drop/then) to be accepted': function (test) {
+    'expect (drop/then) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -399,7 +415,7 @@ export default {
         test.done()
     },
 
-    'expect (drop/then) to be return b': function (test) {
+    'expect (drop/then) to be return b': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -414,7 +430,7 @@ export default {
         test.done()
     },
 
-    'expect (then/drop) to be accepted': function (test) {
+    'expect (then/drop) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -428,7 +444,7 @@ export default {
         test.done()
     },
 
-    'expect (drop/then) to be return a': function (test) {
+    'expect (drop/then) to be return a': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -441,7 +457,7 @@ export default {
         )
         test.done()
     },
-    'expect (eos) to be accepted at the end': function (test) {
+    'expect (eos) to be accepted at the end': function(test) {
         const parser = C.string('abc').eos()
 
         const response = parser.parse(stream.ofString('abc'))
@@ -451,7 +467,7 @@ export default {
         test.equal(response.value, 'abc') // not tuple([a]) !
         test.done()
     },
-    'expect (eos) to be rejected without eating char': function (test) {
+    'expect (eos) to be rejected without eating char': function(test) {
         const parser = C.char('a').eos()
 
         const response = parser.parse(stream.ofString('ab'))
@@ -462,10 +478,12 @@ export default {
         test.equal(response.value, undefined) // not tuple([a]) !
         test.done()
     },
-    'expect rejected (eos) to be rejected keeping previous offset': function (
+    'expect rejected (eos) to be rejected keeping previous offset': function(
         test,
     ) {
-        const parser = C.char('a').then(C.char('a')).eos()
+        const parser = C.char('a')
+            .then(C.char('a'))
+            .eos()
 
         // this will pass by the reject argument function of .eos()
         const response = parser.parse(stream.ofString('ab is ending at 1'))
@@ -476,28 +494,34 @@ export default {
         test.equal(response.value, undefined) // not tuple([a]) !
         test.done()
     },
-    'expect (thenEos) to be accepted at the end': function (test) {
+    'expect (thenEos) to be accepted at the end': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').thenEos().parse(stream.ofString('a')).isAccepted(),
+            C.char('a')
+                .thenEos()
+                .parse(stream.ofString('a'))
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
-    'expect (thenEos) to be rejected if not the end': function (test) {
+    'expect (thenEos) to be rejected if not the end': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').thenEos().parse(stream.ofString('abc')).isAccepted(),
+            C.char('a')
+                .thenEos()
+                .parse(stream.ofString('abc'))
+                .isAccepted(),
             false,
             'should be rejected',
         )
         test.done()
     },
 
-    'expect (returns) to be accepted': function (test) {
+    'expect (returns) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -511,18 +535,20 @@ export default {
         test.done()
     },
 
-    'expect (returns) to return b': function (test) {
+    'expect (returns) to return b': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.char('a').returns('b').parse(stream.ofString('ab'), 0).value,
+            C.char('a')
+                .returns('b')
+                .parse(stream.ofString('ab'), 0).value,
             'b',
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (returns) not to eat char': function (test) {
+    'expect (returns) not to eat char': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -537,7 +563,7 @@ export default {
         test.done()
     },
 
-    'expect (returns) to be rejected': function (test) {
+    'expect (returns) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -551,7 +577,7 @@ export default {
         test.done()
     },
 
-    'expect (or) to be accepted': function (test) {
+    'expect (or) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -565,7 +591,7 @@ export default {
         test.done()
     },
 
-    'expect (or) to be rejected': function (test) {
+    'expect (or) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -579,7 +605,7 @@ export default {
         test.done()
     },
 
-    'expect (or) LL(1) to be rejected': function (test) {
+    'expect (or) LL(1) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -594,29 +620,33 @@ export default {
         test.done()
     },
 
-    'expect (or) to return a': function (test) {
+    'expect (or) to return a': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').or(C.char('b')).parse(stream.ofString('a'), 0).value,
+            C.char('a')
+                .or(C.char('b'))
+                .parse(stream.ofString('a'), 0).value,
             'a',
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (or) to return b': function (test) {
+    'expect (or) to return b': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').or(C.char('b')).parse(stream.ofString('b'), 0).value,
+            C.char('a')
+                .or(C.char('b'))
+                .parse(stream.ofString('b'), 0).value,
             'b',
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (then.or) left to be rejected': function (test) {
+    'expect (then.or) left to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -630,7 +660,7 @@ export default {
         test.done()
     },
 
-    'expect (then.or) left to be consumed': function (test) {
+    'expect (then.or) left to be consumed': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -643,84 +673,105 @@ export default {
         test.done()
     },
 
-    'expect (opt) some to accepted': function (test) {
+    'expect (opt) some to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').opt().parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a')
+                .opt()
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (opt) some to return some a': function (test) {
+    'expect (opt) some to return some a': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').opt().parse(stream.ofString('a'), 0).value.get(),
+            C.char('a')
+                .opt()
+                .parse(stream.ofString('a'), 0)
+                .value.get(),
             'a',
             'should be a.',
         )
         test.done()
     },
 
-    'expect (opt) none to accepted': function (test) {
+    'expect (opt) none to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').opt().parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a')
+                .opt()
+                .parse(stream.ofString('b'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (opt) none to return none': function (test) {
+    'expect (opt) none to return none': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').opt().parse(stream.ofString('b'), 0).value.isPresent(),
+            C.char('a')
+                .opt()
+                .parse(stream.ofString('b'), 0)
+                .value.isPresent(),
             false,
             'should be accepted but none.',
         )
         test.done()
     },
 
-    'expect (rep) to accepted': function (test) {
+    'expect (rep) to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').rep().parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a')
+                .rep()
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (rep) to rejected': function (test) {
+    'expect (rep) to rejected': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').rep().parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a')
+                .rep()
+                .parse(stream.ofString('b'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (rep) mutiple to accepted': function (test) {
+    'expect (rep) mutiple to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').rep().parse(stream.ofString('aaaabbb'), 0).isAccepted(),
+            C.char('a')
+                .rep()
+                .parse(stream.ofString('aaaabbb'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (rep) mutiple to return [a,a,a,a]': function (test) {
+    'expect (rep) mutiple to return [a,a,a,a]': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -734,29 +785,35 @@ export default {
         test.done()
     },
 
-    'expect (optrep) to accepted': function (test) {
+    'expect (optrep) to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').optrep().parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a')
+                .optrep()
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (optrep) none to accepted': function (test) {
+    'expect (optrep) none to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').optrep().parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a')
+                .optrep()
+                .parse(stream.ofString('b'), 0)
+                .isAccepted(),
             true,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (optrep) mutiple to accepted': function (test) {
+    'expect (optrep) mutiple to accepted': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -770,7 +827,7 @@ export default {
         test.done()
     },
 
-    'expect (optrep) mutiple to return some [a,a,a,a]': function (test) {
+    'expect (optrep) mutiple to return some [a,a,a,a]': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -784,18 +841,21 @@ export default {
         test.done()
     },
 
-    'expect (optrep) to return none': function (test) {
+    'expect (optrep) to return none': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
-            C.char('a').optrep().parse(stream.ofString('bbb'), 0).value.array(),
+            C.char('a')
+                .optrep()
+                .parse(stream.ofString('bbb'), 0)
+                .value.array(),
             [],
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (optrep) to return [b,b,b]': function (test) {
+    'expect (optrep) to return [b,b,b]': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -809,7 +869,7 @@ export default {
         test.done()
     },
 
-    'expect two (optrep) to be merged as [b,b,b,a]]': function (test) {
+    'expect two (optrep) to be merged as [b,b,b,a]]': function(test) {
         test.expect(1)
         // tests here
         test.deepEqual(
@@ -823,7 +883,7 @@ export default {
         )
         test.done()
     },
-    'expect two (optrep) to return [[b,b,b],[a]] using array()': function (
+    'expect two (optrep) to return [[b,b,b],[a]] using array()': function(
         test,
     ) {
         test.expect(1)
@@ -841,31 +901,34 @@ export default {
         test.done()
     },
 
-    'expect debug() to make side effect': function (test) {
+    'expect debug() to make side effect': function(test) {
         test.expect(1)
         // tests here
         const original = console.log
         let sideEffect = false
 
-        console.log = function () {
+        console.log = function() {
             sideEffect = true
         }
 
         // side effect action
-        C.char('a').debug('found').optrep().parse(stream.ofString('aaa'), 0)
+        C.char('a')
+            .debug('found')
+            .optrep()
+            .parse(stream.ofString('aaa'), 0)
 
         console.log = original
         test.deepEqual(sideEffect, true, 'should make side effect.')
         test.done()
     },
 
-    'expect debug(param, false) to make side effect': function (test) {
+    'expect debug(param, false) to make side effect': function(test) {
         test.expect(1)
         // tests here
         const original = console.log
         let sideEffect = false
 
-        console.log = function () {
+        console.log = function() {
             sideEffect = true
         }
 
@@ -880,18 +943,21 @@ export default {
         test.done()
     },
 
-    'expect (debug) to not make side effect': function (test) {
+    'expect (debug) to not make side effect': function(test) {
         test.expect(1)
         // tests here
         const original = console.log
         let sideEffect = false
 
-        console.log = function () {
+        console.log = function() {
             sideEffect = true
         }
 
         // side effect action
-        C.char('a').debug('found').optrep().parse(stream.ofString('xxxx'), 0)
+        C.char('a')
+            .debug('found')
+            .optrep()
+            .parse(stream.ofString('xxxx'), 0)
 
         console.log = original
         test.deepEqual(sideEffect, false, 'should make side effect.')

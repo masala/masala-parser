@@ -51,7 +51,7 @@ function satisfy(predicate) {
         input
             .get(index)
             .filter(predicate)
-            .map((value) => response.accept(value, input, index + 1, true))
+            .map(value => response.accept(value, input, index + 1, true))
             .lazyRecoverWith(() => response.reject(input, index, false)),
     )
 }
@@ -60,9 +60,9 @@ function satisfy(predicate) {
 function doTry(p) {
     return new Parser((input, index = 0) => {
         return p.parse(input, index).fold(
-            (accept) => accept,
+            accept => accept,
             // we come back to initial offset
-            (_) => response.reject(input, index, false),
+            _ => response.reject(input, index, false),
         )
     })
 }
@@ -70,7 +70,7 @@ function doTry(p) {
 function layer(p) {
     return new Parser((input, index = 0) =>
         p.parse(input, index).fold(
-            (accept) => {
+            accept => {
                 // TODO logger
 
                 return response.accept(
@@ -81,7 +81,7 @@ function layer(p) {
                 )
             },
             // Compared to satisfy, we come back to initial offset
-            (reject) => reject,
+            reject => reject,
         ),
     )
 }
@@ -100,7 +100,9 @@ function nop() {
 
 // Parser 'a ? -> Parser 'a 'a
 function not(p) {
-    return doTry(p).then(error()).or(any())
+    return doTry(p)
+        .then(error())
+        .or(any())
 }
 
 // int -> Parser (List 'a') a'
@@ -121,7 +123,9 @@ function moveUntil(stop, include = false) {
         return searchArrayStringStart(stop, include)
     }
 
-    let findParser = not(stop).rep().join()
+    let findParser = not(stop)
+        .rep()
+        .join()
     if (include) {
         return findParser.then(stop).join()
     }
@@ -129,14 +133,18 @@ function moveUntil(stop, include = false) {
     const foundEos = Symbol('found-eos')
     return doTry(findParser.then(eos()).returns(foundEos))
         .or(findParser)
-        .filter((v) => v !== foundEos)
+        .filter(v => v !== foundEos)
 }
 
 function dropTo(stop) {
     if (typeof stop === 'string') {
-        return moveUntil(stop).then(string(stop)).drop()
+        return moveUntil(stop)
+            .then(string(stop))
+            .drop()
     } else {
-        return moveUntil(stop).then(stop).drop()
+        return moveUntil(stop)
+            .then(stop)
+            .drop()
     }
 }
 

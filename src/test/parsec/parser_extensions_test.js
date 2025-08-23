@@ -22,21 +22,23 @@ import { F, C, N } from '../../lib/parsec/index'
  */
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'expect (returns) to be accepted': function (test) {
+    'expect (returns) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.ok(
-            F.returns().parse(stream.ofString(''), 0).isAccepted(),
+            F.returns()
+                .parse(stream.ofString(''), 0)
+                .isAccepted(),
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (returns) to return a given value': function (test) {
+    'expect (returns) to return a given value': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -47,22 +49,24 @@ export default {
         test.done()
     },
 
-    'expect (returns) to be rejected': function (test) {
+    'expect (returns) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.error().parse(stream.ofString(''), 0).isAccepted(),
+            F.error()
+                .parse(stream.ofString(''), 0)
+                .isAccepted(),
             false,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (lazy) to be accepted': function (test) {
+    'expect (lazy) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.ok(
-            F.lazy(function () {
+            F.lazy(function() {
                 return F.returns()
             })
                 .parse(stream.ofString(''), 0)
@@ -72,11 +76,11 @@ export default {
         test.done()
     },
 
-    'expect (lazy) to return a given value': function (test) {
+    'expect (lazy) to return a given value': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.lazy(function () {
+            F.lazy(function() {
                 return F.returns(123)
             }).parse(stream.ofString(''), 0).value,
             123,
@@ -84,11 +88,11 @@ export default {
         )
         test.done()
     },
-    'expect (lazy with empty params) to return a given value': function (test) {
+    'expect (lazy with empty params) to return a given value': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.lazy(function () {
+            F.lazy(function() {
                 return F.returns(123)
             }, []).parse(stream.ofString(''), 0).value,
             123,
@@ -97,11 +101,11 @@ export default {
         test.done()
     },
 
-    'expect (lazy) to be rejected': function (test) {
+    'expect (lazy) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.lazy(function () {
+            F.lazy(function() {
                 return F.error()
             })
                 .parse(stream.ofString(''), 0)
@@ -112,12 +116,12 @@ export default {
         test.done()
     },
 
-    'expect (lazy) with a parameter to return a given value': function (test) {
+    'expect (lazy) with a parameter to return a given value': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             F.lazy(
-                function (v) {
+                function(v) {
                     return F.returns(v)
                 },
                 [123],
@@ -127,14 +131,14 @@ export default {
         )
         test.done()
     },
-    'expect (lazy) with multiple parameters to return a given value': function (
+    'expect (lazy) with multiple parameters to return a given value': function(
         test,
     ) {
         test.expect(1)
         // tests here
         test.equal(
             F.lazy(
-                function (v1, v2) {
+                function(v1, v2) {
                     return F.returns(v1 + v2)
                 },
                 [10, 20],
@@ -145,7 +149,7 @@ export default {
         test.done()
     },
 
-    'expect (lazy) with unpacked parameters to fail': function (test) {
+    'expect (lazy) with unpacked parameters to fail': function(test) {
         test.expect(1)
         // tests here
 
@@ -162,44 +166,50 @@ export default {
         test.done()
     },
 
-    'expect (error) to be rejected': function (test) {
+    'expect (error) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.error().parse(stream.ofString(''), 0).isAccepted(),
+            F.error()
+                .parse(stream.ofString(''), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (eos) to be accepted': function (test) {
+    'expect (eos) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.eos().parse(stream.ofString(''), 0).isAccepted(),
+            F.eos()
+                .parse(stream.ofString(''), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (eos) to be rejected': function (test) {
+    'expect (eos) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.eos().parse(stream.ofString('a'), 0).isAccepted(),
+            F.eos()
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (satisfy) to be accepted': function (test) {
+    'expect (satisfy) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.satisfy(function (v) {
+            F.satisfy(function(v) {
                 return v === 'a'
             })
                 .parse(stream.ofString('a'), 0)
@@ -210,11 +220,11 @@ export default {
         test.done()
     },
 
-    'expect (satisfy) to be return the right value': function (test) {
+    'expect (satisfy) to be return the right value': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.satisfy(function (v) {
+            F.satisfy(function(v) {
                 return v === 'a'
             }).parse(stream.ofString('a'), 0).value,
             'a',
@@ -223,11 +233,11 @@ export default {
         test.done()
     },
 
-    'expect (satisfy) to be return the right offset': function (test) {
+    'expect (satisfy) to be return the right offset': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.satisfy(function (v) {
+            F.satisfy(function(v) {
                 return v === 'a'
             }).parse(stream.ofString('a'), 0).offset,
             1,
@@ -236,11 +246,11 @@ export default {
         test.done()
     },
 
-    'expect (satisfy) to be rejected': function (test) {
+    'expect (satisfy) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            F.satisfy(function (v) {
+            F.satisfy(function(v) {
                 return v === 'b'
             })
                 .parse(stream.ofString('a'), 0)
@@ -251,12 +261,12 @@ export default {
         test.done()
     },
 
-    'expect (doTry satisfy) to be accepted': function (test) {
+    'expect (doTry satisfy) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             F.try(
-                F.satisfy(function (v) {
+                F.satisfy(function(v) {
                     return v === 'a'
                 }),
             )
@@ -268,12 +278,12 @@ export default {
         test.done()
     },
 
-    'expect (doTry satisfy) to be rejected': function (test) {
+    'expect (doTry satisfy) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             F.try(
-                F.satisfy(function (v) {
+                F.satisfy(function(v) {
                     return v === 'b'
                 }),
             )
@@ -285,40 +295,46 @@ export default {
         test.done()
     },
 
-    'expect (digit) to be accepted': function (test) {
+    'expect (digit) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            N.digit().parse(stream.ofString('1'), 0).isAccepted(),
+            N.digit()
+                .parse(stream.ofString('1'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (digit) to be rejected': function (test) {
+    'expect (digit) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            N.digit().parse(stream.ofString('a'), 0).isAccepted(),
+            N.digit()
+                .parse(stream.ofString('a'), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (number) to be accepted': function (test) {
+    'expect (number) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('123'), 0).isAccepted(),
+            N.number()
+                .parse(stream.ofString('123'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (number) to return 123': function (test) {
+    'expect (number) to return 123': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -329,18 +345,20 @@ export default {
         test.done()
     },
 
-    'expect negative (number) to be accepted': function (test) {
+    'expect negative (number) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('-123'), 0).isAccepted(),
+            N.number()
+                .parse(stream.ofString('-123'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect negative (number) to return -123': function (test) {
+    'expect negative (number) to return -123': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -351,18 +369,20 @@ export default {
         test.done()
     },
 
-    'expect float (number) to be accepted': function (test) {
+    'expect float (number) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            N.number().parse(stream.ofString('123.34e-34'), 0).isAccepted(),
+            N.number()
+                .parse(stream.ofString('123.34e-34'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect float (number) to return 123.34e-34': function (test) {
+    'expect float (number) to return 123.34e-34': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -373,18 +393,20 @@ export default {
         test.done()
     },
 
-    'expect (charLiteral) to be accepted': function (test) {
+    'expect (charLiteral) to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charLiteral().parse(stream.ofString("'a'"), 0).isAccepted(),
+            C.charLiteral()
+                .parse(stream.ofString("'a'"), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (charLiteral) to return a': function (test) {
+    'expect (charLiteral) to return a': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -395,34 +417,40 @@ export default {
         test.done()
     },
 
-    'expect (charLiteral) quote to be accepted': function (test) {
+    'expect (charLiteral) quote to be accepted': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charLiteral().parse(stream.ofString("'\\''"), 0).isAccepted(),
+            C.charLiteral()
+                .parse(stream.ofString("'\\''"), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (charLiteral) to be rejected': function (test) {
+    'expect (charLiteral) to be rejected': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            C.charLiteral().parse(stream.ofString("''"), 0).isAccepted(),
+            C.charLiteral()
+                .parse(stream.ofString("''"), 0)
+                .isAccepted(),
             false,
             'should be rejected.',
         )
         test.done()
     },
 
-    'expect (stringLiteral) to be accepted': function (test) {
+    'expect (stringLiteral) to be accepted': function(test) {
         test.expect(1)
         // tests here
         try {
             test.equal(
-                C.stringLiteral().parse(stream.ofString('"a"'), 0).isAccepted(),
+                C.stringLiteral()
+                    .parse(stream.ofString('"a"'), 0)
+                    .isAccepted(),
                 true,
                 'should be accepted.',
             )

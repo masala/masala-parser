@@ -21,18 +21,18 @@ import option from '../../lib/data/option'
 */
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'option empty': function (test) {
+    'option empty': function(test) {
         test.expect(1)
         // tests here
         test.equal(option.none().isPresent(), false, 'should be empty option.')
         test.done()
     },
 
-    'option not empty': function (test) {
+    'option not empty': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -43,13 +43,13 @@ export default {
         test.done()
     },
 
-    'option empty mapped': function (test) {
+    'option empty mapped': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .none()
-                .map(function (a) {
+                .map(function(a) {
                     return a
                 })
                 .isPresent(),
@@ -59,13 +59,13 @@ export default {
         test.done()
     },
 
-    'option not empty mapped': function (test) {
+    'option not empty mapped': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .some(12)
-                .map(function (a) {
+                .map(function(a) {
                     return a
                 })
                 .get(),
@@ -75,13 +75,13 @@ export default {
         test.done()
     },
 
-    'option not empty flat mapped to option': function (test) {
+    'option not empty flat mapped to option': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .some(12)
-                .flatMap(function (a) {
+                .flatMap(function(a) {
                     return option.some(a)
                 })
                 .get(),
@@ -91,13 +91,13 @@ export default {
         test.done()
     },
 
-    'option empty flat mapped': function (test) {
+    'option empty flat mapped': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .none()
-                .flatMap(function (a) {
+                .flatMap(function(a) {
                     return a
                 })
                 .isPresent(),
@@ -107,14 +107,14 @@ export default {
         test.done()
     },
 
-    'option empty or else': function (test) {
+    'option empty or else': function(test) {
         test.expect(1)
         // tests here
         test.equal(option.none().orElse(12), 12, 'should be empty option.')
         test.done()
     },
 
-    'option not empty or else': function (test) {
+    'option not empty or else': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -125,11 +125,11 @@ export default {
         test.done()
     },
 
-    'option empty or lazy else': function (test) {
+    'option empty or lazy else': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            option.none().orLazyElse(function () {
+            option.none().orLazyElse(function() {
                 return 12
             }),
             12,
@@ -138,11 +138,11 @@ export default {
         test.done()
     },
 
-    'option not empty or lazy else': function (test) {
+    'option not empty or lazy else': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            option.some(12).orLazyElse(function () {
+            option.some(12).orLazyElse(function() {
                 return 14
             }),
             12,
@@ -151,13 +151,13 @@ export default {
         test.done()
     },
 
-    'option empty filter': function (test) {
+    'option empty filter': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .none()
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 1
                 })
                 .isPresent(),
@@ -167,13 +167,13 @@ export default {
         test.done()
     },
 
-    'option not empty filter': function (test) {
+    'option not empty filter': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .some(12)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 12
                 })
                 .get(),
@@ -183,13 +183,13 @@ export default {
         test.done()
     },
 
-    'option not empty wrong filter': function (test) {
+    'option not empty wrong filter': function(test) {
         test.expect(1)
         // tests here
         test.equal(
             option
                 .some(12)
-                .filter(function (v) {
+                .filter(function(v) {
                     return v === 13
                 })
                 .isPresent(),

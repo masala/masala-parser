@@ -28,13 +28,18 @@ function tkKey(s) {
 function arrayOrNothing() {
     // FIXME: ES2015 code not great
     var value = [],
-        addValue = (e) => {
+        addValue = e => {
             value = value.concat(e)
         },
         getValue = () => value,
         item = F.lazy(expr).map(addValue)
     return item
-        .then(tkKey(',').thenRight(item).optrep().array())
+        .then(
+            tkKey(',')
+                .thenRight(item)
+                .optrep()
+                .array(),
+        )
         .opt()
         .map(getValue)
 }
@@ -43,7 +48,7 @@ function arrayOrNothing() {
 function objectOrNothing() {
     // FIXME: ES2015 code not great
     var value = {},
-        addValue = (e) => {
+        addValue = e => {
             value[e[0]] = e[1]
         },
         getValue = () => value,
@@ -53,7 +58,11 @@ function objectOrNothing() {
             .array()
             .map(addValue)
     return attribute
-        .thenLeft(tkKey(',').then(attribute).optrep())
+        .thenLeft(
+            tkKey(',')
+                .then(attribute)
+                .optrep(),
+        )
         .array()
         .opt()
         .map(getValue)
@@ -82,8 +91,12 @@ function expr() {
 
 //const parse =
 export default {
-    parse: function (source) {
-        const parser = genlex.use(expr().thenLeft(F.eos()).single())
+    parse: function(source) {
+        const parser = genlex.use(
+            expr()
+                .thenLeft(F.eos())
+                .single(),
+        )
 
         return parser.parse(source, 0)
     },

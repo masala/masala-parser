@@ -23,7 +23,9 @@ describe('Flow Bundle Tests', () => {
         const genlex = new GenLex()
         genlex.setSeparatorsParser(F.not(C.charIn('+-<>[],.')))
         genlex.keywords(['+', '-', '<', '>', '[', ']', ',', '.'])
-        const grammar = F.subStream(4).drop().then(F.any().rep())
+        const grammar = F.subStream(4)
+            .drop()
+            .then(F.any().rep())
         const parser = genlex.use(grammar)
         const text = '++++ and then >>'
         const response = parser.parse(Streams.ofString(text))
@@ -42,7 +44,9 @@ describe('Flow Bundle Tests', () => {
         expect(response.isAccepted()).toBe(true)
         expect(response.offset).toBe(text.length)
 
-        const withParser = F.not(eol).rep().then(eol)
+        const withParser = F.not(eol)
+            .rep()
+            .then(eol)
         response = withParser.parse(Streams.ofString(line))
         expect(response.isAccepted()).toBe(true)
         expect(response.offset).toBe(line.length)
@@ -61,7 +65,10 @@ describe('Flow Bundle Tests', () => {
 
     it('expect returns to be ok when empty', () => {
         const string = 'some'
-        const parser = F.any().rep().then(F.eos()).returns([])
+        const parser = F.any()
+            .rep()
+            .then(F.eos())
+            .returns([])
         const parsing = testParser(parser, string)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual([])
@@ -191,7 +198,11 @@ describe('Flow Bundle Tests', () => {
     it('test moveUntil parser, with include', () => {
         const line = Streams.ofString('I write until James appears')
         const combinator = F.moveUntil(C.string('James'), true)
-            .then(F.any().rep().drop())
+            .then(
+                F.any()
+                    .rep()
+                    .drop(),
+            )
             .single()
         const parsing = combinator.parse(line)
         const value = parsing.value
@@ -203,12 +214,16 @@ describe('Flow Bundle Tests', () => {
     it('test moveUntil parser, with include and structure', () => {
         const line = Streams.ofString('I write until James appears')
         const combinator = F.moveUntil(
-            C.string('James').map((james) => ({
+            C.string('James').map(james => ({
                 structure: james,
             })),
             true,
         )
-            .then(F.any().rep().drop())
+            .then(
+                F.any()
+                    .rep()
+                    .drop(),
+            )
             .single()
         const parsing = combinator.parse(line)
         const value = parsing.value
@@ -302,7 +317,7 @@ describe('Flow Bundle Tests', () => {
                 return C.char(this.char).then(
                     this.second()
                         .opt()
-                        .map((opt) => opt.orElse('')),
+                        .map(opt => opt.orElse('')),
                 )
             }
 

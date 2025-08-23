@@ -21,11 +21,11 @@ import stream from '../../lib/stream/index'
 */
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'endOfStream for empty stream': function (test) {
+    'endOfStream for empty stream': function(test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -35,7 +35,7 @@ export default {
         test.done()
     },
 
-    'endOfStream for non empty stream': function (test) {
+    'endOfStream for non empty stream': function(test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -45,7 +45,7 @@ export default {
         test.done()
     },
 
-    'no endOfStream for non empty stream': function (test) {
+    'no endOfStream for non empty stream': function(test) {
         test.expect(1)
         // tests here
         test.equal(
@@ -56,40 +56,49 @@ export default {
         test.done()
     },
 
-    'get from stream': function (test) {
+    'get from stream': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            stream.buffered(stream.ofString('1')).get(0).isSuccess(),
+            stream
+                .buffered(stream.ofString('1'))
+                .get(0)
+                .isSuccess(),
             true,
             'should be a success.',
         )
         test.done()
     },
 
-    'do not get from empty stream': function (test) {
+    'do not get from empty stream': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            stream.buffered(stream.ofString('1')).get(1).isSuccess(),
+            stream
+                .buffered(stream.ofString('1'))
+                .get(1)
+                .isSuccess(),
             false,
             'should be a failure.',
         )
         test.done()
     },
 
-    'get from stream number 1': function (test) {
+    'get from stream number 1': function(test) {
         test.expect(1)
         // tests here
         test.equal(
-            stream.buffered(stream.ofString('123')).get(0).success(),
+            stream
+                .buffered(stream.ofString('123'))
+                .get(0)
+                .success(),
             '1',
             'should be a 1.',
         )
         test.done()
     },
 
-    'get from stream number is cached': function (test) {
+    'get from stream number is cached': function(test) {
         test.expect(1)
         // tests here
         var s = stream.buffered(stream.ofString('123')),

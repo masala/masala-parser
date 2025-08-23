@@ -11,10 +11,10 @@ function dateParser() {
         .then(N.digits())
         .then(C.charIn(['-', '/']).returns('-'))
         .then(N.digits())
-        .map((dateValues) =>
+        .map(dateValues =>
             dateValues[4] > 2000 ? dateValues.reverse() : dateValues,
         )
-        .map((dateArray) => dateArray.join(''))
+        .map(dateArray => dateArray.join(''))
 }
 
 describe('GenLex Tests', () => {
@@ -22,7 +22,10 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const plus = genlex.tokenize('+')
         const minus = genlex.tokenize('-')
-        let grammar = plus.or(minus).rep().thenEos()
+        let grammar = plus
+            .or(minus)
+            .rep()
+            .thenEos()
         const parser = genlex.use(grammar)
         const text = '+ + - --'
         const parsing = parser.parse(stream.ofString(text))
@@ -36,7 +39,10 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const plus = genlex.tokenize('+')
         const minus = genlex.tokenize('-')
-        let grammar = plus.or(minus).rep().thenEos()
+        let grammar = plus
+            .or(minus)
+            .rep()
+            .thenEos()
         const parser = genlex.use(grammar)
         const text = '+  +  +* --'
         const parsing = parser.parse(stream.ofString(text))
@@ -111,7 +117,10 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const number = genlex.tokenize(N.number(), 'number')
         const plus = genlex.tokenize('+')
-        let grammar = plus.or(number).rep().then(F.eos().drop())
+        let grammar = plus
+            .or(number)
+            .rep()
+            .then(F.eos().drop())
         const parser = genlex.use(grammar)
         const text = '++77++4+'
         const parsing = parser.parse(stream.ofString(text))
@@ -136,7 +145,10 @@ describe('GenLex Tests', () => {
         genlex.remove('-')
         const number = genlex.get('number')
         const tkDate = genlex.tokenize(dateParser(), 'date', 800)
-        let grammar = tkDate.rep().then(number).then(F.eos())
+        let grammar = tkDate
+            .rep()
+            .then(number)
+            .then(F.eos())
         const text = '15-12-2018      12-02-2020   12 '
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
@@ -147,7 +159,10 @@ describe('GenLex Tests', () => {
         const genlex = getMathGenLex()
         const number = genlex.get('number')
         const dol = genlex.tokenize('$', 'dol')
-        let grammar = number.then(dol).rep().then(F.eos())
+        let grammar = number
+            .then(dol)
+            .rep()
+            .then(F.eos())
         const text = '15 $ '
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
@@ -159,7 +174,10 @@ describe('GenLex Tests', () => {
         const number = genlex.get('number')
         genlex.tokenize('$')
         const dol = genlex.get('$')
-        let grammar = number.then(dol).rep().then(F.eos())
+        let grammar = number
+            .then(dol)
+            .rep()
+            .then(F.eos())
         const text = '15 $ '
         const parsing = genlex.use(grammar).parse(stream.ofString(text))
         expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos());

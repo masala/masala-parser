@@ -14,6 +14,7 @@ class StringStream extends Stream {
     constructor(source) {
         super()
         this.source = source
+        this.__is__string__stream = true
     }
 
     // StringStream 'a => unit -> boolean

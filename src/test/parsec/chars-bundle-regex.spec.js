@@ -47,7 +47,9 @@ describe('C.inRegexRange – identifier “first char” rule', () => {
 describe('C.inRegexRange in a more complex stream', () => {
     it('accepts the string', () => {
         const stream = Streams.ofString('0a1')
-        const parser = N.digit().then(C.inRegexRange('a-c')).then(N.digit())
+        const parser = N.digit()
+            .then(C.inRegexRange('a-c'))
+            .then(N.digit())
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.offset).toBe(3)
@@ -55,7 +57,9 @@ describe('C.inRegexRange in a more complex stream', () => {
 
     it('reject the range', () => {
         const stream = Streams.ofString('0d1')
-        const parser = N.digit().then(C.inRegexRange('a-c')).then(N.digit())
+        const parser = N.digit()
+            .then(C.inRegexRange('a-c'))
+            .then(N.digit())
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
         expect(parsing.offset).toBe(1)

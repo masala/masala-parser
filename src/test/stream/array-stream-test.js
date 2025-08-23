@@ -1,11 +1,11 @@
 import Streams from '../../lib/stream/index'
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'We can get a response from ': function (test) {
+    'We can get a response from ': function(test) {
         const document = ['More', 'XYZ']
         const line = Streams.ofArray(document)
 
@@ -15,7 +15,7 @@ export default {
         test.done()
     },
 
-    'We have reached out of stream': function (test) {
+    'We have reached out of stream': function(test) {
         const document = ['More', 'XYZ']
         const line = Streams.ofArray(document)
 

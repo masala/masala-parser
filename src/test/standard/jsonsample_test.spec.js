@@ -8,7 +8,7 @@ async function sampleTest(sample) {
         './src/test/standard/json/samples/' + sample,
     )
     let result = {
-        isAccepted: function () {
+        isAccepted: function() {
             return false
         },
     }

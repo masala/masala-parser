@@ -9,7 +9,11 @@ describe('Tuple Data Type Tests', () => {
 
     // Original test: 'non empty tuple'
     it('non empty tuple', () => {
-        expect(tuple().append(1).isEmpty()).toBe(false)
+        expect(
+            tuple()
+                .append(1)
+                .isEmpty(),
+        ).toBe(false)
     })
 
     // Original test: 'initiated tuple'
@@ -52,7 +56,11 @@ describe('Tuple Data Type Tests', () => {
         let v = NEUTRAL
         let vTuple = tuple().append(NEUTRAL)
         expect(vTuple.size()).toBe(0)
-        vTuple = vTuple.append(v).append(3).append(v).append(5)
+        vTuple = vTuple
+            .append(v)
+            .append(3)
+            .append(v)
+            .append(5)
         expect(vTuple.size()).toBe(2)
         expect(vTuple.array()).toEqual([3, 5])
     })
@@ -94,52 +102,52 @@ describe('Tuple Data Type Tests', () => {
 
     // Tests for map function
     it('map applies function to each element', () => {
-        const original = new Tuple([1, 2, 3]);
-        const doubled = original.map(x => x * 2);
-        expect(doubled.array()).toEqual([2, 4, 6]);
-        expect(doubled).toBeInstanceOf(Tuple);
-    });
+        const original = new Tuple([1, 2, 3])
+        const doubled = original.map(x => x * 2)
+        expect(doubled.array()).toEqual([2, 4, 6])
+        expect(doubled).toBeInstanceOf(Tuple)
+    })
 
     it('map returns new Tuple instance', () => {
-        const original = new Tuple([1, 2, 3]);
-        const mapped = original.map(x => x);
-        expect(mapped).not.toBe(original);
-        expect(mapped).toBeInstanceOf(Tuple);
-    });
+        const original = new Tuple([1, 2, 3])
+        const mapped = original.map(x => x)
+        expect(mapped).not.toBe(original)
+        expect(mapped).toBeInstanceOf(Tuple)
+    })
 
     it('map on empty tuple returns empty tuple', () => {
-        const empty = new Tuple([]);
-        const mapped = empty.map(x => x * 2);
-        expect(mapped.isEmpty()).toBe(true);
-        expect(mapped.array()).toEqual([]);
-    });
+        const empty = new Tuple([])
+        const mapped = empty.map(x => x * 2)
+        expect(mapped.isEmpty()).toBe(true)
+        expect(mapped.array()).toEqual([])
+    })
 
     it('map with string transformation', () => {
-        const numbers = new Tuple([1, 2, 3]);
-        const strings = numbers.map(x => `num_${x}`);
-        expect(strings.array()).toEqual(['num_1', 'num_2', 'num_3']);
-    });
+        const numbers = new Tuple([1, 2, 3])
+        const strings = numbers.map(x => `num_${x}`)
+        expect(strings.array()).toEqual(['num_1', 'num_2', 'num_3'])
+    })
 
     it('map with object transformation', () => {
-        const numbers = new Tuple([1, 2, 3]);
-        const objects = numbers.map(x => ({ value: x, doubled: x * 2 }));
+        const numbers = new Tuple([1, 2, 3])
+        const objects = numbers.map(x => ({ value: x, doubled: x * 2 }))
         expect(objects.array()).toEqual([
             { value: 1, doubled: 2 },
             { value: 2, doubled: 4 },
-            { value: 3, doubled: 6 }
-        ]);
-    });
+            { value: 3, doubled: 6 },
+        ])
+    })
 
     it('map preserves original tuple unchanged', () => {
-        const original = new Tuple([1, 2, 3]);
-        const originalArray = [...original.value];
-        original.map(x => x * 2);
-        expect(original.value).toEqual(originalArray);
-    });
+        const original = new Tuple([1, 2, 3])
+        const originalArray = [...original.value]
+        original.map(x => x * 2)
+        expect(original.value).toEqual(originalArray)
+    })
 
     it('map with index parameter', () => {
-        const tuple = new Tuple(['a', 'b', 'c']);
-        const withIndex = tuple.map((item, index) => `${index}:${item}`);
-        expect(withIndex.array()).toEqual(['0:a', '1:b', '2:c']);
-    });
+        const tuple = new Tuple(['a', 'b', 'c'])
+        const withIndex = tuple.map((item, index) => `${index}:${item}`)
+        expect(withIndex.array()).toEqual(['0:a', '1:b', '2:c'])
+    })
 })

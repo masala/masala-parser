@@ -25,45 +25,45 @@ function sampleTest(sample, test) {
     test.expect(1)
 
     // tests here
-    fs.readFile(
-        './src/test/standard/json/samples/' + sample,
-        function (err, data) {
-            if (err) {
-                throw err
-            }
+    fs.readFile('./src/test/standard/json/samples/' + sample, function(
+        err,
+        data,
+    ) {
+        if (err) {
+            throw err
+        }
 
-            var result = {
-                isAccepted: function () {
-                    return false
-                },
-            }
+        var result = {
+            isAccepted: function() {
+                return false
+            },
+        }
 
-            try {
-                result = jsonparser.parse(stream.ofString(data.toString()))
-            } catch (e) {
-                console.log(e.stack)
-            }
+        try {
+            result = jsonparser.parse(stream.ofString(data.toString()))
+        } catch (e) {
+            console.log(e.stack)
+        }
 
-            if (!result.isAccepted()) {
-                console.log(result)
-            }
+        if (!result.isAccepted()) {
+            console.log(result)
+        }
 
-            test.ok(result.isAccepted(), 'Well formed JSON')
-            test.done()
-        },
-    )
+        test.ok(result.isAccepted(), 'Well formed JSON')
+        test.done()
+    })
 }
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'test 1k': function (test) {
+    'test 1k': function(test) {
         sampleTest('1k.json', test)
     },
 
-    'test 100k': function (test) {
+    'test 100k': function(test) {
         sampleTest('100k.json', test)
     },
 }

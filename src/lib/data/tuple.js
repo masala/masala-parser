@@ -59,12 +59,10 @@ export class Tuple {
         return this.value.length
     }
 
-    map(f){
-        const mapped = this.array().map(f);
+    map(f) {
+        const mapped = this.array().map(f)
         return new Tuple(mapped)
-
     }
-
 }
 
 export function isTuple(object) {

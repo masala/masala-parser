@@ -2,11 +2,11 @@ import Streams from '../../lib/stream/index'
 import { F, C } from '../../lib/parsec'
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'response ok with a StringStream': function (test) {
+    'response ok with a StringStream': function(test) {
         const stream = Streams.ofString('The world is a vampire')
 
         const parser = C.string('The')
@@ -19,7 +19,7 @@ export default {
         test.done()
     },
 
-    'response ok inside a StringStream': function (test) {
+    'response ok inside a StringStream': function(test) {
         const stream = Streams.ofString('The world is a vampire')
 
         const parser = C.string('world')
@@ -32,10 +32,12 @@ export default {
         test.done()
     },
 
-    'response ok completing a StringStream': function (test) {
+    'response ok completing a StringStream': function(test) {
         const stream = Streams.ofString('The world is a vampire')
 
-        const parser = C.letter().or(C.char(' ')).rep()
+        const parser = C.letter()
+            .or(C.char(' '))
+            .rep()
         const response = parser.parse(stream)
 
         test.ok(response.isAccepted())
@@ -45,7 +47,7 @@ export default {
         test.done()
     },
 
-    'response fails at StringStream start': function (test) {
+    'response fails at StringStream start': function(test) {
         const stream = Streams.ofString('The world is a vampire')
 
         const parser = C.string('That')
@@ -57,7 +59,7 @@ export default {
         test.done()
     },
 
-    'response fails inside a StringStream': function (test) {
+    'response fails inside a StringStream': function(test) {
         const stream = Streams.ofString('abc de')
 
         const parser = C.string('abc').then(C.string('fails'))
@@ -69,10 +71,13 @@ export default {
         test.done()
     },
 
-    'response passes the StringStream': function (test) {
+    'response passes the StringStream': function(test) {
         const stream = Streams.ofString('abc de')
 
-        const parser = C.letter().or(C.char(' ')).rep().then(C.string('!!!'))
+        const parser = C.letter()
+            .or(C.char(' '))
+            .rep()
+            .then(C.string('!!!'))
         const response = parser.parse(stream)
 
         test.ok(!response.isAccepted())
@@ -84,7 +89,7 @@ export default {
         test.done()
     },
 
-    'response with a failed try is rejected, and offset is 0': function (test) {
+    'response with a failed try is rejected, and offset is 0': function(test) {
         const stream = Streams.ofString('abc de')
 
         const parser = F.try(C.string('abc').then(C.char('x'))).or(

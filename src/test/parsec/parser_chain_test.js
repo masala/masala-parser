@@ -3,14 +3,14 @@ import { F, C, N } from '../../lib/parsec/index'
 import unit from '../../lib/data/unit'
 
 export default {
-    setUp: function (done) {
+    setUp: function(done) {
         done()
     },
 
-    'expect (chain) to be accepted': function (test) {
+    'expect (chain) to be accepted': function(test) {
         const lower = C.char('x')
 
-        const upper = F.satisfy((val) => val === 'x')
+        const upper = F.satisfy(val => val === 'x')
 
         const parser = lower.chain(upper)
 
@@ -20,10 +20,10 @@ export default {
 
         test.done()
     },
-    'expect (chain) to be rejected': function (test) {
+    'expect (chain) to be rejected': function(test) {
         const lower = C.char('x')
 
-        const upper = F.satisfy((val) => val === 'y')
+        const upper = F.satisfy(val => val === 'y')
 
         const parser = lower.chain(upper)
 
@@ -33,11 +33,11 @@ export default {
 
         test.done()
     },
-    'expect (chain) to be accepted and offset to have move': function (test) {
+    'expect (chain) to be accepted and offset to have move': function(test) {
         const lower = C.char('x')
 
         // satisfy makes the stuff move only if accepted
-        const upper = F.satisfy((val) => val === 'x')
+        const upper = F.satisfy(val => val === 'x')
 
         const parser = lower.chain(upper)
 
@@ -47,13 +47,13 @@ export default {
 
         test.done()
     },
-    'expect (chain) to be accepted and offset to have move more': function (
+    'expect (chain) to be accepted and offset to have move more': function(
         test,
     ) {
         const lower = C.string('xyz')
 
         // satisfy makes the stuff move only if accepted
-        const upper = F.satisfy((val) => val === 'xyz')
+        const upper = F.satisfy(val => val === 'xyz')
 
         const parser = lower.chain(upper.then(upper))
 
@@ -63,11 +63,11 @@ export default {
 
         test.done()
     },
-    'expect (chain) to be find back the source offset': function (test) {
+    'expect (chain) to be find back the source offset': function(test) {
         const lower = C.string('xyz')
 
         // satisfy makes the stuff move only if accepted
-        const upper = F.satisfy((val) => val === 'xyz')
+        const upper = F.satisfy(val => val === 'xyz')
 
         const parser = lower.chain(upper.then(upper))
 
@@ -82,26 +82,29 @@ export default {
         test.done()
     },
 
-    'expect (chain) to be accepted again': function (test) {
+    'expect (chain) to be accepted again': function(test) {
         test.expect(1)
 
         var p1 = N.number().thenLeft(C.char(' ').opt()),
             p2 = F.any()
                 .then(F.any())
                 .thenLeft(F.eos())
-                .map(function (r) {
+                .map(function(r) {
                     return r[0] + r[1]
                 })
 
         test.equal(
-            p1.chain(p2).parse(stream.ofString('12 34'), 0).isAccepted(),
+            p1
+                .chain(p2)
+                .parse(stream.ofString('12 34'), 0)
+                .isAccepted(),
             true,
             'should be accepted.',
         )
         test.done()
     },
 
-    'expect (chain) to return 46': function (test) {
+    'expect (chain) to return 46': function(test) {
         test.expect(1)
         // tests here
         const p1 = N.number().thenLeft(C.char(' ').opt()),
@@ -109,7 +112,7 @@ export default {
                 .then(F.any())
                 .thenLeft(F.eos())
                 .array()
-                .map(function (r) {
+                .map(function(r) {
                     return r[0] + r[1]
                 })
 
@@ -117,11 +120,17 @@ export default {
         test.done()
     },
 
-    'expect (chain) to add multiple numbers ': function (test) {
-        const token = N.number().then(spaces().opt().drop()).single()
-        const lex = F.satisfy((number) => number > 0)
+    'expect (chain) to add multiple numbers ': function(test) {
+        const token = N.number()
+            .then(
+                spaces()
+                    .opt()
+                    .drop(),
+            )
+            .single()
+        const lex = F.satisfy(number => number > 0)
             .rep()
-            .map((values) => values.array().reduce((acc, n) => acc + n, 0))
+            .map(values => values.array().reduce((acc, n) => acc + n, 0))
 
         const parsing = token.chain(lex).parse(stream.ofString('10 12 44'), 0)
 
@@ -130,11 +139,15 @@ export default {
         test.done()
     },
 
-    'expect (chain) to be not satisfied by upper level ': function (test) {
-        const token = N.number().then(spaces().opt().drop())
-        const lex = F.satisfy((number) => number > 0)
+    'expect (chain) to be not satisfied by upper level ': function(test) {
+        const token = N.number().then(
+            spaces()
+                .opt()
+                .drop(),
+        )
+        const lex = F.satisfy(number => number > 0)
             .rep()
-            .map((values) => values.array().reduce((acc, n) => acc + n, 0))
+            .map(values => values.array().reduce((acc, n) => acc + n, 0))
 
         const parsing = token.chain(lex).parse(stream.ofString('10 -12 44'), 0)
 

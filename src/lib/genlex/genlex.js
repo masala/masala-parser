@@ -24,9 +24,8 @@ export class TokenValue {
         this.value = value
     }
 
-    // TODO: not sure it's ever called
     accept(name) {
-        console.log('###accepting', name, this.name === name, this.value)
+        //console.log('###accepting', name, this.name === name, this.value)
         return this.name === name ? option.some(this.value) : option.none()
     }
 }
@@ -45,6 +44,7 @@ export class GenLex {
             if (name === undefined) {
                 name = parser
             }
+            console.log('string token', name)
             return this.tokenize(C.string(parser), name, precedence)
         }
 
@@ -52,7 +52,7 @@ export class GenLex {
         this.definitions.push(definition)
 
         const tokenParser = expectToken(
-            (tokenValue) => tokenValue.accept(name),
+            tokenValue => tokenValue.accept(name),
             name,
         )
         this.tokensMap[name] = tokenParser
@@ -68,10 +68,8 @@ export class GenLex {
 
     setSeparators(spacesCharacters) {
         if (typeof spacesCharacters !== 'string') {
-            throw (
-                "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
+            throw "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
                 ' use  setSeparatorsParser to declare a parser'
-            )
         }
         this.spaces = C.charIn(spacesCharacters).map(() => unit)
     }
@@ -86,8 +84,9 @@ export class GenLex {
     }
 
     updatePrecedence(tokenName, precedence) {
-        this.definitions.find((def) => def.name === tokenName).precedence =
-            precedence
+        this.definitions.find(
+            def => def.name === tokenName,
+        ).precedence = precedence
     }
 
     buildTokenizer() {
@@ -120,7 +119,7 @@ export class GenLex {
 
     remove(tokenName) {
         // find definitions
-        this.definitions = this.definitions.filter((d) => d.name !== tokenName)
+        this.definitions = this.definitions.filter(d => d.name !== tokenName)
         delete this.tokensMap[tokenName]
     }
 
@@ -135,7 +134,7 @@ export class GenLex {
 }
 
 function getTokenParser(def) {
-    return def.parser.map((value) => new TokenValue(def.name, value))
+    return def.parser.map(value => new TokenValue(def.name, value))
 }
 
 // name is for easier debugging
@@ -150,7 +149,7 @@ function expectToken(tokenize, name) {
             input
                 .get(index)
                 // FIXME= value is the token, token is the value
-                .map((value) => {
+                .map(value => {
                     //TODO: keep for logger
                     let token = value
 
@@ -166,14 +165,14 @@ function expectToken(tokenize, name) {
                     }
 
                     return tokenize(value)
-                        .map((tokenValue) => {
+                        .map(tokenValue => {
                             // TODO logger console.log('accept with ', name, index);
-                            console.log(
-                                'accept:',
+                            /*console.log(
+                                '### accept:',
                                 tokenValue,
                                 index,
                                 input.location(index),
-                            )
+                            )*/
                             return response.accept(
                                 tokenValue,
                                 input,

@@ -46,12 +46,12 @@ export default class Parser {
         return new Parser((input, index = 0) => self.parse(input, index).map(f))
     }
 
-    tupleMap(f){
-        return this.map(tuple =>{
-            if (!isTuple(tuple)){
-                throw new Error("Calling tupleMap on a non tuple object");
+    tupleMap(f) {
+        return this.map(tuple => {
+            if (!isTuple(tuple)) {
+                throw new Error('Calling tupleMap on a non tuple object')
             }
-            return tuple.map(f);
+            return tuple.map(f)
         })
     }
 
@@ -66,32 +66,30 @@ export default class Parser {
 
     // Parser 'a 'c => Comparable 'a -> Parser 'a 'c
     match(v) {
-        return this.filter((a) => a === v)
+        return this.filter(a => a === v)
     }
 
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     // Parser 'a 'c => Parser 'b 'c -> Parser ('a,'b) 'c
     then(p) {
-        return this.flatMap((a) =>
-            p.map((b) => new Tuple([]).append(a).append(b)),
-        )
+        return this.flatMap(a => p.map(b => new Tuple([]).append(a).append(b)))
     }
 
     single() {
-        return this.map((tuple) => tuple.single())
+        return this.map(tuple => tuple.single())
     }
 
     last() {
-        return this.map((tuple) => tuple.last())
+        return this.map(tuple => tuple.last())
     }
 
     first() {
-        return this.map((tuple) => tuple.first())
+        return this.map(tuple => tuple.first())
     }
 
     // Should be called only on ListParser ; Always returns an array
     array() {
-        return this.map((value) => {
+        return this.map(value => {
             if (!isTuple(value)) {
                 throw 'array() is called only on TupleParser'
             }
@@ -100,7 +98,7 @@ export default class Parser {
     }
 
     join(j = '') {
-        return this.map((value) => {
+        return this.map(value => {
             if (!isTuple(value)) {
                 throw 'Error: join() is called only on TupleParser'
             }
@@ -115,7 +113,7 @@ export default class Parser {
     eos() {
         return new Parser((input, index = 0) =>
             this.parse(input, index).fold(
-                (accept) => {
+                accept => {
                     return input.endOfStream(accept.offset)
                         ? response.accept(
                               accept.value,
@@ -129,7 +127,7 @@ export default class Parser {
                               accept.consumed,
                           )
                 },
-                (reject) =>
+                reject =>
                     response.reject(
                         reject.input,
                         reject.offset,
@@ -186,7 +184,7 @@ export default class Parser {
         return repeatable(
             this,
             () => true,
-            (l) => l !== 0,
+            l => l !== 0,
         )
     }
 
@@ -194,8 +192,8 @@ export default class Parser {
     occurrence(occurrence) {
         return repeatable(
             this,
-            (l) => l < occurrence,
-            (l) => l === occurrence,
+            l => l < occurrence,
+            l => l === occurrence,
         )
     }
 
@@ -224,7 +222,7 @@ export default class Parser {
      * @returns the equivalent Parser
      */
     debug(hint, details = true) {
-        var f = (p) => {
+        var f = p => {
             if (details) {
                 console.log('[debug] : ', hint, p)
             } else {
@@ -247,14 +245,14 @@ function bindAccepted(accept_a, f) {
     return f(accept_a.value)
         .parse(accept_a.input, accept_a.offset)
         .fold(
-            (accept_b) =>
+            accept_b =>
                 response.accept(
                     accept_b.value,
                     accept_b.input,
                     accept_b.offset,
                     accept_a.consumed || accept_b.consumed,
                 ),
-            (reject_b) =>
+            reject_b =>
                 response.reject(
                     reject_b.input,
                     reject_b.offset,
@@ -267,8 +265,8 @@ function bindAccepted(accept_a, f) {
 function bind(self, f) {
     return new Parser((input, index = 0) =>
         self.parse(input, index).fold(
-            (accept_a) => bindAccepted(accept_a, f),
-            (reject_a) => reject_a,
+            accept_a => bindAccepted(accept_a, f),
+            reject_a => reject_a,
         ),
     )
 }
@@ -278,8 +276,8 @@ function bind(self, f) {
 function choice(self, f) {
     return new Parser((input, index = 0) =>
         self.parse(input, index).fold(
-            (accept) => accept,
-            (reject) => (reject.consumed ? reject : f.parse(input, index)),
+            accept => accept,
+            reject => (reject.consumed ? reject : f.parse(input, index)),
         ),
     )
 }
@@ -288,9 +286,8 @@ function choice(self, f) {
 function both(self, f) {
     return new Parser((input, index = 0) =>
         self.parse(input, index).fold(
-            (accept) =>
-                f.parse(input, index).map((r) => accept.value.append(r)),
-            (reject) => reject,
+            accept => f.parse(input, index).map(r => accept.value.append(r)),
+            reject => reject,
         ),
     )
 }
