@@ -17,6 +17,8 @@ import Streams from './stream/index.js'
 import { accept, reject } from './parsec/response.js'
 import { Tuple, isTuple, NEUTRAL, tuple } from './data/tuple.js'
 
+import { createTracer } from './debug/trace.js'
+
 const JSON = standard.jsonParser
 const MD = standard.markdownBundle
 
@@ -39,4 +41,5 @@ export {
     Tuple,
     isTuple,
     NEUTRAL,
+    createTracer,
 }
