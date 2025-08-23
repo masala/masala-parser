@@ -82,6 +82,14 @@ export class TracingGenLex {
 
     buildTokenizer() {
         const token = this._findTokenByPrecedenceTraced()
+        return this.spaces
+            .optrep()
+            .drop()
+            .then(token)
+            .then(this.spaces.optrep().drop())
+            .single()
+        /*
+        const token = this._findTokenByPrecedenceTraced()
         const leftSpaces = this.spaces.optrep().drop()
         const rightSpaces = this.spaces.optrep().drop()
 
@@ -129,6 +137,8 @@ export class TracingGenLex {
             // Return the single token (spaces are dropped)
             return response.accept(tokenValue, input, finalOffset, true)
         }).single()
+
+         */
     }
 
     use(grammar) {
