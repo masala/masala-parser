@@ -81,14 +81,14 @@ export class TracingGenLex {
     }
 
     buildTokenizer() {
-        const token = this._findTokenByPrecedenceTraced()
+        /*const token = this._findTokenByPrecedenceTraced()
         return this.spaces
             .optrep()
             .drop()
             .then(token)
             .then(this.spaces.optrep().drop())
-            .single()
-        /*
+            .single()*/
+
         const token = this._findTokenByPrecedenceTraced()
         const leftSpaces = this.spaces.optrep().drop()
         const rightSpaces = this.spaces.optrep().drop()
@@ -96,49 +96,72 @@ export class TracingGenLex {
         // Custom parse to capture char positions and attach token metadata
         return F.parse((input, index = 0) => {
             // consume leading spaces
-            const resL = leftSpaces.parse(input, index)
-            if (!resL.isAccepted()) return response.reject(input, index, false)
-            const startChar = resL.offset
-
-            if (this.tracer) {
-                this.tracer.emit({ type: 'lex-start', startChar })
+            const responseLeft = leftSpaces.parse(input, index)
+            if (!responseLeft.isAccepted()) {
+                console.log('#0 - failed to parse leading spaces', {
+                    index,
+                })
+                return response.reject(input, index, false)
             }
+            console.log('#1 - leading spaces parsed', {
+                offset: responseLeft.offset,
+                index,
+            })
+            const startChar = responseLeft.offset
+
+            console.log('#2 - emitting lex-start', { startChar, index })
+            this.tracer.emit({ type: 'lex-start', startChar })
 
             // parse token (already traced per-candidate internally)
-            const resTok = token.parse(input, startChar)
-            if (!resTok.isAccepted())
+            const responseToken = token.parse(input, startChar)
+            if (!responseToken.isAccepted()) {
+                console.log('#3 - failed to parse token', {
+                    startChar,
+                    index,
+                })
                 return response.reject(input, index, false)
+            }
 
-            const tokenValue = resTok.value // TokenValue
-            const endChar = resTok.offset // end of token (before trailing spaces)
+            const tokenValue = responseToken.value // TokenValue
+            const endChar = responseToken.offset // end of token (before trailing spaces)
 
             // trailing spaces
             const resR = rightSpaces.parse(input, endChar)
             const finalOffset = resR.isAccepted() ? resR.offset : endChar
+
+            console.log('#4 - trailing spaces parsed', {
+                finalOffset,
+                rightSpacesAccepted: resR.isAccepted(),
+                endChar,
+            })
 
             // Attach metadata to the token value
             const ord = this._ordinal++
             tokenValue[META] = { tokenIndex: ord, startChar, endChar }
 
             // Emit final commit event (includes tokenIndex and trailing info)
-            if (this.tracer) {
-                this.tracer.emit({
-                    type: 'lex-commit',
-                    name: tokenValue.name,
-                    tokenIndex: ord,
-                    startChar,
-                    endChar,
-                    value: tokenValue.value,
-                    trailing: finalOffset - endChar,
-                })
-                this.tracer.setLastTokenMeta(tokenValue[META])
-            }
+
+            this.tracer.emit({
+                type: 'lex-commit',
+                name: tokenValue.name,
+                tokenIndex: ord,
+                startChar,
+                endChar,
+                value: tokenValue.value,
+                trailing: finalOffset - endChar,
+            })
+            this.tracer.setLastTokenMeta(tokenValue[META])
 
             // Return the single token (spaces are dropped)
-            return response.accept(tokenValue, input, finalOffset, true)
-        }).single()
+            console.log('#5 - accepting token', {
+                tokenValue,
+                finalOffset,
 
-         */
+                index,
+                consumed: true,
+            })
+            return response.accept(tokenValue, input, finalOffset, true)
+        })
     }
 
     use(grammar) {
@@ -146,25 +169,30 @@ export class TracingGenLex {
     }
 
     _findTokenByPrecedenceTraced() {
-        const sorted = this.definitions
+        const sortedDefinitions = this.definitions
             .slice()
             .sort((d1, d2) => d2.precedence - d1.precedence)
 
-        const chain = sorted.reduce((orAcc, def) => {
-            const candidate = this._wrapCandidateToken(def) // traced candidate
-                .or(orAcc)
-            return candidate
-        }, F.error())
-
-        return chain
+        return sortedDefinitions.reduce(
+            (combinator, definition) =>
+                F.try(
+                    this.getWrappedTokenParser(definition).debug(
+                        definition.name,
+                    ),
+                )
+                    //    .or (F.error('no match for '+definition.name))
+                    .or(combinator),
+            F.error(),
+        )
     }
 
-    _wrapCandidateToken(def) {
+    getWrappedTokenParser(def) {
         // Build the original candidate that yields TokenValue
         const base = def.parser.map((value) => new TokenValue(def.name, value))
 
         // Wrap to emit lex-try / accept / reject at char layer
         return F.parse((input, index = 0) => {
+            console.log({ try: def.name, index })
             this.tracer.emit({
                 type: 'lex-try',
                 name: def.name,
@@ -174,6 +202,7 @@ export class TracingGenLex {
 
             const res = base.parse(input, index)
             if (res.isAccepted()) {
+                console.log({ taken: def.name, index })
                 const endChar = res.offset
                 const tokenValue = res.value
                 this.tracer.emit({
@@ -186,6 +215,7 @@ export class TracingGenLex {
                 })
                 return res
             } else {
+                console.log({ no_match: def.name, index })
                 this.tracer.emit({
                     type: 'lex-reject',
                     name: def.name,
