@@ -46,6 +46,7 @@ export class TracingGenLex {
             this.tracer,
         )
         this.tokensMap[name] = tokenParser
+        tokenParser.__token__name = name
         return tokenParser
     }
 
@@ -81,15 +82,7 @@ export class TracingGenLex {
     }
 
     buildTokenizer() {
-        /*const token = this._findTokenByPrecedenceTraced()
-        return this.spaces
-            .optrep()
-            .drop()
-            .then(token)
-            .then(this.spaces.optrep().drop())
-            .single()*/
-
-        const token = this._findTokenByPrecedenceTraced()
+        const nextTokenFinder = this._findTokenByPrecedenceTraced()
         const leftSpaces = this.spaces.optrep().drop()
         const rightSpaces = this.spaces.optrep().drop()
 
@@ -98,26 +91,28 @@ export class TracingGenLex {
             // consume leading spaces
             const responseLeft = leftSpaces.parse(input, index)
             if (!responseLeft.isAccepted()) {
-                console.log('#0 - failed to parse leading spaces', {
-                    index,
-                })
+                // as spaces are optional, this should not happen
                 return response.reject(input, index, false)
             }
-            console.log('#1 - leading spaces parsed', {
-                offset: responseLeft.offset,
-                index,
-            })
+
             const startChar = responseLeft.offset
 
-            console.log('#2 - emitting lex-start', { startChar, index })
-            this.tracer.emit({ type: 'lex-start', startChar })
+            //console.log('#2 - emitting lex-start', { startChar, index })
+            this.tracer.emit({ type: 'lex-start', startChar, index })
 
             // parse token (already traced per-candidate internally)
-            const responseToken = token.parse(input, startChar)
+            const responseToken = nextTokenFinder.parse(input, startChar)
             if (!responseToken.isAccepted()) {
-                console.log('#3 - failed to parse token', {
+                /*console.log('#3 - !! Not any valid token found', {
+                    snippet: getSnippet(input, startChar),
                     startChar,
                     index,
+                })*/
+                this.tracer.emit({
+                    type: 'lex-fail',
+                    startChar,
+                    index,
+                    snippet: getSnippet(input, startChar),
                 })
                 return response.reject(input, index, false)
             }
@@ -129,37 +124,37 @@ export class TracingGenLex {
             const resR = rightSpaces.parse(input, endChar)
             const finalOffset = resR.isAccepted() ? resR.offset : endChar
 
-            console.log('#4 - trailing spaces parsed', {
-                finalOffset,
-                rightSpacesAccepted: resR.isAccepted(),
-                endChar,
-            })
-
             // Attach metadata to the token value
-            const ord = this._ordinal++
-            tokenValue[META] = { tokenIndex: ord, startChar, endChar }
+            const tokenIndex = this._ordinal++
+            tokenValue[META] = { tokenIndex, startChar, endChar }
 
             // Emit final commit event (includes tokenIndex and trailing info)
 
             this.tracer.emit({
+                // follows lex-taken, with trailing spaces
                 type: 'lex-commit',
                 name: tokenValue.name,
-                tokenIndex: ord,
+                tokenIndex,
+                startIndex: index,
                 startChar,
                 endChar,
                 value: tokenValue.value,
+                // counts how many trailing spaces were consumed
                 trailing: finalOffset - endChar,
             })
             this.tracer.setLastTokenMeta(tokenValue[META])
 
-            // Return the single token (spaces are dropped)
-            console.log('#5 - accepting token', {
-                tokenValue,
-                finalOffset,
-
+            /*console.log('#5 - accepted token', {
+                name: tokenValue.name,
+                tokenIndex,
+                startChar,
+                endChar,
+                value: tokenValue.value,
                 index,
                 consumed: true,
-            })
+            })*/
+
+            // Return the single token (spaces are dropped)
             return response.accept(tokenValue, input, finalOffset, true)
         })
     }
@@ -192,7 +187,7 @@ export class TracingGenLex {
 
         // Wrap to emit lex-try / accept / reject at char layer
         return F.parse((input, index = 0) => {
-            console.log({ try: def.name, index })
+            //console.log({ try: def.name, index })
             this.tracer.emit({
                 type: 'lex-try',
                 name: def.name,
@@ -202,11 +197,11 @@ export class TracingGenLex {
 
             const res = base.parse(input, index)
             if (res.isAccepted()) {
-                console.log({ taken: def.name, index })
+                //console.log({ taken: def.name, index })
                 const endChar = res.offset
                 const tokenValue = res.value
                 this.tracer.emit({
-                    type: 'lex-accept',
+                    type: 'lex-taken',
                     name: def.name,
                     precedence: def.precedence,
                     startChar: index,
@@ -215,9 +210,10 @@ export class TracingGenLex {
                 })
                 return res
             } else {
-                console.log({ no_match: def.name, index })
+                // console.log({ no_match: def.name, index })
+                // This token candidate did not match, but maybe another will
                 this.tracer.emit({
-                    type: 'lex-reject',
+                    type: 'lex-no-match',
                     name: def.name,
                     precedence: def.precedence,
                     startChar: index,
@@ -247,67 +243,9 @@ function getTokenParser(def) {
     return def.parser.map((value) => new TokenValue(def.name, value))
 }
 
-// name is for easier debugging
-// expectToken consumes exactly one token of this name and give me its value.
-// eslint-disable-next-line
-function expectToken(tokenize, name) {
-    return F.parse((input, index) => {
-        // TODO logger console.log('testing ', {name, input:input.get(index), index});
-        //console.log('trying ', { index, name, input })
-
-        return (
-            input
-                .get(index)
-                // FIXME= value is the token, token is the value
-                .map((value) => {
-                    //TODO: keep for logger
-                    let token = value
-
-                    try {
-                        /*console.log('1: in map', {
-                            value: JSON.stringify(value),
-                            name,
-                            index,
-                        })*/
-                        //console.log('tokenizing', tokenize(token))
-                    } catch (e) {
-                        console.error('failed', e)
-                    }
-
-                    return tokenize(value)
-                        .map((tokenValue) => {
-                            // TODO logger console.log('accept with ', name, index);
-                            /*console.log(
-                                '### accept:',
-                                tokenValue,
-                                index,
-                                input.location(index),
-                            )*/
-                            return response.accept(
-                                tokenValue,
-                                input,
-                                index + 1,
-                                true,
-                            )
-                        })
-                        .orLazyElse(() => {
-                            // TODO logger console.log('lazyElse failed with ', name, index);
-                            // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
-                            //  input.location(index));
-                            return response.reject(input, index, false)
-                        })
-                })
-                .lazyRecoverWith(() => {
-                    // TODO logger console.log('failed with ', name, index);
-                    //console.log('lazyRecover with offset:', input.location(index));
-                    return response.reject(input, index, false)
-                })
-        )
-    })
-}
-
 function expectTokenTraced(tokenize, expectedName, tracer) {
     // Equivalent shape to your expectToken, but instrumented and simplified
+
     return F.parse((input, index) => {
         return input
             .get(index)
@@ -325,13 +263,13 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                 } catch (e) {
                     console.error('failed', e)
                 }
-
                 return tokenize(value) // Option
                     .map((tokenValue) => {
                         // CASE 'grammar-accept'
                         const type = 'grammar-accept'
                         const meta = tokenValue && tokenValue[META]
                         const foundName = tokenValue?.name
+
                         console.log('##', {
                             type,
                             expectedName,
@@ -360,6 +298,7 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                         const type = 'grammar-reject'
                         const meta = streamTokenValue && streamTokenValue[META]
                         const foundName = streamTokenValue?.name
+                        console.log('####### GRAMMAR REJECT #########')
                         console.log('##', {
                             type,
                             expectedName,
@@ -383,8 +322,11 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                     })
             })
             .lazyRecoverWith(() => {
+                // try with empty string
+                // No token at all (empty string or only spaces)
+                console.log('####### GRAMMAR LAZY RECOVER #########')
                 tracer.emit({
-                    type: 'grammar-eos',
+                    type: 'grammar-eos', // TODO: not sure of this name
                     expected: expectedName,
                     tokenIndex: null,
                     index,
@@ -395,4 +337,17 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                 return response.reject(input, index, false)
             })
     })
+}
+
+export function getSnippet(input, startChar, maxLength = 16) {
+    if (!input.__is__string__stream) {
+        return
+    }
+
+    if (startChar === undefined) return ''
+    const snippet = input.source.slice(startChar)
+    if (snippet.length <= maxLength) {
+        return snippet
+    }
+    return snippet.slice(0, maxLength) + '...'
 }
