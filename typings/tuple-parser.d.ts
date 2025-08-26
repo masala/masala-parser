@@ -59,6 +59,8 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      */
     join(separator?: string): SingleParser<string>;
 
+    tupleMap <Y>(f : (x:T)=>Y): TupleParser<Y>;
+
     /**
      * single() is an alias of first(), expressing that the
      * parser had only a single value.
@@ -111,5 +113,6 @@ export interface MixedParser<FIRST, LAST> extends TupleParser<FIRST | LAST | any
     then<Y>(other: SingleParser<Y>): MixedParser<FIRST, Y>;
 
     val(text: string): MixedTuple<FIRST, LAST>;
+    tupleMap <Y>(f : (x:FIRST| LAST)=>Y): TupleParser<Y>;
 
 }

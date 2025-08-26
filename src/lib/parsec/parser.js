@@ -49,6 +49,15 @@ export default class Parser {
         );
     }
 
+    tupleMap(f){
+        return this.map(tuple =>{
+            if (!isTuple(tuple)){
+                throw new Error("Calling tupleMap on a non tuple object");
+            }
+            return tuple.map(f);
+        })
+    }
+
     // Parser 'a 'c => ('a -> boolean) -> Parser 'a 'c
     filter(p) {
         var self = this;

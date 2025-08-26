@@ -84,6 +84,8 @@ export interface Tuple<T> {
      */
     append(neutral: NEUTRAL): this;
 
+    map <Y>(f : (x:T)=>Y): Tuple<Y>;
+
 
 }
 
@@ -93,7 +95,6 @@ export interface EmptyTuple extends Tuple<NEUTRAL> {
     append<F,L>(other: MixedTuple<F,L>): MixedTuple<F,L>;
     append<Y>(other: Tuple<Y>): Tuple<Y>;
     append<Y>(element: Y): Tuple<Y>;
-
 }
 
 export interface MixedTuple<FIRST, LAST> extends Tuple<FIRST |LAST |any> {
@@ -104,4 +105,5 @@ export interface MixedTuple<FIRST, LAST> extends Tuple<FIRST |LAST |any> {
     append<Y>(other: Tuple<Y>): MixedTuple<FIRST, Y>;
     append<Y>(element: Y): MixedTuple<FIRST , Y>;
     append(neutral: NEUTRAL): this;
+    map <Y>(f : (x:FIRST| LAST)=>Y): Tuple<Y>;
 }
