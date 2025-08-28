@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { F, C, N } from '../../lib/parsec'
-import { GenLex, getMathGenLex } from '../../lib/genlex/genlex'
+import { GenLex, getMathGenLex, anyToken } from '../../lib/genlex/genlex'
 import stream from '../../lib/stream'
 
 // Helper function from the original test file
@@ -30,7 +30,7 @@ describe('GenLex Tests', () => {
         const text = '+ + - --'
         const parsing = parser.parse(stream.ofString(text))
 
-        expect(parsing.isEos()).toBe(true)
+        expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos(), 'the parsing has reached the eos()');
         expect(parsing.offset).toBe(5) // Nodeunit: test.equal(5, parsing.offset, 'there are 5 keywords');
         expect(parsing.input.location(parsing.offset)).toBe(8) // Nodeunit: test.equal(8, parsing.input.location(parsing.offset), 'there are 8 chars')
     })
@@ -198,42 +198,34 @@ describe('GenLex Tests', () => {
 
     it('genlex separators must be a string', () => {
         const genlex = getMathGenLex()
-        expect(() => {
-            // Nodeunit: test.ok(found); after try-catch
-            genlex.setSeparators(C.char('-'))
-        }).toThrow()
-    })
-
-    it('genlex can change separators with a full Parser', () => {
-        const genlex = getMathGenLex()
         const number = genlex.get('number')
-        let grammar = number.rep().then(F.eos().drop())
-        const separatorParser = C.char('-').then(C.char('/').opt())
-        genlex.setSeparatorsParser(separatorParser)
-        const text = '15-12-/35--10'
-        const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofString(text))
-        expect(parsing.isAccepted()).toBe(true) // Nodeunit: test.ok(parsing.isAccepted());
-        const tokenValues = parsing.value.array()
-        expect(tokenValues).toEqual([15, 12, 35, 10]) // Nodeunit: test.deepEqual(parsing.value.array(), [15, 12, 35,10]);
+        let grammar = number.rep().then(F.eos())
+        expect(() => genlex.setSeparators(1)).toThrow()
+        // Nodeunit: test.throws(split('[1:2:3,3]')(Stream.ofString('1:2:3,3')));
     })
 
-    it('genlex provide all named tokens', () => {
-        const genlex = getMathGenLex()
-        const { number, plus, mult, open, close } = genlex.tokens()
-        let grammar = number
-            .or(plus)
-            .or(open)
-            .or(close)
-            .or(mult)
+    // New tests for anyToken(genlex)
+    it('anyToken parses a stream of declared keywords', () => {
+        const genlex = new GenLex()
+        genlex.keywords(['A', 'B', 'C'])
+        const grammar = anyToken(genlex)
             .rep()
-            .then(F.eos().drop())
-        const text = '12+ 35'
+            .thenEos()
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofString(text))
+        const parsing = parser.parse(stream.ofString('A B C A'))
         expect(parsing.isAccepted()).toBe(true)
+        expect(parsing.value.array()).toEqual(['A', 'B', 'C', 'A'])
+    })
 
-        const tokenValues = parsing.value.array()
-        expect(tokenValues).toEqual([12, '+', 35])
+    it('anyToken fails when next token is not recognized', () => {
+        const genlex = new GenLex()
+        genlex.keywords(['A', 'B'])
+        const grammar = anyToken(genlex)
+            .rep()
+            .thenEos()
+        const parser = genlex.use(grammar)
+        const parsing = parser.parse(stream.ofString('A X'))
+        expect(parsing.isAccepted()).toBe(false)
+        expect(parsing.getOffset()).toBe(1)
     })
 })

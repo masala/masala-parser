@@ -200,6 +200,11 @@ function defaultSpaces() {
     return C.charIn(' \r\n\f\t').map(() => unit)
 }
 
+export function anyToken(genlex) {
+    const tokenParsers = Object.values(genlex.tokens())
+    return F.tryAll(tokenParsers)
+}
+
 export function getMathGenLex() {
     const basicGenlex = new GenLex()
 
