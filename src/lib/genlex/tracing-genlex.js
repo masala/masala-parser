@@ -169,13 +169,7 @@ export class TracingGenLex {
 
         return sortedDefinitions.reduce(
             (combinator, definition) =>
-                F.try(
-                    this.getWrappedTokenParser(definition).debug(
-                        definition.name,
-                    ),
-                )
-                    //    .or (F.error('no match for '+definition.name))
-                    .or(combinator),
+                F.try(this.getWrappedTokenParser(definition)).or(combinator),
             F.error(),
         )
     }
@@ -249,36 +243,21 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
         return input
             .get(index)
             .map(value => {
-                //TODO: keep for logger
                 let streamTokenValue = value
 
-                try {
-                    /*console.log('1: in map', {
-                            value: JSON.stringify(value),
-                            name,
-                            index,
-                        })*/
-                    //console.log('tokenizing', tokenize(token))
-                } catch (e) {
-                    console.error('failed', e)
-                }
                 return tokenize(value) // Option
                     .map(tokenValue => {
                         // CASE 'grammar-accept'
                         const type = 'grammar-accept'
                         const meta = tokenValue && tokenValue[META]
+
+                        // TODO: Why would expectedName be the same than foundName?
                         const foundName = tokenValue?.name
 
-                        console.log('##', {
-                            type,
-                            expectedName,
-                            tokenValue,
-                            streamTokenValue,
-                            meta,
-                            foundName,
-                        })
+                        //console.log('####### GRAMMAR ACCEPT #########')
+
                         tracer.emit({
-                            type: 'grammar-accept',
+                            type,
                             name: expectedName,
                             tokenIndex: meta?.tokenIndex,
                             startChar: meta?.startChar,
@@ -297,14 +276,8 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                         const type = 'grammar-reject'
                         const meta = streamTokenValue && streamTokenValue[META]
                         const foundName = streamTokenValue?.name
-                        console.log('####### GRAMMAR REJECT #########')
-                        console.log('##', {
-                            type,
-                            expectedName,
-                            streamTokenValue,
-                            meta,
-                            foundName,
-                        })
+                        //console.log('####### GRAMMAR REJECT #########')
+
                         tracer.emit({
                             type: 'grammar-reject',
                             expected: expectedName,
@@ -323,7 +296,7 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
             .lazyRecoverWith(() => {
                 // try with empty string
                 // No token at all (empty string or only spaces)
-                console.log('####### GRAMMAR LAZY RECOVER #########')
+                //console.log('####### GRAMMAR LAZY RECOVER #########')
                 tracer.emit({
                     type: 'grammar-eos', // TODO: not sure of this name
                     expected: expectedName,
