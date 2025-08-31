@@ -1,17 +1,16 @@
-import { describe, it, expect } from 'vitest';
-import option from '../../lib/data/option.js';
+import { describe, it, expect } from 'vitest'
+import option from '../../lib/data/option.js'
 
 describe('Option Data Type Tests', () => {
-
     // Original test: 'option empty'
     it('option empty', () => {
-        expect(option.none().isPresent()).toBe(false);
-    });
+        expect(option.none().isPresent()).toBe(false)
+    })
 
     // Original test: 'option not empty'
     it('option not empty', () => {
-        expect(option.some(12).isPresent()).toBe(true);
-    });
+        expect(option.some(12).isPresent()).toBe(true)
+    })
 
     // Original test: 'option empty mapped'
     it('option empty mapped', () => {
@@ -19,11 +18,11 @@ describe('Option Data Type Tests', () => {
             option
                 .none()
                 .map(function(a) {
-                    return a;
+                    return a
                 })
-                .isPresent()
-        ).toBe(false);
-    });
+                .isPresent(),
+        ).toBe(false)
+    })
 
     // Original test: 'option not empty mapped'
     it('option not empty mapped', () => {
@@ -31,11 +30,11 @@ describe('Option Data Type Tests', () => {
             option
                 .some(12)
                 .map(function(a) {
-                    return a;
+                    return a
                 })
-                .get()
-        ).toBe(12);
-    });
+                .get(),
+        ).toBe(12)
+    })
 
     // Original test: 'option not empty flat mapped to option'
     it('option not empty flat mapped to option', () => {
@@ -43,11 +42,11 @@ describe('Option Data Type Tests', () => {
             option
                 .some(12)
                 .flatMap(function(a) {
-                    return option.some(a);
+                    return option.some(a)
                 })
-                .get()
-        ).toBe(12);
-    });
+                .get(),
+        ).toBe(12)
+    })
 
     // Original test: 'option empty flat mapped'
     it('option empty flat mapped', () => {
@@ -55,39 +54,39 @@ describe('Option Data Type Tests', () => {
             option
                 .none()
                 .flatMap(function(a) {
-                    return a; // This function wouldn't be called for none()
+                    return a // This function wouldn't be called for none()
                 })
-                .isPresent()
-        ).toBe(false);
-    });
+                .isPresent(),
+        ).toBe(false)
+    })
 
     // Original test: 'option empty or else'
     it('option empty or else', () => {
-        expect(option.none().orElse(12)).toBe(12);
-    });
+        expect(option.none().orElse(12)).toBe(12)
+    })
 
     // Original test: 'option not empty or else'
     it('option not empty or else', () => {
-        expect(option.some(12).orElse(14)).toBe(12);
-    });
+        expect(option.some(12).orElse(14)).toBe(12)
+    })
 
     // Original test: 'option empty or lazy else'
     it('option empty or lazy else', () => {
         expect(
             option.none().orLazyElse(function() {
-                return 12;
-            })
-        ).toBe(12);
-    });
+                return 12
+            }),
+        ).toBe(12)
+    })
 
     // Original test: 'option not empty or lazy else'
     it('option not empty or lazy else', () => {
         expect(
             option.some(12).orLazyElse(function() {
-                return 14;
-            })
-        ).toBe(12);
-    });
+                return 14
+            }),
+        ).toBe(12)
+    })
 
     // Original test: 'option empty filter'
     it('option empty filter', () => {
@@ -95,11 +94,11 @@ describe('Option Data Type Tests', () => {
             option
                 .none()
                 .filter(function(v) {
-                    return v === 1;
+                    return v === 1
                 })
-                .isPresent()
-        ).toBe(false);
-    });
+                .isPresent(),
+        ).toBe(false)
+    })
 
     // Original test: 'option not empty filter'
     it('option not empty filter', () => {
@@ -107,11 +106,11 @@ describe('Option Data Type Tests', () => {
             option
                 .some(12)
                 .filter(function(v) {
-                    return v === 12;
+                    return v === 12
                 })
-                .get()
-        ).toBe(12);
-    });
+                .get(),
+        ).toBe(12)
+    })
 
     // Original test: 'option not empty wrong filter'
     it('option not empty wrong filter', () => {
@@ -119,9 +118,9 @@ describe('Option Data Type Tests', () => {
             option
                 .some(12)
                 .filter(function(v) {
-                    return v === 13;
+                    return v === 13
                 })
-                .isPresent()
-        ).toBe(false);
-    });
-});
+                .isPresent(),
+        ).toBe(false)
+    })
+})

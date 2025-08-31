@@ -1,4 +1,4 @@
-import stream from '../../lib/stream/index';
+import stream from '../../lib/stream/index'
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -22,72 +22,78 @@ import stream from '../../lib/stream/index';
 
 export default {
     setUp: function(done) {
-        done();
+        done()
     },
 
     'endOfStream for empty stream': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.ok(stream.ofString('').endOfStream(0), 'should be endOfStream.');
-        test.done();
+        test.ok(stream.ofString('').endOfStream(0), 'should be endOfStream.')
+        test.done()
     },
 
     'endOfStream for non empty stream': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.ok(stream.ofString('1').endOfStream(1), 'should be endOfStream.');
-        test.done();
+        test.ok(stream.ofString('1').endOfStream(1), 'should be endOfStream.')
+        test.done()
     },
 
     'no endOfStream for non empty stream': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             stream.ofString('1').endOfStream(0),
             false,
-            'should be endOfStream.'
-        );
-        test.done();
+            'should be endOfStream.',
+        )
+        test.done()
     },
 
     'get from stream': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
-            stream.ofString('1').get(0).isSuccess(),
+            stream
+                .ofString('1')
+                .get(0)
+                .isSuccess(),
             true,
-            'should be a success.'
-        );
-        test.done();
+            'should be a success.',
+        )
+        test.done()
     },
 
     'do not get from empty stream': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
-            stream.ofString('1').get(1).isSuccess(),
+            stream
+                .ofString('1')
+                .get(1)
+                .isSuccess(),
             false,
-            'should be a failure.'
-        );
-        test.done();
+            'should be a failure.',
+        )
+        test.done()
     },
 
     'do not get from erroneous stream': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             stream
                 .ofString({
                     length: 1,
                     charAt: function() {
-                        throw new Error();
+                        throw new Error()
                     },
                 })
                 .get(0)
                 .isSuccess(),
             false,
-            'should be a failure.'
-        );
-        test.done();
+            'should be a failure.',
+        )
+        test.done()
     },
-};
+}

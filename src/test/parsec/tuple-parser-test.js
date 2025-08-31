@@ -1,56 +1,51 @@
-import {C} from '../../lib/parsec/index';
-
+import { C } from '../../lib/parsec/index'
 
 export default {
-    setUp: function (done) {
-        done();
+    setUp: function(done) {
+        done()
     },
 
-    'expect p.first() to work':function(test){
+    'expect p.first() to work': function(test) {
+        let text = 'abc'
+        let parser = C.letter()
+            .rep()
+            .first()
 
-        let text = 'abc';
-        let parser = C.letter().rep().first();
-
-        test.equal('a', parser.val(text));
-        test.done();
-
+        test.equal('a', parser.val(text))
+        test.done()
     },
 
-    'expect p.last() to work':function(test){
+    'expect p.last() to work': function(test) {
+        let text = 'abc'
+        let parser = C.letter()
+            .rep()
+            .last()
 
-        let text = 'abc';
-        let parser = C.letter().rep().last();
-
-        test.equal('c', parser.val(text));
-        test.done();
-
+        test.equal('c', parser.val(text))
+        test.done()
     },
 
-    'expect p.at() to work':function(test){
+    'expect p.at() to work': function(test) {
+        let text = 'abc'
+        let parser = C.letter()
+            .rep()
+            .map(t => t.at(2))
 
-        let text = 'abc';
-        let parser = C.letter().rep().map(t => t.at(2));
-
-        test.equal('c', parser.val(text));
-        test.done();
-
+        test.equal('c', parser.val(text))
+        test.done()
     },
 
-    'expect p.array to fail if not a tupleParser':function(test){
-
-        let text = 'abc';
-        let parser = C.letters().array();
-        let found = false;
-        try{
-            parser.val(text);
-        }catch {
-            found = true;
+    'expect p.array to fail if not a tupleParser': function(test) {
+        let text = 'abc'
+        let parser = C.letters().array()
+        let found = false
+        try {
+            parser.val(text)
+        } catch {
+            found = true
         }
 
-        test.ok(found);
-        test.done();
-
-    }
-
-
+        test.ok(found)
+        test.done()
+    },
 }

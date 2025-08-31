@@ -1,4 +1,4 @@
-import option from '../../lib/data/option';
+import option from '../../lib/data/option'
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -22,182 +22,180 @@ import option from '../../lib/data/option';
 
 export default {
     setUp: function(done) {
-        done();
+        done()
     },
 
     'option empty': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.equal(option.none().isPresent(), false, 'should be empty option.');
-        test.done();
+        test.equal(option.none().isPresent(), false, 'should be empty option.')
+        test.done()
     },
 
     'option not empty': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option.some(12).isPresent(),
             true,
-            'should not be empty option.'
-        );
-        test.done();
+            'should not be empty option.',
+        )
+        test.done()
     },
 
     'option empty mapped': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option
                 .none()
                 .map(function(a) {
-                    return a;
+                    return a
                 })
                 .isPresent(),
             false,
-            'should be empty option.'
-        );
-        test.done();
+            'should be empty option.',
+        )
+        test.done()
     },
 
     'option not empty mapped': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option
                 .some(12)
                 .map(function(a) {
-                    return a;
+                    return a
                 })
                 .get(),
             12,
-            'should not be empty option.'
-        );
-        test.done();
+            'should not be empty option.',
+        )
+        test.done()
     },
 
     'option not empty flat mapped to option': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option
                 .some(12)
                 .flatMap(function(a) {
-                    return option.some(a);
+                    return option.some(a)
                 })
                 .get(),
             12,
-            'should not be empty option.'
-        );
-        test.done();
+            'should not be empty option.',
+        )
+        test.done()
     },
 
     'option empty flat mapped': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option
                 .none()
                 .flatMap(function(a) {
-                    return a;
+                    return a
                 })
                 .isPresent(),
             false,
-            'should be empty option.'
-        );
-        test.done();
+            'should be empty option.',
+        )
+        test.done()
     },
 
     'option empty or else': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
-        test.equal(option.none().orElse(12), 12, 'should be empty option.');
-        test.done();
+        test.equal(option.none().orElse(12), 12, 'should be empty option.')
+        test.done()
     },
 
     'option not empty or else': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option.some(12).orElse(14),
             12,
-            'should be not empty option.'
-        );
-        test.done();
+            'should be not empty option.',
+        )
+        test.done()
     },
 
     'option empty or lazy else': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option.none().orLazyElse(function() {
-                return 12;
+                return 12
             }),
             12,
-            'should be empty option.'
-        );
-        test.done();
+            'should be empty option.',
+        )
+        test.done()
     },
 
     'option not empty or lazy else': function(test) {
-        test.expect(1);
+        test.expect(1)
         // tests here
         test.equal(
             option.some(12).orLazyElse(function() {
-                return 14;
+                return 14
             }),
             12,
-            'should be not empty option.'
-        );
-        test.done();
+            'should be not empty option.',
+        )
+        test.done()
     },
 
-        'option empty filter': function(test) {
-            test.expect(1);
-            // tests here
-            test.equal(
-                option
-                    .none()
-                    .filter(function(v) {
-                        return v === 1;
-                    })
-                    .isPresent(),
-                false,
-                'should be empty option.'
-            );
-            test.done();
-        },
+    'option empty filter': function(test) {
+        test.expect(1)
+        // tests here
+        test.equal(
+            option
+                .none()
+                .filter(function(v) {
+                    return v === 1
+                })
+                .isPresent(),
+            false,
+            'should be empty option.',
+        )
+        test.done()
+    },
 
-        'option not empty filter': function(test) {
-            test.expect(1);
-            // tests here
-            test.equal(
-                option
-                    .some(12)
-                    .filter(function(v) {
-                        return v === 12;
-                    })
-                    .get(),
-                12,
-                'should be not empty option.'
-            );
-            test.done();
-        },
+    'option not empty filter': function(test) {
+        test.expect(1)
+        // tests here
+        test.equal(
+            option
+                .some(12)
+                .filter(function(v) {
+                    return v === 12
+                })
+                .get(),
+            12,
+            'should be not empty option.',
+        )
+        test.done()
+    },
 
-            'option not empty wrong filter': function(test) {
-                test.expect(1);
-                // tests here
-                test.equal(
-                    option
-                        .some(12)
-                        .filter(function(v) {
-                            return v === 13;
-                        })
-                        .isPresent(),
-                    false,
-                    'should be empty option.'
-                );
-                test.done();
-            },
-
-
-};
+    'option not empty wrong filter': function(test) {
+        test.expect(1)
+        // tests here
+        test.equal(
+            option
+                .some(12)
+                .filter(function(v) {
+                    return v === 13
+                })
+                .isPresent(),
+            false,
+            'should be empty option.',
+        )
+        test.done()
+    },
+}
