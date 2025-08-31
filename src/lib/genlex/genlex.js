@@ -44,7 +44,6 @@ export class GenLex {
             if (name === undefined) {
                 name = parser
             }
-            console.log('string token', name)
             return this.tokenize(C.string(parser), name, precedence)
         }
 

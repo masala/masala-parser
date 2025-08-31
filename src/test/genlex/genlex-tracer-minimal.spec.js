@@ -97,47 +97,90 @@ describe('Tracing GenLex Tokenizer Tests', () => {
         expect(commits[8].trailing).toBe(0)
     })
 
-    it('parser is valid', () => {
-        const { parser } = createTracedSimpleParser()
+    it('simple grammar — accept: emits grammar-accept for A,B and lex-commit for all tokens', () => {
+        const tracer = new EventTracer()
+        const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('A B CC'))
-        // TODO: to be continued
         expect(response.isAccepted()).toBe(true)
-        //expect(response.value.size()).toBe(4)
-        //expect(response.value.join('')).toBe('ABCACBAAC')
+
+        const events = boundTracer.flush()
+        const commits = events.filter(e => e.type === 'lex-commit')
+        const accepts = events.filter(e => e.type === 'grammar-accept')
+
+        expect(commits.length).toBe(4)
+        expect(accepts.length).toBe(2)
+        expect(accepts.map(e => e.name)).toEqual(['A', 'B'])
+        expect(accepts.map(e => e.tokenIndex)).toEqual([undefined, undefined])
+        expect(commits.map(e => e.tokenIndex)).toEqual([0, 1, 2, 3])
     })
 
-    it('token is not valid', () => {
-        const { parser } = createTracedSimpleParser()
-        const response = parser.parse(stream.ofString('A B CDC'))
-        // TODO: to be continued
-        expect(response.isAccepted()).toBe(false)
-        // expect tracer to ...
-    })
-
-    it('grammar is not valid', () => {
-        const { parser } = createTracedSimpleParser()
+    it('simple grammar — grammar-reject when next token mismatches (A C B)', () => {
+        const tracer = new EventTracer()
+        const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('A C B'))
-        // TODO: to be continued
         expect(response.isAccepted()).toBe(false)
-        //expect(response.value.size()).toBe(4)
-        //expect(response.value.join('')).toBe('ABCACBAAC')
+
+        const events = boundTracer.flush()
+        const accepts = events.filter(e => e.type === 'grammar-accept')
+        const rejects = events.filter(e => e.type === 'grammar-reject')
+        const commits = events.filter(e => e.type === 'lex-commit')
+
+        expect(accepts.map(e => e.name)).toEqual(['A'])
+        expect(commits.length).toBe(2)
+        expect(rejects.length).toBe(1)
+        expect(RejectsFields(rejects[0])).toEqual({ expected: 'B', found: 'C' })
+        expect(rejects[0].tokenIndex).toBe(1)
     })
 
-    it('fails with empty string', () => {
-        const { parser } = createTracedSimpleParser()
+    it('simple grammar — lex-fail when an unknown token is encountered (A B CDC)', () => {
+        const tracer = new EventTracer()
+        const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
+        const response = parser.parse(stream.ofString('A B CDC'))
+        expect(response.isAccepted()).toBe(false)
+
+        const events = boundTracer.flush()
+        const fails = events.filter(e => e.type === 'lex-fail')
+        const commits = events.filter(e => e.type === 'lex-commit')
+        const accepts = events.filter(e => e.type === 'grammar-accept')
+
+        expect(accepts.map(e => e.name)).toEqual(['A', 'B'])
+        expect(commits.length).toBe(3)
+        expect(fails.length).toBe(1)
+    })
+
+    it('simple grammar — grammar-eos on empty input', () => {
+        const tracer = new EventTracer()
+        const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString(''))
-        // TODO: to be continued
         expect(response.isAccepted()).toBe(false)
-        //expect(response.value.size()).toBe(4)
-        //expect(response.value.join('')).toBe('ABCACBAAC')
+
+        const events = boundTracer.flush()
+        const eos = events.filter(e => e.type === 'grammar-eos')
+        const lex = events.filter(e => e.type.startsWith('lex-'))
+
+        expect(eos.length).toBe(1)
+        expect(eos[0].expected).toBe('A')
+        expect(lex.length).toBe(0)
     })
 
-    it('fails with just spaces', () => {
-        const { parser } = createTracedSimpleParser()
+    it('simple grammar — spaces-only: emits lex-fail and grammar-eos', () => {
+        const tracer = new EventTracer()
+        const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('   '))
-        // TODO: to be continued
         expect(response.isAccepted()).toBe(false)
-        //expect(response.value.size()).toBe(4)
-        //expect(response.value.join('')).toBe('ABCACBAAC')
+
+        const events = boundTracer.flush()
+        const starts = events.filter(e => e.type === 'lex-start')
+        const fails = events.filter(e => e.type === 'lex-fail')
+        const eos = events.filter(e => e.type === 'grammar-eos')
+
+        expect(starts.length).toBe(1)
+        expect(fails.length).toBe(1)
+        expect(eos.length).toBe(1)
+        expect(eos[0].expected).toBe('A')
     })
 })
+
+function RejectsFields(e) {
+    return { expected: e.expected, found: e.found }
+}
