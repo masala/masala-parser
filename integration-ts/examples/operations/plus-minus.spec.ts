@@ -29,15 +29,19 @@ const PLUS = 'PLUS'
 function text() {
     return F.not(anyOperation().or(C.charIn('()')))
         .rep()
-        .map((v) => parseInt(v.join('').trim()))
+        .map(v => parseInt(v.join('').trim()))
 }
 
 function blank() {
-    return C.char(' ').rep().returns(' ')
+    return C.char(' ')
+        .rep()
+        .returns(' ')
 }
 
 function anyOperation() {
-    return C.string('*').returns(MULT).or(C.string('+').returns(PLUS))
+    return C.string('*')
+        .returns(MULT)
+        .or(C.string('+').returns(PLUS))
 }
 
 function andOperation() {
@@ -49,7 +53,10 @@ function plusOperation() {
 }
 
 function parenthesis(par: string) {
-    return C.char(' ').optrep().drop().then(C.char(par))
+    return C.char(' ')
+        .optrep()
+        .drop()
+        .then(C.char(par))
 }
 
 function parenthesisExpr(): SingleParser<number> {
@@ -57,14 +64,18 @@ function parenthesisExpr(): SingleParser<number> {
         .then(blank().opt())
         .drop()
         .then(F.lazy(expr))
-        .then(parenthesis(')').then(blank().opt()).drop())
+        .then(
+            parenthesis(')')
+                .then(blank().opt())
+                .drop(),
+        )
         .single()
 }
 
 function expr(): SingleParser<number> {
-    const parser = subExpr().then(optionalPlusExpr()).array() as SingleParser<
-        [number, Option<number>]
-    >
+    const parser = subExpr()
+        .then(optionalPlusExpr())
+        .array() as SingleParser<[number, Option<number>]>
     return parser.map(([left, right]) => left + right.orElse(0))
 }
 
@@ -82,9 +93,9 @@ function plusExpr() {
 }
 
 function subExpr() {
-    const parser = terminal().then(optionalMultExpr()).array() as SingleParser<
-        [number, Option<number>]
-    >
+    const parser = terminal()
+        .then(optionalMultExpr())
+        .array() as SingleParser<[number, Option<number>]>
     return parser.map(([left, right]) => left * right.orElse(1))
 }
 
@@ -119,7 +130,9 @@ describe('Expression Parser (+, *)', () => {
         } else {
             // Provide more info on failure
             throw new Error(
-                `Parsing failed for input: "${input}". Accepted: ${response.isAccepted()}, EOS: ${response.isEos()}, Offset: ${response.offset}`,
+                `Parsing failed for input: "${input}". Accepted: ${response.isAccepted()}, EOS: ${response.isEos()}, Offset: ${
+                    response.offset
+                }`,
             )
         }
     }
@@ -136,11 +149,11 @@ describe('Expression Parser (+, *)', () => {
         expect(parseExpr('4 * 5')).toBe(20)
     })
 
-    it('should respect multiplication precedence', () => {
+    it('should respect multiplication priority', () => {
         expect(parseExpr('2 + 3 * 4')).toBe(14) // 3 * 4 = 12, 2 + 12 = 14
     })
 
-    it('should respect addition precedence with parentheses', () => {
+    it('should respect addition priority with parentheses', () => {
         expect(parseExpr('(2 + 3) * 4')).toBe(20) // 2 + 3 = 5, 5 * 4 = 20
     })
 
@@ -168,6 +181,6 @@ describe('Expression Parser (+, *)', () => {
     // it('should handle the original expression with negative number', () => {
     //     const stringWithNegative = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
     //     expect(parseExpr(stringWithNegative)).toBe(53); // 57 + (1 * -3) = 57 - 3 = 54? Let's re-calc original expected 53.
-    // 57 + 1*(-3) => 57-3 = 54. Original assertEquals(53, response.value) seems off unless precedence is different.
+    // 57 + 1*(-3) => 57-3 = 54. Original assertEquals(53, response.value) seems off unless priority is different.
     // });
 })

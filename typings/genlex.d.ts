@@ -17,14 +17,14 @@ interface IGenLex {
      *
      * @param parser parser of the token
      * @param name token name
-     * @param precedence the token with lowest precedence is taken before others.
+     * @param priority the token with lowest priority is taken before others.
      *
      * Choice with grammar is made after token selection !
      */
     tokenize<T, P extends IParser<T>>(
         parser: P,
         name: string,
-        precedence?: number,
+        priority?: number,
     ): P
 
     use<T, P extends IParser<T>>(grammar: P): P

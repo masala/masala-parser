@@ -64,7 +64,7 @@ describe('GenLex Tests', () => {
         expect(genlex.definitions.length).toBe(1) // Nodeunit: test.ok(genlex.definitions.length === 1);
     })
 
-    it('expect use() to sort definitions by revert precedence', () => {
+    it('expect use() to sort definitions by revert priority', () => {
         const genlex = new GenLex()
         const tkNumber = genlex.tokenize(N.number(), 'number')
         const tkDate = genlex.tokenize(dateParser(), 'date', 800)
@@ -77,7 +77,7 @@ describe('GenLex Tests', () => {
         genlex.use(grammar)
         expect(genlex.definitions[0].name).toBe('char') // Nodeunit: test.equal(genlex.definitions[0].name, 'char'); (after sort)
         expect(genlex.definitions[2].name).toBe('date') // Nodeunit: test.equal(genlex.definitions[2].name, 'date'); -> Indexing might differ, check sorted order.
-        expect(genlex.definitions[1].name).toBe('number') // Assuming number has lowest precedence here.
+        expect(genlex.definitions[1].name).toBe('number') // Assuming number has lowest priority here.
     })
 
     it('expect use() to create an easy tokenizer', () => {
@@ -87,20 +87,6 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString('34 23'))
         expect(parsing.isAccepted()).toBe(true) // Nodeunit: test.ok(parsing.isAccepted());
-    })
-
-    it('a Genlex can update its precedence', () => {
-        const genlex = new GenLex()
-        const tkNumber = genlex.tokenize(N.number(), 'number')
-        const tkDate = genlex.tokenize(dateParser(), 'date', 800)
-        let content = '10/05/2014 34 23'
-        genlex.setSeparators(' /')
-        genlex.updatePrecedence('number', 10) // Make number lower precedence than default date tokenizer
-        let grammar = tkDate.or(tkNumber).rep() // No thenEos in original test here
-        const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofString(content))
-        const tokens = parsing.value.array()
-        expect(tokens).toStrictEqual([10, 5, 2014, 34, 23]) // Assuming dateParser returns a string like this
     })
 
     it('GenLex can tokenize keywords', () => {

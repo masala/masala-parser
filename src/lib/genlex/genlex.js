@@ -10,10 +10,10 @@ import option from '../data/option.js'
  */
 export class TokenDefinition {
     // value will be determined at runtime while parsing
-    constructor(parser, name, precedence) {
+    constructor(parser, name, priority) {
         this.parser = parser
         this.name = name
-        this.precedence = precedence
+        this.priority = priority
     }
 }
 
@@ -33,21 +33,21 @@ export class TokenValue {
 export class GenLex {
     constructor() {
         this.spaces = defaultSpaces()
-        // definitions keep trace of all: parser, precedence and name
+        // definitions keep trace of all: parser, priority and name
         this.definitions = []
-        // get a token, but not directly its precedence
+        // get a token, but not directly its priority
         this.tokensMap = {}
     }
 
-    tokenize(parser, name, precedence = 1000) {
+    tokenize(parser, name, priority = 1000) {
         if (typeof parser === 'string') {
             if (name === undefined) {
                 name = parser
             }
-            return this.tokenize(C.string(parser), name, precedence)
+            return this.tokenize(C.string(parser), name, priority)
         }
 
-        const definition = new TokenDefinition(parser, name, precedence)
+        const definition = new TokenDefinition(parser, name, priority)
         this.definitions.push(definition)
 
         const tokenParser = expectToken(
@@ -58,9 +58,9 @@ export class GenLex {
         return tokenParser
     }
 
-    keywords(keys, precedence = 1000) {
+    keywords(keys, priority = 1000) {
         return keys.reduce(
-            (acc, key) => acc.concat(this.tokenize(key, key, precedence)),
+            (acc, key) => acc.concat(this.tokenize(key, key, priority)),
             [],
         )
     }
@@ -82,14 +82,8 @@ export class GenLex {
         this.spaces = spacesParser.map(() => unit)
     }
 
-    updatePrecedence(tokenName, precedence) {
-        this.definitions.find(
-            def => def.name === tokenName,
-        ).precedence = precedence
-    }
-
     buildTokenizer() {
-        const token = this.findTokenByPrecedence()
+        const token = this.findTokenByPriority()
         return this.spaces
             .optrep()
             .drop()
@@ -102,9 +96,9 @@ export class GenLex {
         return this.buildTokenizer().chain(grammar)
     }
 
-    findTokenByPrecedence() {
+    findTokenByPriority() {
         const sortedDefinitions = this.definitions.sort(
-            (d1, d2) => d2.precedence - d1.precedence,
+            (d1, d2) => d2.priority - d1.priority,
         )
 
         return sortedDefinitions.reduce(

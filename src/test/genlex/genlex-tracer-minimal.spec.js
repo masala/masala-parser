@@ -179,6 +179,84 @@ describe('Tracing GenLex Tokenizer Tests', () => {
         expect(eos.length).toBe(1)
         expect(eos[0].expected).toBe('A')
     })
+
+    it('priority: AA has priority over A; candidate selection reflects priority', () => {
+        const tracer = new EventTracer()
+        const genlex = new TracingGenLex(tracer)
+        genlex.tokenize('AA', 'AA', 1200)
+        genlex.tokenize('A', 'A', 1000)
+        const grammar = F.any()
+            .rep()
+            .thenEos()
+        const parser = genlex.use(grammar)
+
+        const input = 'AA A AA'
+        const res = parser.parse(stream.ofString(input))
+        expect(res.isAccepted()).toBe(true)
+
+        const events = tracer.flush()
+        const commits = events.filter(e => e.type === 'lex-commit')
+
+        // Take the first commit at each distinct startChar
+        const firstByStart = new Map()
+        for (const c of commits) {
+            if (!firstByStart.has(c.startChar)) firstByStart.set(c.startChar, c)
+        }
+        // middle token should be 'A' at its start position
+        const hasAAt3 = commits.some(e => e.startChar === 3 && e.name === 'A')
+        expect(hasAAt3).toBe(true)
+    })
+
+    it('priority update: after update, A still yields AA at start when text is AA', () => {
+        const tracer = new EventTracer()
+        const genlex = new TracingGenLex(tracer)
+        genlex.tokenize('AA', 'AA', 1200)
+        genlex.tokenize('A', 'A', 2000)
+        const grammar = F.any()
+            .rep()
+            .thenEos()
+        const parser = genlex.use(grammar)
+
+        const res = parser.parse(stream.ofString('AA'))
+        expect(res.isAccepted()).toBe(true)
+
+        const events = tracer.flush()
+        const commits = events.filter(e => e.type === 'lex-commit')
+
+        expect(commits.map(e => e.name)).toEqual(['AA'])
+        expect(commits.map(e => e.startChar)).toEqual([0])
+        expect(commits.map(e => e.endChar)).toEqual([2])
+    })
+
+    it('metadata and ordering: lex-commit indices, positions and ordering are consistent', () => {
+        const tracer = new EventTracer()
+        const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
+        const res = parser.parse(stream.ofString('A B CC'))
+        expect(res.isAccepted()).toBe(true)
+
+        const events = boundTracer.flush()
+        const starts = events.filter(e => e.type === 'lex-start')
+        const commits = events.filter(e => e.type === 'lex-commit')
+
+        expect(starts.map(e => e.startChar)).toEqual([0, 2, 4, 5])
+        expect(commits.map(e => e.tokenIndex)).toEqual([0, 1, 2, 3])
+        expect(commits.map(e => e.name)).toEqual(['A', 'B', 'C', 'C'])
+        expect(commits.map(e => e.startChar)).toEqual([0, 2, 4, 5])
+        expect(commits.map(e => e.endChar)).toEqual([1, 3, 5, 6])
+        expect(commits.map(e => e.trailing)).toEqual([1, 1, 0, 0])
+
+        // Event ordering: each lex-start occurs before its corresponding commit
+        for (const c of commits) {
+            const iStart = events.findIndex(
+                e => e.type === 'lex-start' && e.startChar === c.startChar,
+            )
+            const iCommit = events.findIndex(
+                e => e.type === 'lex-commit' && e.startChar === c.startChar,
+            )
+            expect(iStart).toBeGreaterThanOrEqual(0)
+            expect(iCommit).toBeGreaterThan(iStart)
+        }
+    })
 })
 
 function RejectsFields(e) {

@@ -13,9 +13,9 @@ function defaultSpaces() {
 export class TracingGenLex {
     constructor(tracer = null) {
         this.spaces = defaultSpaces()
-        // definitions keep trace of all: parser, precedence and name
+        // definitions keep trace of all: parser, priority and name
         this.definitions = []
-        // get a token, but not directly its precedence
+        // get a token, but not directly its priority
         this.tokensMap = {}
         this._ordinal = 0 // token index in token stream
         if (tracer === undefined) {
@@ -29,15 +29,15 @@ export class TracingGenLex {
         }
     }
 
-    tokenize(parser, name, precedence = 1000) {
+    tokenize(parser, name, priority = 1000) {
         if (typeof parser === 'string') {
             if (name === undefined) {
                 name = parser
             }
-            return this.tokenize(C.string(parser), name, precedence)
+            return this.tokenize(C.string(parser), name, priority)
         }
 
-        const definition = new TokenDefinition(parser, name, precedence)
+        const definition = new TokenDefinition(parser, name, priority)
         this.definitions.push(definition)
 
         const tokenParser = expectTokenTraced(
@@ -50,9 +50,9 @@ export class TracingGenLex {
         return tokenParser
     }
 
-    keywords(keys, precedence = 1000) {
+    keywords(keys, priority = 1000) {
         return keys.reduce(
-            (acc, key) => acc.concat(this.tokenize(key, key, precedence)),
+            (acc, key) => acc.concat(this.tokenize(key, key, priority)),
             [],
         )
     }
@@ -74,14 +74,12 @@ export class TracingGenLex {
         this.spaces = spacesParser.map(() => unit)
     }
 
-    updatePrecedence(tokenName, precedence) {
-        this.definitions.find(
-            def => def.name === tokenName,
-        ).precedence = precedence
+    updatePriority(tokenName, priority) {
+        this.definitions.find(def => def.name === tokenName).priority = priority
     }
 
     buildTokenizer() {
-        const nextTokenFinder = this._findTokenByPrecedenceTraced()
+        const nextTokenFinder = this._findTokenByPriorityTraced()
         const leftSpaces = this.spaces.optrep().drop()
         const rightSpaces = this.spaces.optrep().drop()
 
@@ -162,10 +160,10 @@ export class TracingGenLex {
         return this.buildTokenizer().chain(grammar)
     }
 
-    _findTokenByPrecedenceTraced() {
+    _findTokenByPriorityTraced() {
         const sortedDefinitions = this.definitions
             .slice()
-            .sort((d1, d2) => d2.precedence - d1.precedence)
+            .sort((d1, d2) => d2.priority - d1.priority)
 
         return sortedDefinitions.reduce(
             (combinator, definition) =>
@@ -184,7 +182,7 @@ export class TracingGenLex {
             this.tracer.emit({
                 type: 'lex-try',
                 name: def.name,
-                precedence: def.precedence,
+                priority: def.priority,
                 startChar: index,
             })
 
@@ -196,7 +194,7 @@ export class TracingGenLex {
                 this.tracer.emit({
                     type: 'lex-taken',
                     name: def.name,
-                    precedence: def.precedence,
+                    priority: def.priority,
                     startChar: index,
                     endChar,
                     value: tokenValue.value,
@@ -208,7 +206,7 @@ export class TracingGenLex {
                 this.tracer.emit({
                     type: 'lex-no-match',
                     name: def.name,
-                    precedence: def.precedence,
+                    priority: def.priority,
                     startChar: index,
                 })
                 return res
