@@ -2,13 +2,10 @@ import response from '../parsec/response.js'
 import { F, C, N } from '../parsec/index.js'
 import unit from '../data/unit.js'
 import { EventTracer } from './genlex-tracer.js'
-import { GenLex, TokenDefinition, TokenValue } from './genlex.js'
+import { GenLex, TokenDefinition, Token } from './genlex.js'
 
 // Hidden metadata on token instances to correlate layers
 const META = Symbol('token.meta')
-function defaultSpaces() {
-    return C.charIn(' \r\n\f\t').map(() => unit)
-}
 
 export class TracingGenLex extends GenLex {
     constructor(tracer = null) {
@@ -31,19 +28,10 @@ export class TracingGenLex extends GenLex {
         const definition = new TokenDefinition(parser, name, priority)
         this.definitions.push(definition)
 
-        const tokenParser = expectTokenTraced(
-            (tokenValue) => tokenValue.accept(name),
-            name,
-            this.tracer,
-        )
+        const tokenParser = expectTokenTraced(name, this.tracer)
         this.tokensMap[name] = tokenParser
         tokenParser.__token__name = name
         return tokenParser
-    }
-
-    updatePriority(tokenName, priority) {
-        this.definitions.find((def) => def.name === tokenName).priority =
-            priority
     }
 
     buildTokenizer() {
@@ -76,7 +64,7 @@ export class TracingGenLex extends GenLex {
                 return response.reject(input, index, false)
             }
 
-            const tokenValue = responseToken.value // TokenValue
+            const token = responseToken.value // Token found
             const endChar = responseToken.offset // end of token (before trailing spaces)
 
             // trailing spaces
@@ -85,25 +73,26 @@ export class TracingGenLex extends GenLex {
 
             // Attach metadata to the token value
             const tokenIndex = this._ordinal++
-            tokenValue[META] = { tokenIndex, startChar, endChar }
+            token[META] = { tokenIndex, startChar, endChar }
 
             // Emit final commit event (includes tokenIndex and trailing info)
             this.tracer.emit({
                 // follows lex-taken, with trailing spaces
                 type: 'lex-commit',
-                name: tokenValue.name,
+                name: token.name,
                 tokenIndex,
                 startIndex: index,
                 startChar,
                 endChar,
-                value: tokenValue.value,
+                value: token.value,
                 // counts how many trailing spaces were consumed
                 trailing: finalOffset - endChar,
+                snippet: getSnippet(input, startChar),
             })
-            this.tracer.setLastTokenMeta(tokenValue[META])
+            this.tracer.setLastTokenMeta(token[META])
 
             // Return the single token (spaces are dropped)
-            return response.accept(tokenValue, input, finalOffset, true)
+            return response.accept(token, input, finalOffset, true)
         })
     }
 
@@ -121,7 +110,7 @@ export class TracingGenLex extends GenLex {
 
     getWrappedTokenParser(def) {
         // Build the original candidate that yields TokenValue
-        const base = def.parser.map((value) => new TokenValue(def.name, value))
+        const base = def.parser.map((value) => new Token(def.name, value))
 
         // Wrap to emit lex-try / accept / reject at char layer
         return F.parse((input, index = 0) => {
@@ -143,6 +132,7 @@ export class TracingGenLex extends GenLex {
                     startChar: index,
                     endChar,
                     value: tokenValue.value,
+                    snippet: getSnippet(input, index),
                 })
                 return res
             } else {
@@ -163,57 +153,51 @@ function getTokenParser(def) {
     return def.parser.map((value) => new TokenValue(def.name, value))
 }
 
-function expectTokenTraced(tokenize, expectedName, tracer) {
-    // Equivalent shape to your expectToken, but instrumented and simplified
+function expectTokenTraced(expectedName, tracer) {
+    // Equivalent shape to expectToken, but instrumented and simplified
 
     return F.parse((input, index) => {
         return input
             .get(index)
-            .map((value) => {
-                let streamTokenValue = value
+            .map((token) => {
+                let streamTokenValue = token
+                const accepted = token.name === expectedName
+                if (accepted) {
+                    // CASE 'grammar-accept'
+                    const type = 'grammar-accept'
+                    const meta = token && token[META]
 
-                return tokenize(value) // Option
-                    .map((tokenValue) => {
-                        // CASE 'grammar-accept'
-                        const type = 'grammar-accept'
-                        const meta = tokenValue && tokenValue[META]
-
-                        tracer.emit({
-                            type,
-                            name: expectedName,
-                            tokenIndex: meta?.tokenIndex,
-                            startChar: meta?.startChar,
-                            endChar: meta?.endChar,
-                            value: tokenValue.value,
-                        })
-                        tracer.setLastTokenMeta(meta || null)
-                        return response.accept(
-                            tokenValue,
-                            input,
-                            index + 1,
-                            true,
-                        )
+                    tracer.emit({
+                        type,
+                        name: expectedName,
+                        tokenIndex: meta?.tokenIndex,
+                        startChar: meta?.startChar,
+                        endChar: meta?.endChar,
+                        value: token.value,
                     })
-                    .orLazyElse(() => {
-                        const type = 'grammar-reject'
-                        const meta = streamTokenValue && streamTokenValue[META]
-                        const foundName = streamTokenValue?.name
+                    tracer.setLastTokenMeta(meta || null)
+                    return response.accept(token, input, index + 1, true)
+                } else {
+                    // CASE 'grammar-reject'
+                    const type = 'grammar-reject'
+                    const meta = streamTokenValue && streamTokenValue[META]
+                    const foundName = streamTokenValue?.name
 
-                        tracer.emit({
-                            type: 'grammar-reject',
-                            expected: expectedName,
-                            found: foundName ?? null,
-                            tokenIndex: meta?.tokenIndex,
-                            startChar: meta?.startChar,
-                            endChar: meta?.endChar,
-                        })
-                        return response.reject(input, index, false)
+                    tracer.emit({
+                        type,
+                        expected: expectedName,
+                        found: foundName ?? null,
+                        tokenIndex: meta?.tokenIndex,
+                        startChar: meta?.startChar,
+                        endChar: meta?.endChar,
                     })
+                    return response.reject(input, index, false)
+                }
             })
             .lazyRecoverWith(() => {
                 // No token at all (empty string or only spaces)
                 tracer.emit({
-                    type: 'grammar-eos', // TODO: not sure of this name
+                    type: 'grammar-eos',
                     expected: expectedName,
                     tokenIndex: null,
                     index,

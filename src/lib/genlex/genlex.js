@@ -1,10 +1,9 @@
+import { isTuple, Tuple } from '../data/tuple.js'
 import response from '../parsec/response.js'
 import { F, C, N } from '../parsec/index.js'
 import unit from '../data/unit.js'
-import option from '../data/option.js'
 
 /**
- * In Masala, a Token IS a parser
  * And its value is the parsed text
  * Example: C.char(':') -> name = 'colon' or ':', value = ':'
  */
@@ -18,15 +17,11 @@ export class TokenDefinition {
 }
 
 // a Token object is instantiated at runtime, with a value given by the parsed text
-export class TokenValue {
+export class Token {
+    __token = true
     constructor(name, value) {
         this.name = name
         this.value = value
-    }
-
-    accept(name) {
-        // Return the TokenValue itself when the name matches
-        return this.name === name ? option.some(this) : option.none()
     }
 }
 
@@ -50,10 +45,7 @@ export class GenLex {
         const definition = new TokenDefinition(parser, name, priority)
         this.definitions.push(definition)
 
-        const tokenParser = expectToken(
-            (tokenValue) => tokenValue.accept(name),
-            name,
-        )
+        const tokenParser = expectToken(name)
         this.tokensMap[name] = tokenParser
         return tokenParser
     }
@@ -129,53 +121,29 @@ export class GenLex {
 }
 
 function getTokenParser(def) {
-    return def.parser.map((value) => new TokenValue(def.name, value))
+    return def.parser.map((value) => new Token(def.name, value))
 }
 
-// name is for easier debugging
 // expectToken consumes exactly one token of this name and give me its value.
-// eslint-disable-next-line
-function expectToken(tokenize, name) {
-    return F.parse((input, index) => {
-        // TODO logger console.log('testing ', {name, input:input.get(index), index});
-        //console.log('trying ', { index, name, input })
-
-        return (
-            input
-                .get(index)
-                // FIXME= value is the token, token is the value
-                .map((value) => {
-                    //TODO: keep for logger
-                    let token = value
-
-                    try {
-                        /*console.log('1: in map', {
-                            value: JSON.stringify(value),
-                            name,
-                            index,
-                        })*/
-                        //console.log('tokenizing', tokenize(token))
-                    } catch (e) {
-                        console.error('failed', e)
-                    }
-
-                    return tokenize(value)
-                        .map((tokenValue) => {
-                            return response.accept(
-                                tokenValue,
-                                input,
-                                index + 1,
-                                true,
-                            )
-                        })
-                        .orLazyElse(() => {
-                            return response.reject(input, index, false)
-                        })
-                })
-                .lazyRecoverWith(() => {
-                    return response.reject(input, index, false)
-                })
-        )
+function expectToken(name) {
+    return F.parse((tokenStream, index) => {
+        return tokenStream
+            .get(index)
+            .map((token) => {
+                const accepted = token.name === name
+                if (accepted) {
+                    // CASE 'grammar-accept'
+                    return response.accept(token, tokenStream, index + 1, true)
+                } else {
+                    // CASE 'grammar-reject'
+                    return response.reject(tokenStream, index, false)
+                }
+            })
+            .lazyRecoverWith(() => {
+                // No token at all (empty string or only spaces)
+                // (Or something was thrown)
+                return response.reject(tokenStream, index, false)
+            })
     })
 }
 
@@ -201,4 +169,24 @@ export function getMathGenLex() {
     basicGenlex.tokenize(C.char(')'), 'close', 1000)
 
     return basicGenlex
+}
+
+export function leanToken(tokenValue) {
+    if (tokenValue === undefined || tokenValue === null) {
+        return tokenValue
+    }
+    if (tokenValue.__token) {
+        return tokenValue.value
+    }
+    return tokenValue
+}
+
+export function leanTuple(tuple) {
+    if (tuple === undefined || tuple === null) {
+        return tuple
+    }
+    if (isTuple(tuple)) {
+        return tuple.map(leanToken).array()
+    }
+    return tuple
 }

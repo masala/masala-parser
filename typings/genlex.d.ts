@@ -15,6 +15,7 @@ export type TokenCollection = {
 export interface TokenResult<T> {
     name: string
     value: T
+    __token: true
 }
 
 export interface IGenLex {
@@ -61,8 +62,8 @@ export interface IGenLex {
     setSeparatorRepetition(repeat: boolean): GenLex
 
     /**
-     * tonkenize all items, given them the name of the token
-     * Exemple : keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
+     * tokenize all items, given them the name of the token
+     * Example: keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
      * @param tokens
      */
     keywords(tokens: string[]): Array<Token<string>>

@@ -571,7 +571,7 @@ export declare const Streams: Streams
 export declare const GenLex: new () => IGenLex
 export declare const TracingGenLex: new (tracer?: Tracer) => IGenLex
 
-export type { Token, TokenCollection, TokenResult }
+export type { TokenParser, TokenCollection, TokenValue }
 export type { EmptyTuple, Tuple }
 export type {
     VoidParser,

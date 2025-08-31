@@ -10,7 +10,6 @@ export class EventTracer {
         // TODO: it seems no snippet is used or needed
         this.snippetMax = snippetMax
         this.events = []
-        this._lastTokenMeta = null
     }
     _inWindow(charIndex) {
         const [a, b] = this.window
