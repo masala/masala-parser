@@ -2,7 +2,7 @@ import response from '../parsec/response.js'
 import { F, C, N } from '../parsec/index.js'
 import unit from '../data/unit.js'
 import { EventTracer } from './genlex-tracer.js'
-import { TokenDefinition, TokenValue } from './genlex.js'
+import { GenLex, TokenDefinition, TokenValue } from './genlex.js'
 
 // Hidden metadata on token instances to correlate layers
 const META = Symbol('token.meta')
@@ -10,23 +10,14 @@ function defaultSpaces() {
     return C.charIn(' \r\n\f\t').map(() => unit)
 }
 
-export class TracingGenLex {
+export class TracingGenLex extends GenLex {
     constructor(tracer = null) {
-        this.spaces = defaultSpaces()
-        // definitions keep trace of all: parser, priority and name
-        this.definitions = []
-        // get a token, but not directly its priority
-        this.tokensMap = {}
-        this._ordinal = 0 // token index in token stream
         if (tracer === undefined) {
             throw 'TracingGenLex needs a tracer (EventTracer) to be useful'
         }
-        this.tracer = tracer
-
-        if (!tracer) {
-            // Tracer with default options
-            this.tracer = new EventTracer()
-        }
+        super()
+        this._ordinal = 0 // token index in token stream
+        this.tracer = tracer || new EventTracer()
     }
 
     tokenize(parser, name, priority = 1000) {
@@ -50,30 +41,6 @@ export class TracingGenLex {
         return tokenParser
     }
 
-    keywords(keys, priority = 1000) {
-        return keys.reduce(
-            (acc, key) => acc.concat(this.tokenize(key, key, priority)),
-            [],
-        )
-    }
-
-    setSeparators(spacesCharacters) {
-        if (typeof spacesCharacters !== 'string') {
-            throw "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
-                ' use  setSeparatorsParser to declare a parser'
-        }
-        this.spaces = C.charIn(spacesCharacters).map(() => unit)
-    }
-
-    /**
-     * Set separator Parser. It's up to the parser to accept or not
-     * optional repetition
-     * @param spacesParser
-     */
-    setSeparatorsParser(spacesParser) {
-        this.spaces = spacesParser.map(() => unit)
-    }
-
     updatePriority(tokenName, priority) {
         this.definitions.find(def => def.name === tokenName).priority = priority
     }
@@ -94,17 +61,11 @@ export class TracingGenLex {
 
             const startChar = responseLeft.offset
 
-            //console.log('#2 - emitting lex-start', { startChar, index })
             this.tracer.emit({ type: 'lex-start', startChar, index })
 
             // parse token (already traced per-candidate internally)
             const responseToken = nextTokenFinder.parse(input, startChar)
             if (!responseToken.isAccepted()) {
-                /*console.log('#3 - !! Not any valid token found', {
-                    snippet: getSnippet(input, startChar),
-                    startChar,
-                    index,
-                })*/
                 this.tracer.emit({
                     type: 'lex-fail',
                     startChar,
@@ -126,7 +87,6 @@ export class TracingGenLex {
             tokenValue[META] = { tokenIndex, startChar, endChar }
 
             // Emit final commit event (includes tokenIndex and trailing info)
-
             this.tracer.emit({
                 // follows lex-taken, with trailing spaces
                 type: 'lex-commit',
@@ -141,23 +101,9 @@ export class TracingGenLex {
             })
             this.tracer.setLastTokenMeta(tokenValue[META])
 
-            /*console.log('#5 - accepted token', {
-                name: tokenValue.name,
-                tokenIndex,
-                startChar,
-                endChar,
-                value: tokenValue.value,
-                index,
-                consumed: true,
-            })*/
-
             // Return the single token (spaces are dropped)
             return response.accept(tokenValue, input, finalOffset, true)
         })
-    }
-
-    use(grammar) {
-        return this.buildTokenizer().chain(grammar)
     }
 
     _findTokenByPriorityTraced() {
@@ -178,7 +124,6 @@ export class TracingGenLex {
 
         // Wrap to emit lex-try / accept / reject at char layer
         return F.parse((input, index = 0) => {
-            //console.log({ try: def.name, index })
             this.tracer.emit({
                 type: 'lex-try',
                 name: def.name,
@@ -188,7 +133,6 @@ export class TracingGenLex {
 
             const res = base.parse(input, index)
             if (res.isAccepted()) {
-                //console.log({ taken: def.name, index })
                 const endChar = res.offset
                 const tokenValue = res.value
                 this.tracer.emit({
@@ -201,7 +145,6 @@ export class TracingGenLex {
                 })
                 return res
             } else {
-                // console.log({ no_match: def.name, index })
                 // This token candidate did not match, but maybe another will
                 this.tracer.emit({
                     type: 'lex-no-match',
@@ -212,21 +155,6 @@ export class TracingGenLex {
                 return res
             }
         })
-    }
-
-    remove(tokenName) {
-        // find definitions
-        this.definitions = this.definitions.filter(d => d.name !== tokenName)
-        delete this.tokensMap[tokenName]
-    }
-
-    // type: { [key: string]: Parser }
-    tokens() {
-        return this.tokensMap
-    }
-
-    get(tokenName) {
-        return this.tokensMap[tokenName]
     }
 }
 
@@ -249,11 +177,6 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                         const type = 'grammar-accept'
                         const meta = tokenValue && tokenValue[META]
 
-                        // TODO: Why would expectedName be the same than foundName?
-                        const foundName = tokenValue?.name
-
-                        //console.log('####### GRAMMAR ACCEPT #########')
-
                         tracer.emit({
                             type,
                             name: expectedName,
@@ -274,7 +197,6 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                         const type = 'grammar-reject'
                         const meta = streamTokenValue && streamTokenValue[META]
                         const foundName = streamTokenValue?.name
-                        //console.log('####### GRAMMAR REJECT #########')
 
                         tracer.emit({
                             type: 'grammar-reject',
@@ -284,26 +206,17 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
                             startChar: meta?.startChar,
                             endChar: meta?.endChar,
                         })
-                        // CASE : 'grammar-mismatch',
-                        // TODO logger console.log('lazyElse failed with ', name, index);
-                        // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
-                        //  input.location(index));
                         return response.reject(input, index, false)
                     })
             })
             .lazyRecoverWith(() => {
-                // try with empty string
                 // No token at all (empty string or only spaces)
-                //console.log('####### GRAMMAR LAZY RECOVER #########')
                 tracer.emit({
                     type: 'grammar-eos', // TODO: not sure of this name
                     expected: expectedName,
                     tokenIndex: null,
                     index,
                 })
-                // CASE 'grammar-eos' ?
-                // TODO logger console.log('failed with ', name, index);
-                //console.log('lazyRecover with offset:', input.location(index));
                 return response.reject(input, index, false)
             })
     })
