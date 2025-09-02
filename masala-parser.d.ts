@@ -1,7 +1,7 @@
-import type { Tracer } from './typings/debugger.js'
-import type { FlowBundle } from './typings/flow-bundle.js'
+import type { Tracer } from './typings/debugger.d.ts'
+import type { FlowBundle } from './typings/flow-bundle.d.ts'
 import type { EmptyTuple, Tuple } from './typings/tuple.d.ts'
-import type { VoidParser } from './typings/void-parser.js'
+import type { VoidParser } from './typings/void-parser.d.ts'
 import type {
     IGenLex,
     Token,
@@ -568,46 +568,8 @@ export declare const C: CharBundle
 export declare const N: NumberBundle
 export declare const Streams: Streams
 
-export declare class GenLex implements IGenLex {
-    constructor()
-    tokenize(string: string): SingleParser<string>
-    tokenize<T, P extends IParser<T>>(
-        parser: P,
-        name: string,
-        precedence?: number,
-    ): P
-
-    use<T, P extends IParser<T>>(grammar: P): P
-
-    tokens(): TokenCollection
-
-    setSeparators(spacesCharacters: string): GenLex
-
-    /**
-     * Select the parser used by genlex. It will be used as `separator.optrep().then(token).then(separator.optrep())`.
-     * So the separator must not be optional or it will make an infinite loop.
-     * The separation in your text can't be a strict one-time separation with Genlex.
-     * @param parser
-     */
-    setSeparatorsParser<T>(parser: IParser<T>): GenLex
-
-    /**
-     * Should separators be repeated ?
-     *
-     * `separators.optrep().then(myToken()).then(separators.optrep())`
-     * @param repeat default is true
-     */
-    setSeparatorRepetition(repeat: boolean): GenLex
-
-    /**
-     * tonkenize all items, given them the name of the token
-     * Exemple : keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
-     * @param tokens
-     */
-    keywords(tokens: string[]): Array<Token<string>>
-
-    get(tokenName: string): Token<any>
-}
+export declare const GenLex: new () => IGenLex
+export declare const TracingGenLex: new (tracer?: Tracer) => IGenLex
 
 export type { Token, TokenCollection, TokenResult }
 export type { EmptyTuple, Tuple }

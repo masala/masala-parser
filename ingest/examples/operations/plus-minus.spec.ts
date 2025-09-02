@@ -119,7 +119,9 @@ describe('Expression Parser (+, *)', () => {
         } else {
             // Provide more info on failure
             throw new Error(
-                `Parsing failed for input: "${input}". Accepted: ${response.isAccepted()}, EOS: ${response.isEos()}, Offset: ${response.offset}`,
+                `Parsing failed for input: "${input}". Accepted: ${response.isAccepted()}, EOS: ${response.isEos()}, Offset: ${
+                    response.offset
+                }`,
             )
         }
     }
@@ -136,11 +138,11 @@ describe('Expression Parser (+, *)', () => {
         expect(parseExpr('4 * 5')).toBe(20)
     })
 
-    it('should respect multiplication precedence', () => {
+    it('should respect multiplication priority', () => {
         expect(parseExpr('2 + 3 * 4')).toBe(14) // 3 * 4 = 12, 2 + 12 = 14
     })
 
-    it('should respect addition precedence with parentheses', () => {
+    it('should respect addition priority with parentheses', () => {
         expect(parseExpr('(2 + 3) * 4')).toBe(20) // 2 + 3 = 5, 5 * 4 = 20
     })
 
@@ -168,6 +170,6 @@ describe('Expression Parser (+, *)', () => {
     // it('should handle the original expression with negative number', () => {
     //     const stringWithNegative = '2 + 3 * (  (   4  +   10) + ( 4) ) + 1 * -3';
     //     expect(parseExpr(stringWithNegative)).toBe(53); // 57 + (1 * -3) = 57 - 3 = 54? Let's re-calc original expected 53.
-    // 57 + 1*(-3) => 57-3 = 54. Original assertEquals(53, response.value) seems off unless precedence is different.
+    // 57 + 1*(-3) => 57-3 = 54. Original assertEquals(53, response.value) seems off unless priority is different.
     // });
 })

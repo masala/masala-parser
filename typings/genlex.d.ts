@@ -1,6 +1,12 @@
-import { GenLex, IParser, SingleParser } from '../masala-parser.js'
+import {
+    GenLex,
+    IParser,
+    MixedParser,
+    SingleParser,
+    TupleParser,
+} from '../masala-parser.js'
 
-export interface Token<T> extends SingleParser<T> {}
+export interface Token<T> extends SingleParser<TokenResult<T>> {}
 
 export type TokenCollection = {
     [key: string]: Token<any>
@@ -11,13 +17,13 @@ export interface TokenResult<T> {
     value: T
 }
 
-interface IGenLex {
+export interface IGenLex {
     // TODO: make overload here
     /**
      *
      * @param parser parser of the token
      * @param name token name
-     * @param priority the token with lowest priority is taken before others.
+     * @param priority the token with higher numeric priority is tried before others.
      *
      * Choice with grammar is made after token selection !
      */
@@ -25,8 +31,13 @@ interface IGenLex {
         parser: P,
         name: string,
         priority?: number,
-    ): P
+    ): Token<T>
 
+    use<T>(grammar: SingleParser<T>): SingleParser<T>
+    use<T>(grammar: TupleParser<T>): TupleParser<T>
+    use<First, Last>(
+        grammar: MixedParser<First, Last>,
+    ): MixedParser<First, Last>
     use<T, P extends IParser<T>>(grammar: P): P
 
     tokens(): TokenCollection
