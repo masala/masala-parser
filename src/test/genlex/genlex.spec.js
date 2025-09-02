@@ -71,13 +71,10 @@ describe('GenLex Tests', () => {
         const tkChar = genlex.tokenize(C.charLiteral(), 'char', 1200)
         let grammar = tkDate.then(tkNumber.rep().or(tkChar))
 
-        // Nodeunit: test.notEqual(genlex.definitions[0].name, 'date'); (This assert is before genlex.use)
-        // We can't directly replicate this without knowing the initial unsorted state behavior precisely.
-        // The important part is the state *after* .use()
         genlex.use(grammar)
-        expect(genlex.definitions[0].name).toBe('char') // Nodeunit: test.equal(genlex.definitions[0].name, 'char'); (after sort)
-        expect(genlex.definitions[2].name).toBe('date') // Nodeunit: test.equal(genlex.definitions[2].name, 'date'); -> Indexing might differ, check sorted order.
-        expect(genlex.definitions[1].name).toBe('number') // Assuming number has lowest priority here.
+        expect(genlex.definitions[0].name).toBe('char')
+        expect(genlex.definitions[2].name).toBe('date')
+        expect(genlex.definitions[1].name).toBe('number')
     })
 
     it('expect use() to create an easy tokenizer', () => {
@@ -86,7 +83,7 @@ describe('GenLex Tests', () => {
         let grammar = tkNumber.rep()
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString('34 23'))
-        expect(parsing.isAccepted()).toBe(true) // Nodeunit: test.ok(parsing.isAccepted());
+        expect(parsing.isAccepted()).toBe(true)
     })
 
     it('GenLex can tokenize keywords', () => {
@@ -96,7 +93,7 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const text = '+++++'
         const parsing = parser.parse(stream.ofString(text))
-        expect(parsing.isAccepted()).toBe(true) // Nodeunit: test.ok(parsing.isAccepted(), 'GenLex can tokenize keywords');
+        expect(parsing.isAccepted()).toBe(true)
     })
 
     it('tokenize mixes with keywords', () => {
@@ -110,7 +107,7 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const text = '++77++4+'
         const parsing = parser.parse(stream.ofString(text))
-        expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos(), 'tokenize mixes with keywords');
+        expect(parsing.isEos()).toBe(true)
     })
 
     it('getMathGenLex() gives a simple genlex', () => {
@@ -120,9 +117,7 @@ describe('GenLex Tests', () => {
         const text = '15 14'
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
-        // Original test: test.deepEqual(parsing.value.array(), ['15', '14'], ...);
-        // N.number() typically returns numbers, not strings. Tokens would wrap these numbers.
-        const tokenValues = parsing.value.array()
+        const tokenValues = parsing.value.array().map(tv => tv.value)
         expect(tokenValues).toEqual([15, 14])
     })
 
@@ -138,7 +133,7 @@ describe('GenLex Tests', () => {
         const text = '15-12-2018      12-02-2020   12 '
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
-        expect(parsing.isAccepted()).toBe(true) // Nodeunit: test.ok(parsing.isAccepted());
+        expect(parsing.isAccepted()).toBe(true)
     })
 
     it('getMathGenLex can be enhanced with a string', () => {
@@ -152,7 +147,7 @@ describe('GenLex Tests', () => {
         const text = '15 $ '
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
-        expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos());
+        expect(parsing.isEos()).toBe(true)
     })
 
     it('getMathGenLex can be enhanced with a string and no name', () => {
@@ -166,7 +161,7 @@ describe('GenLex Tests', () => {
             .then(F.eos())
         const text = '15 $ '
         const parsing = genlex.use(grammar).parse(stream.ofString(text))
-        expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos());
+        expect(parsing.isEos()).toBe(true)
     })
 
     it('genlex can change separators with a given string', () => {
@@ -177,9 +172,9 @@ describe('GenLex Tests', () => {
         const text = '15-12-35--'
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
-        expect(parsing.isAccepted()).toBe(true) // Nodeunit: test.ok(parsing.isAccepted());
-        const tokenValues = parsing.value.array()
-        expect(tokenValues).toEqual([15, 12, 35]) // Nodeunit: test.deepEqual(parsing.value.array(), [15, 12, 35]);
+        expect(parsing.isAccepted()).toBe(true)
+        const tokenValues = parsing.value.array().map(tv => tv.value)
+        expect(tokenValues).toEqual([15, 12, 35])
     })
 
     it('genlex separators must be a string', () => {
@@ -187,10 +182,9 @@ describe('GenLex Tests', () => {
         const number = genlex.get('number')
         let grammar = number.rep().then(F.eos())
         expect(() => genlex.setSeparators(1)).toThrow()
-        // Nodeunit: test.throws(split('[1:2:3,3]')(Stream.ofString('1:2:3,3')));
     })
 
-    // New tests for anyToken(genlex)
+    // anyToken(genlex)
     it('anyToken parses a stream of declared keywords', () => {
         const genlex = new GenLex()
         genlex.keywords(['A', 'B', 'C'])
@@ -200,7 +194,12 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString('A B C A'))
         expect(parsing.isAccepted()).toBe(true)
-        expect(parsing.value.array()).toEqual(['A', 'B', 'C', 'A'])
+        expect(parsing.value.array().map(tv => tv.value)).toEqual([
+            'A',
+            'B',
+            'C',
+            'A',
+        ])
     })
 
     it('anyToken fails when next token is not recognized', () => {
@@ -213,5 +212,42 @@ describe('GenLex Tests', () => {
         const parsing = parser.parse(stream.ofString('A X'))
         expect(parsing.isAccepted()).toBe(false)
         expect(parsing.getOffset()).toBe(1)
+    })
+
+    // New tests about keywords() kind of parser and TokenValue timing
+    it('keywords returns token-stream parsers (not char parsers)', () => {
+        const genlex = new GenLex()
+        const [a, b] = genlex.keywords(['A', 'B'])
+        // Using keyword parser directly on a char stream should fail
+        const direct = a.parse(stream.ofString('A'))
+        expect(direct.isAccepted()).toBe(false)
+        // Using within a token stream (via use) should work
+        const parser = genlex.use(a.thenEos())
+        const res = parser.parse(stream.ofString('A'))
+        expect(res.isAccepted()).toBe(true)
+        expect(res.value.at(0).value).toBe('A')
+    })
+
+    it('F.any after use yields TokenValue; keyword parser maps to raw value', () => {
+        const genlex1 = new GenLex()
+        genlex1.keywords(['A', 'B'])
+        // F.any() should see TokenValue instances and we can map to underlying values
+        const parserAny = genlex1.use(
+            F.any()
+                .map(tv => tv.value)
+                .rep()
+                .thenEos(),
+        )
+        const anyRes = parserAny.parse(stream.ofString('A B'))
+        expect(anyRes.isAccepted()).toBe(true)
+        expect(anyRes.value.array()).toEqual(['A', 'B'])
+
+        const genlex2 = new GenLex()
+        const [a] = genlex2.keywords(['A'])
+        const parserA = genlex2.use(a.thenEos())
+        const aRes = parserA.parse(stream.ofString('A'))
+        expect(aRes.isAccepted()).toBe(true)
+        // keyword parser maps TokenValue to raw token value (wrapped in a Tuple by thenEos)
+        expect(aRes.value.at(0).value).toBe('A')
     })
 })

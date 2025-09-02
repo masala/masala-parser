@@ -25,8 +25,8 @@ export class TokenValue {
     }
 
     accept(name) {
-        //console.log('###accepting', name, this.name === name, this.value)
-        return this.name === name ? option.some(this.value) : option.none()
+        // Return the TokenValue itself when the name matches
+        return this.name === name ? option.some(this) : option.none()
     }
 }
 
@@ -159,13 +159,6 @@ function expectToken(tokenize, name) {
 
                     return tokenize(value)
                         .map(tokenValue => {
-                            // TODO logger console.log('accept with ', name, index);
-                            /*console.log(
-                                '### accept:',
-                                tokenValue,
-                                index,
-                                input.location(index),
-                            )*/
                             return response.accept(
                                 tokenValue,
                                 input,
@@ -174,15 +167,10 @@ function expectToken(tokenize, name) {
                             )
                         })
                         .orLazyElse(() => {
-                            // TODO logger console.log('lazyElse failed with ', name, index);
-                            // console.log('reject:',index, input.source.offsets[index],input,'>>>', value,
-                            //  input.location(index));
                             return response.reject(input, index, false)
                         })
                 })
                 .lazyRecoverWith(() => {
-                    // TODO logger console.log('failed with ', name, index);
-                    //console.log('lazyRecover with offset:', input.location(index));
                     return response.reject(input, index, false)
                 })
         )
