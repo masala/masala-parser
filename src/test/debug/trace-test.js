@@ -13,13 +13,13 @@ const leftText = F.regex(/[a-zA-Z_][a-zA-Z0-9_]*/)
 const separator = C.char(':').trace('sep')
 
 const rightText = F.moveUntil(eol, true)
-    .map(s => s.split(',').flatMap(x => x.trim()))
+    .map((s) => s.split(',').flatMap((x) => x.trim()))
     .trace('rightText')
 const lineParser = leftText
     .then(separator.drop())
     .then(rightText)
     //.array()
-    .map(tuple => {
+    .map((tuple) => {
         const name = tuple.first()
         const values = tuple.last()
         return {
@@ -28,10 +28,7 @@ const lineParser = leftText
         }
     })
     .trace('lineParser')
-const endParser = C.string('---')
-    .drop()
-    .then(eol)
-    .trace('end')
+const endParser = C.string('---').drop().then(eol).trace('end')
 
 const fullParser = lineParser.rep().then(endParser)
 

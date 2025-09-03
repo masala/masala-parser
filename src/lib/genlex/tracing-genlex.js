@@ -32,7 +32,7 @@ export class TracingGenLex extends GenLex {
         this.definitions.push(definition)
 
         const tokenParser = expectTokenTraced(
-            tokenValue => tokenValue.accept(name),
+            (tokenValue) => tokenValue.accept(name),
             name,
             this.tracer,
         )
@@ -42,7 +42,8 @@ export class TracingGenLex extends GenLex {
     }
 
     updatePriority(tokenName, priority) {
-        this.definitions.find(def => def.name === tokenName).priority = priority
+        this.definitions.find((def) => def.name === tokenName).priority =
+            priority
     }
 
     buildTokenizer() {
@@ -120,7 +121,7 @@ export class TracingGenLex extends GenLex {
 
     getWrappedTokenParser(def) {
         // Build the original candidate that yields TokenValue
-        const base = def.parser.map(value => new TokenValue(def.name, value))
+        const base = def.parser.map((value) => new TokenValue(def.name, value))
 
         // Wrap to emit lex-try / accept / reject at char layer
         return F.parse((input, index = 0) => {
@@ -159,7 +160,7 @@ export class TracingGenLex extends GenLex {
 }
 
 function getTokenParser(def) {
-    return def.parser.map(value => new TokenValue(def.name, value))
+    return def.parser.map((value) => new TokenValue(def.name, value))
 }
 
 function expectTokenTraced(tokenize, expectedName, tracer) {
@@ -168,11 +169,11 @@ function expectTokenTraced(tokenize, expectedName, tracer) {
     return F.parse((input, index) => {
         return input
             .get(index)
-            .map(value => {
+            .map((value) => {
                 let streamTokenValue = value
 
                 return tokenize(value) // Option
-                    .map(tokenValue => {
+                    .map((tokenValue) => {
                         // CASE 'grammar-accept'
                         const type = 'grammar-accept'
                         const meta = tokenValue && tokenValue[META]

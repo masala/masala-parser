@@ -30,10 +30,7 @@ const priorToken = () => mult.or(div)
 const yieldToken = () => plus.or(minus)
 
 function terminal() {
-    return parenthesis()
-        .or(number)
-        .or(negative())
-        .or(F.lazy(expression))
+    return parenthesis().or(number).or(negative()).or(F.lazy(expression))
 }
 
 function negative() {
@@ -41,15 +38,11 @@ function negative() {
         .drop()
         .then(F.lazy(terminal))
         .single()
-        .map(x => -x)
+        .map((x) => -x)
 }
 
 function parenthesis() {
-    return open
-        .drop()
-        .then(F.lazy(expression))
-        .then(close.drop())
-        .single()
+    return open.drop().then(F.lazy(expression)).then(close.drop()).single()
 }
 
 function expression() {
@@ -59,7 +52,7 @@ function expression() {
 function optYieldExpr(left) {
     return yieldExpr(left)
         .opt()
-        .map(opt => (opt.isPresent() ? opt.get() : left))
+        .map((opt) => (opt.isPresent() ? opt.get() : left))
 }
 
 function yieldExpr(left) {
@@ -77,7 +70,7 @@ function priorExpr() {
 function optSubPriorExp(priorValue) {
     return subPriorExpr(priorValue)
         .opt()
-        .map(opt => (opt.isPresent() ? opt.get() : priorValue))
+        .map((opt) => (opt.isPresent() ? opt.get() : priorValue))
 }
 
 function subPriorExpr(priorValue) {
@@ -97,11 +90,11 @@ function multParser() {
 }
 
 export default {
-    setUp: function(done) {
+    setUp: function (done) {
         done()
     },
 
-    'expect multExpr to make mults': function(test) {
+    'expect multExpr to make mults': function (test) {
         let parsing = multParser().parse(stream.ofString('3 * 4'))
         test.equal(parsing.value, 12, 'simple multiplication')
 
@@ -119,13 +112,13 @@ export default {
 
         test.done()
     },
-    'expect multExpr to make negative priorities': function(test) {
+    'expect multExpr to make negative priorities': function (test) {
         let parsing = multParser().parse(stream.ofString('3 * -4'))
         test.equal(parsing.value, -12, 'negative multiplication')
 
         test.done()
     },
-    'expect Expr to be inside parenthesis': function(test) {
+    'expect Expr to be inside parenthesis': function (test) {
         let parsing = multParser().parse(stream.ofString('3 * (4)'))
         test.equal(parsing.value, 12, 'simple parenthesis expr')
 
@@ -137,14 +130,14 @@ export default {
 
         test.done()
     },
-    'expect + and * to respect priorities': function(test) {
+    'expect + and * to respect priorities': function (test) {
         let parsing = multParser().parse(stream.ofString('3 +2*4 '))
         test.equal(parsing.value, 11, 'simple multiplication')
 
         test.done()
     },
 
-    'expect - and / to respect priorities': function(test) {
+    'expect - and / to respect priorities': function (test) {
         let parsing = multParser().parse(stream.ofString('3 + -4/2*5 '))
         test.equal(parsing.value, -7, 'bad priorities')
 

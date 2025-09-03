@@ -28,9 +28,7 @@ describe('Stream Offset Tests', () => {
     it('response ok completing a StringStream', () => {
         const stream = Streams.ofString('The world is a vampire')
 
-        const parser = C.letter()
-            .or(C.char(' '))
-            .rep()
+        const parser = C.letter().or(C.char(' ')).rep()
         const response = parser.parse(stream)
 
         expect(response.isAccepted()).toBe(true)
@@ -61,10 +59,7 @@ describe('Stream Offset Tests', () => {
     it('response passes the StringStream', () => {
         const stream = Streams.ofString('abc de')
 
-        const parser = C.letter()
-            .or(C.char(' '))
-            .rep()
-            .then(C.string('!!!'))
+        const parser = C.letter().or(C.char(' ')).rep().then(C.string('!!!'))
         const response = parser.parse(stream)
 
         expect(response.isAccepted()).toBe(false)

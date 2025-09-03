@@ -22,11 +22,11 @@ import jsonparser from '../../../lib/standard/json/jsonparser'
 */
 
 export default {
-    setUp: function(done) {
+    setUp: function (done) {
         done()
     },
 
-    'number accepted': function(test) {
+    'number accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -36,7 +36,7 @@ export default {
         test.done()
     },
 
-    'string accepted': function(test) {
+    'string accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -46,7 +46,7 @@ export default {
         test.done()
     },
 
-    'string and unrecognized item rejected': function(test) {
+    'string and unrecognized item rejected': function (test) {
         test.expect(1)
         // tests here
         let content = '"123" -' //'"123" -'
@@ -58,7 +58,7 @@ export default {
         test.done()
     },
 
-    'string and unrecognized item rejected with correct offset': function(
+    'string and unrecognized item rejected with correct offset': function (
         test,
     ) {
         //FIXME #108
@@ -77,7 +77,7 @@ export default {
         test.done()
     },
 
-    'null accepted': function(test) {
+    'null accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -87,7 +87,7 @@ export default {
         test.done()
     },
 
-    'true accepted': function(test) {
+    'true accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -97,7 +97,7 @@ export default {
         test.done()
     },
 
-    'false accepted': function(test) {
+    'false accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -107,7 +107,7 @@ export default {
         test.done()
     },
 
-    'empty array accepted': function(test) {
+    'empty array accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -117,7 +117,7 @@ export default {
         test.done()
     },
 
-    'singleton array accepted': function(test) {
+    'singleton array accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -127,7 +127,7 @@ export default {
         test.done()
     },
 
-    'multi element array accepted': function(test) {
+    'multi element array accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -137,7 +137,7 @@ export default {
         test.done()
     },
 
-    'empty object accepted': function(test) {
+    'empty object accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -147,7 +147,7 @@ export default {
         test.done()
     },
 
-    'singleton object accepted': function(test) {
+    'singleton object accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -157,7 +157,7 @@ export default {
         test.done()
     },
 
-    'multi element object accepted': function(test) {
+    'multi element object accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(
@@ -169,7 +169,7 @@ export default {
         test.done()
     },
 
-    'multi level object accepted': function(test) {
+    'multi level object accepted': function (test) {
         test.expect(1)
         // tests here
         test.ok(

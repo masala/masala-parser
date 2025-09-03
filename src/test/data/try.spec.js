@@ -37,7 +37,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .success(1)
-                .map(i => i + 1)
+                .map((i) => i + 1)
                 .isSuccess(),
         ).toBe(true)
     })
@@ -59,7 +59,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .success(1)
-                .map(i => i + 1)
+                .map((i) => i + 1)
                 .success(),
         ).toBe(2)
     })
@@ -69,7 +69,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .failure(new Error('failure'))
-                .map(i => i + 1) // This map function won't be executed
+                .map((i) => i + 1) // This map function won't be executed
                 .isFailure(),
         ).toBe(true)
     })
@@ -80,7 +80,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .failure(failureValue)
-                .map(i => i + 1) // This map function won't be executed
+                .map((i) => i + 1) // This map function won't be executed
                 .failure(),
         ).toBe(failureValue)
     })
@@ -90,7 +90,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .success(1)
-                .flatMap(i => atry.success(i + 1))
+                .flatMap((i) => atry.success(i + 1))
                 .success(),
         ).toBe(2)
     })
@@ -101,7 +101,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .failure(failureValue)
-                .flatMap(i => atry.success(i + 1)) // This function won't be executed
+                .flatMap((i) => atry.success(i + 1)) // This function won't be executed
                 .failure(),
         ).toBe(failureValue)
     })
@@ -146,7 +146,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .success(1)
-                .filter(v => v === 1)
+                .filter((v) => v === 1)
                 .isSuccess(),
         ).toBe(true)
     })
@@ -156,7 +156,7 @@ describe('Try Data Type Tests', () => {
         expect(
             atry
                 .success(1)
-                .filter(v => v === 2)
+                .filter((v) => v === 2)
                 .isFailure(),
         ).toBe(true)
     })
@@ -164,7 +164,7 @@ describe('Try Data Type Tests', () => {
     // Original test: 'atry failure filter'
     it('atry failure filter', () => {
         const failureValue = new Error('original failure')
-        const result = atry.failure(failureValue).filter(v => v === 1) // Filter function won't be executed
+        const result = atry.failure(failureValue).filter((v) => v === 1) // Filter function won't be executed
         expect(result.isFailure()).toBe(true)
         expect(result.failure()).toBe(failureValue)
     })

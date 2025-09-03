@@ -29,10 +29,10 @@ class ParserResponse {
     // Response 'a 'c => unit -> bool
     isAccepted() {
         return this.fold(
-            function() {
+            function () {
                 return true
             },
-            function() {
+            function () {
                 return false
             },
         )
@@ -41,8 +41,8 @@ class ParserResponse {
     // Response 'a 'c => unit -> bool
     toTry() {
         return this.fold(
-            accept => atry.success(accept.value),
-            reject =>
+            (accept) => atry.success(accept.value),
+            (reject) =>
                 atry.failure(new Error('parser error at ' + reject.offset)),
         )
     }

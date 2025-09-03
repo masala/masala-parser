@@ -10,7 +10,7 @@ function createParser() {
     genlex.keywords(['+', '-', '<', '>', '[', ']', ',', '.'])
     // The grammar will collect all recognized tokens
     const grammar = F.any()
-        .map(token => token.value)
+        .map((token) => token.value)
         .rep()
     return genlex.use(grammar)
 }
@@ -27,7 +27,7 @@ describe('GenLex Brainfuck Tokenizer Tests', () => {
         // The original test's response.offset was the count of actual Brainfuck command characters.
         const actualBfChars = hW
             .split('')
-            .filter(char => '+-<>[],.'.includes(char)).length
+            .filter((char) => '+-<>[],.'.includes(char)).length
         expect(response.value.size()).toBe(actualBfChars)
         // The GenLex offset would be the number of tokens found.
         expect(response.offset).toBe(actualBfChars)
@@ -74,7 +74,7 @@ Pointer :   ^
         // The original test asserted offset 106. This is the count of actual Brainfuck command characters.
         const bfCommandCharsInString = hW
             .split('')
-            .filter(char => '+-<>[],.'.includes(char)).length
+            .filter((char) => '+-<>[],.'.includes(char)).length
         // response.offset should be the number of tokens (bfCommandCharsInString)
         expect(response.offset).toBe(bfCommandCharsInString)
         expect(response.value.size()).toBe(bfCommandCharsInString)

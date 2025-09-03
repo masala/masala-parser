@@ -15,21 +15,11 @@ describe('Stream Tests', () => {
     })
 
     it('get from stream', () => {
-        expect(
-            stream
-                .ofString('1')
-                .get(0)
-                .isSuccess(),
-        ).toBe(true)
+        expect(stream.ofString('1').get(0).isSuccess()).toBe(true)
     })
 
     it('do not get from empty stream', () => {
-        expect(
-            stream
-                .ofString('1')
-                .get(1)
-                .isSuccess(),
-        ).toBe(false)
+        expect(stream.ofString('1').get(1).isSuccess()).toBe(false)
     })
 
     it('do not get from erroneous stream', () => {
@@ -37,7 +27,7 @@ describe('Stream Tests', () => {
             stream
                 .ofString({
                     length: 1,
-                    charAt: function() {
+                    charAt: function () {
                         throw new Error()
                     },
                 })

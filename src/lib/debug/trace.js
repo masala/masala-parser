@@ -157,7 +157,7 @@ export function createTracer({
             )
             wrapOne(parser, meta.name, per)
         }
-        return rootParser => rootParser // pass-through to keep pipeline style
+        return (rootParser) => rootParser // pass-through to keep pipeline style
     }
 
     return {
@@ -172,7 +172,7 @@ export function createTracer({
          */
         trace(targetParser, name, opts) {
             wrapOne(targetParser, name, opts)
-            return rootParser => rootParser
+            return (rootParser) => rootParser
         },
 
         traceAll,

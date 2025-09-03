@@ -4,11 +4,9 @@ import { F, C, N } from '../../lib/parsec/index'
 
 describe('Parser Extensions Tests', () => {
     it('expect (returns) to be accepted', () => {
-        expect(
-            F.returns()
-                .parse(stream.ofString(''), 0)
-                .isAccepted(),
-        ).toBe(true)
+        expect(F.returns().parse(stream.ofString(''), 0).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('expect (returns) to return a given value', () => {
@@ -16,16 +14,12 @@ describe('Parser Extensions Tests', () => {
     })
 
     it('expect (returns) to be rejected', () => {
-        expect(
-            F.error()
-                .parse(stream.ofString(''), 0)
-                .isAccepted(),
-        ).toBe(false)
+        expect(F.error().parse(stream.ofString(''), 0).isAccepted()).toBe(false)
     })
 
     it('expect (lazy) to be accepted', () => {
         expect(
-            F.lazy(function() {
+            F.lazy(function () {
                 return F.returns()
             })
                 .parse(stream.ofString(''), 0)
@@ -35,7 +29,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (lazy) to return a given value', () => {
         expect(
-            F.lazy(function() {
+            F.lazy(function () {
                 return F.returns(123)
             }).parse(stream.ofString(''), 0).value,
         ).toBe(123)
@@ -43,7 +37,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (lazy with empty params) to return a given value', () => {
         expect(
-            F.lazy(function() {
+            F.lazy(function () {
                 return F.returns(123)
             }, []).parse(stream.ofString(''), 0).value,
         ).toBe(123)
@@ -51,7 +45,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (lazy) to be rejected', () => {
         expect(
-            F.lazy(function() {
+            F.lazy(function () {
                 return F.error()
             })
                 .parse(stream.ofString(''), 0)
@@ -62,7 +56,7 @@ describe('Parser Extensions Tests', () => {
     it('expect (lazy) with a parameter to return a given value', () => {
         expect(
             F.lazy(
-                function(v) {
+                function (v) {
                     return F.returns(v)
                 },
                 [123],
@@ -73,7 +67,7 @@ describe('Parser Extensions Tests', () => {
     it('expect (lazy) with multiple parameters to return a given value', () => {
         expect(
             F.lazy(
-                function(v1, v2) {
+                function (v1, v2) {
                     return F.returns(v1 + v2)
                 },
                 [10, 20],
@@ -95,32 +89,20 @@ describe('Parser Extensions Tests', () => {
     })
 
     it('expect (error) to be rejected', () => {
-        expect(
-            F.error()
-                .parse(stream.ofString(''), 0)
-                .isAccepted(),
-        ).toBe(false)
+        expect(F.error().parse(stream.ofString(''), 0).isAccepted()).toBe(false)
     })
 
     it('expect (eos) to be accepted', () => {
-        expect(
-            F.eos()
-                .parse(stream.ofString(''), 0)
-                .isAccepted(),
-        ).toBe(true)
+        expect(F.eos().parse(stream.ofString(''), 0).isAccepted()).toBe(true)
     })
 
     it('expect (eos) to be rejected', () => {
-        expect(
-            F.eos()
-                .parse(stream.ofString('a'), 0)
-                .isAccepted(),
-        ).toBe(false)
+        expect(F.eos().parse(stream.ofString('a'), 0).isAccepted()).toBe(false)
     })
 
     it('expect (satisfy) to be accepted', () => {
         expect(
-            F.satisfy(function(v) {
+            F.satisfy(function (v) {
                 return v === 'a'
             })
                 .parse(stream.ofString('a'), 0)
@@ -130,7 +112,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (satisfy) to be return the right value', () => {
         expect(
-            F.satisfy(function(v) {
+            F.satisfy(function (v) {
                 return v === 'a'
             }).parse(stream.ofString('a'), 0).value,
         ).toBe('a')
@@ -138,7 +120,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (satisfy) to be return the right offset', () => {
         expect(
-            F.satisfy(function(v) {
+            F.satisfy(function (v) {
                 return v === 'a'
             }).parse(stream.ofString('a'), 0).offset,
         ).toBe(1)
@@ -146,7 +128,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (satisfy) to be rejected', () => {
         expect(
-            F.satisfy(function(v) {
+            F.satisfy(function (v) {
                 return v === 'b'
             })
                 .parse(stream.ofString('a'), 0)
@@ -157,7 +139,7 @@ describe('Parser Extensions Tests', () => {
     it('expect (doTry satisfy) to be accepted', () => {
         expect(
             F.try(
-                F.satisfy(function(v) {
+                F.satisfy(function (v) {
                     return v === 'a'
                 }),
             )
@@ -169,7 +151,7 @@ describe('Parser Extensions Tests', () => {
     it('expect (doTry satisfy) to be rejected', () => {
         expect(
             F.try(
-                F.satisfy(function(v) {
+                F.satisfy(function (v) {
                     return v === 'b'
                 }),
             )
@@ -179,27 +161,19 @@ describe('Parser Extensions Tests', () => {
     })
 
     it('expect (digit) to be accepted', () => {
-        expect(
-            N.digit()
-                .parse(stream.ofString('1'), 0)
-                .isAccepted(),
-        ).toBe(true)
+        expect(N.digit().parse(stream.ofString('1'), 0).isAccepted()).toBe(true)
     })
 
     it('expect (digit) to be rejected', () => {
-        expect(
-            N.digit()
-                .parse(stream.ofString('a'), 0)
-                .isAccepted(),
-        ).toBe(false)
+        expect(N.digit().parse(stream.ofString('a'), 0).isAccepted()).toBe(
+            false,
+        )
     })
 
     it('expect (number) to be accepted', () => {
-        expect(
-            N.number()
-                .parse(stream.ofString('123'), 0)
-                .isAccepted(),
-        ).toBe(true)
+        expect(N.number().parse(stream.ofString('123'), 0).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('expect (number) to return 123', () => {
@@ -207,11 +181,9 @@ describe('Parser Extensions Tests', () => {
     })
 
     it('expect negative (number) to be accepted', () => {
-        expect(
-            N.number()
-                .parse(stream.ofString('-123'), 0)
-                .isAccepted(),
-        ).toBe(true)
+        expect(N.number().parse(stream.ofString('-123'), 0).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('expect negative (number) to return -123', () => {
@@ -220,9 +192,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect float (number) to be accepted', () => {
         expect(
-            N.number()
-                .parse(stream.ofString('123.34e-34'), 0)
-                .isAccepted(),
+            N.number().parse(stream.ofString('123.34e-34'), 0).isAccepted(),
         ).toBe(true)
     })
 
@@ -234,9 +204,7 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (charLiteral) to be accepted', () => {
         expect(
-            C.charLiteral()
-                .parse(stream.ofString("'a'"), 0)
-                .isAccepted(),
+            C.charLiteral().parse(stream.ofString("'a'"), 0).isAccepted(),
         ).toBe(true)
     })
 
@@ -246,25 +214,19 @@ describe('Parser Extensions Tests', () => {
 
     it('expect (charLiteral) quote to be accepted', () => {
         expect(
-            C.charLiteral()
-                .parse(stream.ofString("'\\''"), 0)
-                .isAccepted(),
+            C.charLiteral().parse(stream.ofString("'\\''"), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (charLiteral) to be rejected', () => {
         expect(
-            C.charLiteral()
-                .parse(stream.ofString("''"), 0)
-                .isAccepted(),
+            C.charLiteral().parse(stream.ofString("''"), 0).isAccepted(),
         ).toBe(false)
     })
 
     it('expect (stringLiteral) to be accepted', () => {
         expect(
-            C.stringLiteral()
-                .parse(stream.ofString('"a"'), 0)
-                .isAccepted(),
+            C.stringLiteral().parse(stream.ofString('"a"'), 0).isAccepted(),
         ).toBe(true)
     })
 })

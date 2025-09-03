@@ -51,7 +51,7 @@ export class GenLex {
         this.definitions.push(definition)
 
         const tokenParser = expectToken(
-            tokenValue => tokenValue.accept(name),
+            (tokenValue) => tokenValue.accept(name),
             name,
         )
         this.tokensMap[name] = tokenParser
@@ -67,8 +67,10 @@ export class GenLex {
 
     setSeparators(spacesCharacters) {
         if (typeof spacesCharacters !== 'string') {
-            throw "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
+            throw (
+                "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
                 ' use  setSeparatorsParser to declare a parser'
+            )
         }
         this.spaces = C.charIn(spacesCharacters).map(() => unit)
     }
@@ -112,7 +114,7 @@ export class GenLex {
 
     remove(tokenName) {
         // find definitions
-        this.definitions = this.definitions.filter(d => d.name !== tokenName)
+        this.definitions = this.definitions.filter((d) => d.name !== tokenName)
         delete this.tokensMap[tokenName]
     }
 
@@ -127,7 +129,7 @@ export class GenLex {
 }
 
 function getTokenParser(def) {
-    return def.parser.map(value => new TokenValue(def.name, value))
+    return def.parser.map((value) => new TokenValue(def.name, value))
 }
 
 // name is for easier debugging
@@ -142,7 +144,7 @@ function expectToken(tokenize, name) {
             input
                 .get(index)
                 // FIXME= value is the token, token is the value
-                .map(value => {
+                .map((value) => {
                     //TODO: keep for logger
                     let token = value
 
@@ -158,7 +160,7 @@ function expectToken(tokenize, name) {
                     }
 
                     return tokenize(value)
-                        .map(tokenValue => {
+                        .map((tokenValue) => {
                             return response.accept(
                                 tokenValue,
                                 input,

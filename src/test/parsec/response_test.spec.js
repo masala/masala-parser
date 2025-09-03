@@ -8,19 +8,14 @@ describe('Response Tests', () => {
     })
 
     it('response as a success', () => {
-        expect(
-            response
-                .accept()
-                .toTry()
-                .isSuccess(),
-        ).toBe(true)
+        expect(response.accept().toTry().isSuccess()).toBe(true)
     })
 
     it('response accepted map to accepted', () => {
         expect(
             response
                 .accept()
-                .map(function(a) {
+                .map(function (a) {
                     return a
                 })
                 .isAccepted(),
@@ -29,7 +24,7 @@ describe('Response Tests', () => {
 
     it('response accepted map to return the value', () => {
         expect(
-            response.accept('a').map(function(a) {
+            response.accept('a').map(function (a) {
                 return a
             }).value,
         ).toBe('a')
@@ -37,7 +32,7 @@ describe('Response Tests', () => {
 
     it('response accepted map to pass in response as second argument', () => {
         expect(
-            response.accept('a').map(function(_, response) {
+            response.accept('a').map(function (_, response) {
                 return response
             }).value,
         ).toEqual(response.accept('a'))
@@ -47,7 +42,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .accept('a')
-                .flatMap(function(a) {
+                .flatMap(function (a) {
                     return response.accept(a)
                 })
                 .isAccepted(),
@@ -57,7 +52,7 @@ describe('Response Tests', () => {
     it('response accepted flatMap knows the offset', () => {
         const responseOffset = response
             .accept('a', 'abc', 1, false)
-            .flatMap(function(a, response) {
+            .flatMap(function (a, response) {
                 return response.offset
             })
 
@@ -68,7 +63,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .accept('a')
-                .flatMap(function(a) {
+                .flatMap(function (a) {
                     return response.accept(a)
                 })
                 .isAccepted(),
@@ -79,7 +74,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .accept()
-                .flatMap(function() {
+                .flatMap(function () {
                     return response.reject()
                 })
                 .isAccepted(),
@@ -90,7 +85,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .reject()
-                .map(function(t) {
+                .map(function (t) {
                     return t
                 })
                 .isAccepted(),
@@ -99,7 +94,7 @@ describe('Response Tests', () => {
 
     it('response rejected map callback not called', () => {
         let calls = 0
-        response.reject().map(function() {
+        response.reject().map(function () {
             calls++
         })
         expect(calls).toBe(0)
@@ -109,7 +104,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .reject()
-                .flatMap(function() {
+                .flatMap(function () {
                     return response.accept()
                 })
                 .isAccepted(),
@@ -118,7 +113,7 @@ describe('Response Tests', () => {
 
     it('response rejected flatMap callback not called', () => {
         let calls = 0
-        response.reject().flatMap(function() {
+        response.reject().flatMap(function () {
             calls++
         })
         expect(calls).toBe(0)
@@ -126,7 +121,7 @@ describe('Response Tests', () => {
 
     it('response accepted fold', () => {
         expect(
-            response.accept('a').fold(function(a) {
+            response.accept('a').fold(function (a) {
                 return a.value
             }),
         ).toBe('a')
@@ -134,16 +129,16 @@ describe('Response Tests', () => {
 
     it('fold takes a function to map the value depending on result', () => {
         let value = response.accept('a').fold(
-            accept => accept.value + '-potato', // Accept has value, input, offset, consumed
-            reject => reject.offset + '-tomato',
+            (accept) => accept.value + '-potato', // Accept has value, input, offset, consumed
+            (reject) => reject.offset + '-tomato',
         ) // Reject has offset, consumed
 
         // we accept, so it should be a-potato
         expect(value).toBe('a-potato')
 
         value = response.reject().fold(
-            accept => accept.value + '-potato',
-            reject => reject.offset + '-tomato',
+            (accept) => accept.value + '-potato',
+            (reject) => reject.offset + '-tomato',
         )
 
         // we reject, so it should use the second function
@@ -155,7 +150,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .accept('a')
-                .filter(function(a) {
+                .filter(function (a) {
                     return a === 'a'
                 })
                 .isAccepted(),
@@ -166,7 +161,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .accept('a')
-                .filter(function(a) {
+                .filter(function (a) {
                     return a !== 'a'
                 })
                 .isAccepted(),
@@ -194,21 +189,16 @@ describe('Response Tests', () => {
     })
 
     it('response as a failure', () => {
-        expect(
-            response
-                .reject()
-                .toTry()
-                .isSuccess(),
-        ).toBe(false)
+        expect(response.reject().toTry().isSuccess()).toBe(false)
     })
 
     it('response rejected fold', () => {
         expect(
             response.reject().fold(
-                function(a) {
+                function (a) {
                     return a.value
                 },
-                function() {
+                function () {
                     return 'b'
                 },
             ),
@@ -219,7 +209,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .reject()
-                .filter(function() {
+                .filter(function () {
                     return true
                 })
                 .isAccepted(),
@@ -230,7 +220,7 @@ describe('Response Tests', () => {
         expect(
             response
                 .reject()
-                .filter(function() {
+                .filter(function () {
                     return false
                 })
                 .isAccepted(),

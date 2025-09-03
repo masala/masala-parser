@@ -15,30 +15,21 @@ describe('Buffered Stream Tests', () => {
     })
 
     it('get from stream', () => {
-        expect(
-            stream
-                .buffered(stream.ofString('1'))
-                .get(0)
-                .isSuccess(),
-        ).toBe(true)
+        expect(stream.buffered(stream.ofString('1')).get(0).isSuccess()).toBe(
+            true,
+        )
     })
 
     it('do not get from empty stream', () => {
-        expect(
-            stream
-                .buffered(stream.ofString('1'))
-                .get(1)
-                .isSuccess(),
-        ).toBe(false)
+        expect(stream.buffered(stream.ofString('1')).get(1).isSuccess()).toBe(
+            false,
+        )
     })
 
     it('get from stream number 1', () => {
-        expect(
-            stream
-                .buffered(stream.ofString('123'))
-                .get(0)
-                .success(),
-        ).toBe('1')
+        expect(stream.buffered(stream.ofString('123')).get(0).success()).toBe(
+            '1',
+        )
     })
 
     it('get from stream number is cached', () => {

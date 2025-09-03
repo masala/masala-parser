@@ -26,13 +26,10 @@ describe('F Layer Tests', () => {
             .then(C.char('a'))
             .thenEos()
             .array()
-            .map(r => r.length)
+            .map((r) => r.length)
         const second = C.string('aa').thenEos()
         const successInput = 'aa'
-        const layer = F.layer(first)
-            .and(second)
-            .and(second)
-            .array()
+        const layer = F.layer(first).and(second).and(second).array()
         let response = layer.parse(Streams.ofString(successInput))
 
         expect(response.isAccepted()).toBe(true)
@@ -45,18 +42,15 @@ describe('F Layer Tests', () => {
             .then(C.char('a'))
             .thenEos()
             .array()
-            .map(r => r.length)
+            .map((r) => r.length)
         const second = C.char('a')
             .then(C.char('a'))
             .thenEos()
             .array()
-            .map(r => r.join('-'))
+            .map((r) => r.join('-'))
         const third = C.string('aa').thenEos()
         const input = 'aa'
-        const layer = F.layer(first)
-            .and(second)
-            .and(third)
-            .array()
+        const layer = F.layer(first).and(second).and(third).array()
         let response = layer.parse(Streams.ofString(input))
 
         expect(response.isAccepted()).toBe(true)
@@ -69,12 +63,10 @@ describe('F Layer Tests', () => {
             .then(C.char('a'))
             .array()
             .thenEos()
-            .map(r => r.length)
+            .map((r) => r.length)
         const second = C.string('aaFAIL').thenEos()
         const successInput = 'aa'
-        const layer = F.layer(first)
-            .and(second)
-            .array()
+        const layer = F.layer(first).and(second).array()
         let response = layer.parse(Streams.ofString(successInput))
 
         expect(response.isAccepted()).toBe(false)
@@ -86,7 +78,7 @@ describe('F Layer Tests', () => {
         const first = C.char('a')
             .then(C.char('a'))
             .thenEos()
-            .map(r => r.length)
+            .map((r) => r.length)
         const second = C.string('aaSUCCESS').thenEos()
         const successInput = 'aaSUCCESS'
         const layer = F.layer(first).and(second)
@@ -101,11 +93,11 @@ describe('F Layer Tests', () => {
         const first = C.char('a')
             .then(C.char('a'))
             .thenEos()
-            .map(r => r.length)
+            .map((r) => r.length)
         let found = false
         const second = C.string('aaSUCCESS')
             .thenEos()
-            .map(x => {
+            .map((x) => {
                 found = true
                 return x
             })

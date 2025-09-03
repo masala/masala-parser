@@ -11,10 +11,10 @@ function dateParser() {
         .then(N.digits())
         .then(C.charIn(['-', '/']).returns('-'))
         .then(N.digits())
-        .map(dateValues =>
+        .map((dateValues) =>
             dateValues[4] > 2000 ? dateValues.reverse() : dateValues,
         )
-        .map(dateArray => dateArray.join(''))
+        .map((dateArray) => dateArray.join(''))
 }
 
 describe('GenLex Tests', () => {
@@ -22,10 +22,7 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const plus = genlex.tokenize('+')
         const minus = genlex.tokenize('-')
-        let grammar = plus
-            .or(minus)
-            .rep()
-            .thenEos()
+        let grammar = plus.or(minus).rep().thenEos()
         const parser = genlex.use(grammar)
         const text = '+ + - --'
         const parsing = parser.parse(stream.ofString(text))
@@ -39,10 +36,7 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const plus = genlex.tokenize('+')
         const minus = genlex.tokenize('-')
-        let grammar = plus
-            .or(minus)
-            .rep()
-            .thenEos()
+        let grammar = plus.or(minus).rep().thenEos()
         const parser = genlex.use(grammar)
         const text = '+  +  +* --'
         const parsing = parser.parse(stream.ofString(text))
@@ -100,10 +94,7 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const number = genlex.tokenize(N.number(), 'number')
         const plus = genlex.tokenize('+')
-        let grammar = plus
-            .or(number)
-            .rep()
-            .then(F.eos().drop())
+        let grammar = plus.or(number).rep().then(F.eos().drop())
         const parser = genlex.use(grammar)
         const text = '++77++4+'
         const parsing = parser.parse(stream.ofString(text))
@@ -117,7 +108,7 @@ describe('GenLex Tests', () => {
         const text = '15 14'
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
-        const tokenValues = parsing.value.array().map(tv => tv.value)
+        const tokenValues = parsing.value.array().map((tv) => tv.value)
         expect(tokenValues).toEqual([15, 14])
     })
 
@@ -126,10 +117,7 @@ describe('GenLex Tests', () => {
         genlex.remove('-')
         const number = genlex.get('number')
         const tkDate = genlex.tokenize(dateParser(), 'date', 800)
-        let grammar = tkDate
-            .rep()
-            .then(number)
-            .then(F.eos())
+        let grammar = tkDate.rep().then(number).then(F.eos())
         const text = '15-12-2018      12-02-2020   12 '
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
@@ -140,10 +128,7 @@ describe('GenLex Tests', () => {
         const genlex = getMathGenLex()
         const number = genlex.get('number')
         const dol = genlex.tokenize('$', 'dol')
-        let grammar = number
-            .then(dol)
-            .rep()
-            .then(F.eos())
+        let grammar = number.then(dol).rep().then(F.eos())
         const text = '15 $ '
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
@@ -155,10 +140,7 @@ describe('GenLex Tests', () => {
         const number = genlex.get('number')
         genlex.tokenize('$')
         const dol = genlex.get('$')
-        let grammar = number
-            .then(dol)
-            .rep()
-            .then(F.eos())
+        let grammar = number.then(dol).rep().then(F.eos())
         const text = '15 $ '
         const parsing = genlex.use(grammar).parse(stream.ofString(text))
         expect(parsing.isEos()).toBe(true)
@@ -173,7 +155,7 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
         expect(parsing.isAccepted()).toBe(true)
-        const tokenValues = parsing.value.array().map(tv => tv.value)
+        const tokenValues = parsing.value.array().map((tv) => tv.value)
         expect(tokenValues).toEqual([15, 12, 35])
     })
 
@@ -188,13 +170,11 @@ describe('GenLex Tests', () => {
     it('anyToken parses a stream of declared keywords', () => {
         const genlex = new GenLex()
         genlex.keywords(['A', 'B', 'C'])
-        const grammar = anyToken(genlex)
-            .rep()
-            .thenEos()
+        const grammar = anyToken(genlex).rep().thenEos()
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString('A B C A'))
         expect(parsing.isAccepted()).toBe(true)
-        expect(parsing.value.array().map(tv => tv.value)).toEqual([
+        expect(parsing.value.array().map((tv) => tv.value)).toEqual([
             'A',
             'B',
             'C',
@@ -205,9 +185,7 @@ describe('GenLex Tests', () => {
     it('anyToken fails when next token is not recognized', () => {
         const genlex = new GenLex()
         genlex.keywords(['A', 'B'])
-        const grammar = anyToken(genlex)
-            .rep()
-            .thenEos()
+        const grammar = anyToken(genlex).rep().thenEos()
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString('A X'))
         expect(parsing.isAccepted()).toBe(false)
@@ -234,7 +212,7 @@ describe('GenLex Tests', () => {
         // F.any() should see TokenValue instances and we can map to underlying values
         const parserAny = genlex1.use(
             F.any()
-                .map(tv => tv.value)
+                .map((tv) => tv.value)
                 .rep()
                 .thenEos(),
         )
