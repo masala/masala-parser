@@ -234,6 +234,7 @@ describe('GenLex Tests', () => {
 
     it('Genlex F.any yields wrapped values', () => {
         const genlex1 = new GenLex()
+        genlex1.keywords(['A', 'B'])
         // F.any() over the token stream should see TokenResult instances currently
         const anyParser = genlex1.use(F.any().rep().thenEos())
         const anyResponse = anyParser.parse(stream.ofString('A B'))
