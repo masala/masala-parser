@@ -7,13 +7,10 @@ import { GenLex, TokenDefinition, Token } from './genlex.js'
 const META = Symbol('token.meta')
 
 export class TracingGenLex extends GenLex {
-    constructor(tracer = null) {
-        if (tracer === undefined) {
-            throw 'TracingGenLex needs a tracer (EventTracer) to be useful'
-        }
+    constructor(tracer = new EventTracer()) {
         super()
         this._ordinal = 0 // token index in token stream
-        this.tracer = tracer || new EventTracer()
+        this.tracer = tracer
     }
 
     tokenize(parser, name, priority = 1000) {
@@ -42,10 +39,6 @@ export class TracingGenLex extends GenLex {
         return F.parse((input, index = 0) => {
             // consume leading spaces
             const responseLeft = leftSpaces.parse(input, index)
-            if (!responseLeft.isAccepted()) {
-                // as spaces are optional, this should not happen
-                return response.reject(input, index, false)
-            }
 
             const startChar = responseLeft.offset
 
@@ -68,7 +61,7 @@ export class TracingGenLex extends GenLex {
 
             // trailing spaces
             const resR = rightSpaces.parse(input, endChar)
-            const finalOffset = resR.isAccepted() ? resR.offset : endChar
+            const finalOffset = resR.offset
 
             // Attach metadata to the token value
             const tokenIndex = this._ordinal++
@@ -160,31 +153,31 @@ function expectTokenTraced(expectedName, tracer) {
                 if (accepted) {
                     // CASE 'grammar-accept'
                     const type = 'grammar-accept'
-                    const meta = token && token[META]
+                    const meta = token[META]
 
                     tracer.emit({
                         type,
                         name: expectedName,
-                        tokenIndex: meta?.tokenIndex,
-                        startChar: meta?.startChar,
-                        endChar: meta?.endChar,
+                        tokenIndex: meta.tokenIndex,
+                        startChar: meta.startChar,
+                        endChar: meta.endChar,
                         value: token.value,
                     })
-                    tracer.setLastTokenMeta(meta || null)
+                    tracer.setLastTokenMeta(meta)
                     return response.accept(token, input, index + 1, true)
                 } else {
                     // CASE 'grammar-reject'
                     const type = 'grammar-reject'
-                    const meta = streamTokenValue && streamTokenValue[META]
-                    const foundName = streamTokenValue?.name
+                    const meta = streamTokenValue[META]
+                    const foundName = streamTokenValue.name
 
                     tracer.emit({
                         type,
                         expected: expectedName,
-                        found: foundName ?? null,
-                        tokenIndex: meta?.tokenIndex,
-                        startChar: meta?.startChar,
-                        endChar: meta?.endChar,
+                        found: foundName,
+                        tokenIndex: meta.tokenIndex,
+                        startChar: meta.startChar,
+                        endChar: meta.endChar,
                     })
                     return response.reject(input, index, false)
                 }

@@ -16,7 +16,7 @@ function createClassicMinimalParser() {
     return genlex.use(grammar)
 }
 
-function createTracedMinimalParser(tracer = null) {
+function createTracedMinimalParser(tracer) {
     const genlex = new TracingGenLex(tracer)
     genlex.keywords(['A', 'B', 'C'])
     // The grammar will collect all recognized tokens
@@ -27,7 +27,7 @@ function createTracedMinimalParser(tracer = null) {
     return { parser: genlex.use(grammar), tracer: genlex.tracer }
 }
 
-function createTracedSimpleParser(tracer = null) {
+function createTracedSimpleParser(tracer) {
     const genlex = new TracingGenLex(tracer)
     const [a, b] = genlex.keywords(['A', 'B', 'C'])
     const grammar = a.then(b).then(F.any().rep()).thenEos()
