@@ -62,7 +62,9 @@ export function createTracer({
             const t = input.get
                 ? input.get(i)
                 : atry.failure(new Error('no get'))
-            if (!t || !t.isSuccess()) break
+            if (!t || !t.isSuccess()) {
+                break
+            }
             chars.push(t.success())
             if (chars.length >= snippetMax) {
                 chars.push('…')
@@ -84,7 +86,9 @@ export function createTracer({
         if (!targetParser || typeof targetParser.parse !== 'function') {
             throw new Error(`trace(${name}): target is not a Parser instance`)
         }
-        if (originals.has(targetParser)) return // already wrapped
+        if (originals.has(targetParser)) {
+            return
+        } // already wrapped
 
         const originalParse = targetParser.parse
         originals.set(targetParser, originalParse)
@@ -131,14 +135,18 @@ export function createTracer({
                 record(entry)
             }
 
-            if (shouldEnterLog) depth--
+            if (shouldEnterLog) {
+                depth--
+            }
             return res
         }
     }
 
     function resolvePerParserOpts(name, metaOpts, options) {
         let base = { ...metaOpts }
-        if (!options) return base
+        if (!options) {
+            return base
+        }
         if (options.byName && options.byName[name]) {
             return { ...base, ...options, ...options.byName[name] }
         }
@@ -149,7 +157,9 @@ export function createTracer({
     function traceAll(options) {
         for (const parser of TRACE_REGISTRY) {
             const meta = TRACE_META.get(parser)
-            if (!meta) continue
+            if (!meta) {
+                continue
+            }
             const per = resolvePerParserOpts(
                 meta.name,
                 meta.opts || {},

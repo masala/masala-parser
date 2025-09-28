@@ -113,7 +113,7 @@ describe('GenLex Tests', () => {
         const text = '15 14'
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
-        const tokenValues = parsing.value.array().map(tv => tv.value)
+        const tokenValues = parsing.value.array().map((tv) => tv.value)
         expect(tokenValues).toEqual([15, 14])
     })
 
@@ -160,14 +160,12 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString(text))
         expect(parsing.isAccepted()).toBe(true)
-        const tokenValues = parsing.value.array().map(tv => tv.value)
+        const tokenValues = parsing.value.array().map((tv) => tv.value)
         expect(tokenValues).toEqual([15, 12, 35])
     })
 
     it('genlex separators must be a string', () => {
         const genlex = getMathGenLex()
-        const number = genlex.get('number')
-        let grammar = number.rep().then(F.eos())
         expect(() => genlex.setSeparators(1)).toThrow()
     })
 
@@ -179,7 +177,7 @@ describe('GenLex Tests', () => {
         const parser = genlex.use(grammar)
         const parsing = parser.parse(stream.ofString('A B C A'))
         expect(parsing.isAccepted()).toBe(true)
-        expect(parsing.value.array().map(tv => tv.value)).toEqual([
+        expect(parsing.value.array().map((tv) => tv.value)).toEqual([
             'A',
             'B',
             'C',
@@ -200,7 +198,7 @@ describe('GenLex Tests', () => {
     // New tests about keywords() kind of parser and TokenValue timing
     it('keywords returns token-stream parsers (not char parsers)', () => {
         const genlex = new GenLex()
-        const [a, b] = genlex.keywords(['A', 'B'])
+        const [a] = genlex.keywords(['A', 'B'])
         // Using keyword parser directly on a char stream should fail
         const direct = a.parse(stream.ofString('A'))
         expect(direct.isAccepted()).toBe(false)
@@ -217,7 +215,7 @@ describe('GenLex Tests', () => {
         // F.any() should see TokenValue instances and we can map to underlying values
         const parserAny = genlex1.use(
             F.any()
-                .map(tv => tv.value)
+                .map((tv) => tv.value)
                 .rep()
                 .thenEos(),
         )
@@ -236,10 +234,9 @@ describe('GenLex Tests', () => {
 
     it('Genlex F.any yields wrapped values', () => {
         const genlex1 = new GenLex()
-        const [a, b] = genlex1.keywords(['A', 'B'])
-        // F.any() over the token stream should see TokenValue instances currently
-        const parserAThenB = genlex1.use(F.any().rep().thenEos())
-        const anyResponse = parserAThenB.parse(stream.ofString('A B'))
+        // F.any() over the token stream should see TokenResult instances currently
+        const anyParser = genlex1.use(F.any().rep().thenEos())
+        const anyResponse = anyParser.parse(stream.ofString('A B'))
         expect(anyResponse.isAccepted()).toBe(true)
         const result = anyResponse.value
         expect(result.at(0).value).toEqual('A')

@@ -17,9 +17,12 @@ export class EventTracer {
     }
     _push(e) {
         // filter by char start if present
-        if (typeof e.startChar === 'number' && !this._inWindow(e.startChar))
+        if (typeof e.startChar === 'number' && !this._inWindow(e.startChar)) {
             return
-        if (!this.includeRejects && /reject|mismatch/i.test(e.type)) return
+        }
+        if (!this.includeRejects && /reject|mismatch/i.test(e.type)) {
+            return
+        }
         this.events.push({ ts: Date.now(), ...e })
     }
     emit(e) {

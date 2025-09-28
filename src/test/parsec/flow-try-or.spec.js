@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { NEUTRAL, tuple } from '../../lib/index.js'
+import { NEUTRAL } from '../../lib/index.js'
 import Streams from '../../lib/stream/index'
 import { C, F } from '../../lib/parsec/index'
 
@@ -70,14 +70,13 @@ describe('combining F.try() and p.or()', () => {
     it('Full backtracking works at index !=0 ', () => {
         const start = C.string('====')
         const eater = C.char('a').then(C.char('a'))
-        const secondEater = C.char('a').then(C.char('b'))
-        const parser = start.drop().then(F.try(eater)) //.debug('first').or(F.try( secondEater).debug('second'))
+        const parser = start.drop().then(F.try(eater))
 
         const stream = Streams.ofString('====ac')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
 
-        // ✨ despite backtracking for first parser, the second will eat 'a'
+        // ✨ despite backtracking for the first parser, the second will eat 'a'
         expect(parsing.offset).toBe(4)
     })
 

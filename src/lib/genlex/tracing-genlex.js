@@ -1,6 +1,5 @@
 import response from '../parsec/response.js'
-import { F, C, N } from '../parsec/index.js'
-import unit from '../data/unit.js'
+import { F, C } from '../parsec/index.js'
 import { EventTracer } from './genlex-tracer.js'
 import { GenLex, TokenDefinition, Token } from './genlex.js'
 
@@ -149,10 +148,6 @@ export class TracingGenLex extends GenLex {
     }
 }
 
-function getTokenParser(def) {
-    return def.parser.map((value) => new TokenValue(def.name, value))
-}
-
 function expectTokenTraced(expectedName, tracer) {
     // Equivalent shape to expectToken, but instrumented and simplified
 
@@ -212,7 +207,9 @@ export function getSnippet(input, startChar, maxLength = 16) {
         return
     }
 
-    if (startChar === undefined) return ''
+    if (startChar === undefined) {
+        return ''
+    }
     const snippet = input.source.slice(startChar)
     if (snippet.length <= maxLength) {
         return snippet
