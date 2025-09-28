@@ -1,13 +1,13 @@
 import response from '../parsec/response.js'
 import { F, C } from '../parsec/index.js'
-import { EventTracer } from './genlex-tracer.js'
+import { GenlexEventTracer } from './genlex-event-tracer.js'
 import { GenLex, TokenDefinition, Token } from './genlex.js'
 
 // Hidden metadata on token instances to correlate layers
 const META = Symbol('token.meta')
 
 export class TracingGenLex extends GenLex {
-    constructor(tracer = new EventTracer()) {
+    constructor(tracer = new GenlexEventTracer()) {
         super()
         this._ordinal = 0 // token index in token stream
         this.tracer = tracer

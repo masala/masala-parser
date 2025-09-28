@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { TracingGenLex, getSnippet } from '../../lib/genlex/tracing-genlex.js'
 
-import { F, GenLex } from '../../lib/index.js'
 import stream from '../../lib/stream/index.js'
-import { EventTracer } from '../../lib/genlex/genlex-tracer.js'
 
 describe('TracingGenLex coverage additions', () => {
     it("tokenize(string) — defaults token name to the string when name isn't provided", () => {

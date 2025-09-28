@@ -3,7 +3,7 @@ import { TracingGenLex } from '../../lib/genlex/tracing-genlex.js'
 
 import { F, GenLex } from '../../lib/index.js'
 import stream from '../../lib/stream/index.js'
-import { EventTracer } from '../../lib/genlex/genlex-tracer.js'
+import { GenlexEventTracer } from '../../lib/genlex/genlex-event-tracer.js'
 
 function createClassicMinimalParser() {
     const genlex = new GenLex()
@@ -56,7 +56,7 @@ describe('Tracing GenLex Tokenizer Tests', () => {
     })
 
     it('minimal grammar — emits lex events with metadata (no grammar-accept with F.any())', () => {
-        const tracer = new EventTracer()
+        const tracer = new GenlexEventTracer()
         const { parser, tracer: boundTracer } =
             createTracedMinimalParser(tracer)
         const input = 'A B C A C B A A C'
@@ -84,7 +84,7 @@ describe('Tracing GenLex Tokenizer Tests', () => {
     })
 
     it('simple grammar — accept: emits grammar-accept for A,B and lex-commit for all tokens', () => {
-        const tracer = new EventTracer()
+        const tracer = new GenlexEventTracer()
         const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('A B CC'))
         expect(response.isAccepted()).toBe(true)
@@ -101,7 +101,7 @@ describe('Tracing GenLex Tokenizer Tests', () => {
     })
 
     it('simple grammar — grammar-reject when next token mismatches (A C B)', () => {
-        const tracer = new EventTracer()
+        const tracer = new GenlexEventTracer()
         const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('A C B'))
         expect(response.isAccepted()).toBe(false)
@@ -119,7 +119,7 @@ describe('Tracing GenLex Tokenizer Tests', () => {
     })
 
     it('simple grammar — lex-fail when an unknown token is encountered (A B CDC)', () => {
-        const tracer = new EventTracer()
+        const tracer = new GenlexEventTracer()
         const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('A B CDC'))
         expect(response.isAccepted()).toBe(false)
@@ -135,7 +135,7 @@ describe('Tracing GenLex Tokenizer Tests', () => {
     })
 
     it('simple grammar — grammar-eos on empty input', () => {
-        const tracer = new EventTracer()
+        const tracer = new GenlexEventTracer()
         const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString(''))
         expect(response.isAccepted()).toBe(false)
@@ -150,7 +150,7 @@ describe('Tracing GenLex Tokenizer Tests', () => {
     })
 
     it('simple grammar — spaces-only: emits lex-fail and grammar-eos', () => {
-        const tracer = new EventTracer()
+        const tracer = new GenlexEventTracer()
         const { parser, tracer: boundTracer } = createTracedSimpleParser(tracer)
         const response = parser.parse(stream.ofString('   '))
         expect(response.isAccepted()).toBe(false)

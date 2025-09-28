@@ -1,5 +1,5 @@
 // lib/debug/tracer.js
-export class EventTracer {
+export class GenlexEventTracer {
     constructor({
         window = [0, Number.MAX_SAFE_INTEGER],
         includeRejects = true,
