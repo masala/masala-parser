@@ -49,6 +49,8 @@ export function createTracer({
 
     // Keep originals so we can avoid double wrapping or restore later
     const originals = new WeakMap()
+    // Track wrapped parsers so we can iterate at restore time
+    const wrapped = new Set()
 
     function overlaps(start, end) {
         // true if [start,end) intersects [winStart,winEnd)
@@ -92,12 +94,10 @@ export function createTracer({
 
         const originalParse = targetParser.parse
         originals.set(targetParser, originalParse)
+        wrapped.add(targetParser)
 
         targetParser.parse = function tracedParse(input, index = 0) {
-            const start =
-                input && typeof input.location === 'function'
-                    ? input.location(index)
-                    : index
+            const start = input.location(index)
 
             const shouldEnterLog = start >= winStart && start < winEnd
 
@@ -111,12 +111,11 @@ export function createTracer({
             const res = originalParse.call(this, input, index)
 
             // Compute end/consumption even when rejected
-            const end = typeof res.offset === 'number' ? res.offset : index
+            const end = res.offset
             const spanInWindow = overlaps(start, end) || shouldEnterLog
 
             // (C) post-event (only if we touched the window, and keep rejects if asked)
-            const accepted =
-                typeof res.isAccepted === 'function' ? res.isAccepted() : false
+            const accepted = res.isAccepted()
             if (spanInWindow && (accepted || includeRejects)) {
                 const entry = {
                     phase: 'exit',
@@ -160,11 +159,7 @@ export function createTracer({
             if (!meta) {
                 continue
             }
-            const per = resolvePerParserOpts(
-                meta.name,
-                meta.opts || {},
-                options,
-            )
+            const per = resolvePerParserOpts(meta.name, meta.opts, options)
             wrapOne(parser, meta.name, per)
         }
         return (rootParser) => rootParser // pass-through to keep pipeline style
@@ -191,10 +186,14 @@ export function createTracer({
          * Remove all wrappers (optional)
          */
         restore() {
-            originals.forEach((orig, parser) => {
-                parser.parse = orig
+            wrapped.forEach((parser) => {
+                const orig = originals.get(parser)
+                if (orig) {
+                    parser.parse = orig
+                    originals.delete(parser)
+                }
             })
-            originals.clear()
+            wrapped.clear()
         },
 
         /**
