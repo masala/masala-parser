@@ -51,7 +51,7 @@ export interface IGenLex {
      * The separation in your text can't be a strict one-time separation with Genlex.
      * @param parser
      */
-    setSeparatorsParser<T>(parser: IParser<T>): GenLex
+    setSeparatorsParser<T>(parser: IParser<any>): GenLex
 
     /**
      * Should separators be repeated ?

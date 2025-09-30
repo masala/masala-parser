@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Streams, C, N, F } from '../../lib/index.js'
+import { C, N } from '../../lib/index.js'
 
 describe('Parser tupleMap Tests', () => {
     it('tupleMap applies function to each element of tuple', () => {

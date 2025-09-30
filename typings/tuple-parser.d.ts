@@ -8,14 +8,17 @@ export interface SingleParser<T> extends IParser<T> {
     then(dropped: VoidParser): TupleParser<T>
     then(empty: EmptyTupleParser): TupleParser<T>
 
-    then<Y>(otherTuple: TupleParser<Y>): MixedParser<T, Y>
     then(sameTuple: TupleParser<T>): TupleParser<T>
+    then<Y>(otherTuple: TupleParser<Y>): MixedParser<T, Y>
     then<FIRST, LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<T, LAST>
 
     then(same: SingleParser<T>): TupleParser<T>
     then<Y>(other: SingleParser<Y>): MixedParser<T, Y>
+
     then(p: IParser<T>): TupleParser<T>
     then<Y>(p: IParser<Y>): MixedParser<T, Y>
+
+    thenEos(): TupleParser<T>
 
     //or(other: SingleParser<T>): SingleParser<T>
     or<Y>(other: SingleParser<Y>): SingleParser<T | Y>
@@ -46,6 +49,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     then(p: IParser<T>): TupleParser<T>
     then<Y>(p: IParser<Y>): MixedParser<T, Y>
 
+    thenEos(): this
     /**
      * Maps the content of the tuple value into an array.
      * However, it's usually better to work directly on the Tuple, not the TupleParser
@@ -58,7 +62,7 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
      */
     join(separator?: string): SingleParser<string>
 
-    tupleMap <Y>(f : (x:T)=>Y): TupleParser<Y>;
+    tupleMap<Y>(f: (x: T) => Y): TupleParser<Y>
 
     /**
      * single() is an alias of first(), expressing that the
@@ -122,8 +126,8 @@ export interface MixedParser<FIRST, LAST>
     then<F, L>(other: MixedParser<F, L>): MixedParser<FIRST, L>
     then<Y>(other: SingleParser<Y>): MixedParser<FIRST, Y>
 
-    val(text: string): MixedTuple<FIRST, LAST>;
-    tupleMap <Y>(f : (x:FIRST| LAST)=>Y): TupleParser<Y>;
+    val(text: string): MixedTuple<FIRST, LAST>
+    tupleMap<Y>(f: (x: FIRST | LAST) => Y): TupleParser<Y>
 
     or(other: MixedParser<FIRST, LAST>): MixedParser<FIRST, LAST>
     or(other: IParser<any>): IParser<any>

@@ -34,11 +34,11 @@ function leftText(): SingleParser<string> {
 
 function rightText(): SingleParser<string> {
     return F.moveUntil(endLiner().drop(), true)
-}
+}*/
 
 function frontMatterLine(): SingleParser<FrontMatterLine> {
-    return leftText()
-        .then(rightText())
+    return leftText
+        .then(rightText)
         .array()
         .map(([name, value]) => ({
             name,
@@ -49,4 +49,4 @@ function frontMatterLine(): SingleParser<FrontMatterLine> {
 export const frontMatterParser: FrontMatterParser = frontMatterLine()
     .then(lineSeparator().optrep().drop())
     .single()
-    .rep()*/
+    .rep()

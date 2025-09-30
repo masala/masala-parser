@@ -51,7 +51,7 @@ function terminal(): TupleParser<Instruction> {
         .or(gt)
         .or(comma)
         .or(period)
-        .map((type) => ({ type }) as Instruction)
+        .map((result) => ({ type: result.value }) as Instruction)
         .rep()
 }
 
@@ -79,7 +79,7 @@ function expr(): TupleParser<Instruction> {
 
     const mappedSub = sub.map((option) =>
         option.isPresent() ? option.get() : empty,
-    ) as IParser<Tuple<Instruction>>
+    ) as unknown as TupleParser<Instruction>
 
     return terminal().then(mappedSub) as TupleParser<Instruction>
 }

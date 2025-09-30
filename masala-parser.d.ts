@@ -282,7 +282,9 @@ export interface IParser<T> {
      * const abParser = C.char('a').then(C.char('b'))
      * ```
      */
-    then<Y>(p: IParser<Y>): TupleParser<T | Y>
+    then<Y>(p: TupleParser<Y>): TupleParser<T | Y>
+    then(p: IParser<T>): TupleParser<T>
+    then<Y>(p: IParser<Y>): MixedParser<T, Y>
 
     /**
      * Transforms the Response value
@@ -324,7 +326,7 @@ export interface IParser<T> {
     /**
      * Verify that the stream is ended
      */
-    thenEos(): this
+    thenEos(): TupleParser<any | T>
 
     /**
      * If accepted, the parser will return the given value
@@ -561,8 +563,6 @@ interface NumberBundle {
     digits(): SingleParser<number>
 }
 
-type ParserOrString<T> = IParser<T> | string
-
 export declare const F: FlowBundle
 export declare const C: CharBundle
 export declare const N: NumberBundle
@@ -571,7 +571,7 @@ export declare const Streams: Streams
 export declare const GenLex: new () => IGenLex
 export declare const TracingGenLex: new (tracer?: Tracer) => IGenLex
 
-export type { TokenParser, TokenCollection, TokenValue }
+export type { Token, TokenCollection, TokenResult }
 export type { EmptyTuple, Tuple }
 export type {
     VoidParser,

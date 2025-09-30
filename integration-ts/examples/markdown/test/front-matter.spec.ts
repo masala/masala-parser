@@ -7,7 +7,9 @@ describe('Front Matter Parser', () => {
         const input = Streams.ofString('title: My Document\n')
         const result = frontMatterParser.parse(input)
         expect(result.isAccepted()).toBe(true)
-        expect(result.value).toEqual([{ name: 'title', value: 'My Document' }])
+        expect(result.value.array()).toEqual([
+            { name: 'title', value: 'My Document' },
+        ])
     })
 
     it('should parse multiple lines of front matter', () => {

@@ -33,6 +33,7 @@ function copy() {
     //ncp('./masala-parser.d.ts', './integration-npm/node_modules/@masala/parser/masala-parser.d.ts');
 
     copyDeclaration()
+    copyPackageJson()
     console.log('Done --- \n')
 }
 
@@ -48,5 +49,12 @@ function copyDeclaration() {
         ncp('./typings', `${destination}/typings`)
         console.log(`${destination}/typings`)
         //ncp('./typings/genlex.d.ts', `${destination}/typings/genlex.d.ts`);
+    }
+}
+
+function copyPackageJson() {
+    for (const destination of destinations) {
+        ncp('./package.json', `${destination}/package.json`)
+        console.log(`${destination}/package.json`)
     }
 }

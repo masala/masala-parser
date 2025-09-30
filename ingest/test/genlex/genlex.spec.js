@@ -1,6 +1,11 @@
 import { describe, it, expect } from 'vitest'
 import { F, C, N } from '../../lib/parsec'
-import { GenLex, getMathGenLex, anyToken } from '../../lib/genlex/genlex'
+import {
+    GenLex,
+    getMathGenLex,
+    anyToken,
+    leanTuple,
+} from '../../lib/genlex/genlex'
 import stream from '../../lib/stream'
 
 // Helper function from the original test file
@@ -161,8 +166,6 @@ describe('GenLex Tests', () => {
 
     it('genlex separators must be a string', () => {
         const genlex = getMathGenLex()
-        const number = genlex.get('number')
-        let grammar = number.rep().then(F.eos())
         expect(() => genlex.setSeparators(1)).toThrow()
     })
 
@@ -195,7 +198,7 @@ describe('GenLex Tests', () => {
     // New tests about keywords() kind of parser and TokenValue timing
     it('keywords returns token-stream parsers (not char parsers)', () => {
         const genlex = new GenLex()
-        const [a, b] = genlex.keywords(['A', 'B'])
+        const [a] = genlex.keywords(['A', 'B'])
         // Using keyword parser directly on a char stream should fail
         const direct = a.parse(stream.ofString('A'))
         expect(direct.isAccepted()).toBe(false)
@@ -227,5 +230,42 @@ describe('GenLex Tests', () => {
         expect(aRes.isAccepted()).toBe(true)
         // keyword parser maps TokenValue to raw token value (wrapped in a Tuple by thenEos)
         expect(aRes.value.at(0).value).toBe('A')
+    })
+
+    it('Genlex F.any yields wrapped values', () => {
+        const genlex1 = new GenLex()
+        genlex1.keywords(['A', 'B'])
+        // F.any() over the token stream should see TokenResult instances currently
+        const anyParser = genlex1.use(F.any().rep().thenEos())
+        const anyResponse = anyParser.parse(stream.ofString('A B'))
+        expect(anyResponse.isAccepted()).toBe(true)
+        const result = anyResponse.value
+        expect(result.at(0).value).toEqual('A')
+        expect(leanTuple(anyResponse.value)).toEqual(['A', 'B'])
+    })
+
+    it('Genlex tokenize yields wrapped values', () => {
+        const genlexAB = new GenLex()
+        const a = genlexAB.tokenize('A', 'a')
+        const b = genlexAB.tokenize('B', 'b')
+        const parserAThenB = genlexAB.use(a.then(b).thenEos())
+        const response = parserAThenB.parse(stream.ofString('A B'))
+        const result = response.value
+        expect(response.isAccepted()).toBe(true)
+        expect(result.at(0).value).toBe('A')
+        expect(leanTuple(result)).toEqual(['A', 'B'])
+    })
+
+    it('Genlex keywords yields wrapped values', () => {
+        const genlex1 = new GenLex()
+        const [a, b] = genlex1.keywords(['A', 'B'])
+        // F.any() over the token stream should see TokenValue instances currently
+        const parserAThenB = genlex1.use(a.then(b).thenEos())
+        const response = parserAThenB.parse(stream.ofString('A B'))
+        const result = response.value
+
+        expect(response.isAccepted()).toBe(true)
+        expect(result.at(0).value).toBe('A')
+        expect(leanTuple(result)).toEqual(['A', 'B'])
     })
 })
