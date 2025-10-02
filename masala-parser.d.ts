@@ -590,3 +590,5 @@ interface TracerOptions {
     snippetMax?: number
 }
 export declare function createTracer(options?: TracerOptions): Tracer
+export declare function leanToken<T>(token: TokenResult<T>): T
+export declare function leanTuple<T>(tokens: Tuple<TokenResult<T>>): Tuple<T>

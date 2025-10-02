@@ -28,18 +28,15 @@ export interface IGenLex {
      *
      * Choice with grammar is made after token selection !
      */
-    tokenize<T, P extends IParser<T>>(
-        parser: P,
-        name: string,
-        priority?: number,
-    ): Token<T>
+    tokenize(keyword: string, name: string, priority?: number): Token<string>
+    tokenize<T>(parser: IParser<T>, name: string, priority?: number): Token<T>
 
     use<T>(grammar: SingleParser<T>): SingleParser<T>
     use<T>(grammar: TupleParser<T>): TupleParser<T>
     use<First, Last>(
         grammar: MixedParser<First, Last>,
     ): MixedParser<First, Last>
-    use<T, P extends IParser<T>>(grammar: P): P
+    use<T>(grammar: IParser<T>): IParser<T>
 
     tokens(): TokenCollection
 

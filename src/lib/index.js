@@ -7,7 +7,7 @@
  */
 
 import data from './data/index.js'
-import { GenLex, getMathGenLex } from './genlex/genlex.js'
+import { GenLex, getMathGenLex, leanTuple, leanToken } from './genlex/genlex.js'
 import parsec from './parsec/index.js'
 import Parser from './parsec/parser.js'
 import { F, C, N } from './parsec/index.js'
@@ -27,6 +27,8 @@ export {
     accept,
     reject,
     GenLex,
+    leanTuple,
+    leanToken,
     getMathGenLex,
     parsec,
     standard,
