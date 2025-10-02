@@ -6,6 +6,8 @@ import unit from '../data/unit.js'
 /**
  * And its value is the parsed text
  * Example: C.char(':') -> name = 'colon' or ':', value = ':'
+ *
+ * Exported because needed in tracing-genlex.js
  */
 export class TokenDefinition {
     // value will be determined at runtime while parsing

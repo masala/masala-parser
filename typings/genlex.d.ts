@@ -6,13 +6,13 @@ import {
     TupleParser,
 } from '../masala-parser.js'
 
-export interface Token<T> extends SingleParser<TokenResult<T>> {}
+export interface TokenParser<T> extends SingleParser<Token<T>> {}
 
 export type TokenCollection = {
-    [key: string]: Token<any>
+    [key: string]: TokenParser<any>
 }
 
-export interface TokenResult<T> {
+export interface Token<T> {
     name: string
     value: T
     __token: true
@@ -28,8 +28,16 @@ export interface IGenLex {
      *
      * Choice with grammar is made after token selection !
      */
-    tokenize(keyword: string, name: string, priority?: number): Token<string>
-    tokenize<T>(parser: IParser<T>, name: string, priority?: number): Token<T>
+    tokenize(
+        keyword: string,
+        name: string,
+        priority?: number,
+    ): TokenParser<string>
+    tokenize<T>(
+        parser: IParser<T>,
+        name: string,
+        priority?: number,
+    ): TokenParser<T>
 
     use<T>(grammar: SingleParser<T>): SingleParser<T>
     use<T>(grammar: TupleParser<T>): TupleParser<T>
@@ -63,7 +71,7 @@ export interface IGenLex {
      * Example: keywords(['AND', 'OR']) will create the tokens named 'AND' and 'OR' with C.string('AND'), C.string('OR)
      * @param tokens
      */
-    keywords(tokens: string[]): Array<Token<string>>
+    keywords(tokens: string[]): Array<TokenParser<string>>
 
-    get(tokenName: string): Token<any>
+    get(tokenName: string): TokenParser<any>
 }

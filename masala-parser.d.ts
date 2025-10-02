@@ -4,9 +4,9 @@ import type { EmptyTuple, Tuple } from './typings/tuple.d.ts'
 import type { VoidParser } from './typings/void-parser.d.ts'
 import type {
     IGenLex,
-    Token,
+    TokenParser,
     TokenCollection,
-    TokenResult,
+    Token,
 } from './typings/genlex.d.ts'
 import type {
     TupleParser,
@@ -570,8 +570,8 @@ export declare const Streams: Streams
 
 export declare const GenLex: new () => IGenLex
 export declare const TracingGenLex: new (tracer?: Tracer) => IGenLex
+export type { Token, TokenCollection, IGenLex, TokenParser }
 
-export type { Token, TokenCollection, TokenResult }
 export type { EmptyTuple, Tuple }
 export type {
     VoidParser,
@@ -590,5 +590,5 @@ interface TracerOptions {
     snippetMax?: number
 }
 export declare function createTracer(options?: TracerOptions): Tracer
-export declare function leanToken<T>(token: TokenResult<T>): T
-export declare function leanTuple<T>(tokens: Tuple<TokenResult<T>>): Tuple<T>
+export declare function leanToken<T>(token: Token<T>): T
+export declare function leanTuple<T>(tokens: Tuple<Token<T>>): Tuple<T>
