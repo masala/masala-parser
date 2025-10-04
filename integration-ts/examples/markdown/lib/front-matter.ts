@@ -38,11 +38,12 @@ function rightText(): SingleParser<string> {
 
 function frontMatterLine(): SingleParser<FrontMatterLine> {
     return leftText
-        .then(rightText)
+        .then(stopper.drop())
+        .then(rightText.opt())
         .array()
-        .map(([name, value]) => ({
+        .map(([name, value]: any[]) => ({
             name,
-            value,
+            value: value.orElse('').trim(),
         }))
 }
 

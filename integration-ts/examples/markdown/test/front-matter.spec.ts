@@ -19,7 +19,7 @@ date: 2024-03-20
 `)
         const result = frontMatterParser.parse(input)
         expect(result.isAccepted()).toBe(true)
-        expect(result.value).toEqual([
+        expect(result.value.array()).toEqual([
             { name: 'title', value: 'My Document' },
             { name: 'author', value: 'John Doe' },
             { name: 'date', value: '2024-03-20' },
@@ -30,7 +30,7 @@ date: 2024-03-20
         const input = Streams.ofChar('title:\n')
         const result = frontMatterParser.parse(input)
         expect(result.isAccepted()).toBe(true)
-        expect(result.value).toEqual([{ name: 'title', value: '' }])
+        expect(result.value.array()).toEqual([{ name: 'title', value: '' }])
     })
 
     it('should reject invalid identifiers', () => {
@@ -48,7 +48,7 @@ date: 2024-03-20
 `)
         const result = frontMatterParser.parse(input)
         expect(result.isAccepted()).toBe(true)
-        expect(result.value).toEqual([
+        expect(result.value.array()).toEqual([
             { name: 'title', value: 'My Document' },
             { name: 'author', value: 'John Doe' },
             { name: 'date', value: '2024-03-20' },
