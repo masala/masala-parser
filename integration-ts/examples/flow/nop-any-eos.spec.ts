@@ -19,7 +19,7 @@ function combinator() {
     return F.any().then(day()).then(F.nop()).then(F.any()).eos()
 }
 
-let stream = Streams.ofString(string)
+let stream = Streams.ofChar(string)
 let parsing = combinator().parse(stream)
 
 describe('Flow Combinators (nop, any, eos)', () => {

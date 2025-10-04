@@ -20,7 +20,6 @@ import { Tuple, isTuple, NEUTRAL, tuple } from './data/tuple.js'
 import { createTracer } from './debug/trace.js'
 
 const JSON = standard.jsonParser
-const MD = standard.markdownBundle
 
 export {
     data,
@@ -38,7 +37,6 @@ export {
     C,
     N,
     JSON,
-    MD,
     tuple,
     Tuple,
     isTuple,

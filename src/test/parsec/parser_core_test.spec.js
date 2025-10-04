@@ -15,7 +15,7 @@ describe('Parser Core Tests', () => {
                 .map(function (a) {
                     return a + 'b'
                 })
-                .parse(stream.ofString('a'), 0)
+                .parse(stream.ofChar('a'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -26,7 +26,7 @@ describe('Parser Core Tests', () => {
                 .map(function (a) {
                     return a + 'b'
                 })
-                .parse(stream.ofString('b'), 0)
+                .parse(stream.ofChar('b'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -37,12 +37,12 @@ describe('Parser Core Tests', () => {
                 .map(function (a) {
                     return a + 'b'
                 })
-                .parse(stream.ofString('a'), 0).value,
+                .parse(stream.ofChar('a'), 0).value,
         ).toBe('ab')
     })
 
     it('expect (map) to be return 5x8', () => {
-        const st = stream.ofString('5x8')
+        const st = stream.ofChar('5x8')
         const combinator = N.integer()
             .then(C.char('x').drop())
             .then(N.integer())
@@ -58,7 +58,7 @@ describe('Parser Core Tests', () => {
                 .flatMap(function () {
                     return F.returns('b')
                 })
-                .parse(stream.ofString('a'), 0)
+                .parse(stream.ofChar('a'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -69,7 +69,7 @@ describe('Parser Core Tests', () => {
                 .flatMap(function () {
                     return F.returns('b')
                 })
-                .parse(stream.ofString('b'), 0)
+                .parse(stream.ofChar('b'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -80,7 +80,7 @@ describe('Parser Core Tests', () => {
                 .flatMap(function () {
                     return C.char('b')
                 })
-                .parse(stream.ofString('ab'), 0).value,
+                .parse(stream.ofChar('ab'), 0).value,
         ).toBe('b')
     })
 
@@ -90,7 +90,7 @@ describe('Parser Core Tests', () => {
                 .filter(function (a) {
                     return a === 'a'
                 })
-                .parse(stream.ofString('a'), 0)
+                .parse(stream.ofChar('a'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -101,20 +101,20 @@ describe('Parser Core Tests', () => {
                 .filter(function (a) {
                     return a === 'b'
                 })
-                .parse(stream.ofString('a'), 0)
+                .parse(stream.ofChar('a'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
 
     it('expect (match) to be accepted', () => {
         expect(
-            C.char('a').match('a').parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a').match('a').parse(stream.ofChar('a'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (match) to be rejected', () => {
         expect(
-            C.char('a').match('b').parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a').match('b').parse(stream.ofChar('a'), 0).isAccepted(),
         ).toBe(false)
     })
 
@@ -122,7 +122,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .then(C.char('b'))
-                .parse(stream.ofString('ab'), 0)
+                .parse(stream.ofChar('ab'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -131,7 +131,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .then(C.char('b'))
-                .parse(stream.ofString('cb'), 0)
+                .parse(stream.ofChar('cb'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -140,17 +140,15 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .then(C.char('b'))
-                .parse(stream.ofString('ac'), 0)
+                .parse(stream.ofChar('ac'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
 
     it('expect (then) to return [a,b]', () => {
         expect(
-            C.char('a')
-                .then(C.char('b'))
-                .array()
-                .parse(stream.ofString('ab'), 0).value,
+            C.char('a').then(C.char('b')).array().parse(stream.ofChar('ab'), 0)
+                .value,
         ).toEqual(['a', 'b'])
     })
 
@@ -159,14 +157,14 @@ describe('Parser Core Tests', () => {
             C.char('a')
                 .then(C.char('b').then(C.char('c').drop()).then(C.char('d')))
                 .array()
-                .parse(stream.ofString('abcd'), 0).value,
+                .parse(stream.ofChar('abcd'), 0).value,
         ).toEqual(['a', 'b', 'd'])
     })
 
     it('expect (then) to be empty with two drops', () => {
         const parser = C.char('a').drop().then(C.char('b').drop())
 
-        const value = parser.parse(stream.ofString('ab')).value.value
+        const value = parser.parse(stream.ofChar('ab')).value.value
 
         expect(Array.isArray(value)).toBe(true)
         expect(value.length).toBe(0)
@@ -184,8 +182,8 @@ describe('Parser Core Tests', () => {
             .then(C.char('c').drop().then(C.char('d')))
             .array()
 
-        expect(first.parse(stream.ofString('abcd')).value).toEqual(
-            second.parse(stream.ofString('abcd')).value,
+        expect(first.parse(stream.ofChar('abcd')).value).toEqual(
+            second.parse(stream.ofChar('abcd')).value,
         )
     })
 
@@ -196,7 +194,7 @@ describe('Parser Core Tests', () => {
                 .then(C.char('c').drop())
                 .concat(C.char('d'))
                 .array()
-                .parse(stream.ofString('abcd'), 0).value,
+                .parse(stream.ofChar('abcd'), 0).value,
         ).toEqual(['a', 'b', 'd'])
     })
 
@@ -204,7 +202,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .thenLeft(C.char('b'))
-                .parse(stream.ofString('ab'), 0)
+                .parse(stream.ofChar('ab'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -214,7 +212,7 @@ describe('Parser Core Tests', () => {
             C.char('a')
                 .thenLeft(C.char('b'))
                 .single()
-                .parse(stream.ofString('ab'), 0).value,
+                .parse(stream.ofChar('ab'), 0).value,
         ).toBe('a')
     })
 
@@ -222,7 +220,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .thenLeft(C.char('b'))
-                .parse(stream.ofString('b'), 0)
+                .parse(stream.ofChar('b'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -231,7 +229,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .thenRight(C.char('b'))
-                .parse(stream.ofString('ab'), 0)
+                .parse(stream.ofChar('ab'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -241,7 +239,7 @@ describe('Parser Core Tests', () => {
             C.char('a')
                 .thenRight(C.char('b'))
                 .single()
-                .parse(stream.ofString('ab'), 0).value,
+                .parse(stream.ofChar('ab'), 0).value,
         ).toBe('b')
     })
 
@@ -249,7 +247,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .thenRight(C.char('b'))
-                .parse(stream.ofString('b'), 0)
+                .parse(stream.ofChar('b'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -259,7 +257,7 @@ describe('Parser Core Tests', () => {
             C.char('a')
                 .drop()
                 .then(C.char('b'))
-                .parse(stream.ofString('ab'), 0)
+                .parse(stream.ofChar('ab'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -270,7 +268,7 @@ describe('Parser Core Tests', () => {
                 .drop()
                 .then(C.char('b'))
                 .single()
-                .parse(stream.ofString('ab'), 0).value,
+                .parse(stream.ofChar('ab'), 0).value,
         ).toBe('b')
     })
 
@@ -278,7 +276,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .then(C.char('b').drop())
-                .parse(stream.ofString('ab'), 0)
+                .parse(stream.ofChar('ab'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -288,13 +286,13 @@ describe('Parser Core Tests', () => {
             C.char('a')
                 .then(C.char('b').drop())
                 .single()
-                .parse(stream.ofString('ab'), 0).value,
+                .parse(stream.ofChar('ab'), 0).value,
         ).toBe('a')
     })
 
     it('expect (eos) to be accepted at the end', () => {
         const parser = C.string('abc').eos()
-        const response = parser.parse(stream.ofString('abc'))
+        const response = parser.parse(stream.ofChar('abc'))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.isEos()).toBe(true)
@@ -303,7 +301,7 @@ describe('Parser Core Tests', () => {
 
     it('expect (eos) to be rejected without eating char', () => {
         const parser = C.char('a').eos()
-        const response = parser.parse(stream.ofString('ab'))
+        const response = parser.parse(stream.ofChar('ab'))
 
         expect(response.isAccepted()).toBe(false)
         expect(response.isEos()).toBe(false)
@@ -313,7 +311,7 @@ describe('Parser Core Tests', () => {
 
     it('expect rejected (eos) to be rejected keeping previous offset', () => {
         const parser = C.char('a').then(C.char('a')).eos()
-        const response = parser.parse(stream.ofString('ab is ending at 1'))
+        const response = parser.parse(stream.ofChar('ab is ending at 1'))
 
         expect(response.isAccepted()).toBe(false)
         expect(response.isEos()).toBe(false)
@@ -323,28 +321,25 @@ describe('Parser Core Tests', () => {
 
     it('expect (thenEos) to be accepted at the end', () => {
         expect(
-            C.char('a').thenEos().parse(stream.ofString('a')).isAccepted(),
+            C.char('a').thenEos().parse(stream.ofChar('a')).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (thenEos) to be rejected if not the end', () => {
         expect(
-            C.char('a').thenEos().parse(stream.ofString('abc')).isAccepted(),
+            C.char('a').thenEos().parse(stream.ofChar('abc')).isAccepted(),
         ).toBe(false)
     })
 
     it('expect (returns) to be accepted', () => {
         expect(
-            C.char('a')
-                .returns('b')
-                .parse(stream.ofString('ab'), 0)
-                .isAccepted(),
+            C.char('a').returns('b').parse(stream.ofChar('ab'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (returns) to return b', () => {
         expect(
-            C.char('a').returns('b').parse(stream.ofString('ab'), 0).value,
+            C.char('a').returns('b').parse(stream.ofChar('ab'), 0).value,
         ).toBe('b')
     })
 
@@ -354,16 +349,13 @@ describe('Parser Core Tests', () => {
                 .returns('X')
                 .then(C.char('b'))
                 .array()
-                .parse(stream.ofString('ab'), 0).value,
+                .parse(stream.ofChar('ab'), 0).value,
         ).toEqual(['X', 'b'])
     })
 
     it('expect (returns) to be rejected', () => {
         expect(
-            C.char('a')
-                .returns('b')
-                .parse(stream.ofString('b'), 0)
-                .isAccepted(),
+            C.char('a').returns('b').parse(stream.ofChar('b'), 0).isAccepted(),
         ).toBe(false)
     })
 
@@ -371,7 +363,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .or(C.char('b'))
-                .parse(stream.ofString('a'), 0)
+                .parse(stream.ofChar('a'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -380,7 +372,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .or(C.char('b'))
-                .parse(stream.ofString('c'), 0)
+                .parse(stream.ofChar('c'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -390,20 +382,20 @@ describe('Parser Core Tests', () => {
             C.char('a')
                 .then(C.char('b'))
                 .or(C.char('a'))
-                .parse(stream.ofString('ac'), 0)
+                .parse(stream.ofChar('ac'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
 
     it('expect (or) to return a', () => {
         expect(
-            C.char('a').or(C.char('b')).parse(stream.ofString('a'), 0).value,
+            C.char('a').or(C.char('b')).parse(stream.ofChar('a'), 0).value,
         ).toBe('a')
     })
 
     it('expect (or) to return b', () => {
         expect(
-            C.char('a').or(C.char('b')).parse(stream.ofString('b'), 0).value,
+            C.char('a').or(C.char('b')).parse(stream.ofChar('b'), 0).value,
         ).toBe('b')
     })
 
@@ -411,7 +403,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .then(C.char('b').or(C.char('c')))
-                .parse(stream.ofString('ad'), 0)
+                .parse(stream.ofChar('ad'), 0)
                 .isAccepted(),
         ).toBe(false)
     })
@@ -420,70 +412,67 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .then(C.char('b').or(C.char('c')))
-                .parse(stream.ofString('ad'), 0).consumed,
+                .parse(stream.ofChar('ad'), 0).consumed,
         ).toBe(true)
     })
 
     it('expect (opt) some to accepted', () => {
         expect(
-            C.char('a').opt().parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a').opt().parse(stream.ofChar('a'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (opt) some to return some a', () => {
-        expect(
-            C.char('a').opt().parse(stream.ofString('a'), 0).value.get(),
-        ).toBe('a')
+        expect(C.char('a').opt().parse(stream.ofChar('a'), 0).value.get()).toBe(
+            'a',
+        )
     })
 
     it('expect (opt) none to accepted', () => {
         expect(
-            C.char('a').opt().parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a').opt().parse(stream.ofChar('b'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (opt) none to return none', () => {
         expect(
-            C.char('a').opt().parse(stream.ofString('b'), 0).value.isPresent(),
+            C.char('a').opt().parse(stream.ofChar('b'), 0).value.isPresent(),
         ).toBe(false)
     })
 
     it('expect (rep) to accepted', () => {
         expect(
-            C.char('a').rep().parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a').rep().parse(stream.ofChar('a'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (rep) to rejected', () => {
         expect(
-            C.char('a').rep().parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a').rep().parse(stream.ofChar('b'), 0).isAccepted(),
         ).toBe(false)
     })
 
     it('expect (rep) mutiple to accepted', () => {
         expect(
-            C.char('a').rep().parse(stream.ofString('aaaabbb'), 0).isAccepted(),
+            C.char('a').rep().parse(stream.ofChar('aaaabbb'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (rep) mutiple to return [a,a,a,a]', () => {
         expect(
-            C.char('a')
-                .rep()
-                .parse(stream.ofString('aaaabbb'), 0)
-                .value.array(),
+            C.char('a').rep().parse(stream.ofChar('aaaabbb'), 0).value.array(),
         ).toEqual(['a', 'a', 'a', 'a'])
     })
 
     it('expect (optrep) to accepted', () => {
         expect(
-            C.char('a').optrep().parse(stream.ofString('a'), 0).isAccepted(),
+            C.char('a').optrep().parse(stream.ofChar('a'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (optrep) none to accepted', () => {
         expect(
-            C.char('a').optrep().parse(stream.ofString('b'), 0).isAccepted(),
+            C.char('a').optrep().parse(stream.ofChar('b'), 0).isAccepted(),
         ).toBe(true)
     })
 
@@ -491,7 +480,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .optrep()
-                .parse(stream.ofString('aaaabbb'), 0)
+                .parse(stream.ofChar('aaaabbb'), 0)
                 .isAccepted(),
         ).toBe(true)
     })
@@ -500,14 +489,14 @@ describe('Parser Core Tests', () => {
         expect(
             C.char('a')
                 .optrep()
-                .parse(stream.ofString('aaaabbb'), 0)
+                .parse(stream.ofChar('aaaabbb'), 0)
                 .value.array(),
         ).toEqual(['a', 'a', 'a', 'a'])
     })
 
     it('expect (optrep) to return none', () => {
         expect(
-            C.char('a').optrep().parse(stream.ofString('bbb'), 0).value.array(),
+            C.char('a').optrep().parse(stream.ofChar('bbb'), 0).value.array(),
         ).toEqual([])
     })
 
@@ -515,7 +504,7 @@ describe('Parser Core Tests', () => {
         expect(
             C.notChar('a')
                 .optrep()
-                .parse(stream.ofString('bbba'), 0)
+                .parse(stream.ofChar('bbba'), 0)
                 .value.array(),
         ).toEqual(['b', 'b', 'b'])
     })
@@ -526,7 +515,7 @@ describe('Parser Core Tests', () => {
                 .optrep()
                 .then(C.char('a').optrep())
                 .array()
-                .parse(stream.ofString('bbba'), 0).value,
+                .parse(stream.ofChar('bbba'), 0).value,
         ).toEqual(['b', 'b', 'b', 'a'])
     })
 
@@ -537,7 +526,7 @@ describe('Parser Core Tests', () => {
                 .array()
                 .then(C.char('a').optrep().array())
                 .array()
-                .parse(stream.ofString('bbba'), 0).value,
+                .parse(stream.ofChar('bbba'), 0).value,
         ).toEqual([['b', 'b', 'b'], ['a']])
     })
 
@@ -549,7 +538,7 @@ describe('Parser Core Tests', () => {
             sideEffect = true
         }
 
-        C.char('a').debug('found').optrep().parse(stream.ofString('aaa'), 0)
+        C.char('a').debug('found').optrep().parse(stream.ofChar('aaa'), 0)
 
         console.log = original
         expect(sideEffect).toBe(true)
@@ -566,7 +555,7 @@ describe('Parser Core Tests', () => {
         C.char('a')
             .debug('found', false)
             .optrep()
-            .parse(stream.ofString('aaa'), 0)
+            .parse(stream.ofChar('aaa'), 0)
 
         console.log = original
         expect(sideEffect).toBe(true)
@@ -580,14 +569,14 @@ describe('Parser Core Tests', () => {
             sideEffect = true
         }
 
-        C.char('a').debug('found').optrep().parse(stream.ofString('xxxx'), 0)
+        C.char('a').debug('found').optrep().parse(stream.ofChar('xxxx'), 0)
 
         console.log = original
         expect(sideEffect).toBe(false)
     })
 
     it('joins a TupleParser resulting in a string', () => {
-        const st = stream.ofString('5x8')
+        const st = stream.ofChar('5x8')
         let combinator = F.any().rep().join('')
         expect(combinator.parse(st).value).toBe('5x8')
 
@@ -596,7 +585,7 @@ describe('Parser Core Tests', () => {
     })
 
     it('fails with join() if it is not a TupleParser', () => {
-        const st = stream.ofString('5x8')
+        const st = stream.ofChar('5x8')
         let combinator = F.any().rep().first().join('')
         expect(() => combinator.parse(st)).toThrow()
     })

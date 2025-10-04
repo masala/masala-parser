@@ -10,26 +10,26 @@ import Stream from './stream.js'
 /**
  * String stream class
  */
-class StringStream extends Stream {
+class CharStream extends Stream {
     constructor(source) {
         super()
         this.source = source
-        this.__is__string__stream = true
+        this.__is__char__stream = true
     }
 
-    // StringStream 'a => unit -> boolean
+    // CharStream 'a => unit -> boolean
     endOfStream(index) {
         return this.source.length <= index
     }
 
-    // StringStream 'a => number -> 'a <+> error
+    // CharStream 'a => number -> 'a <+> error
     unsafeGet(index) {
         return this.source.charAt(index)
     }
 }
 
 function factory(source) {
-    return new StringStream(source)
+    return new CharStream(source)
 }
 
 export default factory

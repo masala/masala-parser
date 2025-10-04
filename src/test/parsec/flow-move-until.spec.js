@@ -5,7 +5,7 @@ import { F, C } from '../../lib/parsec/index'
 describe('moveUntil do not return a TupleParser', () => {
     it('test moveUntil returning a string when stopping at a string', () => {
         const document = 'aaXYZb'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChar(document)
         const combinator = F.moveUntil('XYZ')
         const parser = combinator.parse(line)
         expect(parser.value).toBe('aa')
@@ -13,7 +13,7 @@ describe('moveUntil do not return a TupleParser', () => {
 
     it('test moveUntil returning a string when stopping at parser', () => {
         const document = 'aaXYZb'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChar(document)
         const combinator = F.moveUntil(C.string('XYZ'))
         const parser = combinator.parse(line)
         expect(parser.value).toBe('aa')

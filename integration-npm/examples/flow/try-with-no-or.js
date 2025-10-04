@@ -1,41 +1,48 @@
-const {Streams, F, C} = require('@masala/parser');
-const {assertFalse} = require('../../assert');
+const { Streams, F, C } = require('@masala/parser')
+const { assertFalse } = require('../../assert')
 
 function day() {
-    return C.stringIn(['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']);
+    return C.stringIn([
+        'MONDAY',
+        'TUESDAY',
+        'WEDNESDAY',
+        'THURSDAY',
+        'FRIDAY',
+        'SATURDAY',
+        'SUNDAY',
+    ])
 }
 
 function blank() {
-    return C.char(' ').rep().returns(' ');
+    return C.char(' ').rep().returns(' ')
 }
 
-const separator = () => C.string('---');
+const separator = () => C.string('---')
 
 function emptyTry() {
-    return F.try(C.string('xyz'));
+    return F.try(C.string('xyz'))
 }
 
 function optAlternative() {
-    return C.string('xyz').opt();
+    return C.string('xyz').opt()
 }
 
 function combinator() {
-
     return day()
-        .then(blank()).rep()
+        .then(blank())
+        .rep()
         .then(separator())
-        .then(optAlternative())//.debug('we pass the option', false)
-        .then(emptyTry())//.debug('we pass the try', false)
-        .then(day());
-
+        .then(optAlternative()) //.debug('we pass the option', false)
+        .then(emptyTry()) //.debug('we pass the try', false)
+        .then(day())
 }
 
-const string = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY';
+const string = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY'
 
-let stream = Streams.ofString(string);
-let parsing = combinator().parse(stream);
+let stream = Streams.ofChar(string)
+let parsing = combinator().parse(stream)
 
-assertFalse(parsing.isAccepted());
+assertFalse(parsing.isAccepted())
 
 /**
  Conclusion:

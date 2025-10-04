@@ -31,7 +31,7 @@ export default class Parser {
     }
 
     val(text) {
-        return this.parse(stream.ofString(text)).value
+        return this.parse(stream.ofChar(text)).value
     }
 
     // Parser 'a 'c => ('a -> Parser 'b 'c) -> Parser 'b 'c

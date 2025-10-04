@@ -11,7 +11,7 @@ import option from '../data/option.js'
 
 /**
  * ParserStream stream class
- * Compared to StringStream, it is NOT a RandomAccess.
+ * Compared to CharStream, it is NOT a RandomAccess.
  * You must use a substream before making access to an unreached point.
  */
 class ParserStream extends Stream {
@@ -63,11 +63,11 @@ class ParserStream extends Stream {
     // ParserStream 'a => number -> 'a <+> error
     /**
      * index is the token index ; It uses getOffset(index) to retrieve the location
-     * in the stringStream
+     * in the charStream
      * @param index  token index
      */
     unsafeGet(index) {
-        // the wrapped parser parses the StringStream
+        // the wrapped parser parses the CharStream
         let sourceIndex
         let option = this.getOffset(index)
         if (option.isPresent()) {

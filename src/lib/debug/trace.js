@@ -33,7 +33,7 @@ export function registerTrace(parser, name, opts = {}) {
  * Usage:
  *   const tracer = createTracer({ window: [start, end], includeValues: true })
  *   const traced = tracer.trace(rightText, 'rightText', { showValue: true })(fullParser)
- *   traced.parse(Streams.ofString(input))
+ *   traced.parse(Streams.ofChar(input))
  *   console.log(JSON.stringify(tracer.flush(), null, 2))
  */
 export function createTracer({

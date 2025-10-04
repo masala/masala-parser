@@ -14,7 +14,7 @@ async function sampleTest(sample) {
     }
 
     try {
-        result = jsonparser.parse(stream.ofString(data.toString()))
+        result = jsonparser.parse(stream.ofChar(data.toString()))
     } catch (e) {
         console.log(e.stack)
     }

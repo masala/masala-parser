@@ -5,7 +5,7 @@ describe('Number parser', () => {
     it('should parse a number followed by EOS', () => {
         // Parsec needs a stream of characters
         const document = '12'
-        const s = Streams.ofString(document)
+        const s = Streams.ofChar(document)
 
         // numberLitteral defines any int or float number
         // We expect a number, then eos: End Of Stream

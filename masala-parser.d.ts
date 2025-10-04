@@ -172,7 +172,7 @@ export interface Stream<Data> {
  * Data parsed by the parser
  */
 interface Streams {
-    ofString(string: string): Stream<string>
+    ofChar(string: string): Stream<string>
 
     ofArray<X>(): Stream<X[]>
 

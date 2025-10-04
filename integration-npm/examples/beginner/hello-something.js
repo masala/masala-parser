@@ -1,24 +1,31 @@
 // Plain old ES
-const {Streams,  C}= require('@masala/parser');
-const {assertArrayEquals,assertEquals, assertTrue} = require('../../assert');
+const { Streams, C } = require('@masala/parser')
+const { assertArrayEquals, assertEquals, assertTrue } = require('../../assert')
 
 // The goal is check that we have Hello 'something', then to grab that something
 
-const helloParser = C.string("Hello")
-                    .then(C.char(' ').rep())
-                    .then(C.char("'"))
-                    .thenRight(C.letter().rep()) // keeping repeated ascii letters
-                    .thenLeft(C.char("'"));    // keeping previous letters
+const helloParser = C.string('Hello')
+    .then(C.char(' ').rep())
+    .then(C.char("'"))
+    .thenRight(C.letter().rep()) // keeping repeated ascii letters
+    .thenLeft(C.char("'")) // keeping previous letters
 
-const parsing = helloParser.parse(Streams.ofString("Hello 'World'"));
+const parsing = helloParser.parse(Streams.ofChar("Hello 'World'"))
 // C.letter().rep() will giv a array of letters
 
-assertArrayEquals(['W','o','r','l','d'], parsing.value.array(), "Hello World joined");
-
+assertArrayEquals(
+    ['W', 'o', 'r', 'l', 'd'],
+    parsing.value.array(),
+    'Hello World joined',
+)
 
 // Note that helloParser will not reach the end of the stream; it will stop at the space after People
-const peopleParsing = helloParser.parse(Streams.ofString("Hello 'People' in 2017"));
+const peopleParsing = helloParser.parse(
+    Streams.ofChar("Hello 'People' in 2017"),
+)
 
-assertEquals("People", peopleParsing.value.join(''), "Hello People joined");
-assertTrue(peopleParsing.offset < "Hello People in 2017".length, "Bad Offset for Hello People");
-
+assertEquals('People', peopleParsing.value.join(''), 'Hello People joined')
+assertTrue(
+    peopleParsing.offset < 'Hello People in 2017'.length,
+    'Bad Offset for Hello People',
+)

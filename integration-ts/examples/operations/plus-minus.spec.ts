@@ -29,19 +29,15 @@ const PLUS = 'PLUS'
 function text() {
     return F.not(anyOperation().or(C.charIn('()')))
         .rep()
-        .map(v => parseInt(v.join('').trim()))
+        .map((v) => parseInt(v.join('').trim()))
 }
 
 function blank() {
-    return C.char(' ')
-        .rep()
-        .returns(' ')
+    return C.char(' ').rep().returns(' ')
 }
 
 function anyOperation() {
-    return C.string('*')
-        .returns(MULT)
-        .or(C.string('+').returns(PLUS))
+    return C.string('*').returns(MULT).or(C.string('+').returns(PLUS))
 }
 
 function andOperation() {
@@ -53,10 +49,7 @@ function plusOperation() {
 }
 
 function parenthesis(par: string) {
-    return C.char(' ')
-        .optrep()
-        .drop()
-        .then(C.char(par))
+    return C.char(' ').optrep().drop().then(C.char(par))
 }
 
 function parenthesisExpr(): SingleParser<number> {
@@ -64,18 +57,14 @@ function parenthesisExpr(): SingleParser<number> {
         .then(blank().opt())
         .drop()
         .then(F.lazy(expr))
-        .then(
-            parenthesis(')')
-                .then(blank().opt())
-                .drop(),
-        )
+        .then(parenthesis(')').then(blank().opt()).drop())
         .single()
 }
 
 function expr(): SingleParser<number> {
-    const parser = subExpr()
-        .then(optionalPlusExpr())
-        .array() as SingleParser<[number, Option<number>]>
+    const parser = subExpr().then(optionalPlusExpr()).array() as SingleParser<
+        [number, Option<number>]
+    >
     return parser.map(([left, right]) => left + right.orElse(0))
 }
 
@@ -93,9 +82,9 @@ function plusExpr() {
 }
 
 function subExpr() {
-    const parser = terminal()
-        .then(optionalMultExpr())
-        .array() as SingleParser<[number, Option<number>]>
+    const parser = terminal().then(optionalMultExpr()).array() as SingleParser<
+        [number, Option<number>]
+    >
     return parser.map(([left, right]) => left * right.orElse(1))
 }
 
@@ -123,7 +112,7 @@ function combinator() {
 describe('Expression Parser (+, *)', () => {
     // Helper function to run the parser and return the result value or throw error
     const parseExpr = (input: string): number => {
-        let stream = Streams.ofString(input)
+        let stream = Streams.ofChar(input)
         let response = combinator().parse(stream)
         if (response.isAccepted() && response.isEos()) {
             return response.value

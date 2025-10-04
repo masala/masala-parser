@@ -6,7 +6,7 @@ import { Streams, F, C } from '@masala/parser'
  */
 describe('Character parsers', () => {
     it('should parse sequential characters followed by EOS', () => {
-        const stream = Streams.ofString('abc')
+        const stream = Streams.ofChar('abc')
         const charsParser = C.char('a')
             .then(C.char('b'))
             .then(C.char('c'))

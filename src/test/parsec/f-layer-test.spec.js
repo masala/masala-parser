@@ -10,12 +10,12 @@ describe('F Layer Tests', () => {
 
         const layer = F.layer(parser)
 
-        let response = layer.parse(Streams.ofString(successInput))
+        let response = layer.parse(Streams.ofChar(successInput))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.offset).toBe(0)
 
-        response = layer.parse(Streams.ofString(failInput))
+        response = layer.parse(Streams.ofChar(failInput))
 
         expect(response.isAccepted()).toBe(false)
         expect(response.offset).toBe(0)
@@ -30,7 +30,7 @@ describe('F Layer Tests', () => {
         const second = C.string('aa').thenEos()
         const successInput = 'aa'
         const layer = F.layer(first).and(second).and(second).array()
-        let response = layer.parse(Streams.ofString(successInput))
+        let response = layer.parse(Streams.ofChar(successInput))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.value).toEqual([2, 'aa', 'aa'])
@@ -51,7 +51,7 @@ describe('F Layer Tests', () => {
         const third = C.string('aa').thenEos()
         const input = 'aa'
         const layer = F.layer(first).and(second).and(third).array()
-        let response = layer.parse(Streams.ofString(input))
+        let response = layer.parse(Streams.ofChar(input))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.value).toEqual([2, 'a-a', 'aa'])
@@ -67,7 +67,7 @@ describe('F Layer Tests', () => {
         const second = C.string('aaFAIL').thenEos()
         const successInput = 'aa'
         const layer = F.layer(first).and(second).array()
-        let response = layer.parse(Streams.ofString(successInput))
+        let response = layer.parse(Streams.ofChar(successInput))
 
         expect(response.isAccepted()).toBe(false)
         expect(response.offset).toBe(0)
@@ -82,7 +82,7 @@ describe('F Layer Tests', () => {
         const second = C.string('aaSUCCESS').thenEos()
         const successInput = 'aaSUCCESS'
         const layer = F.layer(first).and(second)
-        let response = layer.parse(Streams.ofString(successInput))
+        let response = layer.parse(Streams.ofChar(successInput))
 
         expect(response.isAccepted()).toBe(false)
         expect(response.offset).toBe(2)
@@ -103,7 +103,7 @@ describe('F Layer Tests', () => {
             })
         const successInput = 'aaSUCCESS'
         const layer = F.layer(first).and(second)
-        let response = layer.parse(Streams.ofString(successInput))
+        let response = layer.parse(Streams.ofChar(successInput))
 
         expect(response.isAccepted()).toBe(false)
         expect(response.offset).toBe(2)

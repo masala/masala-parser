@@ -27,7 +27,7 @@ describe('rep parser', () => {
         const n = N.number().then(C.char('/')).rep()
 
         const string = '1/2/3/4/5/'
-        const stream = Streams.ofString(string)
+        const stream = Streams.ofChar(string)
         const response = n.parse(stream)
         const data = response.value
 
@@ -48,7 +48,7 @@ describe('rep parser', () => {
             .rep()
 
         const string = '1#2#3/4/5/'
-        const stream = Streams.ofString(string)
+        const stream = Streams.ofChar(string)
         const response = n.parse(stream)
         const data = response.value
 
@@ -62,7 +62,7 @@ describe('rep parser', () => {
         const n = N.number().then(C.char('/')).rep().rep()
 
         const string = '1/2/3/4/5/'
-        const stream = Streams.ofString(string)
+        const stream = Streams.ofChar(string)
         const response = n.parse(stream)
         const data = response.value
 
@@ -74,7 +74,7 @@ describe('rep parser', () => {
         const n = N.digit().rep()
 
         const string = '12345'
-        const stream = Streams.ofString(string)
+        const stream = Streams.ofChar(string)
         const response = n.parse(stream)
         const data = response.value
 

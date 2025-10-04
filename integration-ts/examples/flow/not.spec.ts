@@ -21,7 +21,7 @@ describe('Flow Combinator (not)', () => {
 
         const inputString = 'Xabx' // X matches not(day), fails not(a), fails not(day)
 
-        let stream = Streams.ofString(inputString)
+        let stream = Streams.ofChar(inputString)
 
         let parsing1 = F.not(day()).parse(stream)
         expect(parsing1.isAccepted(), "F.not(day()) on 'X'").toBe(true)

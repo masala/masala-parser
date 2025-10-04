@@ -3,7 +3,7 @@ import stream from '../../lib/stream/index'
 import { N } from '../../lib/parsec/index'
 
 function testParser(parser, string) {
-    let myStream = stream.ofString(string)
+    let myStream = stream.ofChar(string)
     let parsing = parser.parse(myStream)
     return parsing
 }

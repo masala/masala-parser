@@ -196,7 +196,7 @@ function expectTokenTraced(expectedName, tracer) {
 }
 
 export function getSnippet(input, startChar, maxLength = 16) {
-    if (!input.__is__string__stream) {
+    if (!input.__is__char__stream) {
         return
     }
 

@@ -1,5 +1,4 @@
-import {Streams, JSON} from '@masala/parser';
-
+import { Streams, JSON } from '@masala/parser'
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -22,123 +21,150 @@ import {Streams, JSON} from '@masala/parser';
 */
 
 export default {
-  setUp: function(done) {
-    done();
-  },
-    
-  'number accepted': function(test) {
-    test.expect(1);
-    // tests here    
-    test.ok(JSON.parse(Streams.ofString('123')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'string accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('"123"')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'string and unrecognized item rejected': function(test) {
-    test.expect(1);
-    // tests here
-    test.equal(JSON.parse(Streams.ofString('"123" -')).isAccepted(), 
-               false,
-               'should be rejected.');
-    test.done();
-  },
-    
-  'string and unrecognized item rejected with correct offset': function(test) {
-    test.expect(1);
-    // tests here
-    var result = JSON.parse(Streams.ofString('["123", -]'));
-    test.equal(result.offset,
-               7,
-               'should be 7.');
-    test.done();
-  },
-    
-  'null accepted': function(test) {
-    test.expect(1);
-    // tests here    
-    test.ok(JSON.parse(Streams.ofString('null')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
- 
-  'true accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('true')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'false accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('false')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'empty array accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('[ ]')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'singleton array accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('[ 123 ]')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'multi element array accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('[ 123 , 234 ]')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'empty object accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('{ }')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'singleton object accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('{ "a" : "v" }')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
-    
-  'multi element object accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('{ "a" : "v", "a" : [] }')).isAccepted(), 
-            'should be accepted.');
-    test.done();
-  },
+    setUp: function (done) {
+        done()
+    },
 
-  'multi level object accepted': function(test) {
-    test.expect(1);
-    // tests here
-    test.ok(JSON.parse(Streams.ofString('{ "a" : "v", "b" : {"c":{"d":12} }}')).isAccepted(),
-        'should be accepted.');
-    test.done();
-  },
+    'number accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('123')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
 
-};
+    'string accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('"123"')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'string and unrecognized item rejected': function (test) {
+        test.expect(1)
+        // tests here
+        test.equal(
+            JSON.parse(Streams.ofChar('"123" -')).isAccepted(),
+            false,
+            'should be rejected.',
+        )
+        test.done()
+    },
+
+    'string and unrecognized item rejected with correct offset': function (
+        test,
+    ) {
+        test.expect(1)
+        // tests here
+        var result = JSON.parse(Streams.ofChar('["123", -]'))
+        test.equal(result.offset, 7, 'should be 7.')
+        test.done()
+    },
+
+    'null accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('null')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'true accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('true')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'false accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('false')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'empty array accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('[ ]')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'singleton array accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('[ 123 ]')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'multi element array accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('[ 123 , 234 ]')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'empty object accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('{ }')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'singleton object accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('{ "a" : "v" }')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'multi element object accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(Streams.ofChar('{ "a" : "v", "a" : [] }')).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+
+    'multi level object accepted': function (test) {
+        test.expect(1)
+        // tests here
+        test.ok(
+            JSON.parse(
+                Streams.ofChar('{ "a" : "v", "b" : {"c":{"d":12} }}'),
+            ).isAccepted(),
+            'should be accepted.',
+        )
+        test.done()
+    },
+}

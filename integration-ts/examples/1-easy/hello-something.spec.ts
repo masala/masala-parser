@@ -10,7 +10,7 @@ describe('Hello Something Parser', () => {
             .then(C.letter().rep()) // keeping repeated ascii letters
             .then(C.char("'").drop()) // keeping previous letters
 
-        const parsing = helloParser.parse(Streams.ofString("Hello 'World'"))
+        const parsing = helloParser.parse(Streams.ofChar("Hello 'World'"))
         // C.letter.rep() will giv a array of letters
         expect(parsing.value.array()).toEqual(['W', 'o', 'r', 'l', 'd'])
     })
@@ -25,7 +25,7 @@ describe('Hello Something Parser', () => {
 
         // Note that helloParser will not reach the end of the stream; it will stop at the space after People
         const peopleParsing = helloParser.parse(
-            Streams.ofString("Hello 'People' in 2017"),
+            Streams.ofChar("Hello 'People' in 2017"),
         )
 
         expect(peopleParsing.value.join('')).toBe('People')

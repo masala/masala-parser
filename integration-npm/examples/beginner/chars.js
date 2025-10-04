@@ -1,44 +1,41 @@
-const {Streams, F, C } = require('@masala/parser');
-const {assertArrayEquals, assertEquals} = require('../../assert');
-
+const { Streams, F, C } = require('@masala/parser')
+const { assertArrayEquals, assertEquals } = require('../../assert')
 
 // Only char
-let stream = Streams.ofString('abc');
+let stream = Streams.ofChar('abc')
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
     .then(F.eos().drop()) // End Of Stream ; droping its value, just checking it's here
-    .array();
-let parsing = charsParser.parse(stream);
+    .array()
+let parsing = charsParser.parse(stream)
 
-assertArrayEquals(['a', 'b', 'c'], parsing.value);
-
+assertArrayEquals(['a', 'b', 'c'], parsing.value)
 
 // Using letter and rep() ;
-stream = Streams.ofString('Hello World');
-const letterParser = C.letter().rep()  // 'Hello'
-    .then(C.char(' '))  // space is not a letter
-    .then(C.letter().rep()); // 'World'
+stream = Streams.ofChar('Hello World')
+const letterParser = C.letter()
+    .rep() // 'Hello'
+    .then(C.char(' ')) // space is not a letter
+    .then(C.letter().rep()) // 'World'
 
-parsing = letterParser.parse(stream);
+parsing = letterParser.parse(stream)
 // console.log(parsing.value);
 //[ List { value: [ 'H', 'e', 'l', 'l', 'o' ] },' ',List { value: [ 'W', 'o', 'r', 'l', 'd' ] } ]
 // Well, complicated value ; Note that rep() returns a masala-List structure
 
-
 // Using C.letters and C.string
-stream = Streams.ofString('Hello World');
+stream = Streams.ofChar('Hello World')
 const helloParser = C.string('Hello')
     .then(C.char(' '))
     .then(C.letters())
-    .array();
+    .array()
 
-parsing = helloParser.parse(stream);
-assertArrayEquals(['Hello',' ','World'], parsing.value);
-
+parsing = helloParser.parse(stream)
+assertArrayEquals(['Hello', ' ', 'World'], parsing.value)
 
 // Using C.stringIn
-stream = Streams.ofString('James');
-const combinator = C.stringIn(['The', 'James', 'Bond', 'series']);
-parsing = combinator.parse(stream);
-assertEquals('James', parsing.value);
+stream = Streams.ofChar('James')
+const combinator = C.stringIn(['The', 'James', 'Bond', 'series'])
+parsing = combinator.parse(stream)
+assertEquals('James', parsing.value)

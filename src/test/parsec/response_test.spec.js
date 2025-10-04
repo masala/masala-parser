@@ -169,14 +169,14 @@ describe('Response Tests', () => {
     })
 
     it('accept can be consumed', () => {
-        const myStream = stream.ofString('abc')
+        const myStream = stream.ofChar('abc')
         const acceptance = response.accept('c', myStream, 3, false)
         const consumed = acceptance.isEos()
         expect(consumed).toBe(true)
     })
 
     it('accept should not be yet consumed', () => {
-        const myStream = stream.ofString('abc')
+        const myStream = stream.ofChar('abc')
         expect(response.accept('b', myStream, 2, false).isEos()).toBe(false)
     })
 

@@ -30,7 +30,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('123')).isAccepted(),
+            jsonparser.parse(stream.ofChar('123')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -40,7 +40,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('"123"')).isAccepted(),
+            jsonparser.parse(stream.ofChar('"123"')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -51,7 +51,7 @@ export default {
         // tests here
         let content = '"123" -' //'"123" -'
         test.equal(
-            jsonparser.parse(stream.ofString(content)).isAccepted(),
+            jsonparser.parse(stream.ofChar(content)).isAccepted(),
             false,
             'should be rejected.',
         )
@@ -64,7 +64,7 @@ export default {
         //FIXME #108
         // tests here
         try {
-            var result = jsonparser.parse(stream.ofString('["123",2,4]'))
+            var result = jsonparser.parse(stream.ofChar('["123",2,4]'))
             //console.log('Offsets >>', stream.offsets[7])
         } catch (e) {
             console.error(e)
@@ -81,7 +81,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('null')).isAccepted(),
+            jsonparser.parse(stream.ofChar('null')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -91,7 +91,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('true')).isAccepted(),
+            jsonparser.parse(stream.ofChar('true')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -101,7 +101,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('false')).isAccepted(),
+            jsonparser.parse(stream.ofChar('false')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -111,7 +111,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('[ ]')).isAccepted(),
+            jsonparser.parse(stream.ofChar('[ ]')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -121,7 +121,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('[ 123 ]')).isAccepted(),
+            jsonparser.parse(stream.ofChar('[ 123 ]')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -131,7 +131,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('[ 123 , 234 ]')).isAccepted(),
+            jsonparser.parse(stream.ofChar('[ 123 , 234 ]')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -141,7 +141,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('{ }')).isAccepted(),
+            jsonparser.parse(stream.ofChar('{ }')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -151,7 +151,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            jsonparser.parse(stream.ofString('{ "a" : "v" }')).isAccepted(),
+            jsonparser.parse(stream.ofChar('{ "a" : "v" }')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -162,7 +162,7 @@ export default {
         // tests here
         test.ok(
             jsonparser
-                .parse(stream.ofString('{ "a" : "v", "a" : [] }'))
+                .parse(stream.ofChar('{ "a" : "v", "a" : [] }'))
                 .isAccepted(),
             'should be accepted.',
         )
@@ -174,7 +174,7 @@ export default {
         // tests here
         test.ok(
             jsonparser
-                .parse(stream.ofString('{ "a" : "v", "b" : {"c":{"d":12} }}'))
+                .parse(stream.ofChar('{ "a" : "v", "b" : {"c":{"d":12} }}'))
                 .isAccepted(),
             'should be accepted.',
         )

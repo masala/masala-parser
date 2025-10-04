@@ -3,7 +3,7 @@ import { Streams, C, N } from '@masala/parser'
 
 describe('Floor combinator', () => {
     it('should parse a number between pipes and floor it', () => {
-        let stream = Streams.ofString('|4.6|')
+        let stream = Streams.ofChar('|4.6|')
         const floorCombinator = C.char('|')
             .drop()
             .then(N.number()) // we have ['|',4.6], we keep 4.6

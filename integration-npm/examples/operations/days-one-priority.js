@@ -35,9 +35,7 @@ function day() {
 }
 
 function blank() {
-    return C.char(' ')
-        .rep()
-        .returns(' ')
+    return C.char(' ').rep().returns(' ')
 }
 
 function operation() {
@@ -47,17 +45,11 @@ function operation() {
 }
 
 function parenthesis(par) {
-    return C.char(' ')
-        .optrep()
-        .drop()
-        .then(C.char(par))
+    return C.char(' ').optrep().drop().then(C.char(par))
 }
 
 function parenthesisExpr() {
-    return parenthesis('(')
-        .drop()
-        .then(expr())
-        .then(parenthesis(')').drop())
+    return parenthesis('(').drop().then(expr()).then(parenthesis(')').drop())
 }
 
 function expr() {
@@ -65,9 +57,7 @@ function expr() {
 }
 
 function subExpr() {
-    return operation()
-        .then(terminal())
-        .then(F.lazy(optionalSubExpr))
+    return operation().then(terminal()).then(F.lazy(optionalSubExpr))
 }
 
 function optionalSubExpr() {
@@ -84,7 +74,7 @@ function combinator() {
 
 const string = '(TUESDAY OR THURSDAY OR TUESDAY)    OR (WEDNESDAY OR (FRIDAY))'
 
-let stream = Streams.ofString(string)
+let stream = Streams.ofChar(string)
 let parsing = combinator().parse(stream)
 
 assertTrue(parsing.isAccepted())

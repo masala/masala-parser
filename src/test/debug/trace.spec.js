@@ -48,7 +48,7 @@ describe('createTracer / Parser.trace integration', () => {
         }
 
         const traced = tracer.traceAll(options)(fullParser)
-        const stream = Streams.ofString(input)
+        const stream = Streams.ofChar(input)
         traced.parse(stream)
 
         const logs = tracer.flush()
@@ -78,7 +78,7 @@ describe('createTracer / Parser.trace integration', () => {
             },
         }
         const traced = tracer.traceAll(options)(fullParser)
-        traced.parse(Streams.ofString(input))
+        traced.parse(Streams.ofChar(input))
         const logs = tracer.flush()
 
         const rightTextExit = logs.find(
@@ -145,7 +145,7 @@ describe('trace() and registerTrace() edge cases', () => {
         tracer.trace(p, 'p')
 
         // Run once and ensure we have logs
-        p.parse(Streams.ofString('ok'))
+        p.parse(Streams.ofChar('ok'))
         const logs = tracer.flush()
         expect(logs.length > 0).toBe(true)
     })
@@ -154,7 +154,7 @@ describe('trace() and registerTrace() edge cases', () => {
         const tracer = createTracer({ window: [0, 100], includeRejects: false })
         const rejecter = C.string('Z')
         const traced = tracer.trace(rejecter, 'rej')(rejecter)
-        traced.parse(Streams.ofString('abc'))
+        traced.parse(Streams.ofChar('abc'))
         const logs = tracer.flush()
         const enters = logs.filter(
             (e) => e.name === 'rej' && e.phase === 'enter',
@@ -168,7 +168,7 @@ describe('trace() and registerTrace() edge cases', () => {
         const tracer = createTracer({ window: [0, 100], snippet: false })
         const p = C.string('abc')
         const traced = tracer.trace(p, 'cons')(p)
-        traced.parse(Streams.ofString('abc'))
+        traced.parse(Streams.ofChar('abc'))
         const logs = tracer.flush()
         const exit = logs.find((e) => e.name === 'cons' && e.phase === 'exit')
         expect(exit).toBeTruthy()
@@ -179,11 +179,11 @@ describe('trace() and registerTrace() edge cases', () => {
         const tracer = createTracer({ window: [0, 100] })
         const p = C.string('x')
         tracer.trace(p, 'p')(p)
-        p.parse(Streams.ofString('x'))
+        p.parse(Streams.ofChar('x'))
         tracer.flush()
 
         tracer.restore()
-        p.parse(Streams.ofString('x'))
+        p.parse(Streams.ofChar('x'))
         expect(tracer.flush()).toEqual([])
     })
 
@@ -212,7 +212,7 @@ describe('trace() and registerTrace() edge cases', () => {
         })
         const p = C.string('abcdef')
         const traced = tracer.trace(p, 'ell')(p)
-        traced.parse(Streams.ofString('abcdef'), 0)
+        traced.parse(Streams.ofChar('abcdef'), 0)
         const logs = tracer.flush()
         const exit = logs.find((e) => e.name === 'ell' && e.phase === 'exit')
         expect(exit).toBeTruthy()
@@ -229,7 +229,7 @@ describe('trace() and registerTrace() edge cases', () => {
 
         // options undefined => should use base meta opts
         const traced = tracer.traceAll()(p)
-        traced.parse(Streams.ofString('v'))
+        traced.parse(Streams.ofChar('v'))
         const logs = tracer.flush()
         const exit = logs.find((e) => e.name === 'pv' && e.phase === 'exit')
         expect(exit).toBeTruthy()
