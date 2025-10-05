@@ -139,6 +139,10 @@ export class TracingGenLex extends GenLex {
             }
         })
     }
+
+    flush() {
+        return this.tracer.flush()
+    }
 }
 
 function expectTokenTraced(expectedName, tracer) {

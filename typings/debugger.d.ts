@@ -7,6 +7,9 @@ interface TracerOption {
     showValue: boolean
     byName: Record<string, ByNameOption>
 }
+
+type Log = any
+
 interface Tracer {
     trace<D, T>(
         parser: Parser<D, T>,
@@ -15,4 +18,11 @@ interface Tracer {
     ): Parser<D, T>
 
     traceAll
+    flush(): Log[]
+}
+
+// TO be normalized with simple Tracer
+export interface GenlexTracer {
+    flush(): Log[]
+    getLastTokenMeta(): any
 }

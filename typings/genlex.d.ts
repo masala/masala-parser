@@ -5,6 +5,7 @@ import {
     SingleParser,
     TupleParser,
 } from '../masala-parser.js'
+import { GenlexTracer, Log, Tracer } from './debugger.js'
 
 export interface TokenParser<T> extends SingleParser<Token<T>> {}
 
@@ -74,4 +75,9 @@ export interface IGenLex {
     keywords(tokens: string[]): Array<TokenParser<string>>
 
     get(tokenName: string): TokenParser<any>
+}
+
+export interface ITracingGenLex extends IGenLex {
+    tracer: GenlexTracer
+    flush(): Log[]
 }

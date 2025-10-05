@@ -1,4 +1,4 @@
-import type { Tracer } from './typings/debugger.d.ts'
+import type { Tracer, GenlexTracer } from './typings/debugger.d.ts'
 import type { FlowBundle } from './typings/flow-bundle.d.ts'
 import type { EmptyTuple, Tuple } from './typings/tuple.d.ts'
 import type { VoidParser } from './typings/void-parser.d.ts'
@@ -7,6 +7,7 @@ import type {
     TokenParser,
     TokenCollection,
     Token,
+    ITracingGenLex,
 } from './typings/genlex.d.ts'
 import type {
     TupleParser,
@@ -569,7 +570,7 @@ export declare const N: NumberBundle
 export declare const Streams: Streams
 
 export declare const GenLex: new () => IGenLex
-export declare const TracingGenLex: new (tracer?: Tracer) => IGenLex
+export declare const TracingGenLex: new (tracer?: Tracer) => ITracingGenLex
 export type { Token, TokenCollection, IGenLex, TokenParser }
 
 export type { EmptyTuple, Tuple }
@@ -592,3 +593,4 @@ interface TracerOptions {
 export declare function createTracer(options?: TracerOptions): Tracer
 export declare function leanToken<T>(token: Token<T>): T
 export declare function leanTuple<T>(tokens: Tuple<Token<T>>): Tuple<T>
+export type { GenlexTracer }
