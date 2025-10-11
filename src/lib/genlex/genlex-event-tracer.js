@@ -1,4 +1,6 @@
 // lib/debug/tracer.js
+import { aiConvert } from '../debug/ai-converter.js'
+
 export class GenlexEventTracer {
     constructor({
         window = [0, Number.MAX_SAFE_INTEGER],
@@ -30,6 +32,10 @@ export class GenlexEventTracer {
     }
     flush() {
         return this.events.splice(0, this.events.length)
+    }
+
+    flushForAi() {
+        return aiConvert(this.flush())
     }
 
     setLastTokenMeta(meta) {

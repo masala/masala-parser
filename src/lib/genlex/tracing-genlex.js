@@ -143,6 +143,10 @@ export class TracingGenLex extends GenLex {
     flush() {
         return this.tracer.flush()
     }
+
+    flushForAi() {
+        return this.tracer.flushForAi()
+    }
 }
 
 function expectTokenTraced(expectedName, tracer) {

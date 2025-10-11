@@ -1,0 +1,744 @@
+[
+    {
+        "ts": 1760022422299,
+        "type": "lex-start",
+        "startChar": 0,
+        "index": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "NEQ",
+        "priority": 300,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "NEQ",
+        "priority": 300,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "GTE",
+        "priority": 500,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "GTE",
+        "priority": 500,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "LTE",
+        "priority": 500,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "LTE",
+        "priority": 500,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "NOT",
+        "priority": 500,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "NOT",
+        "priority": 500,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "IDENTIFIER",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "IDENTIFIER",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "GT",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "GT",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "LT",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "LT",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "EQ",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "EQ",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": ".",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": ".",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": ",",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": ",",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": ":",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": ":",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "}",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "}",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "{",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "{",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": ")",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": ")",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "(",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "(",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "||",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "||",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "&&",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "&&",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "%",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "%",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "/",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "/",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "*",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-no-match",
+        "name": "*",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-try",
+        "name": "-",
+        "priority": 1000,
+        "startChar": 0
+    },
+    {
+        "ts": 1760022422299,
+        "type": "lex-taken",
+        "name": "-",
+        "priority": 1000,
+        "startChar": 0,
+        "endChar": 1,
+        "value": "-",
+        "snippet": "-10"
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-commit",
+        "name": "-",
+        "tokenIndex": 0,
+        "startIndex": 0,
+        "startChar": 0,
+        "endChar": 1,
+        "value": "-",
+        "trailing": 0,
+        "snippet": "-10"
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-reject",
+        "expected": "NOT",
+        "found": "-",
+        "tokenIndex": 0,
+        "startChar": 0,
+        "endChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-reject",
+        "expected": "+",
+        "found": "-",
+        "tokenIndex": 0,
+        "startChar": 0,
+        "endChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-accept",
+        "name": "-",
+        "tokenIndex": 0,
+        "startChar": 0,
+        "endChar": 1,
+        "value": "-"
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-start",
+        "startChar": 1,
+        "index": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "NEQ",
+        "priority": 300,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "NEQ",
+        "priority": 300,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "GTE",
+        "priority": 500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "GTE",
+        "priority": 500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "LTE",
+        "priority": 500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "LTE",
+        "priority": 500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "NOT",
+        "priority": 500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "NOT",
+        "priority": 500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "IDENTIFIER",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "IDENTIFIER",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "GT",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "GT",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "LT",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "LT",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "EQ",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "EQ",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": ".",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": ".",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": ",",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": ",",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": ":",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": ":",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "}",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "}",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "{",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "{",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": ")",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": ")",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "(",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "(",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "||",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "||",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "&&",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "&&",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "%",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "%",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "/",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "/",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "*",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "*",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "-",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "-",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "+",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "+",
+        "priority": 1000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "BOOLEAN_LITERAL",
+        "priority": 1500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-no-match",
+        "name": "BOOLEAN_LITERAL",
+        "priority": 1500,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-try",
+        "name": "NUMBER_LITERAL",
+        "priority": 2000,
+        "startChar": 1
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-taken",
+        "name": "NUMBER_LITERAL",
+        "priority": 2000,
+        "startChar": 1,
+        "endChar": 3,
+        "value": 10,
+        "snippet": "10"
+    },
+    {
+        "ts": 1760022422300,
+        "type": "lex-commit",
+        "name": "NUMBER_LITERAL",
+        "tokenIndex": 1,
+        "startIndex": 1,
+        "startChar": 1,
+        "endChar": 3,
+        "value": 10,
+        "trailing": 0,
+        "snippet": "10"
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-reject",
+        "expected": "IDENTIFIER",
+        "found": "NUMBER_LITERAL",
+        "tokenIndex": 1,
+        "startChar": 1,
+        "endChar": 3
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-reject",
+        "expected": "BOOLEAN_LITERAL",
+        "found": "NUMBER_LITERAL",
+        "tokenIndex": 1,
+        "startChar": 1,
+        "endChar": 3
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-reject",
+        "expected": "STRING_LITERAL",
+        "found": "NUMBER_LITERAL",
+        "tokenIndex": 1,
+        "startChar": 1,
+        "endChar": 3
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-accept",
+        "name": "NUMBER_LITERAL",
+        "tokenIndex": 1,
+        "startChar": 1,
+        "endChar": 3,
+        "value": 10
+    },
+    {
+        "ts": 1760022422300,
+        "type": "grammar-eos",
+        "expected": ".",
+        "tokenIndex": null,
+        "index": 2
+    }
+]

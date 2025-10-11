@@ -1,0 +1,12 @@
+[
+    { "type": "lex-try", "name": "NEQ" },
+    { "type": "lex-try", "name": "GTE" },
+    { "type": "lex-try", "name": "LTE" },
+    { "type": "lex-try", "name": "NOT" },
+    { "type": "lex-taken", "name": "-" },
+    { "type": "grammar-reject", "expected": "NOT", "found": "-" },
+    { "type": "grammar-reject", "expected": "+", "found": "-" },
+    { "type": "grammar-accept", "name": "-" },
+    { "type": "lex-try", "name": "NEQ" },
+    { "type": "lex-try", "name": "GTE" }
+]

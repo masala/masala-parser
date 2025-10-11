@@ -1,5 +1,5 @@
 // vitest.config.ts  – put next to package.json of @masala/parser
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
     test: {
@@ -9,8 +9,8 @@ export default defineConfig({
         includeSource: [],
 
         coverage: {
-            provider: 'v8',          // default, but make it explicit
-            all: true,               // check files not touched by tests, too
+            provider: 'v8', // default, but make it explicit
+            all: true, // check files not touched by tests, too
             include: ['src/lib/**/*.js'],
             exclude: [
                 // never count tests or potential fixtures
@@ -28,11 +28,7 @@ export default defineConfig({
             //functions: 100,
             //statements: 100,
 
-            reporter: ['text', 'html'],   // CLI + ./coverage/index.html
+            reporter: ['text', 'html'], // CLI + ./coverage/index.html
         },
-
     },
-
-
-
-});
+})
