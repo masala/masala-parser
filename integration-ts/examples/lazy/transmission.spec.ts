@@ -29,7 +29,7 @@ describe('Lazy Combinator with Recursion', () => {
 
         // Input: AAA B
         const str = 'AAAB'
-        const stream = Streams.ofChar(str)
+        const stream = Streams.ofChars(str)
         const parsing = parser.parse(stream)
 
         // A('a') -> C.char('A').rep() parses 'AAA'

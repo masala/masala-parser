@@ -7,7 +7,7 @@ describe('Filter and Match Combinators', () => {
             .filter((m) => m >= 5)
             .rep()
         // The parser will accept the first 3 numbers (5, 6, 7)
-        let response = combinator.parse(Streams.ofChar('5672'))
+        let response = combinator.parse(Streams.ofChars('5672'))
         expect(response.isAccepted()).toBe(true)
         expect(response.value.size()).toBe(3)
         // Check the actual values if needed
@@ -21,16 +21,16 @@ describe('Filter and Match Combinators', () => {
         let parser = N.number().match(55)
 
         // Test case 1: exact match
-        let res1 = parser.parse(Streams.ofChar('55'))
+        let res1 = parser.parse(Streams.ofChars('55'))
         expect(res1.isAccepted()).toBe(true)
         expect(res1.value).toBe(55)
 
         // Test case 2: non-match (extra digit)
-        let res2 = parser.parse(Streams.ofChar('555'))
+        let res2 = parser.parse(Streams.ofChars('555'))
         expect(res2.isAccepted()).toBe(false)
 
         // Test case 3: non-match (different number)
-        let res3 = parser.parse(Streams.ofChar('56'))
+        let res3 = parser.parse(Streams.ofChars('56'))
         expect(res3.isAccepted()).toBe(false)
     })
 })

@@ -5,5 +5,5 @@ const floorCombinator = C.string('Hello')
     .then(C.string(' World'))
     .then(C.string('fail'))
 
-const parsing = floorCombinator.parse(Streams.ofChar('Hello World !!!'))
+const parsing = floorCombinator.parse(Streams.ofChars('Hello World !!!'))
 assertFalse(parsing.isAccepted(), 'Testing debug')

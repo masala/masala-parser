@@ -113,7 +113,7 @@ export const titleTests = {
         const text = `### This is a title`
         const line = text + '\n'
 
-        let response = title().parse(Streams.ofChar(line))
+        let response = title().parse(Streams.ofChars(line))
         assertTrue(response.isAccepted())
         assertEquals(response.offset, text.length)
     },
@@ -122,7 +122,7 @@ export const titleTests = {
         const text = `This is a title\n------`
         const line = text + '\n'
 
-        let response = title().parse(Streams.ofChar(line))
+        let response = title().parse(Streams.ofChars(line))
         assertTrue(response.isAccepted())
         assertEquals(response.offset, text.length)
     },

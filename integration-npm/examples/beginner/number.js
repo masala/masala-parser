@@ -3,7 +3,7 @@ const { assertEquals, assertTrue } = require('../../assert')
 
 // Parsec needs a stream of characters
 const document = '12'
-const s = Streams.ofChar(document)
+const s = Streams.ofChars(document)
 
 // numberLitteral defines any int or float number
 // We expect a number, then eos: End Of Stream

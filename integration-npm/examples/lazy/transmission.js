@@ -22,7 +22,7 @@ function B(aVal) {
 const parser = A('a')
 
 const str = 'AAAB'
-const stream = Streams.ofChar(str)
+const stream = Streams.ofChars(str)
 const parsing = parser.parse(stream)
 
 assertTrue(parsing.offset === str.length)

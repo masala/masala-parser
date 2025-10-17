@@ -15,7 +15,7 @@ function testFile(sample) {
     var sampleContent = fs.readFileSync(sampleFileName).toString()
     var sampleExpected = fs.readFileSync(expectedFileName).toString()
 
-    const parsing = M.parse(Streams.ofChar(sampleContent))
+    const parsing = M.parse(Streams.ofChars(sampleContent))
     value = parsing.value
     expected = JSON.parse(sampleExpected)
 }

@@ -8,7 +8,7 @@ const parser = C.string('Hello')
     .thenRight(C.letter().rep())
     .thenLeft(C.char("'"))
 
-var parsing = parser.parse(Streams.ofChar("Hello 'World'"))
+var parsing = parser.parse(Streams.ofChars("Hello 'World'"))
 assertArrayEquals(
     ['W', 'o', 'r', 'l', 'd'],
     parsing.value.array(),

@@ -29,7 +29,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('123')).isAccepted(),
+            JSON.parse(Streams.ofChars('123')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -39,7 +39,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('"123"')).isAccepted(),
+            JSON.parse(Streams.ofChars('"123"')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -49,7 +49,7 @@ export default {
         test.expect(1)
         // tests here
         test.equal(
-            JSON.parse(Streams.ofChar('"123" -')).isAccepted(),
+            JSON.parse(Streams.ofChars('"123" -')).isAccepted(),
             false,
             'should be rejected.',
         )
@@ -61,7 +61,7 @@ export default {
     ) {
         test.expect(1)
         // tests here
-        var result = JSON.parse(Streams.ofChar('["123", -]'))
+        var result = JSON.parse(Streams.ofChars('["123", -]'))
         test.equal(result.offset, 7, 'should be 7.')
         test.done()
     },
@@ -70,7 +70,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('null')).isAccepted(),
+            JSON.parse(Streams.ofChars('null')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -80,7 +80,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('true')).isAccepted(),
+            JSON.parse(Streams.ofChars('true')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -90,7 +90,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('false')).isAccepted(),
+            JSON.parse(Streams.ofChars('false')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -100,7 +100,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('[ ]')).isAccepted(),
+            JSON.parse(Streams.ofChars('[ ]')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -110,7 +110,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('[ 123 ]')).isAccepted(),
+            JSON.parse(Streams.ofChars('[ 123 ]')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -120,7 +120,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('[ 123 , 234 ]')).isAccepted(),
+            JSON.parse(Streams.ofChars('[ 123 , 234 ]')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -130,7 +130,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('{ }')).isAccepted(),
+            JSON.parse(Streams.ofChars('{ }')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -140,7 +140,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('{ "a" : "v" }')).isAccepted(),
+            JSON.parse(Streams.ofChars('{ "a" : "v" }')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -150,7 +150,7 @@ export default {
         test.expect(1)
         // tests here
         test.ok(
-            JSON.parse(Streams.ofChar('{ "a" : "v", "a" : [] }')).isAccepted(),
+            JSON.parse(Streams.ofChars('{ "a" : "v", "a" : [] }')).isAccepted(),
             'should be accepted.',
         )
         test.done()
@@ -161,7 +161,7 @@ export default {
         // tests here
         test.ok(
             JSON.parse(
-                Streams.ofChar('{ "a" : "v", "b" : {"c":{"d":12} }}'),
+                Streams.ofChars('{ "a" : "v", "b" : {"c":{"d":12} }}'),
             ).isAccepted(),
             'should be accepted.',
         )

@@ -21,7 +21,7 @@ describe('Optional parser', () => {
         const n = C.char('z')
 
         const mixed = c.then(n)
-        const stream = Streams.ofChar('zNOT_REACHED')
+        const stream = Streams.ofChars('zNOT_REACHED')
 
         const response = mixed.parse(stream) // not 'a', so we have 'b' as default value
         const data = response.value

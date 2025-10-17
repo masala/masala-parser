@@ -2,7 +2,7 @@ const { Streams, F, C } = require('@masala/parser')
 const { assertArrayEquals, assertEquals } = require('../../assert')
 
 // Only char
-let stream = Streams.ofChar('abc')
+let stream = Streams.ofChars('abc')
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -13,7 +13,7 @@ let parsing = charsParser.parse(stream)
 assertArrayEquals(['a', 'b', 'c'], parsing.value)
 
 // Using letter and rep() ;
-stream = Streams.ofChar('Hello World')
+stream = Streams.ofChars('Hello World')
 const letterParser = C.letter()
     .rep() // 'Hello'
     .then(C.char(' ')) // space is not a letter
@@ -25,7 +25,7 @@ parsing = letterParser.parse(stream)
 // Well, complicated value ; Note that rep() returns a masala-List structure
 
 // Using C.letters and C.string
-stream = Streams.ofChar('Hello World')
+stream = Streams.ofChars('Hello World')
 const helloParser = C.string('Hello')
     .then(C.char(' '))
     .then(C.letters())
@@ -35,7 +35,7 @@ parsing = helloParser.parse(stream)
 assertArrayEquals(['Hello', ' ', 'World'], parsing.value)
 
 // Using C.stringIn
-stream = Streams.ofChar('James')
+stream = Streams.ofChars('James')
 const combinator = C.stringIn(['The', 'James', 'Bond', 'series'])
 parsing = combinator.parse(stream)
 assertEquals('James', parsing.value)

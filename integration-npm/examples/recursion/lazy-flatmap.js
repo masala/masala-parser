@@ -14,7 +14,7 @@ function B(aVal) {
 const parser = A()
 
 const str = 'AAAB'
-const stream = Streams.ofChar(str)
+const stream = Streams.ofChars(str)
 const parsing = parser.parse(stream)
 
 //F.startsWith()

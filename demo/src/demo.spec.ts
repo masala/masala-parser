@@ -34,7 +34,7 @@ const documentParser = lineParser.rep().then(C.string('---').drop()).array()
 
 describe('Parser Combinator demonstration', () => {
     it('should parse a line', () => {
-        const stream = Streams.ofString(document)
+        const stream = Streams.ofChars(document)
         const parsing = lineParser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual({
@@ -45,7 +45,7 @@ describe('Parser Combinator demonstration', () => {
     })
 
     it('should parse the entire front matter', () => {
-        const stream = Streams.ofString(document)
+        const stream = Streams.ofChars(document)
         const parsing = documentParser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual([

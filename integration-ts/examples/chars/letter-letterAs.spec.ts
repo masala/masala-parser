@@ -13,7 +13,7 @@ describe('Character Combinators (letters, lowerCase, notString)', () => {
                 .then(C.notChar('.').rep()) // Parses until the end
         }
 
-        let stream = Streams.ofChar(inputString)
+        let stream = Streams.ofChars(inputString)
         let parsing = combinator().parse(stream)
 
         expect(parsing.isAccepted()).toBe(true)

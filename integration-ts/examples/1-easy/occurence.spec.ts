@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 describe('Occurrence parser', () => {
     it('should parse 5 occurrences of a digit', () => {
         let combinator = N.digit().occurrence(5)
-        let response = combinator.parse(Streams.ofChar('55555'))
+        let response = combinator.parse(Streams.ofChars('55555'))
 
         expect(response.value.size()).toBe(5)
     })
@@ -12,7 +12,7 @@ describe('Occurrence parser', () => {
     it('should parse 3 occurrences of a digit followed by a number', () => {
         // we are looking for 5,5,5 then 55
         let combinator = N.digit().occurrence(3).then(N.number())
-        let response = combinator.parse(Streams.ofChar('55555'))
+        let response = combinator.parse(Streams.ofChars('55555'))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.value.last()).toBe(55)
@@ -23,7 +23,7 @@ describe('Occurrence parser', () => {
          * Occurence with a Tuple parser
          */
         let parser = C.char('a').then(C.char('b')).occurrence(3)
-        let resp = parser.parse(Streams.ofChar('ababab'))
+        let resp = parser.parse(Streams.ofChars('ababab'))
 
         // Expecting a structure like [['a','b'], ['a','b'], ['a','b']]
         expect(resp.isAccepted()).toBe(true)
@@ -41,7 +41,7 @@ describe('Occurrence parser', () => {
          * Occurence with a Tuple parser
          */
         let parser = C.char('a').then(C.char('b')).occurrence(3)
-        let resp = parser.parse(Streams.ofChar('ababab'))
+        let resp = parser.parse(Streams.ofChars('ababab'))
 
         // Expecting a structure like [['a','b'], ['a','b'], ['a','b']]
         expect(resp.isAccepted()).toBe(true)

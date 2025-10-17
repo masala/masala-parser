@@ -10,7 +10,7 @@ const helloParser = C.string('Hello')
     .thenRight(C.letter().rep()) // keeping repeated ascii letters
     .thenLeft(C.char("'")) // keeping previous letters
 
-const parsing = helloParser.parse(Streams.ofChar("Hello 'World'"))
+const parsing = helloParser.parse(Streams.ofChars("Hello 'World'"))
 // C.letter().rep() will giv a array of letters
 
 assertArrayEquals(
@@ -21,7 +21,7 @@ assertArrayEquals(
 
 // Note that helloParser will not reach the end of the stream; it will stop at the space after People
 const peopleParsing = helloParser.parse(
-    Streams.ofChar("Hello 'People' in 2017"),
+    Streams.ofChars("Hello 'People' in 2017"),
 )
 
 assertEquals('People', peopleParsing.value.join(''), 'Hello People joined')

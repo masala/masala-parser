@@ -30,7 +30,7 @@ const licensePlateParser: LicensePlateParser = letters
 
 describe('License Plate Parser', () => {
     it('should parse a valid European plate', () => {
-        const stream = Streams.ofString('DB-101-NY')
+        const stream = Streams.ofChars('DB-101-NY')
         const parsing = licensePlateParser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual({
@@ -42,7 +42,7 @@ describe('License Plate Parser', () => {
     })
 
     it('should reject an invalid plate', () => {
-        const stream = Streams.ofString('DB-666-42')
+        const stream = Streams.ofChars('DB-666-42')
         const parsing = licensePlateParser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
     })

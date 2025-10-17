@@ -74,7 +74,7 @@ function combinator() {
 
 const string = '(TUESDAY OR THURSDAY OR TUESDAY)    OR (WEDNESDAY OR (FRIDAY))'
 
-let stream = Streams.ofChar(string)
+let stream = Streams.ofChars(string)
 let parsing = combinator().parse(stream)
 
 assertTrue(parsing.isAccepted())

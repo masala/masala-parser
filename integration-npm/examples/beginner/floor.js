@@ -1,7 +1,7 @@
 const { Streams, N, C } = require('@masala/parser')
 const { assertEquals } = require('../../assert')
 
-const stream = Streams.ofChar('|4.6|')
+const stream = Streams.ofChars('|4.6|')
 const floorCombinator = C.char('|')
     .drop()
     .then(N.number()) // we have ['|',4.6], we keep 4.6

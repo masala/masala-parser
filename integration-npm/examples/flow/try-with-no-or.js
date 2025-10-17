@@ -39,7 +39,7 @@ function combinator() {
 
 const string = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY'
 
-let stream = Streams.ofChar(string)
+let stream = Streams.ofChars(string)
 let parsing = combinator().parse(stream)
 
 assertFalse(parsing.isAccepted())
