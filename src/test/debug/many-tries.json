@@ -1,0 +1,14 @@
+[
+    { "type": "lex-try", "name": "A" },
+    { "type": "lex-try", "name": "B" },
+    { "type": "lex-try", "name": "C" },
+    { "type": "lex-try", "name": "NOT1" },
+    { "type": "lex-try", "name": "NOT2" },
+    { "type": "lex-try", "name": "NOT3" },
+    { "type": "lex-try", "name": "NOT4" },
+    { "type": "lex-try", "name": "NOT5" },
+    { "type": "lex-try", "name": "NOT6" },
+    { "type": "lex-try", "name": "X" },
+    { "type": "lex-try", "name": "Y" },
+    { "type": "lex-try", "name": "Z" }
+]

@@ -3,7 +3,7 @@ export function aiConvert(logs) {
     const acceptedTypes = [
         'grammar-accept',
         'grammar-reject',
-        'grammar-eos',
+        //'grammar-eos', removed, because  noisy
         'lex-taken',
         'lex-try',
         'lex-fail',
@@ -12,7 +12,13 @@ export function aiConvert(logs) {
     newLogs = keepLogByType(newLogs, acceptedTypes)
 
     const simplified = simplify(newLogs)
-    return simplified
+    // shorten both lexTried and grammarRejected groups
+    return shortenKeys(simplified, ['lexTried', 'grammarRejected'], {
+        max: 8,
+        head: 3,
+        tail: 3,
+        ellipsis: '...',
+    })
 }
 
 function keepOnlyKeys(logs, keys) {
@@ -65,4 +71,34 @@ function simplify(events) {
         }
     }
     return out
+}
+
+/* --------  shortener for lexTried arrays -------- */
+
+function shortenArrayMiddle(
+    arr,
+    { max = 8, head = 3, tail = 3, ellipsis = '...' } = {},
+) {
+    if (!Array.isArray(arr) || arr.length <= max) return arr
+    const left = arr.slice(0, head)
+    const right = arr.slice(-tail)
+    return [...left, ellipsis, ...right]
+}
+
+function shortenKeys(logs, keys, opts) {
+    return logs.map((entry) => {
+        if (!entry) return entry
+        let changed = false
+        const out = { ...entry }
+        for (const k of keys) {
+            if (Array.isArray(out[k])) {
+                const shortened = shortenArrayMiddle(out[k], opts)
+                if (shortened !== out[k]) {
+                    out[k] = shortened
+                    changed = true
+                }
+            }
+        }
+        return changed ? out : entry
+    })
 }
