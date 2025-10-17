@@ -87,7 +87,6 @@ function shortenArrayMiddle(
 
 function shortenKeys(logs, keys, opts) {
     return logs.map((entry) => {
-        if (!entry) return entry
         let changed = false
         const out = { ...entry }
         for (const k of keys) {

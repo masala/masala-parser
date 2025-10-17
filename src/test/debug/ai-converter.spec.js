@@ -43,3 +43,17 @@ describe('AI log converter', () => {
         expect(converted[4]).toEqual({ lexTried: ['NEQ', 'GTE'] })
     })
 })
+
+describe('Side cases', () => {
+    it('should work with empty', () => {
+        let logs = [{}, { type: 'lex-try', name: 'A' }]
+        let converted = aiConvert(logs)
+        let expected = [{ lexTried: ['A'] }]
+        expect(converted).toEqual(expected)
+
+        logs = [{ type: 'lex-try', name: 'A' }, {}]
+        converted = aiConvert(logs)
+        expected = [{ lexTried: ['A'] }]
+        expect(converted).toEqual(expected)
+    })
+})

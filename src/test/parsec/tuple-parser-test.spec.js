@@ -35,7 +35,7 @@ describe('Tuple Parser Tests', () => {
 
     it('expect F.nop to be like a empty tuple', () => {
         let text = 'ab'
-        const stream = Streams.ofChar(text)
+        const stream = Streams.ofChars(text)
         let parser = C.char('a').then(F.nop()).then(C.char('b')).join()
         let parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)

@@ -7,7 +7,7 @@ export default {
 
     'We can get a response from ': function (test) {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArray(document)
+        const line = Streams.ofArrays(document)
 
         let response = line.get(0)
         test.equal(response.value, 'More')
@@ -17,7 +17,7 @@ export default {
 
     'We have reached out of stream': function (test) {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArray(document)
+        const line = Streams.ofArrays(document)
 
         let out = line.endOfStream(3)
         test.ok(out)

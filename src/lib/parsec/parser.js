@@ -31,7 +31,7 @@ export default class Parser {
     }
 
     val(text) {
-        return this.parse(stream.ofChar(text)).value
+        return this.parse(stream.ofChars(text)).value
     }
 
     // Parser 'a 'c => ('a -> Parser 'b 'c) -> Parser 'b 'c
@@ -213,7 +213,7 @@ export default class Parser {
         var self = this
 
         return new Parser((input, index = 0) =>
-            p.parse(stream.buffered(stream.ofParser(self, input)), index),
+            p.parse(stream.buffered(stream.ofParsers(self, input)), index),
         )
     }
 

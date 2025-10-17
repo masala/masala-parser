@@ -10,7 +10,7 @@ describe('TracingGenLex coverage additions', () => {
         expect(tok.__token__name).toBe('+')
 
         const parser = gl.use(tok.thenEos())
-        const res = parser.parse(stream.ofChar('+'))
+        const res = parser.parse(stream.ofChars('+'))
         expect(res.isAccepted()).toBe(true)
         const tv = res.value.at(0)
         expect(tv.name).toBe('+')
@@ -23,12 +23,12 @@ describe('TracingGenLex coverage additions', () => {
     })
 
     it('getSnippet — returns empty string when startChar is undefined', () => {
-        const s = stream.ofChar('ABC')
+        const s = stream.ofChars('ABC')
         expect(getSnippet(s, undefined)).toBe('')
     })
 
     it('getSnippet — truncates when longer than maxLength', () => {
-        const s = stream.ofChar('abcdefghijklmnopqr')
+        const s = stream.ofChars('abcdefghijklmnopqr')
         expect(getSnippet(s, 0, 8)).toBe('abcdefgh...')
     })
 
@@ -39,7 +39,7 @@ describe('TracingGenLex coverage additions', () => {
         const a = gl.tokenize('A')
 
         // Provide an object without a name so foundName is undefined
-        const res = a.parse(stream.ofArray([{}]))
+        const res = a.parse(stream.ofArrays([{}]))
         expect(res.isAccepted()).toBe(false)
 
         const events = tracer.flush()

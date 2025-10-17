@@ -173,11 +173,11 @@ export interface Stream<Data> {
  * Data parsed by the parser
  */
 interface Streams {
-    ofChar(string: string): Stream<string>
+    ofChars(string: string): Stream<string>
 
-    ofArray<X>(): Stream<X[]>
+    ofArrays<X>(): Stream<X[]>
 
-    ofParser<T, D>(
+    ofParsers<T, D>(
         tokenParser: IParser<T>,
         lowerStream: Stream<D>,
     ): Stream<IParser<T>>

@@ -16,7 +16,7 @@ function ifElseParser() {
 describe('TracingGenLex flush', () => {
     it('flush returns and clears events', () => {
         const grammar = ifElseParser()
-        const input = stream.ofChar('if A else B')
+        const input = stream.ofChars('if A else B')
         const res = grammar.parse(input)
         //expect(res.isAccepted()).toBe(true)
 
@@ -30,7 +30,7 @@ describe('TracingGenLex flush', () => {
 
     it('flush simple events', () => {
         const grammar = ifElseParser()
-        const input = stream.ofChar('if A else B')
+        const input = stream.ofChars('if A else B')
         const res = grammar.parse(input)
         expect(res.isAccepted()).toBe(true)
 

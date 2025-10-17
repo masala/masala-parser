@@ -4,16 +4,18 @@ import jsonparser from '../../lib/standard/json/jsonparser.js'
 
 describe('JSON Parser Tests', () => {
     it('number accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('123')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('123')).isAccepted()).toBe(true)
     })
 
     it('string accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('"123"')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('"123"')).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('string and unrecognized item rejected', () => {
         let content = '"123" -' //'"123" -'
-        expect(jsonparser.parse(stream.ofChar(content)).isAccepted()).toBe(
+        expect(jsonparser.parse(stream.ofChars(content)).isAccepted()).toBe(
             false,
         )
     })
@@ -22,7 +24,7 @@ describe('JSON Parser Tests', () => {
         //FIXME #108
         let result
         try {
-            result = jsonparser.parse(stream.ofChar('["123",2,4]'))
+            result = jsonparser.parse(stream.ofChars('["123",2,4]'))
             //console.log('Offsets >>', stream.offsets[7])
         } catch (e) {
             console.error(e)
@@ -35,47 +37,49 @@ describe('JSON Parser Tests', () => {
     })
 
     it('null accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('null')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('null')).isAccepted()).toBe(true)
     })
 
     it('true accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('true')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('true')).isAccepted()).toBe(true)
     })
 
     it('false accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('false')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('false')).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('empty array accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('[ ]')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('[ ]')).isAccepted()).toBe(true)
     })
 
     it('singleton array accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('[ 123 ]')).isAccepted()).toBe(
+        expect(jsonparser.parse(stream.ofChars('[ 123 ]')).isAccepted()).toBe(
             true,
         )
     })
 
     it('multi element array accepted', () => {
         expect(
-            jsonparser.parse(stream.ofChar('[ 123 , 234 ]')).isAccepted(),
+            jsonparser.parse(stream.ofChars('[ 123 , 234 ]')).isAccepted(),
         ).toBe(true)
     })
 
     it('empty object accepted', () => {
-        expect(jsonparser.parse(stream.ofChar('{ }')).isAccepted()).toBe(true)
+        expect(jsonparser.parse(stream.ofChars('{ }')).isAccepted()).toBe(true)
     })
 
     it('singleton object accepted', () => {
         expect(
-            jsonparser.parse(stream.ofChar('{ "a" : "v" }')).isAccepted(),
+            jsonparser.parse(stream.ofChars('{ "a" : "v" }')).isAccepted(),
         ).toBe(true)
     })
 
     it('multi element object accepted', () => {
         expect(
             jsonparser
-                .parse(stream.ofChar('{ "a" : "v", "a" : [] }'))
+                .parse(stream.ofChars('{ "a" : "v", "a" : [] }'))
                 .isAccepted(),
         ).toBe(true)
     })
@@ -83,7 +87,7 @@ describe('JSON Parser Tests', () => {
     it('multi level object accepted', () => {
         expect(
             jsonparser
-                .parse(stream.ofChar('{ "a" : "v", "b" : {"c":{"d":12} }}'))
+                .parse(stream.ofChars('{ "a" : "v", "b" : {"c":{"d":12} }}'))
                 .isAccepted(),
         ).toBe(true)
     })

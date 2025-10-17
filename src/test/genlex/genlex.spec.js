@@ -30,7 +30,7 @@ describe('GenLex Tests', () => {
         let grammar = plus.or(minus).rep().thenEos()
         const parser = genlex.use(grammar)
         const text = '+ + - --'
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
 
         expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos(), 'the parsing has reached the eos()');
         expect(parsing.offset).toBe(5) // Nodeunit: test.equal(5, parsing.offset, 'there are 5 keywords');
@@ -44,7 +44,7 @@ describe('GenLex Tests', () => {
         let grammar = plus.or(minus).rep().thenEos()
         const parser = genlex.use(grammar)
         const text = '+  +  +* --'
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
 
         expect(parsing.isEos()).toBe(false) // Nodeunit: test.ok(! parsing.isEos(), 'an error should have occurred');
         expect(parsing.getOffset()).toBe(3) // Nodeunit: test.equal(3, parsing.getOffset(), 'Failed at the third token');
@@ -81,7 +81,7 @@ describe('GenLex Tests', () => {
         const tkNumber = genlex.tokenize(N.number(), 'number')
         let grammar = tkNumber.rep()
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar('34 23'))
+        const parsing = parser.parse(stream.ofChars('34 23'))
         expect(parsing.isAccepted()).toBe(true)
     })
 
@@ -91,7 +91,7 @@ describe('GenLex Tests', () => {
         let grammar = plus.rep().then(F.eos().drop())
         const parser = genlex.use(grammar)
         const text = '+++++'
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
         expect(parsing.isAccepted()).toBe(true)
     })
 
@@ -102,7 +102,7 @@ describe('GenLex Tests', () => {
         let grammar = plus.or(number).rep().then(F.eos().drop())
         const parser = genlex.use(grammar)
         const text = '++77++4+'
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
         expect(parsing.isEos()).toBe(true)
     })
 
@@ -112,7 +112,7 @@ describe('GenLex Tests', () => {
         let grammar = number.rep()
         const text = '15 14'
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
         const tokenValues = parsing.value.array().map((tv) => tv.value)
         expect(tokenValues).toEqual([15, 14])
     })
@@ -125,7 +125,7 @@ describe('GenLex Tests', () => {
         let grammar = tkDate.rep().then(number).then(F.eos())
         const text = '15-12-2018      12-02-2020   12 '
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
         expect(parsing.isAccepted()).toBe(true)
     })
 
@@ -136,7 +136,7 @@ describe('GenLex Tests', () => {
         let grammar = number.then(dol).rep().then(F.eos())
         const text = '15 $ '
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
         expect(parsing.isEos()).toBe(true)
     })
 
@@ -147,7 +147,7 @@ describe('GenLex Tests', () => {
         const dol = genlex.get('$')
         let grammar = number.then(dol).rep().then(F.eos())
         const text = '15 $ '
-        const parsing = genlex.use(grammar).parse(stream.ofChar(text))
+        const parsing = genlex.use(grammar).parse(stream.ofChars(text))
         expect(parsing.isEos()).toBe(true)
     })
 
@@ -158,7 +158,7 @@ describe('GenLex Tests', () => {
         genlex.setSeparators('-')
         const text = '15-12-35--'
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar(text))
+        const parsing = parser.parse(stream.ofChars(text))
         expect(parsing.isAccepted()).toBe(true)
         const tokenValues = parsing.value.array().map((tv) => tv.value)
         expect(tokenValues).toEqual([15, 12, 35])
@@ -175,7 +175,7 @@ describe('GenLex Tests', () => {
         genlex.keywords(['A', 'B', 'C'])
         const grammar = anyToken(genlex).rep().thenEos()
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar('A B C A'))
+        const parsing = parser.parse(stream.ofChars('A B C A'))
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value.array().map((tv) => tv.value)).toEqual([
             'A',
@@ -190,7 +190,7 @@ describe('GenLex Tests', () => {
         genlex.keywords(['A', 'B'])
         const grammar = anyToken(genlex).rep().thenEos()
         const parser = genlex.use(grammar)
-        const parsing = parser.parse(stream.ofChar('A X'))
+        const parsing = parser.parse(stream.ofChars('A X'))
         expect(parsing.isAccepted()).toBe(false)
         expect(parsing.getOffset()).toBe(1)
     })
@@ -200,11 +200,11 @@ describe('GenLex Tests', () => {
         const genlex = new GenLex()
         const [a] = genlex.keywords(['A', 'B'])
         // Using keyword parser directly on a char stream should fail
-        const direct = a.parse(stream.ofChar('A'))
+        const direct = a.parse(stream.ofChars('A'))
         expect(direct.isAccepted()).toBe(false)
         // Using within a token stream (via use) should work
         const parser = genlex.use(a.thenEos())
-        const res = parser.parse(stream.ofChar('A'))
+        const res = parser.parse(stream.ofChars('A'))
         expect(res.isAccepted()).toBe(true)
         expect(res.value.at(0).value).toBe('A')
     })
@@ -219,14 +219,14 @@ describe('GenLex Tests', () => {
                 .rep()
                 .thenEos(),
         )
-        const anyRes = parserAny.parse(stream.ofChar('A B'))
+        const anyRes = parserAny.parse(stream.ofChars('A B'))
         expect(anyRes.isAccepted()).toBe(true)
         expect(anyRes.value.array()).toEqual(['A', 'B'])
 
         const genlex2 = new GenLex()
         const [a] = genlex2.keywords(['A'])
         const parserA = genlex2.use(a.thenEos())
-        const aRes = parserA.parse(stream.ofChar('A'))
+        const aRes = parserA.parse(stream.ofChars('A'))
         expect(aRes.isAccepted()).toBe(true)
         // keyword parser maps TokenValue to raw token value (wrapped in a Tuple by thenEos)
         expect(aRes.value.at(0).value).toBe('A')
@@ -237,7 +237,7 @@ describe('GenLex Tests', () => {
         genlex1.keywords(['A', 'B'])
         // F.any() over the token stream should see TokenResult instances currently
         const anyParser = genlex1.use(F.any().rep().thenEos())
-        const anyResponse = anyParser.parse(stream.ofChar('A B'))
+        const anyResponse = anyParser.parse(stream.ofChars('A B'))
         expect(anyResponse.isAccepted()).toBe(true)
         const result = anyResponse.value
         expect(result.at(0).value).toEqual('A')
@@ -249,7 +249,7 @@ describe('GenLex Tests', () => {
         const a = genlexAB.tokenize('A', 'a')
         const b = genlexAB.tokenize('B', 'b')
         const parserAThenB = genlexAB.use(a.then(b).thenEos())
-        const response = parserAThenB.parse(stream.ofChar('A B'))
+        const response = parserAThenB.parse(stream.ofChars('A B'))
         const result = response.value
         expect(response.isAccepted()).toBe(true)
         expect(result.at(0).value).toBe('A')
@@ -261,7 +261,7 @@ describe('GenLex Tests', () => {
         const [a, b] = genlex1.keywords(['A', 'B'])
         // F.any() over the token stream should see TokenValue instances currently
         const parserAThenB = genlex1.use(a.then(b).thenEos())
-        const response = parserAThenB.parse(stream.ofChar('A B'))
+        const response = parserAThenB.parse(stream.ofChars('A B'))
         const result = response.value
 
         expect(response.isAccepted()).toBe(true)

@@ -9,7 +9,7 @@ describe('combining F.try() and p.or()', () => {
         const parser = F.moveUntil(endLiner.drop())
 
         const document = 'hello world\n'
-        const stream = Streams.ofChar(document)
+        const stream = Streams.ofChars(document)
         const parsing = parser.parse(stream)
         expect(parsing.value).toBe('hello world')
         expect(parsing.offset).toBe(document.length - 1)
@@ -19,7 +19,7 @@ describe('combining F.try() and p.or()', () => {
         const eater = C.char('a').then(C.char('a'))
         const parser = eater.or(C.char('b'))
 
-        const stream = Streams.ofChar('ab')
+        const stream = Streams.ofChars('ab')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
 
@@ -31,7 +31,7 @@ describe('combining F.try() and p.or()', () => {
         const eater = C.char('a').then(C.char('a'))
         const parser = F.try(eater)
 
-        const stream = Streams.ofChar('ab')
+        const stream = Streams.ofChars('ab')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
 
@@ -46,7 +46,7 @@ describe('combining F.try() and p.or()', () => {
         const secondEater = C.char('a').then(C.char('b'))
         const parser = F.try(eater).or(secondEater)
 
-        const stream = Streams.ofChar('ac')
+        const stream = Streams.ofChars('ac')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
 
@@ -59,7 +59,7 @@ describe('combining F.try() and p.or()', () => {
         const secondEater = C.char('a').then(C.char('b'))
         const parser = F.try(eater).or(F.try(secondEater))
 
-        const stream = Streams.ofChar('ac')
+        const stream = Streams.ofChars('ac')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
 
@@ -72,7 +72,7 @@ describe('combining F.try() and p.or()', () => {
         const eater = C.char('a').then(C.char('a'))
         const parser = start.drop().then(F.try(eater))
 
-        const stream = Streams.ofChar('====ac')
+        const stream = Streams.ofChars('====ac')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
 
@@ -86,7 +86,7 @@ describe('combining F.try() and p.or()', () => {
         const thirdEater = C.char('a').then(C.char('c'))
         const parser = F.tryAll([eater, secondEater, thirdEater])
 
-        const stream = Streams.ofChar('ab')
+        const stream = Streams.ofChars('ab')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.offset).toBe(2)
@@ -98,7 +98,7 @@ describe('combining F.try() and p.or()', () => {
         const thirdEater = C.char('a').then(C.char('d'))
         const parser = F.tryAll([eater, secondEater, thirdEater])
 
-        const stream = Streams.ofChar('ab')
+        const stream = Streams.ofChars('ab')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(false)
         expect(parsing.offset).toBe(0)
@@ -107,7 +107,7 @@ describe('combining F.try() and p.or()', () => {
     it('use tryAll with empty array, mapping empty tuple', () => {
         const parser = F.tryAll([])
 
-        const stream = Streams.ofChar('ab')
+        const stream = Streams.ofChars('ab')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.offset).toBe(0)
@@ -121,7 +121,7 @@ describe('combining F.try() and p.or()', () => {
             .then(C.char('b'))
             .join()
 
-        const stream = Streams.ofChar('ab')
+        const stream = Streams.ofChars('ab')
         const parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.offset).toBe(2)

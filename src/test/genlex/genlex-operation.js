@@ -95,50 +95,50 @@ export default {
     },
 
     'expect multExpr to make mults': function (test) {
-        let parsing = multParser().parse(stream.ofChar('3 * 4'))
+        let parsing = multParser().parse(stream.ofChars('3 * 4'))
         test.equal(parsing.value, 12, 'simple multiplication')
 
-        parsing = multParser().parse(stream.ofChar('14 / 4'))
+        parsing = multParser().parse(stream.ofChars('14 / 4'))
 
         test.equal(parsing.value, 3.5, 'simple division')
 
-        parsing = multParser().parse(stream.ofChar('14 / 4*3 '))
+        parsing = multParser().parse(stream.ofChars('14 / 4*3 '))
 
         test.equal(parsing.value, 10.5, 'combine mult and div')
 
-        parsing = multParser().parse(stream.ofChar('14 / 4*3 /2*  2 '))
+        parsing = multParser().parse(stream.ofChars('14 / 4*3 /2*  2 '))
 
         test.equal(parsing.value, 10.5, 'combine more mult and div')
 
         test.done()
     },
     'expect multExpr to make negative priorities': function (test) {
-        let parsing = multParser().parse(stream.ofChar('3 * -4'))
+        let parsing = multParser().parse(stream.ofChars('3 * -4'))
         test.equal(parsing.value, -12, 'negative multiplication')
 
         test.done()
     },
     'expect Expr to be inside parenthesis': function (test) {
-        let parsing = multParser().parse(stream.ofChar('3 * (4)'))
+        let parsing = multParser().parse(stream.ofChars('3 * (4)'))
         test.equal(parsing.value, 12, 'simple parenthesis expr')
 
-        parsing = multParser().parse(stream.ofChar('3 * (2*4)'))
+        parsing = multParser().parse(stream.ofChars('3 * (2*4)'))
         test.equal(parsing.value, 24, 'more complexe parenthesis expr')
 
-        parsing = multParser().parse(stream.ofChar('3 * (2*(4))'))
+        parsing = multParser().parse(stream.ofChars('3 * (2*(4))'))
         test.equal(parsing.value, 24, 'deep parenthesis expr')
 
         test.done()
     },
     'expect + and * to respect priorities': function (test) {
-        let parsing = multParser().parse(stream.ofChar('3 +2*4 '))
+        let parsing = multParser().parse(stream.ofChars('3 +2*4 '))
         test.equal(parsing.value, 11, 'simple multiplication')
 
         test.done()
     },
 
     'expect - and / to respect priorities': function (test) {
-        let parsing = multParser().parse(stream.ofChar('3 + -4/2*5 '))
+        let parsing = multParser().parse(stream.ofChars('3 + -4/2*5 '))
         test.equal(parsing.value, -7, 'bad priorities')
 
         test.done()

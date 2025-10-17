@@ -9,7 +9,7 @@ describe('Failed Try', () => {
         }
 
         const inputString = 'b' // Simplified input for clarity
-        let stream = Streams.ofChar(inputString)
+        let stream = Streams.ofChars(inputString)
         let parsing = emptyTry().parse(stream)
 
         expect(parsing.isAccepted()).toBe(false) // Should be accepted

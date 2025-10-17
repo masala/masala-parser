@@ -20,7 +20,7 @@ describe('GenLex Brainfuck Tokenizer Tests', () => {
         let hW =
             '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
         let parser = createParser()
-        const response = parser.parse(Streams.ofChar(hW))
+        const response = parser.parse(Streams.ofChars(hW))
 
         expect(response.isAccepted()).toBe(true)
         // Check if all characters that are commands were tokenized
@@ -68,7 +68,7 @@ Pointer :   ^
 >++.                    And finally a newline from Cell #6`
 
         let parser = createParser()
-        const response = parser.parse(Streams.ofChar(hW))
+        const response = parser.parse(Streams.ofChars(hW))
 
         expect(response.isAccepted()).toBe(true)
         // The original test asserted offset 106. This is the count of actual Brainfuck command characters.

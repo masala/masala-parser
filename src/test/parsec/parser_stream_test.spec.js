@@ -14,46 +14,50 @@ function spaces() {
 describe('Parser Stream Tests', () => {
     it('endOfStream for empty stream', () => {
         const p = C.char(' ').optrep().thenRight(N.number())
-        expect(stream.ofParser(p, stream.ofChar('')).endOfStream(0)).toBe(true)
+        expect(stream.ofParsers(p, stream.ofChars('')).endOfStream(0)).toBe(
+            true,
+        )
     })
 
     it('endOfStream for non empty stream', () => {
         const p = C.char(' ').optrep().thenRight(N.number())
-        expect(stream.ofParser(p, stream.ofChar('1')).endOfStream(1)).toBe(true)
+        expect(stream.ofParsers(p, stream.ofChars('1')).endOfStream(1)).toBe(
+            true,
+        )
     })
 
     it('no endOfStream for non empty stream', () => {
         const p = C.char(' ').optrep().thenRight(N.number())
-        expect(stream.ofParser(p, stream.ofChar('1')).endOfStream(0)).toBe(
+        expect(stream.ofParsers(p, stream.ofChars('1')).endOfStream(0)).toBe(
             false,
         )
     })
 
     it('get from stream', () => {
         const p = C.char(' ').optrep().thenRight(N.number())
-        expect(stream.ofParser(p, stream.ofChar('1')).get(0).isSuccess()).toBe(
-            true,
-        )
+        expect(
+            stream.ofParsers(p, stream.ofChars('1')).get(0).isSuccess(),
+        ).toBe(true)
     })
 
     it('do not get from empty stream', () => {
         const p = C.char(' ').optrep().thenRight(N.number())
-        expect(stream.ofParser(p, stream.ofChar('1')).get(1).isSuccess()).toBe(
-            false,
-        )
+        expect(
+            stream.ofParsers(p, stream.ofChars('1')).get(1).isSuccess(),
+        ).toBe(false)
     })
 
     it('get from stream number 123', () => {
         const p = C.char(' ').optrep().thenRight(N.number()).single()
-        expect(stream.ofParser(p, stream.ofChar('123')).get(0).success()).toBe(
-            123,
-        )
+        expect(
+            stream.ofParsers(p, stream.ofChars('123')).get(0).success(),
+        ).toBe(123)
     })
 
     it('Offset are found in series of numbers', () => {
         const p = N.number().then(C.char(' ').optrep().drop()).single()
 
-        const parserStream = stream.ofParser(p, stream.ofChar('123   14137'))
+        const parserStream = stream.ofParsers(p, stream.ofChars('123   14137'))
         // index: ^0    ^6
 
         const first = parserStream.get(0).success() //>> 123
@@ -66,7 +70,7 @@ describe('Parser Stream Tests', () => {
 
     it('failing series of numbers', () => {
         const p = N.number().then(C.char(' ').optrep().drop()).single()
-        const parserStream = stream.ofParser(p, stream.ofChar('123   a'))
+        const parserStream = stream.ofParsers(p, stream.ofChars('123   a'))
         //                                                index: ^0    ^6
 
         const first = parserStream.get(0).success() //>> 123
@@ -82,7 +86,7 @@ describe('Parser Stream Tests', () => {
     it('having correct location when success', () => {
         const p = N.number().then(C.char(' ').optrep().drop()).single()
 
-        const parserStream = stream.ofParser(p, stream.ofChar('123   14137'))
+        const parserStream = stream.ofParsers(p, stream.ofChars('123   14137'))
         //                                                index: ^0    ^6
 
         const first = parserStream.get(0).success() //>> 123
@@ -97,7 +101,7 @@ describe('Parser Stream Tests', () => {
     it('searching illegal location will fail', () => {
         const p = N.number().then(C.char(' ').optrep().drop()).single()
 
-        const parserStream = stream.ofParser(p, stream.ofChar('123   14137'))
+        const parserStream = stream.ofParsers(p, stream.ofChars('123   14137'))
         //                                                index: ^0    ^6
 
         const first = parserStream.get(0).success() //>> 123
@@ -109,7 +113,7 @@ describe('Parser Stream Tests', () => {
     it('having correct location when fail', () => {
         const p = N.number()
 
-        const parserStream = stream.ofParser(p, stream.ofChar('1234   14137'))
+        const parserStream = stream.ofParsers(p, stream.ofChars('1234   14137'))
         //                                                index: ^0  ^4
 
         const first = parserStream.get(0).success() //>> 123
@@ -123,8 +127,8 @@ describe('Parser Stream Tests', () => {
     it('unsafe_get can see next element', () => {
         const lower = N.number().then(spaces().opt().drop()).single()
 
-        const lowerStream = Streams.ofChar('10 12 44')
-        const parserStream = Streams.ofParser(lower, lowerStream)
+        const lowerStream = Streams.ofChars('10 12 44')
+        const parserStream = Streams.ofParsers(lower, lowerStream)
 
         parserStream.unsafeGet(0)
         const value = parserStream.unsafeGet(1)
@@ -135,8 +139,8 @@ describe('Parser Stream Tests', () => {
     it('unsafe_get cannot see beyond next element', () => {
         const lower = N.number().then(spaces().opt().drop())
 
-        const lowerStream = Streams.ofChar('10 12 44')
-        const parserStream = Streams.ofParser(lower, lowerStream)
+        const lowerStream = Streams.ofChars('10 12 44')
+        const parserStream = Streams.ofParsers(lower, lowerStream)
 
         expect(() => parserStream.unsafeGet(1)).toThrow()
     })
