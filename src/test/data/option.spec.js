@@ -2,17 +2,14 @@ import { describe, it, expect } from 'vitest'
 import option from '../../lib/data/option.js'
 
 describe('Option Data Type Tests', () => {
-    // Original test: 'option empty'
     it('option empty', () => {
         expect(option.none().isPresent()).toBe(false)
     })
 
-    // Original test: 'option not empty'
     it('option not empty', () => {
         expect(option.some(12).isPresent()).toBe(true)
     })
 
-    // Original test: 'option empty mapped'
     it('option empty mapped', () => {
         expect(
             option
@@ -24,7 +21,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(false)
     })
 
-    // Original test: 'option not empty mapped'
     it('option not empty mapped', () => {
         expect(
             option
@@ -36,7 +32,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(12)
     })
 
-    // Original test: 'option not empty flat mapped to option'
     it('option not empty flat mapped to option', () => {
         expect(
             option
@@ -48,7 +43,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(12)
     })
 
-    // Original test: 'option empty flat mapped'
     it('option empty flat mapped', () => {
         expect(
             option
@@ -60,17 +54,14 @@ describe('Option Data Type Tests', () => {
         ).toBe(false)
     })
 
-    // Original test: 'option empty or else'
     it('option empty or else', () => {
         expect(option.none().orElse(12)).toBe(12)
     })
 
-    // Original test: 'option not empty or else'
     it('option not empty or else', () => {
         expect(option.some(12).orElse(14)).toBe(12)
     })
 
-    // Original test: 'option empty or lazy else'
     it('option empty or lazy else', () => {
         expect(
             option.none().orLazyElse(function () {
@@ -79,7 +70,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(12)
     })
 
-    // Original test: 'option not empty or lazy else'
     it('option not empty or lazy else', () => {
         expect(
             option.some(12).orLazyElse(function () {
@@ -88,7 +78,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(12)
     })
 
-    // Original test: 'option empty filter'
     it('option empty filter', () => {
         expect(
             option
@@ -100,7 +89,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(false)
     })
 
-    // Original test: 'option not empty filter'
     it('option not empty filter', () => {
         expect(
             option
@@ -112,7 +100,6 @@ describe('Option Data Type Tests', () => {
         ).toBe(12)
     })
 
-    // Original test: 'option not empty wrong filter'
     it('option not empty wrong filter', () => {
         expect(
             option

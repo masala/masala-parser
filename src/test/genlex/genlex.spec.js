@@ -32,9 +32,9 @@ describe('GenLex Tests', () => {
         const text = '+ + - --'
         const parsing = parser.parse(stream.ofChars(text))
 
-        expect(parsing.isEos()).toBe(true) // Nodeunit: test.ok(parsing.isEos(), 'the parsing has reached the eos()');
-        expect(parsing.offset).toBe(5) // Nodeunit: test.equal(5, parsing.offset, 'there are 5 keywords');
-        expect(parsing.input.location(parsing.offset)).toBe(8) // Nodeunit: test.equal(8, parsing.input.location(parsing.offset), 'there are 8 chars')
+        expect(parsing.isEos()).toBe(true)
+        expect(parsing.offset).toBe(5)
+        expect(parsing.input.location(parsing.offset)).toBe(8)
     })
 
     it('genlex find offsets when fail', () => {
@@ -46,21 +46,21 @@ describe('GenLex Tests', () => {
         const text = '+  +  +* --'
         const parsing = parser.parse(stream.ofChars(text))
 
-        expect(parsing.isEos()).toBe(false) // Nodeunit: test.ok(! parsing.isEos(), 'an error should have occurred');
-        expect(parsing.getOffset()).toBe(3) // Nodeunit: test.equal(3, parsing.getOffset(), 'Failed at the third token');
-        expect(parsing.location()).toBe(7) // Nodeunit: test.equal(7, parsing.location(), 'fail is not 3: it must be the char offset before the error');
+        expect(parsing.isEos()).toBe(false)
+        expect(parsing.getOffset()).toBe(3)
+        expect(parsing.location()).toBe(7)
     })
 
     it('expect Genlex to be constructed with spaces ', () => {
         const genlex = new GenLex()
-        expect(genlex.spaces).toBeDefined() // Nodeunit: test.ok(genlex.spaces !== undefined);
-        expect(genlex.definitions.length).toBe(0) // Nodeunit: test.ok(genlex.definitions.length === 0);
+        expect(genlex.spaces).toBeDefined()
+        expect(genlex.definitions.length).toBe(0)
     })
 
     it('expect tokenize() to add on definition', () => {
         const genlex = new GenLex()
         genlex.tokenize(N.number(), 'number', 500)
-        expect(genlex.definitions.length).toBe(1) // Nodeunit: test.ok(genlex.definitions.length === 1);
+        expect(genlex.definitions.length).toBe(1)
     })
 
     it('expect use() to sort definitions by revert priority', () => {
