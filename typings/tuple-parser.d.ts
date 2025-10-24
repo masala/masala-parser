@@ -41,8 +41,8 @@ export interface TupleParser<T> extends IParser<Tuple<T>> {
     single(): SingleParser<T> // alias of first()
     then(dropped: VoidParser): TupleParser<T>
     then(empty: EmptyTupleParser): TupleParser<T>
-    then<Y>(otherTuple: TupleParser<Y>): MixedParser<T, Y>
     then(sameTuple: TupleParser<T>): TupleParser<T>
+    then<Y>(otherTuple: TupleParser<Y>): MixedParser<T, Y>
     then<FIRST, LAST>(mixed: MixedParser<FIRST, LAST>): MixedParser<T, LAST>
     then(other: SingleParser<T>): TupleParser<T>
     then<Y>(other: SingleParser<Y>): MixedParser<T, Y>

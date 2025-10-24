@@ -49,7 +49,7 @@ export interface IGenLex {
 
     tokens(): TokenCollection
 
-    setSeparators(spacesCharacters: string): GenLex
+    setSeparators(spacesCharacters: string): this
 
     /**
      * Select the parser used by genlex. It will be used as `separator.optrep().then(token).then(separator.optrep())`.
@@ -57,15 +57,14 @@ export interface IGenLex {
      * The separation in your text can't be a strict one-time separation with Genlex.
      * @param parser
      */
-    setSeparatorsParser<T>(parser: IParser<any>): GenLex
+    setSeparatorsParser<T>(parser: IParser<any>): this
 
     /**
-     * Should separators be repeated ?
-     *
-     * `separators.optrep().then(myToken()).then(separators.optrep())`
-     * @param repeat default is true
+     * No separators accepted between tokens.
+     * For example to parse: "@masala/function" and forbid "@masala/ function"
+     * Whereas "2+2" is parsed like "2+ 2"
      */
-    setSeparatorRepetition(repeat: boolean): GenLex
+    noSeparator(): this
 
     /**
      * tokenize all items, given them the name of the token

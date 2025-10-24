@@ -28,6 +28,7 @@ export class Token {
 }
 
 export class GenLex {
+    _nospace = false
     constructor() {
         this.spaces = defaultSpaces()
         // definitions keep trace of all: parser, priority and name
@@ -45,7 +46,10 @@ export class GenLex {
         }
 
         const definition = new TokenDefinition(parser, name, priority)
-        this.definitions.push(definition)
+
+        // we unshift instead of concat to preserve priority of genlex.keywords
+        // see genlex-priority.spec.js
+        this.definitions.unshift(definition)
 
         const tokenParser = expectToken(name)
         this.tokensMap[name] = tokenParser
@@ -59,7 +63,13 @@ export class GenLex {
         )
     }
 
+    noSeparator() {
+        this._nospace = true
+        return this
+    }
+
     setSeparators(spacesCharacters) {
+        this._nospace = false
         if (typeof spacesCharacters !== 'string') {
             throw (
                 "setSeparators needs a string as separators, such as ' \r\n\f\t' ;" +
@@ -67,6 +77,7 @@ export class GenLex {
             )
         }
         this.spaces = C.charIn(spacesCharacters).map(() => unit)
+        return this
     }
 
     /**
@@ -75,11 +86,17 @@ export class GenLex {
      * @param spacesParser
      */
     setSeparatorsParser(spacesParser) {
+        this._nospace = false
         this.spaces = spacesParser.map(() => unit)
+        return this
     }
 
     buildTokenizer() {
         const token = this.findTokenByPriority()
+        if (this._nospace) {
+            return token
+        }
+
         return this.spaces
             .optrep()
             .drop()
