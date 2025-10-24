@@ -9,7 +9,8 @@ export function testEsm(F, standard, Streams) {
     const jsonParser = standard.jsonParser
     const jsonDocument = '{"ok":true}'
 
-    const jsonParserResult = jsonParser.parse(Streams.ofChar(jsonDocument))
+    const jsonParserResult = jsonParser.parse(Streams.ofChars(jsonDocument))
+
     const jsonSuccess = jsonParserResult.value.ok === true
     console.log({ jsonParserResult, jsonSuccess })
 
