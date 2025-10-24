@@ -79,7 +79,9 @@ function shortenArrayMiddle(
     arr,
     { max = 8, head = 3, tail = 3, ellipsis = '...' } = {},
 ) {
-    if (!Array.isArray(arr) || arr.length <= max) return arr
+    if (!Array.isArray(arr) || arr.length <= max) {
+        return arr
+    }
     const left = arr.slice(0, head)
     const right = arr.slice(-tail)
     return [...left, ellipsis, ...right]

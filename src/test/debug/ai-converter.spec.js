@@ -26,7 +26,6 @@ describe('AI log converter', () => {
 
     it('should keep order ', () => {
         const converted = aiConvert(smallLogs)
-        console.log(converted)
         /*
 [
   { lexTried: [ 'NEQ', 'GTE', 'LTE', 'NOT' ] },
