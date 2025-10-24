@@ -6,7 +6,7 @@
  * Licensed under the LGPL3 license.
  */
 
-import { GenLex } from '../../genlex/genlex.js'
+import { GenLex, leanToken } from '../../genlex/genlex.js'
 
 import { F } from '../../parsec/index.js'
 import { C, N } from '../../parsec/index.js'
@@ -17,11 +17,11 @@ import { C, N } from '../../parsec/index.js'
 
 let genlex = new GenLex()
 genlex.keywords(['null', 'false', 'true', '{', '}', '[', ']', ':', ','])
-let number = genlex.tokenize(N.number(), 'number', 1100)
-let string = genlex.tokenize(C.stringLiteral(), 'string', 800)
+let number = genlex.tokenize(N.number(), 'number', 1100).map(leanToken)
+let string = genlex.tokenize(C.stringLiteral(), 'string', 800).map(leanToken)
 
 function tkKey(s) {
-    return genlex.get(s)
+    return genlex.get(s) //.debug('tk')
 }
 
 // unit -> Parser ? Token
@@ -83,7 +83,15 @@ function expr() {
 //const parse =
 export default {
     parse: function (source) {
-        const parser = genlex.use(expr().thenLeft(F.eos()).single())
+        const parser = genlex.use(
+            expr()
+                .map((v) => {
+                    //console.log(JSON.stringify(v))
+                    return v
+                })
+                .thenLeft(F.eos())
+                .single(),
+        )
 
         return parser.parse(source, 0)
     },
