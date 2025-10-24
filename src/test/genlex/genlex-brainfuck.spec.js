@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { GenLex } from '../../lib/genlex/genlex'
-import { F, C } from '../../lib/parsec/index' // Added .js extension
+import { F, C } from '../../lib/core/index' // Added .js extension
 import Streams from '../../lib/stream'
 
 function createParser() {

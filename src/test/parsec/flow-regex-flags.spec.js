@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F } from '../../lib/parsec/index'
+import { F } from '../../lib/core/index'
 
 describe('F.regex – behaviour of individual RegExp flags', () => {
     /* ───────────────────────────── i : ignore-case ─────────────────────────── */

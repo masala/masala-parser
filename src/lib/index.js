@@ -9,13 +9,13 @@
 import data from './data/index.js'
 import { GenLex, getMathGenLex, leanTuple, leanToken } from './genlex/genlex.js'
 import { TracingGenLex } from './genlex/tracing-genlex.js'
-import parsec from './parsec/index.js'
-import Parser from './parsec/parser.js'
-import { F, C, N } from './parsec/index.js'
+import parsec from './core/index.js'
+import Parser from './core/parser.js'
+import { F, C, N } from './core/index.js'
 import standard from './standard/index.js'
 import Streams from './stream/index.js'
 
-import { accept, reject } from './parsec/response.js'
+import { accept, reject } from './core/response.js'
 import { Tuple, isTuple, NEUTRAL, tuple } from './data/tuple.js'
 
 import { createTracer } from './debug/trace.js'

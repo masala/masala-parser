@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 
 describe('Parser Response', () => {
     it('should handle fully accepted response', () => {
-        let response = C.char('a').rep().parse(Streams.ofString('aaaa'))
+        let response = C.char('a').rep().parse(Streams.ofChars('aaaa'))
         expect(response.value.join('')).toBe('aaaa')
         expect(response.offset).toBe(4)
         expect(response.isAccepted()).toBe(true)
@@ -12,7 +12,7 @@ describe('Parser Response', () => {
 
     it('should handle partially accepted response', () => {
         // Partially accepted
-        let response = C.char('a').rep().parse(Streams.ofString('aabb'))
+        let response = C.char('a').rep().parse(Streams.ofChars('aabb'))
         expect(response.value.join('')).toBe('aa')
         expect(response.offset).toBe(2)
         expect(response.isAccepted()).toBe(true)

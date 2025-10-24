@@ -51,7 +51,7 @@ function terminal(): TupleParser<Instruction> {
         .or(gt)
         .or(comma)
         .or(period)
-        .map((type) => ({ type }) as Instruction)
+        .map((result) => ({ type: result.value }) as Instruction)
         .rep()
 }
 
@@ -79,7 +79,7 @@ function expr(): TupleParser<Instruction> {
 
     const mappedSub = sub.map((option) =>
         option.isPresent() ? option.get() : empty,
-    ) as IParser<Tuple<Instruction>>
+    ) as unknown as TupleParser<Instruction>
 
     return terminal().then(mappedSub) as TupleParser<Instruction>
 }
@@ -105,7 +105,7 @@ function brainfuck(program: string) {
 
     const parser = createParser()
 
-    let response = parser.parse(Streams.ofString(program))
+    let response = parser.parse(Streams.ofChars(program))
 
     interpretAll(response.value)
 
@@ -180,7 +180,7 @@ describe('Brainfuck Interpreter', () => {
         const program = '+++>+'
         resetState()
         const parser = createParser()
-        let response = parser.parse(Streams.ofString(program))
+        let response = parser.parse(Streams.ofChars(program))
         interpretAll(response.value)
 
         expect(memory.slice(0, max + 1)).toEqual([3, 1])
@@ -192,7 +192,7 @@ describe('Brainfuck Interpreter', () => {
         const program = '+++[>+<-]'
         resetState()
         const parser = createParser()
-        let response = parser.parse(Streams.ofString(program))
+        let response = parser.parse(Streams.ofChars(program))
         interpretAll(response.value)
 
         // Memory: [0, 3] (values swapped), Pointer: 0
@@ -207,7 +207,7 @@ describe('Brainfuck Interpreter', () => {
             '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
         resetState()
         const parser = createParser()
-        let response = parser.parse(Streams.ofString(program))
+        let response = parser.parse(Streams.ofChars(program))
         interpretAll(response.value)
 
         expect(output).toBe('Hello World!\n')

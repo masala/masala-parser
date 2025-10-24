@@ -8,8 +8,8 @@
 
 import { GenLex, leanToken } from '../../genlex/genlex.js'
 
-import { F } from '../../parsec/index.js'
-import { C, N } from '../../parsec/index.js'
+import { F } from '../../core/index.js'
+import { C, N } from '../../core/index.js'
 
 //
 // Facilities

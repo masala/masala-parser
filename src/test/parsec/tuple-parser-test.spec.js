@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { Streams } from '../../lib/index.js'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 
 describe('Tuple Parser Tests', () => {
     it('expect p.first() to work', () => {

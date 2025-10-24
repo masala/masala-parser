@@ -13,6 +13,7 @@ import { MdElement } from './types.js'
 
 export function markdown(): TupleParser<MdElement> {
     let genlex = new GenLex()
+    const separator = eol().then(eol().rep())
     genlex.setSeparatorsParser(eol().then(eol().rep()))
     const tkBullets = genlex.tokenize(bulletBlock(), 'bulletBlock', 500)
     const tkCode = genlex.tokenize(codeBlock(2), 'codeBlock', 600)

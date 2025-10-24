@@ -45,7 +45,7 @@ const verifiedParser = lineParser.flatMap(secondLineParser)
 
 describe('Flatmap real life case', () => {
     it('should parse a line', () => {
-        const stream = Streams.ofString(document)
+        const stream = Streams.ofChars(document)
         const parsing = verifiedParser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual({

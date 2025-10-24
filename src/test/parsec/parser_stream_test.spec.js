@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import stream from '../../lib/stream/index'
-import C from '../../lib/parsec/chars-bundle'
-import N from '../../lib/parsec/numbers-bundle'
+import C from '../../lib/core/chars-bundle'
+import N from '../../lib/core/numbers-bundle'
 import Streams from '../../lib/stream'
 import unit from '../../lib/data/unit'
 

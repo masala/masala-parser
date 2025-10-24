@@ -1,5 +1,5 @@
-import response from '../parsec/response.js'
-import { F, C } from '../parsec/index.js'
+import response from '../core/response.js'
+import { F, C } from '../core/index.js'
 import { GenlexEventTracer } from './genlex-event-tracer.js'
 import { GenLex, TokenDefinition, Token } from './genlex.js'
 

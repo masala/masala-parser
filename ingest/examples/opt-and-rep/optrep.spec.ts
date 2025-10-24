@@ -80,7 +80,7 @@ describe('optrep – infinite-loop guard', () => {
 
         // If it *ever* finishes we ping back
         try {
-          const stream = Streams.ofString("1/2/3/4/5/");
+          const stream = Streams.ofChars("1/2/3/4/5/");
           blocks.parse(stream);
           parentPort.postMessage("finished");   // should never happen
         } catch (e) {

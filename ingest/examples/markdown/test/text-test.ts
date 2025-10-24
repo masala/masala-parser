@@ -93,7 +93,7 @@ export const textTests = {
                 { type: 'text', text: '.' },
             ],
         }
-        let response = paragraph().parse(Streams.ofString(text))
+        let response = paragraph().parse(Streams.ofChars(text))
 
         assertDeepEquals(response.value, expectedComplexParagraph)
         assertEquals(response.offset, complexParagraph.length)

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { F, C, N } from '../../lib/parsec'
+import { F, C, N } from '../../lib/core'
 import {
     GenLex,
     getMathGenLex,

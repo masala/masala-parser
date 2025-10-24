@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { N, C } from '../../lib/parsec/index'
+import { N, C } from '../../lib/core/index'
 
 describe('Chars Bundle Tests', () => {
     it('accepts a character inside the range', () => {

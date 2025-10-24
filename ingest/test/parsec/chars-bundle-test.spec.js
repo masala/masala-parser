@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 
 describe('Chars Bundle Tests', () => {
     it('expect (char) to be accepted', () => {
-        expect(C.char('a').parse(Streams.ofString('a'), 0).isAccepted()).toBe(
+        expect(C.char('a').parse(Streams.ofChars('a'), 0).isAccepted()).toBe(
             true,
         )
     })
 
     it('expect (char) to be rejected', () => {
-        expect(C.char('a').parse(Streams.ofString('b'), 0).isAccepted()).toBe(
+        expect(C.char('a').parse(Streams.ofChars('b'), 0).isAccepted()).toBe(
             false,
         )
     })
@@ -20,15 +20,15 @@ describe('Chars Bundle Tests', () => {
     })
 
     it('expect (notChar) to be accepted', () => {
-        expect(
-            C.notChar('a').parse(Streams.ofString('b'), 0).isAccepted(),
-        ).toBe(true)
+        expect(C.notChar('a').parse(Streams.ofChars('b'), 0).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('expect (notChar) to be rejected', () => {
-        expect(
-            C.notChar('a').parse(Streams.ofString('a'), 0).isAccepted(),
-        ).toBe(false)
+        expect(C.notChar('a').parse(Streams.ofChars('a'), 0).isAccepted()).toBe(
+            false,
+        )
     })
 
     it('expect (notChar) to be refused', () => {
@@ -37,101 +37,101 @@ describe('Chars Bundle Tests', () => {
 
     it('expect (charNotIn) to be accepted', () => {
         expect(
-            C.charNotIn('a').parse(Streams.ofString('b'), 0).isAccepted(),
+            C.charNotIn('a').parse(Streams.ofChars('b'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (charNotIn) to be rejected', () => {
         expect(
-            C.charNotIn('a').parse(Streams.ofString('a'), 0).isAccepted(),
+            C.charNotIn('a').parse(Streams.ofChars('a'), 0).isAccepted(),
         ).toBe(false)
     })
 
     it('expect (charIn) to be accepted', () => {
-        expect(C.charIn('a').parse(Streams.ofString('a'), 0).isAccepted()).toBe(
+        expect(C.charIn('a').parse(Streams.ofChars('a'), 0).isAccepted()).toBe(
             true,
         )
     })
 
     it('expect (charIn) to be rejected', () => {
-        expect(C.charIn('a').parse(Streams.ofString('b'), 0).isAccepted()).toBe(
+        expect(C.charIn('a').parse(Streams.ofChars('b'), 0).isAccepted()).toBe(
             false,
         )
     })
 
     it('expect (lowerCase) to be accepted', () => {
-        expect(C.lowerCase().parse(Streams.ofString('a'), 0).isAccepted()).toBe(
+        expect(C.lowerCase().parse(Streams.ofChars('a'), 0).isAccepted()).toBe(
             true,
         )
     })
 
     it('expect (lowerCase) to be rejected', () => {
-        expect(C.lowerCase().parse(Streams.ofString('A'), 0).isAccepted()).toBe(
+        expect(C.lowerCase().parse(Streams.ofChars('A'), 0).isAccepted()).toBe(
             false,
         )
     })
 
     it('expect (upperCase) to be accepted', () => {
-        expect(C.upperCase().parse(Streams.ofString('A'), 0).isAccepted()).toBe(
+        expect(C.upperCase().parse(Streams.ofChars('A'), 0).isAccepted()).toBe(
             true,
         )
     })
 
     it('expect (upperCase) to be rejected', () => {
-        expect(C.upperCase().parse(Streams.ofString('z'), 0).isAccepted()).toBe(
+        expect(C.upperCase().parse(Streams.ofChars('z'), 0).isAccepted()).toBe(
             false,
         )
     })
 
     it('expect upper (letter) to be accepted', () => {
-        expect(C.letter().parse(Streams.ofString('A'), 0).isAccepted()).toBe(
+        expect(C.letter().parse(Streams.ofChars('A'), 0).isAccepted()).toBe(
             true,
         )
     })
 
     it('expect lower (letter) to be accepted', () => {
-        expect(C.letter().parse(Streams.ofString('z'), 0).isAccepted()).toBe(
+        expect(C.letter().parse(Streams.ofChars('z'), 0).isAccepted()).toBe(
             true,
         )
     })
 
     it('expect space (letter) to be rejected', () => {
-        expect(C.letter().parse(Streams.ofString(' '), 0).isAccepted()).toBe(
+        expect(C.letter().parse(Streams.ofChars(' '), 0).isAccepted()).toBe(
             false,
         )
     })
 
     it('expect non (letter) to be rejected', () => {
-        expect(C.letter().parse(Streams.ofString('0'), 0).isAccepted()).toBe(
+        expect(C.letter().parse(Streams.ofChars('0'), 0).isAccepted()).toBe(
             false,
         )
     })
 
     it('expect occidental letter to be accepted', () => {
-        expect(C.letter().parse(Streams.ofString('a'), 0).isAccepted()).toBe(
+        expect(C.letter().parse(Streams.ofChars('a'), 0).isAccepted()).toBe(
             true,
         )
-        expect(C.letterAs().parse(Streams.ofString('a'), 0).isAccepted()).toBe(
+        expect(C.letterAs().parse(Streams.ofChars('a'), 0).isAccepted()).toBe(
             true,
         )
         expect(
             C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(Streams.ofString('a'))
+                .parse(Streams.ofChars('a'))
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(Streams.ofString('é'))
+                .parse(Streams.ofChars('é'))
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(Streams.ofString('Б'))
+                .parse(Streams.ofChars('Б'))
                 .isAccepted(),
         ).toBe(false)
         expect(
             C.letterAs(C.OCCIDENTAL_LETTER)
-                .parse(Streams.ofString('÷'))
+                .parse(Streams.ofChars('÷'))
                 .isAccepted(),
         ).toBe(false)
     })
@@ -140,30 +140,30 @@ describe('Chars Bundle Tests', () => {
         expect(
             C.letters()
                 .then(F.eos())
-                .parse(Streams.ofString('aéÉ'), 0)
+                .parse(Streams.ofChars('aéÉ'), 0)
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.lettersAs()
                 .then(F.eos())
-                .parse(Streams.ofString('aéÉ'), 0)
+                .parse(Streams.ofChars('aéÉ'), 0)
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.lettersAs(C.OCCIDENTAL_LETTER)
-                .parse(Streams.ofString('a'))
-                .isAccepted(),
-        ).toBe(true)
-        expect(
-            C.lettersAs(C.OCCIDENTAL_LETTER)
-                .then(F.eos())
-                .parse(Streams.ofString('éA'))
+                .parse(Streams.ofChars('a'))
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.lettersAs(C.OCCIDENTAL_LETTER)
                 .then(F.eos())
-                .parse(Streams.ofString('БAs'))
+                .parse(Streams.ofChars('éA'))
+                .isAccepted(),
+        ).toBe(true)
+        expect(
+            C.lettersAs(C.OCCIDENTAL_LETTER)
+                .then(F.eos())
+                .parse(Streams.ofChars('БAs'))
                 .isAccepted(),
         ).toBe(false)
     })
@@ -171,18 +171,14 @@ describe('Chars Bundle Tests', () => {
     it('expect ascii letter to be accepted', () => {
         expect(
             C.letterAs(C.ASCII_LETTER)
-                .parse(Streams.ofString('a'), 0)
+                .parse(Streams.ofChars('a'), 0)
                 .isAccepted(),
         ).toBe(true)
         expect(
-            C.letterAs(C.ASCII_LETTER)
-                .parse(Streams.ofString('é'))
-                .isAccepted(),
+            C.letterAs(C.ASCII_LETTER).parse(Streams.ofChars('é')).isAccepted(),
         ).toBe(false)
         expect(
-            C.letterAs(C.ASCII_LETTER)
-                .parse(Streams.ofString('Б'))
-                .isAccepted(),
+            C.letterAs(C.ASCII_LETTER).parse(Streams.ofChars('Б')).isAccepted(),
         ).toBe(false)
     })
 
@@ -190,23 +186,23 @@ describe('Chars Bundle Tests', () => {
         expect(
             C.lettersAs(C.ASCII_LETTER)
                 .then(F.eos())
-                .parse(Streams.ofString('a'))
+                .parse(Streams.ofChars('a'))
                 .isAccepted(),
         ).toBe(true)
     })
 
     it('expect utf8 letter to be accepted', () => {
         expect(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('a')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofChars('a')).isAccepted(),
         ).toBe(true)
         expect(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('é')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofChars('é')).isAccepted(),
         ).toBe(true)
         expect(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('Б')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofChars('Б')).isAccepted(),
         ).toBe(true)
         expect(
-            C.letterAs(C.UTF8_LETTER).parse(Streams.ofString('÷')).isAccepted(),
+            C.letterAs(C.UTF8_LETTER).parse(Streams.ofChars('÷')).isAccepted(),
         ).toBe(false)
     })
 
@@ -214,31 +210,31 @@ describe('Chars Bundle Tests', () => {
         expect(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos())
-                .parse(Streams.ofString('a'))
+                .parse(Streams.ofChars('a'))
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos())
-                .parse(Streams.ofString('éA'))
+                .parse(Streams.ofChars('éA'))
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.lettersAs(C.UTF8_LETTER)
                 .then(F.eos())
-                .parse(Streams.ofString('БAs'))
+                .parse(Streams.ofChars('БAs'))
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.letterAs(C.UTF8_LETTER)
                 .then(F.eos())
-                .parse(Streams.ofString('Б÷As'))
+                .parse(Streams.ofChars('Б÷As'))
                 .isAccepted(),
         ).toBe(false)
     })
 
     it('expect unknown letters to be rejected', () => {
-        const line = Streams.ofString('a')
+        const line = Streams.ofChars('a')
         expect(() => {
             const combinator = C.lettersAs(Symbol('UNKNOWN')).then(F.eos())
             combinator.parse(line)
@@ -249,7 +245,7 @@ describe('Chars Bundle Tests', () => {
         const parsing = C.letters()
             .thenLeft(F.eos())
             .single()
-            .parse(Streams.ofString('someLetters'), 0)
+            .parse(Streams.ofChars('someLetters'), 0)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toBe('someLetters')
     })
@@ -257,7 +253,7 @@ describe('Chars Bundle Tests', () => {
     it('expect (letters) with space to be rejected', () => {
         const parsing = C.letters()
             .then(F.eos())
-            .parse(Streams.ofString('some Letters'), 0)
+            .parse(Streams.ofChars('some Letters'), 0)
         expect(parsing.isAccepted()).toBe(false)
         expect(parsing.offset).toBe(4)
     })
@@ -265,7 +261,7 @@ describe('Chars Bundle Tests', () => {
     it('expect (letters) with number to be rejected', () => {
         const parsing = C.letters()
             .then(F.eos())
-            .parse(Streams.ofString('some2Letters'), 0)
+            .parse(Streams.ofChars('some2Letters'), 0)
         expect(parsing.isAccepted()).toBe(false)
     })
 
@@ -273,24 +269,24 @@ describe('Chars Bundle Tests', () => {
         const parsing = C.letters()
             .thenLeft(F.eos())
             .single()
-            .parse(Streams.ofString('someLetters'), 0)
+            .parse(Streams.ofChars('someLetters'), 0)
         expect(parsing.value).toBe('someLetters')
     })
 
     it('expect (string) to be accepted', () => {
         expect(
-            C.string('Hello').parse(Streams.ofString('Hello'), 0).isAccepted(),
+            C.string('Hello').parse(Streams.ofChars('Hello'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (string) to be rejected', () => {
         expect(
-            C.string('hello').parse(Streams.ofString('hell'), 0).isAccepted(),
+            C.string('hello').parse(Streams.ofChars('hell'), 0).isAccepted(),
         ).toBe(false)
     })
 
     it('test stringIn', () => {
-        let line = Streams.ofString('James Bond')
+        let line = Streams.ofChars('James Bond')
         const combinator = C.stringIn(['The', 'James', 'Bond', 'series'])
         const value = combinator.parse(line).value
         expect(typeof value).toBe('string')
@@ -298,7 +294,7 @@ describe('Chars Bundle Tests', () => {
     })
 
     it('test stringIn Similar', () => {
-        let line = Streams.ofString('Jack James Jane')
+        let line = Streams.ofChars('Jack James Jane')
         const combinator = C.stringIn(['Jamie', 'Jacko', 'Jack'])
         const parsing = combinator.parse(line)
         const value = parsing.value
@@ -308,7 +304,7 @@ describe('Chars Bundle Tests', () => {
     })
 
     it('test stringIn one string sidecase', () => {
-        let line = Streams.ofString('James')
+        let line = Streams.ofChars('James')
         const combinator = C.stringIn(['James'])
         const value = combinator.parse(line).value
         expect(typeof value).toBe('string')
@@ -316,14 +312,14 @@ describe('Chars Bundle Tests', () => {
     })
 
     it('test stringIn empty sidecase', () => {
-        let line = Streams.ofString('James')
+        let line = Streams.ofChars('James')
         const combinator = C.stringIn([]).then(F.eos())
         const parsing = combinator.parse(line)
         expect(parsing.isAccepted()).toBe(false)
     })
 
     it('test stringIn empty accept nothing sidecase', () => {
-        let line = Streams.ofString('')
+        let line = Streams.ofChars('')
         const combinator = C.stringIn([]).then(F.eos())
         const parsing = combinator.parse(line)
         expect(parsing.isAccepted()).toBe(true)
@@ -331,83 +327,75 @@ describe('Chars Bundle Tests', () => {
 
     it('expect (notString) to be accepted', () => {
         expect(
-            C.notString('**').parse(Streams.ofString('hello'), 0).isAccepted(),
+            C.notString('**').parse(Streams.ofChars('hello'), 0).isAccepted(),
         ).toBe(true)
     })
 
     it('expect (notString) to be h', () => {
-        expect(
-            C.notString('**').parse(Streams.ofString('hello'), 0).value,
-        ).toBe('h')
+        expect(C.notString('**').parse(Streams.ofChars('hello'), 0).value).toBe(
+            'h',
+        )
     })
 
     it('expect (notString) to be rejected', () => {
         expect(
-            C.notString('**')
-                .parse(Streams.ofString('**hello'), 0)
-                .isAccepted(),
+            C.notString('**').parse(Streams.ofChars('**hello'), 0).isAccepted(),
         ).toBe(false)
     })
 
     it('expect accent to be accepted', () => {
-        expect(
-            C.utf8Letter().parse(Streams.ofString('é'), 0).isAccepted(),
-        ).toBe(true)
+        expect(C.utf8Letter().parse(Streams.ofChars('é'), 0).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('expect cyriliq to be accepted', () => {
-        expect(
-            C.utf8Letter().parse(Streams.ofString('Б'), 0).isAccepted(),
-        ).toBe(true)
-        expect(
-            C.utf8Letter().parse(Streams.ofString('б'), 0).isAccepted(),
-        ).toBe(true)
+        expect(C.utf8Letter().parse(Streams.ofChars('Б'), 0).isAccepted()).toBe(
+            true,
+        )
+        expect(C.utf8Letter().parse(Streams.ofChars('б'), 0).isAccepted()).toBe(
+            true,
+        )
     })
 
     it('expect dash to be rejected', () => {
-        expect(
-            C.utf8Letter().parse(Streams.ofString('-'), 0).isAccepted(),
-        ).toBe(false)
+        expect(C.utf8Letter().parse(Streams.ofChars('-'), 0).isAccepted()).toBe(
+            false,
+        )
     })
 
     it('expect "nothing" to be rejected', () => {
-        expect(C.utf8Letter().parse(Streams.ofString(''), 0).isAccepted()).toBe(
+        expect(C.utf8Letter().parse(Streams.ofChars(''), 0).isAccepted()).toBe(
             false,
         )
     })
 
     it('expect emoji to be accepted', () => {
         expect(
-            C.emoji()
-                .then(F.eos())
-                .parse(Streams.ofString('б'), 0)
-                .isAccepted(),
+            C.emoji().then(F.eos()).parse(Streams.ofChars('б'), 0).isAccepted(),
+        ).toBe(false)
+        expect(
+            C.emoji().then(F.eos()).parse(Streams.ofChars('a'), 0).isAccepted(),
         ).toBe(false)
         expect(
             C.emoji()
                 .then(F.eos())
-                .parse(Streams.ofString('a'), 0)
-                .isAccepted(),
-        ).toBe(false)
-        expect(
-            C.emoji()
-                .then(F.eos())
-                .parse(Streams.ofString('🐵🐵✈️'), 0)
+                .parse(Streams.ofChars('🐵🐵✈️'), 0)
                 .isAccepted(),
         ).toBe(true)
         expect(
             C.emoji()
                 .then(F.eos())
-                .parse(Streams.ofString('✈️'), 0)
+                .parse(Streams.ofChars('✈️'), 0)
                 .isAccepted(),
         ).toBe(true)
         expect(
-            C.emoji().then(F.eos()).parse(Streams.ofString('🥪')).isAccepted(),
+            C.emoji().then(F.eos()).parse(Streams.ofChars('🥪')).isAccepted(),
         ).toBe(true)
     })
 
     it('expect subString to works', () => {
-        let stream = Streams.ofString('James Bond')
+        let stream = Streams.ofChars('James Bond')
         let parser = C.subString(6).then(C.string('Bond'))
         const response = parser.parse(stream)
         expect(response.value.array()).toEqual(['James ', 'Bond'])

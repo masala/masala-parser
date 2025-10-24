@@ -46,7 +46,7 @@ Here is an example of a home-made parser for going back after an Accept:
 - Construct a Tuple of values from previous accepted values
 
 ```js
-let stream = Streams.ofString('abc')
+let stream = Streams.ofChar('abc')
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -61,7 +61,7 @@ assertEquals(parsing.value, 'abc')
 - Uses `then()` and returns only the left or right value
 
 ```js
-const stream = Streams.ofString('|4.6|')
+const stream = Streams.ofChar('|4.6|')
 const floorCombinator = C.char('|')
     .drop()
     .then(N.number()) // we have ['|',4.6], we keep 4.6
@@ -81,7 +81,7 @@ assertEquals(4, parsing.value, 'Floor parsing')
 - Change the value of the response
 
 ```js
-const stream = Streams.ofString('5x8')
+const stream = Streams.ofChar('5x8')
 const combinator = N.integer()
     .then(C.charIn('x*').drop())
     .then(N.integer())
@@ -97,7 +97,7 @@ assertEquals(combinator.parse(stream).value, 40)
 - It's a simplification of map
 
 ```js
-const stream = Streams.ofString('ab')
+const stream = Streams.ofChar('ab')
 // given 'ac', value should be ['X' , 'c']
 const combinator = C.char('a').thenReturns('X').then(C.char('b'))
 assertEquals(combinator.parse(stream).value, ['X', 'b'])
@@ -142,7 +142,7 @@ C.char('a').opt(C.char('b')).char('c')
 - Ensure a parser is repeated **at least** one time
 
 ```js
-const stream = Streams.ofString('aaa')
+const stream = Streams.ofChar('aaa')
 const parsing = C.char('a').rep().parse(stream)
 test.ok(parsing.isAccepted())
 // We need to call list.array()
@@ -189,7 +189,7 @@ while testing or().
 const eater = C.char('a').then(C.char('a'))
 const parser = eater.or(C.char('b'))
 
-const stream = Streams.ofString('ab')
+const stream = Streams.ofChar('ab')
 const parsing = parser.parse(stream)
 expect(parsing.isAccepted()).toBe(false)
 expect(parsing.offset).toBe(1) // ✨ this is the point ! one 'a' is consumed
@@ -261,8 +261,8 @@ It can help you to read your document knowing what happen previously
 - Simplification of `filter()`
 - Check if the stream value is equal to the _matchValue_
 
-            //given 123
-            N.number().match(123)
+              //given 123
+              N.number().match(123)
 
 ### error()
 

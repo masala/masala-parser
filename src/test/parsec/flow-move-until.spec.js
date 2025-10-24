@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 
 describe('moveUntil do not return a TupleParser', () => {
     it('test moveUntil returning a string when stopping at a string', () => {

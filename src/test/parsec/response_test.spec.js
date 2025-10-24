@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import response from '../../lib/parsec/response'
+import response from '../../lib/core/response'
 import stream from '../../lib/stream/index'
 
 describe('Response Tests', () => {

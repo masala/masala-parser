@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec'
+import { F, C } from '../../lib/core'
 
 describe('Stream Offset Tests', () => {
     it('response ok with a CharStream', () => {

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { NEUTRAL } from '../../lib/index.js'
 import Streams from '../../lib/stream/index'
-import { C, F } from '../../lib/parsec/index'
+import { C, F } from '../../lib/core/index'
 
 describe('combining F.try() and p.or()', () => {
     it('works straightforward with a single or()', () => {

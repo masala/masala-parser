@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import stream from '../../lib/stream/index'
-import { F, C, N } from '../../lib/parsec/index'
+import { F, C, N } from '../../lib/core/index'
 import unit from '../../lib/data/unit'
 
 function spaces() {
@@ -14,7 +14,7 @@ describe('Parser Chain Tests', () => {
         const lower = C.char('x')
         const upper = F.satisfy((val) => val === 'x')
         const parser = lower.chain(upper)
-        const response = parser.parse(stream.ofString('x'))
+        const response = parser.parse(stream.ofChars('x'))
         expect(response.isAccepted()).toBe(true)
     })
 
@@ -22,7 +22,7 @@ describe('Parser Chain Tests', () => {
         const lower = C.char('x')
         const upper = F.satisfy((val) => val === 'y')
         const parser = lower.chain(upper)
-        const response = parser.parse(stream.ofString('x'))
+        const response = parser.parse(stream.ofChars('x'))
         expect(response.isAccepted()).toBe(false)
     })
 
@@ -30,7 +30,7 @@ describe('Parser Chain Tests', () => {
         const lower = C.char('x')
         const upper = F.satisfy((val) => val === 'x')
         const parser = lower.chain(upper)
-        const response = parser.parse(stream.ofString('x'))
+        const response = parser.parse(stream.ofChars('x'))
         expect(response.offset).toBe(1)
     })
 
@@ -38,7 +38,7 @@ describe('Parser Chain Tests', () => {
         const lower = C.string('xyz')
         const upper = F.satisfy((val) => val === 'xyz')
         const parser = lower.chain(upper.then(upper))
-        const response = parser.parse(stream.ofString('xyzxyz'))
+        const response = parser.parse(stream.ofChars('xyzxyz'))
         expect(response.offset).toBe(2)
     })
 
@@ -46,7 +46,7 @@ describe('Parser Chain Tests', () => {
         const lower = C.string('xyz')
         const upper = F.satisfy((val) => val === 'xyz')
         const parser = lower.chain(upper.then(upper))
-        const response = parser.parse(stream.ofString('xyzxyz'))
+        const response = parser.parse(stream.ofChars('xyzxyz'))
         expect(response.input.source.offsets[response.offset]).toBe(6)
     })
 
@@ -59,7 +59,7 @@ describe('Parser Chain Tests', () => {
                 return r[0] + r[1]
             })
         expect(
-            p1.chain(p2).parse(stream.ofString('12 34'), 0).isAccepted(),
+            p1.chain(p2).parse(stream.ofChars('12 34'), 0).isAccepted(),
         ).toBe(true)
     })
 
@@ -72,7 +72,7 @@ describe('Parser Chain Tests', () => {
             .map(function (r) {
                 return r[0] + r[1]
             })
-        expect(p1.chain(p2).parse(stream.ofString('12 34'), 0).value).toBe(46)
+        expect(p1.chain(p2).parse(stream.ofChars('12 34'), 0).value).toBe(46)
     })
 
     it('expect (chain) to add multiple numbers', () => {
@@ -81,7 +81,7 @@ describe('Parser Chain Tests', () => {
             .rep()
             .map((values) => values.array().reduce((acc, n) => acc + n, 0))
 
-        const parsing = token.chain(lex).parse(stream.ofString('10 12 44'), 0)
+        const parsing = token.chain(lex).parse(stream.ofChars('10 12 44'), 0)
 
         expect(parsing.isEos()).toBe(true)
         expect(parsing.value).toBe(66)
@@ -93,7 +93,7 @@ describe('Parser Chain Tests', () => {
             .rep()
             .map((values) => values.array().reduce((acc, n) => acc + n, 0))
 
-        const parsing = token.chain(lex).parse(stream.ofString('10 -12 44'), 0)
+        const parsing = token.chain(lex).parse(stream.ofChars('10 -12 44'), 0)
 
         expect(parsing.isEos()).toBe(false)
     })

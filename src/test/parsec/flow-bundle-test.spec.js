@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 import { GenLex } from '../../lib'
 
 function testParser(parser, string) {

@@ -14,7 +14,7 @@ describe('Flow Combinators (startWith, moveUntil, dropTo)', () => {
                 .then(F.dropTo('dog'))
         }
 
-        let stream = Streams.ofString(inputString)
+        let stream = Streams.ofChars(inputString)
         let parsing = combinator().parse(stream)
 
         expect(parsing.isAccepted()).toBe(true)

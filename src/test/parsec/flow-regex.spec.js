@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 
 describe('Chars Bundle Tests', () => {
     it('accepts a single character', () => {

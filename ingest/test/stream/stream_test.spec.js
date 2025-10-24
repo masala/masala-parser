@@ -3,29 +3,29 @@ import stream from '../../lib/stream/index'
 
 describe('Stream Tests', () => {
     it('endOfStream for empty stream', () => {
-        expect(stream.ofString('').endOfStream(0)).toBe(true)
+        expect(stream.ofChars('').endOfStream(0)).toBe(true)
     })
 
     it('endOfStream for non empty stream', () => {
-        expect(stream.ofString('1').endOfStream(1)).toBe(true)
+        expect(stream.ofChars('1').endOfStream(1)).toBe(true)
     })
 
     it('no endOfStream for non empty stream', () => {
-        expect(stream.ofString('1').endOfStream(0)).toBe(false)
+        expect(stream.ofChars('1').endOfStream(0)).toBe(false)
     })
 
     it('get from stream', () => {
-        expect(stream.ofString('1').get(0).isSuccess()).toBe(true)
+        expect(stream.ofChars('1').get(0).isSuccess()).toBe(true)
     })
 
     it('do not get from empty stream', () => {
-        expect(stream.ofString('1').get(1).isSuccess()).toBe(false)
+        expect(stream.ofChars('1').get(1).isSuccess()).toBe(false)
     })
 
     it('do not get from erroneous stream', () => {
         expect(
             stream
-                .ofString({
+                .ofChars({
                     length: 1,
                     charAt: function () {
                         throw new Error()

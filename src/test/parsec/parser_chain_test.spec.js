@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import stream from '../../lib/stream/index'
-import { F, C, N } from '../../lib/parsec/index'
+import { F, C, N } from '../../lib/core/index'
 import unit from '../../lib/data/unit'
 
 function spaces() {

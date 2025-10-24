@@ -1,6 +1,6 @@
 import { isTuple } from '../data/tuple.js'
-import response from '../parsec/response.js'
-import { F, C, N } from '../parsec/index.js'
+import response from '../core/response.js'
+import { F, C, N } from '../core/index.js'
 import unit from '../data/unit.js'
 
 /**

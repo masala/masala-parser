@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { Streams } from '../../lib/index.js'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 
 describe('Tuple Parser Tests', () => {
     it('expect p.first() to work', () => {
@@ -35,7 +35,7 @@ describe('Tuple Parser Tests', () => {
 
     it('expect F.nop to be like a empty tuple', () => {
         let text = 'ab'
-        const stream = Streams.ofString(text)
+        const stream = Streams.ofChars(text)
         let parser = C.char('a').then(F.nop()).then(C.char('b')).join()
         let parsing = parser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)

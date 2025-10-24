@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import stream from '../../lib/stream/index'
-import { N } from '../../lib/parsec/index'
+import { N } from '../../lib/core/index'
 
 function testParser(parser, string) {
     let myStream = stream.ofChars(string)

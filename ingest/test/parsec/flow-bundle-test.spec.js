@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 import { GenLex } from '../../lib'
 
 function testParser(parser, string) {
-    let stream = Streams.ofString(string)
+    let stream = Streams.ofChars(string)
     let parsing = parser.parse(stream)
     return parsing
 }
@@ -13,7 +13,7 @@ describe('Flow Bundle Tests', () => {
     it('subStream is ok on string stream', () => {
         const text = 'Hello World'
         const parser = F.subStream(6).then(C.string('World'))
-        const response = parser.parse(Streams.ofString(text))
+        const response = parser.parse(Streams.ofChars(text))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.value.size()).toBe(7)
@@ -26,7 +26,7 @@ describe('Flow Bundle Tests', () => {
         const grammar = F.subStream(4).drop().then(F.any().rep())
         const parser = genlex.use(grammar)
         const text = '++++ and then >>'
-        const response = parser.parse(Streams.ofString(text))
+        const response = parser.parse(Streams.ofChars(text))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.value.size()).toBe(2)
@@ -38,12 +38,12 @@ describe('Flow Bundle Tests', () => {
         const eol = C.char('\n')
         const parser = F.not(eol).rep()
 
-        let response = parser.parse(Streams.ofString(line))
+        let response = parser.parse(Streams.ofChars(line))
         expect(response.isAccepted()).toBe(true)
         expect(response.offset).toBe(text.length)
 
         const withParser = F.not(eol).rep().then(eol)
-        response = withParser.parse(Streams.ofString(line))
+        response = withParser.parse(Streams.ofChars(line))
         expect(response.isAccepted()).toBe(true)
         expect(response.offset).toBe(line.length)
     })
@@ -79,7 +79,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntilFast string', () => {
-        const line = Streams.ofString('soXYZso')
+        const line = Streams.ofChars('soXYZso')
         const combinator = F.moveUntil('XYZ')
         const parser = combinator.parse(line)
         expect(parser.value).toBe('so')
@@ -87,7 +87,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntilFast string with include', () => {
-        const line = Streams.ofString('soXYZso')
+        const line = Streams.ofChars('soXYZso')
         const combinator = F.moveUntil('XYZ', true)
         const parser = combinator.parse(line)
         expect(parser.value).toBe('soXYZ')
@@ -96,7 +96,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFast string with continuation', () => {
         const document = 'start-detect-XYZ-continues'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChars(document)
         const start = C.string('start-')
         const combinator = start
             .drop()
@@ -110,7 +110,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFast array of string with continuation', () => {
         const document = 'start-detect-XYZ-continues'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChars(document)
         const start = C.string('start-')
         const combinator = start
             .drop()
@@ -124,7 +124,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFast array of string with include', () => {
         const document = 'start-detect-XYZ-continues'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChars(document)
         const start = C.string('start-')
         const combinator = start
             .drop()
@@ -139,7 +139,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFast string fails', () => {
         const document = 'start-detect-XYZ-continues'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChars(document)
         const start = C.string('start-')
         const combinator = start
             .drop()
@@ -151,7 +151,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFast array of string fails', () => {
         const document = 'start-detect-XYZ-continues'
-        const line = Streams.ofString(document)
+        const line = Streams.ofChars(document)
         const start = C.string('start-')
         const combinator = start
             .drop()
@@ -163,7 +163,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFast fails if array stream', () => {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArray(document)
+        const line = Streams.ofArrays(document)
         const combinator = F.moveUntil(['ABC', 'ZE', 'XYZ'])
         expect(() => combinator.parse(line)).toThrow(
             'Input source must be a String',
@@ -172,7 +172,7 @@ describe('Flow Bundle Tests', () => {
 
     it('test moveUntilFastString fails if array stream', () => {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArray(document)
+        const line = Streams.ofArrays(document)
         const combinator = F.moveUntil('XYZ')
         expect(() => combinator.parse(line)).toThrow(
             'Input source must be a String',
@@ -180,7 +180,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil', () => {
-        const line = Streams.ofString('I write until James appears')
+        const line = Streams.ofChars('I write until James appears')
         const combinator = F.moveUntil(C.string('James'))
             .then(F.any().drop())
             .single()
@@ -189,7 +189,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil parser, with include', () => {
-        const line = Streams.ofString('I write until James appears')
+        const line = Streams.ofChars('I write until James appears')
         const combinator = F.moveUntil(C.string('James'), true)
             .then(F.any().rep().drop())
             .single()
@@ -201,7 +201,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil parser, with include and structure', () => {
-        const line = Streams.ofString('I write until James appears')
+        const line = Streams.ofChars('I write until James appears')
         const combinator = F.moveUntil(
             C.string('James').map((james) => ({
                 structure: james,
@@ -218,7 +218,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil parser, with eos, not including', () => {
-        const line = Streams.ofString('I write until the end')
+        const line = Streams.ofChars('I write until the end')
         const combinator = F.moveUntil(C.string('end'), false)
         const parsing = combinator.parse(line)
         const value = parsing.value
@@ -228,7 +228,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil parser, with eos, including', () => {
-        const line = Streams.ofString('I write until James appears')
+        const line = Streams.ofChars('I write until James appears')
         const combinator = F.moveUntil(C.string('appears'), true)
         const parsing = combinator.parse(line)
         const value = parsing.value
@@ -238,7 +238,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil Not found', () => {
-        const line = Streams.ofString('I write until James appears')
+        const line = Streams.ofChars('I write until James appears')
         const combinator = F.moveUntil(C.string('Indiana'))
             .then(C.string('I'))
             .then(F.any().drop())
@@ -247,7 +247,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil found with failing parser', () => {
-        const line = Streams.ofString('I write until James Bond appears')
+        const line = Streams.ofChars('I write until James Bond appears')
         const combinator = F.moveUntil(C.string('James')).then(
             F.dropTo(F.eos()),
         )
@@ -256,7 +256,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test dropTo with string', () => {
-        const line = Streams.ofString('I write until James Bond appears')
+        const line = Streams.ofChars('I write until James Bond appears')
         const combinator = F.dropTo('James')
             .then(C.string(' Bond appears'))
             .then(F.eos())
@@ -265,7 +265,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test dropTo with string fail', () => {
-        const line = Streams.ofString('I write until James Bond appears')
+        const line = Streams.ofChars('I write until James Bond appears')
         const combinator = F.dropTo('James')
             .then(C.string(' Bond appears'))
             .then(F.eos())
@@ -274,7 +274,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test dropTo with parser', () => {
-        const line = Streams.ofString('I write until James Bond appears')
+        const line = Streams.ofChars('I write until James Bond appears')
         const combinator = F.dropTo(C.string('James'))
             .then(C.string(' Bond appears'))
             .then(F.eos())
@@ -283,7 +283,7 @@ describe('Flow Bundle Tests', () => {
     })
 
     it('test moveUntil found with more parsers', () => {
-        const line = Streams.ofString('I write until James Bond appears')
+        const line = Streams.ofChars('I write until James Bond appears')
         const combinator = F.moveUntil(C.string('James'))
             .then(F.dropTo('appears'))
             .then(F.eos().drop())
@@ -311,7 +311,7 @@ describe('Flow Bundle Tests', () => {
             }
         }
 
-        const line = Streams.ofString('ababa')
+        const line = Streams.ofChars('ababa')
         const combinator = new SomeLazyParser('a').first().then(F.eos().drop())
         const value = combinator.parse(line).value
         expect(value.join('')).toBe('ababa')

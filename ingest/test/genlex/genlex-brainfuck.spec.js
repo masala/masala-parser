@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { GenLex } from '../../lib/genlex/genlex'
-import { F, C } from '../../lib/parsec/index' // Added .js extension
+import { F, C } from '../../lib/core/index' // Added .js extension
 import Streams from '../../lib/stream'
 
 function createParser() {
@@ -20,7 +20,7 @@ describe('GenLex Brainfuck Tokenizer Tests', () => {
         let hW =
             '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
         let parser = createParser()
-        const response = parser.parse(Streams.ofString(hW))
+        const response = parser.parse(Streams.ofChars(hW))
 
         expect(response.isAccepted()).toBe(true)
         // Check if all characters that are commands were tokenized
@@ -68,7 +68,7 @@ Pointer :   ^
 >++.                    And finally a newline from Cell #6`
 
         let parser = createParser()
-        const response = parser.parse(Streams.ofString(hW))
+        const response = parser.parse(Streams.ofChars(hW))
 
         expect(response.isAccepted()).toBe(true)
         // The original test asserted offset 106. This is the count of actual Brainfuck command characters.

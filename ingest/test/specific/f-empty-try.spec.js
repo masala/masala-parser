@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Streams from '../../lib/stream/index'
-import { F, C } from '../../lib/parsec/index'
+import { F, C } from '../../lib/core/index'
 
 describe('Failed Try', () => {
     it('separate the problem of F.try only', () => {
@@ -9,7 +9,7 @@ describe('Failed Try', () => {
         }
 
         const inputString = 'b' // Simplified input for clarity
-        let stream = Streams.ofString(inputString)
+        let stream = Streams.ofChars(inputString)
         let parsing = emptyTry().parse(stream)
 
         expect(parsing.isAccepted()).toBe(false) // Should be accepted
