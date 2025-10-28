@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { C, F, Streams, createTracer } from '../../lib/index.js'
+import { C, F, Stream, createTracer } from '../../lib/index.js'
 import {
     registerTrace,
     TRACE_REGISTRY,
@@ -48,7 +48,7 @@ describe('createTracer / Parser.trace integration', () => {
         }
 
         const traced = tracer.traceAll(options)(fullParser)
-        const stream = Streams.ofChars(input)
+        const stream = Stream.ofChars(input)
         traced.parse(stream)
 
         const logs = tracer.flush()
@@ -78,7 +78,7 @@ describe('createTracer / Parser.trace integration', () => {
             },
         }
         const traced = tracer.traceAll(options)(fullParser)
-        traced.parse(Streams.ofChars(input))
+        traced.parse(Stream.ofChars(input))
         const logs = tracer.flush()
 
         const rightTextExit = logs.find(
@@ -145,7 +145,7 @@ describe('trace() and registerTrace() edge cases', () => {
         tracer.trace(p, 'p')
 
         // Run once and ensure we have logs
-        p.parse(Streams.ofChars('ok'))
+        p.parse(Stream.ofChars('ok'))
         const logs = tracer.flush()
         expect(logs.length > 0).toBe(true)
     })
@@ -154,7 +154,7 @@ describe('trace() and registerTrace() edge cases', () => {
         const tracer = createTracer({ window: [0, 100], includeRejects: false })
         const rejecter = C.string('Z')
         const traced = tracer.trace(rejecter, 'rej')(rejecter)
-        traced.parse(Streams.ofChars('abc'))
+        traced.parse(Stream.ofChars('abc'))
         const logs = tracer.flush()
         const enters = logs.filter(
             (e) => e.name === 'rej' && e.phase === 'enter',
@@ -168,7 +168,7 @@ describe('trace() and registerTrace() edge cases', () => {
         const tracer = createTracer({ window: [0, 100], snippet: false })
         const p = C.string('abc')
         const traced = tracer.trace(p, 'cons')(p)
-        traced.parse(Streams.ofChars('abc'))
+        traced.parse(Stream.ofChars('abc'))
         const logs = tracer.flush()
         const exit = logs.find((e) => e.name === 'cons' && e.phase === 'exit')
         expect(exit).toBeTruthy()
@@ -179,11 +179,11 @@ describe('trace() and registerTrace() edge cases', () => {
         const tracer = createTracer({ window: [0, 100] })
         const p = C.string('x')
         tracer.trace(p, 'p')(p)
-        p.parse(Streams.ofChars('x'))
+        p.parse(Stream.ofChars('x'))
         tracer.flush()
 
         tracer.restore()
-        p.parse(Streams.ofChars('x'))
+        p.parse(Stream.ofChars('x'))
         expect(tracer.flush()).toEqual([])
     })
 
@@ -212,7 +212,7 @@ describe('trace() and registerTrace() edge cases', () => {
         })
         const p = C.string('abcdef')
         const traced = tracer.trace(p, 'ell')(p)
-        traced.parse(Streams.ofChars('abcdef'), 0)
+        traced.parse(Stream.ofChars('abcdef'), 0)
         const logs = tracer.flush()
         const exit = logs.find((e) => e.name === 'ell' && e.phase === 'exit')
         expect(exit).toBeTruthy()
@@ -229,7 +229,7 @@ describe('trace() and registerTrace() edge cases', () => {
 
         // options undefined => should use base meta opts
         const traced = tracer.traceAll()(p)
-        traced.parse(Streams.ofChars('v'))
+        traced.parse(Stream.ofChars('v'))
         const logs = tracer.flush()
         const exit = logs.find((e) => e.name === 'pv' && e.phase === 'exit')
         expect(exit).toBeTruthy()

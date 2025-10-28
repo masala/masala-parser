@@ -4,7 +4,7 @@
 import { title } from '../lib/title-parser.js'
 import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert.js'
 import { bullet } from '../lib/bullet-parser.js'
-import { Streams } from '@masala/parser'
+import { Stream } from '@masala/parser'
 
 export const titleTests = {
     'test level1': function () {
@@ -113,7 +113,7 @@ export const titleTests = {
         const text = `### This is a title`
         const line = text + '\n'
 
-        let response = title().parse(Streams.ofChars(line))
+        let response = title().parse(Stream.ofChars(line))
         assertTrue(response.isAccepted())
         assertEquals(response.offset, text.length)
     },
@@ -122,7 +122,7 @@ export const titleTests = {
         const text = `This is a title\n------`
         const line = text + '\n'
 
-        let response = title().parse(Streams.ofChars(line))
+        let response = title().parse(Stream.ofChars(line))
         assertTrue(response.isAccepted())
         assertEquals(response.offset, text.length)
     },

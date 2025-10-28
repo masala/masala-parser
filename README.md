@@ -70,7 +70,7 @@ const combinator = helloParser.then(white.rep()).then(worldParser)
 
 ```js
 // N: Number Bundle, C: Chars Bundle
-import { Streams, N, C } from '@masala/parser'
+import { Stream, N, C } from '@masala/parser'
 
 const stream = Stream.ofChars('|4.6|')
 const floorCombinator = C.char('|')
@@ -124,14 +124,14 @@ that represents your problem. After parsing, there are two subtypes of
 - `Reject` if it could not.
 
 ```js
-let response = C.char('a').rep().parse(Streams.ofChars('aaaa'))
+let response = C.char('a').rep().parse(Stream.ofChars('aaaa'))
 assertEquals(response.value.join(''), 'aaaa')
 assertEquals(response.offset, 4)
 assertTrue(response.isAccepted())
 assertTrue(response.isConsumed())
 
 // Partially accepted
-response = C.char('a').rep().parse(Streams.ofChars('aabb'))
+response = C.char('a').rep().parse(Stream.ofChars('aabb'))
 assertEquals(response.value.join(''), 'aa')
 assertEquals(response.offset, 2)
 assertTrue(response.isAccepted())
@@ -163,7 +163,7 @@ The goal is to check that we have Hello 'someone', then to grab that name
 
 ```js
 // Plain old javascript
-import { Streams, C } from '@masala/parser'
+import { Stream, C } from '@masala/parser'
 
 var helloParser = C.string('Hello')
     .then(C.char(' ').rep())
@@ -182,7 +182,7 @@ And each new Parser is a combination of Parsers given by the standard bundles or
 previous functions.
 
 ```js
-import { Streams, N, C, F } from '@masala/parser'
+import { Stream, N, C, F } from '@masala/parser'
 
 const blanks = () => C.char(' ').optrep()
 
@@ -220,7 +220,7 @@ function combinator() {
 }
 
 function parseOperation(line) {
-    return combinator().parse(Streams.ofChars(line))
+    return combinator().parse(Stream.ofChars(line))
 }
 
 assertEquals(4, parseOperation('2   +2').value, 'sum: ')

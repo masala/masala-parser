@@ -1,4 +1,4 @@
-import { C, N, Streams } from '@masala/parser'
+import { C, N, Stream } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 import { Worker } from 'worker_threads'
 

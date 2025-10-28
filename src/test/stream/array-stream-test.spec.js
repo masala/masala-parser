@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import Streams from '../../lib/stream/index'
+import Stream from '../../lib/stream/index'
 
 describe('Array Stream Tests', () => {
     it('We can get a response from array', () => {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArrays(document)
+        const line = Stream.ofArrays(document)
 
         let response = line.get(0)
         expect(response.value).toBe('More')
@@ -12,7 +12,7 @@ describe('Array Stream Tests', () => {
 
     it('We have reached out of stream', () => {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArrays(document)
+        const line = Stream.ofArrays(document)
 
         let out = line.endOfStream(3)
         expect(out).toBe(true)

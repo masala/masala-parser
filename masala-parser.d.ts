@@ -145,14 +145,14 @@ export function tuple<T>(array: T[]): Tuple<T>
  * Represents a **source** of data that will be parsed.
  * These data are characters with Stream<String> of tokens defined
  * by low-level tokens (if, '{', number, class, function}) with Stream<Parser>.
- * There are two types of Streams: low level where source is a text or an array,
+ * There are two types of Stream: low level where source is a text or an array,
  * and high level where source is composed with another source.
  *
  * A source can be parsed multiple times by various parsers. A
  * `Stream` is supposed to be parsed only once.
  *
  */
-export interface Stream<Data> {
+export interface IStream<Data> {
     /**
      * For high-level stream, returns the index of the low-level source.
      * For low-level, returns the same value as index.
@@ -166,27 +166,27 @@ export interface Stream<Data> {
      */
     get(index: number): Try<Data, void>
 
-    subStreamAt(index: number, stream: Stream<Data>): any
+    subStreamAt(index: number, stream: IStream<Data>): any
 }
 
 /**
  * Data parsed by the parser
  */
-interface Streams {
-    ofChars(string: string): Stream<string>
+interface StreamCollection {
+    ofChars(string: string): IStream<string>
 
-    ofArrays<X>(): Stream<X[]>
+    ofArrays<X>(): IStream<X[]>
 
     ofParsers<T, D>(
         tokenParser: IParser<T>,
-        lowerStream: Stream<D>,
-    ): Stream<IParser<T>>
+        lowerStream: IStream<D>,
+    ): IStream<IParser<T>>
 
     /**
      * Creates a bufferedStream that checks into a cache
      * @param source
      */
-    buffered<D>(source: D): Stream<D>
+    buffered<D>(source: D): IStream<D>
 }
 
 /**
@@ -292,7 +292,7 @@ export interface IParser<T> {
      *
      * ```js
      * const parser = N.number().map (n => n*2);
-     * const value = parser.parse(Streams.ofString('1')).value;
+     * const value = parser.parse(Stream.ofString('1')).value;
      * test.equal(value, 2 );
      * ```
      *
@@ -311,7 +311,7 @@ export interface IParser<T> {
      *
      *  const combinator = N.digit()
      *      .flatMap(doubleNumber);
-     *  let response = combinator.parse(Streams.ofString('12'));
+     *  let response = combinator.parse(Stream.ofString('12'));
      *  assertTrue(response.isAccepted());
      * ```
      *
@@ -395,7 +395,7 @@ export interface IParser<T> {
      * Search for next n occurrences. `TupleParser.occurence()`  will continue to build one larger Tuple
      * ```js
      * let parser = C.char('a').then (C.char('b')).occurrence(3);
-     * let resp = parser.parse(Streams.ofString('ababab'));
+     * let resp = parser.parse(Stream.ofString('ababab'));
      * // ->  Tuple { value: [ 'a', 'b', 'a', 'b', 'a', 'b' ] } }
      * ```
      * @param n
@@ -567,7 +567,7 @@ interface NumberBundle {
 export declare const F: FlowBundle
 export declare const C: CharBundle
 export declare const N: NumberBundle
-export declare const Streams: Streams
+export declare const Stream: StreamCollection
 
 export declare const GenLex: new () => IGenLex
 export declare const TracingGenLex: new (tracer?: Tracer) => ITracingGenLex

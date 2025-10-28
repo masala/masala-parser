@@ -5,7 +5,7 @@ import {
     IParser,
     Option,
     SingleParser,
-    Streams,
+    Stream,
     Tuple,
     tuple,
     TupleParser,
@@ -105,7 +105,7 @@ function brainfuck(program: string) {
 
     const parser = createParser()
 
-    let response = parser.parse(Streams.ofChars(program))
+    let response = parser.parse(Stream.ofChars(program))
 
     interpretAll(response.value)
 
@@ -180,7 +180,7 @@ describe('Brainfuck Interpreter', () => {
         const program = '+++>+'
         resetState()
         const parser = createParser()
-        let response = parser.parse(Streams.ofChars(program))
+        let response = parser.parse(Stream.ofChars(program))
         interpretAll(response.value)
 
         expect(memory.slice(0, max + 1)).toEqual([3, 1])
@@ -192,7 +192,7 @@ describe('Brainfuck Interpreter', () => {
         const program = '+++[>+<-]'
         resetState()
         const parser = createParser()
-        let response = parser.parse(Streams.ofChars(program))
+        let response = parser.parse(Stream.ofChars(program))
         interpretAll(response.value)
 
         // Memory: [0, 3] (values swapped), Pointer: 0
@@ -207,7 +207,7 @@ describe('Brainfuck Interpreter', () => {
             '++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.'
         resetState()
         const parser = createParser()
-        let response = parser.parse(Streams.ofChars(program))
+        let response = parser.parse(Stream.ofChars(program))
         interpretAll(response.value)
 
         expect(output).toBe('Hello World!\n')

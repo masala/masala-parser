@@ -1,4 +1,4 @@
-import Streams from '../../lib/stream/index'
+import Stream from '../../lib/stream/index'
 
 export default {
     setUp: function (done) {
@@ -7,7 +7,7 @@ export default {
 
     'We can get a response from ': function (test) {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArrays(document)
+        const line = Stream.ofArrays(document)
 
         let response = line.get(0)
         test.equal(response.value, 'More')
@@ -17,7 +17,7 @@ export default {
 
     'We have reached out of stream': function (test) {
         const document = ['More', 'XYZ']
-        const line = Streams.ofArrays(document)
+        const line = Stream.ofArrays(document)
 
         let out = line.endOfStream(3)
         test.ok(out)

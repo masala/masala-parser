@@ -1,4 +1,4 @@
-import { Streams, C } from '@masala/parser'
+import { Stream, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Character Combinators (letters, lowerCase, notString)', () => {
@@ -13,7 +13,7 @@ describe('Character Combinators (letters, lowerCase, notString)', () => {
                 .then(C.notChar('.').rep()) // Parses until the end
         }
 
-        let stream = Streams.ofChars(inputString)
+        let stream = Stream.ofChars(inputString)
         let parsing = combinator().parse(stream)
 
         expect(parsing.isAccepted()).toBe(true)

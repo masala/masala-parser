@@ -3,7 +3,7 @@
 **Import**
 
 ```ts
-import { N, Streams } from '@masala/parser'
+import { N, Stream } from '@masala/parser'
 ```
 
 ## Number parser
@@ -24,9 +24,9 @@ The parsing is returned as a JavaScript type `number`.
 **Examples**
 
 ```ts
-N.number().parse(Streams.ofChars('42')) // → 42
-N.number().parse(Streams.ofChars('-12.5')) // → -12.5
-N.number().parse(Streams.ofChars('3.1e-2')) // → 0.031
+N.number().parse(Stream.ofChars('42')) // → 42
+N.number().parse(Stream.ofChars('-12.5')) // → -12.5
+N.number().parse(Stream.ofChars('3.1e-2')) // → 0.031
 ```
 
 Grammar: `[+-]? (digits ("." digits?)? | "." digits) ([eE][+-]?digits)?`
@@ -46,6 +46,6 @@ const ratio = N.number().then(C.char('/')).then(N.number())
 **Examples**
 
 ```ts
-N.digit().parse(Streams.ofChars('7')) // '7'
-N.digits().parse(Streams.ofChars('1234')) // '1234'
+N.digit().parse(Stream.ofChars('7')) // '7'
+N.digits().parse(Stream.ofChars('1234')) // '1234'
 ```

@@ -1,4 +1,4 @@
-import { C, N, Tuple, Streams } from '@masala/parser'
+import { C, N, Tuple, Stream } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Optional parser', () => {
@@ -21,7 +21,7 @@ describe('Optional parser', () => {
         const n = C.char('z')
 
         const mixed = c.then(n)
-        const stream = Streams.ofChars('zNOT_REACHED')
+        const stream = Stream.ofChars('zNOT_REACHED')
 
         const response = mixed.parse(stream) // not 'a', so we have 'b' as default value
         const data = response.value

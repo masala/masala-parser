@@ -1,4 +1,4 @@
-import { Streams, F, C } from '@masala/parser'
+import { Stream, F, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Flow Combinators (try, opt)', () => {
@@ -47,7 +47,7 @@ describe('Flow Combinators (try, opt)', () => {
         const inputString = 'TUESDAY      ---FRIDAY' // Simplified input for clarity
         // Original: 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY'; causes issues with rep()
 
-        let stream = Streams.ofChars(inputString)
+        let stream = Stream.ofChars(inputString)
         let parsing = combinator().parse(stream)
 
         // Based on the original assertFalse(parsing.isAccepted());
@@ -66,7 +66,7 @@ describe('Flow Combinators (try, opt)', () => {
 
         // Let's test the original failure case logic - why did it fail?
         const originalString = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY'
-        let originalStream = Streams.ofChars(originalString)
+        let originalStream = Stream.ofChars(originalString)
         let originalParsing = combinator().parse(originalStream)
         // Perhaps the blank().rep() was too greedy?
         expect(originalParsing.isAccepted()).toBe(false) // Confirming original behavior

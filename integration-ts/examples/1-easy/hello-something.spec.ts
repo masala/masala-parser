@@ -1,4 +1,4 @@
-import { Streams, C } from '@masala/parser'
+import { Stream, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Hello Something Parser', () => {
@@ -10,7 +10,7 @@ describe('Hello Something Parser', () => {
             .then(C.letter().rep()) // keeping repeated ascii letters
             .then(C.char("'").drop()) // keeping previous letters
 
-        const parsing = helloParser.parse(Streams.ofChars("Hello 'World'"))
+        const parsing = helloParser.parse(Stream.ofChars("Hello 'World'"))
         // C.letter.rep() will giv a array of letters
         expect(parsing.value.array()).toEqual(['W', 'o', 'r', 'l', 'd'])
     })
@@ -25,7 +25,7 @@ describe('Hello Something Parser', () => {
 
         // Note that helloParser will not reach the end of the stream; it will stop at the space after People
         const peopleParsing = helloParser.parse(
-            Streams.ofChars("Hello 'People' in 2017"),
+            Stream.ofChars("Hello 'People' in 2017"),
         )
 
         expect(peopleParsing.value.join('')).toBe('People')

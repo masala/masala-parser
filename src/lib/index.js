@@ -13,7 +13,7 @@ import parsec from './core/index.js'
 import Parser from './core/parser.js'
 import { F, C, N } from './core/index.js'
 import standard from './standard/index.js'
-import Streams from './stream/index.js'
+import Stream from './stream/index.js'
 
 import { accept, reject } from './core/response.js'
 import { Tuple, isTuple, NEUTRAL, tuple } from './data/tuple.js'
@@ -33,7 +33,7 @@ export {
     getMathGenLex,
     parsec,
     standard,
-    Streams,
+    Stream,
     Parser,
     F,
     C,

@@ -1,4 +1,4 @@
-import { Streams, F, C } from '@masala/parser'
+import { Stream, F, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Flow Combinator (not)', () => {
@@ -21,7 +21,7 @@ describe('Flow Combinator (not)', () => {
 
         const inputString = 'Xabx' // X matches not(day), fails not(a), fails not(day)
 
-        let stream = Streams.ofChars(inputString)
+        let stream = Stream.ofChars(inputString)
 
         let parsing1 = F.not(day()).parse(stream)
         expect(parsing1.isAccepted(), "F.not(day()) on 'X'").toBe(true)

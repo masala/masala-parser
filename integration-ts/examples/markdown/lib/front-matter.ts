@@ -1,4 +1,4 @@
-import { F, C, Streams, Tuple, TupleParser } from '@masala/parser'
+import { F, C, Stream, Tuple, TupleParser } from '@masala/parser'
 import { SingleParser } from '@masala/parser'
 
 interface FrontMatterLine {

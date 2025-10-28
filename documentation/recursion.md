@@ -7,7 +7,7 @@ parsing
 
 ## Recursion fail
 
-        const {Streams, F, N, C, X} = require('@masala/parser');
+        const {Stream, F, N, C, X} = require('@masala/parser');
 
         function A(){
             return C.char('A').then(B());
@@ -20,7 +20,7 @@ parsing
         console.log('=== Building Parser ====');
         const parser = A();
         console.log('=== NEVER THERE ====');
-        let parsing = parser.parse(Streams.ofChars('AAAAAB'));
+        let parsing = parser.parse(Stream.ofChars('AAAAAB'));
 
 ## Lazy Recursion
 
@@ -39,8 +39,7 @@ parsing the stream.
         console.log('=== Building Parser ====');
         const parser = A();
         console.log('=== GETTING THERE ====');
-        let parsing = parser.parse(Streams.ofChars('AAAAAB')); // Accepted :)
-
+        let parsing = parser.parse(Stream.ofChars('AAAAAB')); // Accepted :)
 
 ## Operations
 

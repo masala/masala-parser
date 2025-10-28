@@ -1,4 +1,4 @@
-import { Streams, F, C } from '@masala/parser'
+import { Stream, F, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 const string = 'The quick brown fox jumps over the lazy dog'
@@ -14,7 +14,7 @@ describe('Flow Combinators (startWith, moveUntil, dropTo)', () => {
                 .then(F.dropTo('dog'))
         }
 
-        let stream = Streams.ofChars(inputString)
+        let stream = Stream.ofChars(inputString)
         let parsing = combinator().parse(stream)
 
         expect(parsing.isAccepted()).toBe(true)

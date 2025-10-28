@@ -87,7 +87,7 @@ in a document. `F.dropTo(string|parser)` will do the same, but dropping the
 content.
 
 ```js
-const line = Streams.ofChars('I write until James Bond appears')
+const line = Stream.ofChars('I write until James Bond appears')
 
 const combinator = F.moveUntil(C.string('James'))
     .then(F.dropTo('appears'))

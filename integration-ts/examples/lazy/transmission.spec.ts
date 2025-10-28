@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Streams, F, C, SingleParser, Tuple } from '@masala/parser'
+import { Stream, F, C, SingleParser, Tuple } from '@masala/parser'
 
 describe('Lazy Combinator with Recursion', () => {
     it('should handle recursive parsing with F.lazy', () => {
@@ -29,7 +29,7 @@ describe('Lazy Combinator with Recursion', () => {
 
         // Input: AAA B
         const str = 'AAAB'
-        const stream = Streams.ofChars(str)
+        const stream = Stream.ofChars(str)
         const parsing = parser.parse(stream)
 
         // A('a') -> C.char('A').rep() parses 'AAA'
