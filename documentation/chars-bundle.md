@@ -5,9 +5,9 @@
 Using Only Chars
 
 ```js
-const { Streams, F, C } = require('@masala/parser')
+import { Streams, F, C } from '@masala/parser'
 
-let stream = Streams.ofString('abc')
+let stream = Streams.ofChars('abc')
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -20,7 +20,7 @@ assertArrayEquals(['a', 'b', 'c'], parsing.value)
 Or just using `C.letter` and `rep()`:
 
 ```js
-stream = Streams.ofChar('Hello World')
+stream = Streams.ofChars('Hello World')
 const letterParser = C.letter
     .rep() // 'Hello'
     .then(C.char(' ')) // space is not a letter
@@ -36,7 +36,7 @@ We can improve our control by using the right function at the right time. Here,
 Using `C.letters` and `C.string`
 
 ```js
-stream = Streams.ofChar('Hello World')
+stream = Streams.ofChars('Hello World')
 const helloParser = C.string('Hello').then(C.char(' ')).then(C.letters)
 
 parsing = helloParser.parse(stream)
@@ -50,20 +50,20 @@ assertArrayEquals(['Hello', ' ', 'World'], parsing.value)
 ```js
 import { Streams, F, C } from 'masala-parser'
 
-assertTrue(C.letterAs().parse(Streams.ofChar('a')).isAccepted())
+assertTrue(C.letterAs().parse(Streams.ofChars('a')).isAccepted())
 assertTrue(
-    C.letterAs(C.OCCIDENTAL_LETTER).parse(Streams.ofChar('a')).isAccepted(),
+    C.letterAs(C.OCCIDENTAL_LETTER).parse(Streams.ofChars('a')).isAccepted(),
 )
-assertTrue(C.letterAs(C.UTF8_LETTER).parse(Streams.ofChar('Б')).isAccepted())
+assertTrue(C.letterAs(C.UTF8_LETTER).parse(Streams.ofChars('Б')).isAccepted())
 assertTrue(
-    !C.letterAs(C.OCCIDENTAL_LETTER).parse(Streams.ofChar('÷')).isAccepted(),
+    !C.letterAs(C.OCCIDENTAL_LETTER).parse(Streams.ofChars('÷')).isAccepted(),
 )
 ```
 
 ### stringIn
 
 ```js
-stream = Streams.ofChar('James')
+stream = Streams.ofChars('James')
 const combinator = C.stringIn(['The', 'James', 'Bond', 'series'])
 parsing = combinator.parse(stream)
 assertEquals('James', parsing.value)
@@ -77,7 +77,7 @@ parser. The argument can be either a raw range string `a-zA-Z_` or a RegExp
 consumes exactly one code unit.
 
 ```js
-let stream = Streams.ofChar('myUser')
+let stream = Streams.ofChars('myUser')
 
 //identifier parser-> myUser: ok ; 0myUser: not ok
 const firstChar = C.inRegexRange('a-zA-Z_')

@@ -1,4 +1,4 @@
-import { Streams, C, N } from '@masala/parser'
+import { Streams, C, N, SingleParser, F } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 // Next char must be the double of the previous
@@ -25,5 +25,39 @@ describe('FlatMap Combinator', () => {
         let response3 = combinator.parse(Streams.ofChars('48'))
         expect(response3.isAccepted()).toBe(true)
         // Assuming it keeps the second parser's result: expect(response3.value.join('')).toBe('8');
+    })
+
+    it('should parse lines', () => {
+        const separator = C.char(':')
+        const end = C.char('\n').opt()
+
+        const nameParser: SingleParser<string> = C.string('authors')
+            .then(separator.drop())
+            .then(C.letters())
+            .then(end.drop())
+            .last()
+
+        const ratingParser = (name: string) =>
+            C.letters()
+                .filter((val: string) => val.includes(name))
+                .then(separator.drop())
+                .then(
+                    F.not(end)
+                        .rep()
+                        .map((chars) => chars.join('')),
+                )
+
+        const parser = nameParser.flatMap(ratingParser)
+
+        const string = `authors:alice\nalice:5`
+        const value = parser.val(string)
+        expect(value.array()).toEqual(['alice', '5'])
+
+        /*const ratingParser = (nameParser: SingleParser<string>) => {
+            return nameParser.filter(
+                (val: string) => val.includes(val.name), // ✨
+            )
+        }
+        */
     })
 })

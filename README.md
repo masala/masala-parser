@@ -9,7 +9,7 @@ Masala Parser is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf).
 
 Masala Parser is a Javascript implementation of the Haskell **Parsec**. It is
-plain Javascript that works in the browser, is tested with more than 450 unit
+plain Javascript that works in the browser, is tested with more than 500 unit
 tests, covering 100% of code lines.
 
 ### Use cases
@@ -17,16 +17,17 @@ tests, covering 100% of code lines.
 - It can create a **full parser from scratch**
 - It can extract data from a big text and **replace complex regexp**
 - It works in any **browser**
-- There is a good **typescript** type declaration
+- There is a **incredible typescript** api
 - It can validate complete structure with **variations**
 - It's a great starting point for parser education. It's **way simpler than Lex
   & Yacc**.
 - It's designed to be written in other languages (Python, Java, Rust) with the
   same interface
+- Masala Parser has some **good performances** in speed and memory
 
-Masala Parser keywords are **simplicity**, **variations** and
-**maintainability**. You won't need theoretical bases on languages for
-extraction or validation use cases.
+Masala Parser shines for **simplicity**, **variations** and **maintainability**
+of your parsers. You won't need theoretical bases on languages for extraction or
+validation use cases.
 
 Masala Parser has relatively good performances, however, Javascript is obviously
 not the fastest machine.
@@ -54,20 +55,25 @@ generated from typescript interface.
 
 ## Hello World
 
+Let's parse `Hello World`
+
 ```js
-const helloParser = C.string('hello')
+const helloParser = C.string('Hello')
 const white = C.char(' ')
-const worldParser = C.string('world')
+const worldParser = C.string('World')
 const combinator = helloParser.then(white.rep()).then(worldParser)
 ```
 
 ## Floor notation
 
+`|4.2|` is a mathematical notation that removes the digits after `.` So |4.2|
+== 4.
+
 ```js
 // N: Number Bundle, C: Chars Bundle
-const { Streams, N, C } = require('@masala/parser')
+import { Streams, N, C } from '@masala/parser'
 
-const stream = Stream.ofString('|4.6|')
+const stream = Stream.ofChars('|4.6|')
 const floorCombinator = C.char('|')
     .drop()
     .then(N.number()) // we have ['|', 4.6], we drop '|'
@@ -81,6 +87,9 @@ assertEquals(4, parsing.value, 'Floor parsing')
 ```
 
 ## Explanations
+
+We create small simple parsers, with a set of utilities (`C`, `N`, `optrep()`,
+`map()`, ...), then we create a more complex parser that combine them.
 
 According to Wikipedia _"in functional programming, a parser combinator is a
 higher-order function that accepts several parsers as input and returns a new
@@ -116,14 +125,14 @@ that represents your problem. After parsing, there are two subtypes of
 - `Reject` if it could not.
 
 ```js
-let response = C.char('a').rep().parse(Streams.ofChar('aaaa'))
+let response = C.char('a').rep().parse(Streams.ofChars('aaaa'))
 assertEquals(response.value.join(''), 'aaaa')
 assertEquals(response.offset, 4)
 assertTrue(response.isAccepted())
 assertTrue(response.isConsumed())
 
 // Partially accepted
-response = C.char('a').rep().parse(Streams.ofChar('aabb'))
+response = C.char('a').rep().parse(Streams.ofChars('aabb'))
 assertEquals(response.value.join(''), 'aa')
 assertEquals(response.offset, 2)
 assertTrue(response.isAccepted())
@@ -155,14 +164,14 @@ The goal is to check that we have Hello 'someone', then to grab that name
 
 ```js
 // Plain old javascript
-const { Streams, C } = require('@masala/parser')
+import { Streams, C } from '@masala/parser'
 
 var helloParser = C.string('Hello')
     .then(C.char(' ').rep())
     .then(C.letters()) // succession of A-Za-z letters
     .last() // keeping previous letters
 
-var value = helloParser.val('Hello Gandhi') // val(x) is a shortcut for parse(Stream.ofString(x)).value;
+var value = helloParser.val('Hello Gandhi') // val(x) is a shortcut for parse(Stream.ofChars(x)).value;
 
 assertEquals('Gandhi', value)
 ```
@@ -212,7 +221,7 @@ function combinator() {
 }
 
 function parseOperation(line) {
-    return combinator().parse(Streams.ofString(line))
+    return combinator().parse(Streams.ofChars(line))
 }
 
 assertEquals(4, parseOperation('2   +2').value, 'sum: ')
@@ -253,7 +262,7 @@ goes back to the original offset and use the parser inside the `.or(P)`
 expression.`.
 
 Like Haskell's Parsec, Masala Parser can parse infinite look-ahead grammars but
-performs best on predictive (LL[1]) grammars.
+performs best on predictive LL(1) grammars.
 
 Let see how with `try()`, we can look a bit ahead of next characters, then go
 back:
@@ -271,6 +280,19 @@ Suppose we do not `try()` but use `or()` directly:
         ..ok..ok  ↑oups: cursor is NOT going back. So now we must test '*2' ;
                                                    Is it (multiplication())? No ;
                                                    or(scalar()) ? neither
+
+We have the same problem with pure text. Let's parse `monday` or `money`
+
+    const parser = C.string('monday').or('money')
+    const result = parser.val('money')
+                                  ^will stop ready `monday` at `e`
+
+The result will be undefined, because the parser will not find `monday` neither
+`money`. The good parser is:
+
+    const parser = F.try(C.string('monday')).or('money')
+
+When failing reading `monday`, the parser will come back to `m`
 
 # Recursion
 

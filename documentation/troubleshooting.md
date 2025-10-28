@@ -12,13 +12,6 @@ const floorCombinator = C.string('Hello')
     .then(C.string('fail'))
     .debug('wont be displayed', true)
 
-const parsing = floorCombinator.parse(Streams.ofChar('Hello World !!!'))
+const parsing = floorCombinator.parse(Streams.ofChars('Hello World !!!'))
 assertFalse(parsing.isAccepted(), 'Testing debug')
 ```
-
-## Stack Overflow
-
-RangeError: Maximum call stack size exceeded at Try.lazyRecoverWith
-(/Users/nicorama/code/products/parsec/parsec/src/lib/data/try.js:83:20)
-
-???
