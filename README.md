@@ -85,6 +85,38 @@ const parsing = floorCombinator.parse(stream)
 assertEquals(4, parsing.value, 'Floor parsing')
 ```
 
+## Parsing tokens
+
+You can parse a stream of tokens, not only characters. Let's parse a date from
+tokens.
+
+```js
+import { Stream, C, F, GenLex } from '@masala/parser'
+
+const genlex = new GenLex()
+
+const [slash] = genlex.keywords(['/'])
+// 1100 is the precedence of the token
+const number = genlex.tokenize(N.digits(), 'number', 1100)
+
+let dateParser = number
+    .then(slash.drop())
+    .then(number)
+    .then(slash.drop())
+    .then(number)
+    .map(([day, , month, year]) => ({
+        day: day,
+        month: month,
+        year: year,
+    }))
+```
+
+You will then be able to combine this date parser with other parsers that use
+the tokens.
+
+Overall, using GenLex and tokens is more efficient than using characters for
+complex grammars.
+
 ## Explanations
 
 We create small simple parsers, with a set of utilities (`C`, `N`, `optrep()`,
