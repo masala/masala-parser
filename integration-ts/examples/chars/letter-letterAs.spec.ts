@@ -19,7 +19,6 @@ describe('Character Combinators (letters, lowerCase, notString)', () => {
         expect(parsing.isAccepted()).toBe(true)
         const structure = parsing.value.array() as string[]
         expect(structure[0]).toBe('The') // Check the number of parsed elements
-        console.log(parsing.value)
         expect(parsing.value.join('')).toBe(
             'The quick brown fox jumps over the lazy dog',
         ) // Check the collected value

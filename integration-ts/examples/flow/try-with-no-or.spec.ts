@@ -28,18 +28,20 @@ describe('Flow Combinators (try, opt)', () => {
 
         // Parses optional 'xyz'
         function optAlternative() {
-            return C.string('xyz').opt().debug('opt')
+            return C.string('xyz').opt()
         }
 
         function combinator() {
-            return day()
-                .debug('day') // Parses TUESDAY
-                .then(blank().rep()) // Parses spaces
+            return (
+                day()
+                    //.debug('day') // Parses TUESDAY
+                    .then(blank().rep()) // Parses spaces
 
-                .then(separator().debug('sep')) // Parses '---'
-                .then(optAlternative().map((x) => x.orElse('42')))
-                .debug('afterOPt') // Parses optional 'xyz', fails, returns '12'
-                .then(emptyTry().or(day()).debug('emptyTry')) // Tries 'xyz', fails, backtracks (consumes nothing)
+                    .then(separator()) // Parses '---'
+                    .then(optAlternative().map((x) => x.orElse('42')))
+                    //.debug('afterOPt') // Parses optional 'xyz', fails, returns '12'
+                    .then(emptyTry().or(day()))
+            ) // Tries 'xyz', fails, backtracks (consumes nothing)
         }
 
         const inputString = 'TUESDAY      ---FRIDAY' // Simplified input for clarity
