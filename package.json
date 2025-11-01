@@ -2,7 +2,7 @@
     "name": "@masala/parser",
     "type": "module",
     "description": "Masala Parser",
-    "version": "2.0.0-rc1",
+    "version": "2.0.0-rc2",
     "private": false,
     "license": "LGPL‑3.0",
     "licence-meaning": "You are free to use, modify and distribute this software under the terms of the LGPL-3.0 license. However, if you modify the library (/src/lib) and distribute it, you must also distribute the source code of your modifications under the same license. If you want to modify without distributing, just pay us legit royalties 😇",
@@ -73,7 +73,7 @@
         "prettier-eslint-cli": "^3.4.3",
         "rimraf": "^6.0.1",
         "rmfr": "^2.0.0",
-        "rollup": "^4.40.1",
+        "rollup": "^4.52.5",
         "typedoc": "^0.28.3"
     },
     "lint-staged": {
