@@ -139,7 +139,7 @@ assertEquals(response.offset, 4)
 assertTrue(response.isAccepted())
 assertTrue(response.isConsumed())
 
-// Partially accepted
+// Partially accepted: 'aa' is read, then it stops at offset 2
 response = C.char('a').rep().parse(Stream.ofChars('aabb'))
 assertEquals(response.value.join(''), 'aa')
 assertEquals(response.offset, 2)
