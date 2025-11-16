@@ -4,51 +4,54 @@
 [![Coverage Status](https://coveralls.io/repos/d-plaindoux/masala-parser/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/masala-parser?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-Masala Parser is inspired by the paper titled:
+Masala Parser is an Open source javascript library to create your own parsers.
+You won't need theoretical bases on languages for many usages.
+
+Masala Parser shines for **simplicity**, **variations** and **maintainability**
+of your parsers. Typescript support and token export for AI processing will also
+help you in the debug process.
+
+![absolute-demo.png](documentation/images/absolute-demo.png)
+
+Masala Parser is a Javascript implementation of the Haskell **Parsec** and is
+inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf).
 
-Masala Parser is a Javascript implementation of the Haskell **Parsec**. It is
-plain Javascript that works in the browser, is tested with more than 500 unit
-tests, covering 100% of code lines.
+It is plain Javascript that works in the browser, is tested with more than 500
+unit tests, covering 100% of code lines.
 
 ### Use cases
+
+Here are the pros of Masala Parser:
 
 - It can create a **full parser from scratch**
 - It can extract data from a big text and **replace complex regexp**
 - It works in any **browser**
 - There is a **incredible typescript** api
-- It can validate complete structure with **variations**
-- It's a great starting point for parser education. It's **way simpler than Lex
-  & Yacc**.
-- It's designed to be written in other languages (Python, Java, Rust) with the
-  same interface
-- Masala Parser has some **good performances** in speed and memory
-
-Masala Parser shines for **simplicity**, **variations** and **maintainability**
-of your parsers. You won't need theoretical bases on languages for extraction or
-validation use cases.
-
-Masala Parser has relatively good performances, however, Javascript is obviously
-not the fastest machine.
+- It has some **good performances** in speed and memory
+- Masala is actively supported by [Robusta Build](https://robusta.build)
 
 # Usage
+
+We made a **7 minutes** Youtube video to explain how to create a parser:
+
+[![Masala Parser Youtube Video](documentation/images/masala-yt.png)](https://www.youtube.com/watch?v=VNUrvWdtM2g)
+
+### Installation
 
 With Node Js or modern build
 
         npm install -S @masala/parser
+        yarn add @masala/parser
 
-Or in the browser
+Or in the browser, using Javascript ES Modules:
+
+        import {F, standard, Streams} from 'https://unpkg.com/@masala/parser@2.0.0
 
 - [download Release](https://github.com/d-plaindoux/masala-parser/releases)
 - `<script src="masala-parser.min.js"/>`
 
 Check the [Change Log](./changelog.md) if you can from a previous version.
-
-# Reference
-
-You will find an
-[Masala Parser online reference](http://www.robusta.io/masala-parser/ts/modules/_masala_parser_d_.html),
-generated from typescript interface.
 
 # Quick Examples
 
@@ -61,28 +64,6 @@ const helloParser = C.string('Hello')
 const white = C.char(' ')
 const worldParser = C.string('World')
 const combinator = helloParser.then(white.rep()).then(worldParser)
-```
-
-## Floor notation
-
-`|4.2|` is a mathematical notation that removes the digits after `.` So |4.2|
-== 4.
-
-```js
-// N: Number Bundle, C: Chars Bundle
-import { Stream, N, C } from '@masala/parser'
-
-const stream = Stream.ofChars('|4.6|')
-const floorCombinator = C.char('|')
-    .drop()
-    .then(N.number()) // we have ['|', 4.6], we drop '|'
-    .then(C.char('|').drop()) // we have [4.6, '|'], we keep [4.6]
-    .single() // we had [4.6], now just 4.6
-    .map((x) => Math.floor(x))
-
-// The parser parses a stream of characters
-const parsing = floorCombinator.parse(stream)
-assertEquals(4, parsing.value, 'Floor parsing')
 ```
 
 ## Parsing tokens
@@ -130,21 +111,17 @@ parser as its output."_
 
 Let's say we have a document :
 
-> > > The James Bond series, by writer Ian Fleming, focuses on a fictional
-> > > British Secret Service agent created in 1953, who featured him in twelve
-> > > novels and two short-story collections. Since Fleming's death in 1964,
-> > > eight other authors have written authorised Bond novels or novelizations:
-> > > Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian
-> > > Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz.
+> The **James Bond** series, by writer **Ian Fleming**, focuses on a fictional
+> _British_ secret service agent created in 1953.
 
-The parser could fetch every name, ie two consecutive words starting with
-uppercase. The parser will read through the document and aggregate a Response,
-which contains a value and the current offset in the text.
+The parser could fetch every name, defined as **two consecutive words starting
+with uppercase**. The parser will read through the document and aggregate a
+Response, which contains a value and the current offset in the text.
 
 This value will evolve when the parser will meet new characters, but also with
 some function calls, such as the `map()` function.
 
-![](./documentation/parsec-monoid.png)
+![Parser monoid](./documentation/parser-monoid.png)
 
 ## The Response
 
@@ -194,7 +171,6 @@ simplicity, we will use a stream of characters, which is a text :)
 The goal is to check that we have Hello 'someone', then to grab that name
 
 ```js
-// Plain old javascript
 import { Stream, C } from '@masala/parser'
 
 var helloParser = C.string('Hello')
@@ -202,7 +178,8 @@ var helloParser = C.string('Hello')
     .then(C.letters()) // succession of A-Za-z letters
     .last() // keeping previous letters
 
-var value = helloParser.val('Hello Gandhi') // val(x) is a shortcut for parse(Stream.ofChars(x)).value;
+// val(x) is a shortcut for: parse(Stream.ofChars(x)).value
+var value = helloParser.val('Hello Gandhi')
 
 assertEquals('Gandhi', value)
 ```
@@ -330,8 +307,7 @@ When failing reading `monday`, the parser will come back to `m`
 Masala-Parser (like Parsec) is a top-down parser and doesn't like
 [Left Recursion](https://cs.stackexchange.com/a/9971).
 
-However, it is a resolved problem for this kind of parsers, with a lot of
-documentation. You can read more on
+However, it is a resolved problem for this kind of parsers. You can read more on
 [recursion with Masala](./documentation/recursion.md), and checkout examples on
 our Github repository (
 [simple recursion](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/recursion/aaab-lazy-recursion.js),
