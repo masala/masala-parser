@@ -1,4 +1,4 @@
-import { Streams, F, C } from '@masala/parser'
+import { Stream, F, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 function day() {
@@ -19,7 +19,7 @@ function combinator() {
     return F.any().then(day()).then(F.nop()).then(F.any()).eos()
 }
 
-let stream = Streams.ofChars(string)
+let stream = Stream.ofChars(string)
 let parsing = combinator().parse(stream)
 
 describe('Flow Combinators (nop, any, eos)', () => {

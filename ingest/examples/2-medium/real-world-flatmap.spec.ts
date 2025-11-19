@@ -1,4 +1,4 @@
-import { Streams, C, N, F, SingleParser, TupleParser } from '@masala/parser'
+import { Stream, C, N, F, SingleParser, TupleParser } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 interface FirstLine {
@@ -45,7 +45,7 @@ const verifiedParser = lineParser.flatMap(secondLineParser)
 
 describe('Flatmap real life case', () => {
     it('should parse a line', () => {
-        const stream = Streams.ofChars(document)
+        const stream = Stream.ofChars(document)
         const parsing = verifiedParser.parse(stream)
         expect(parsing.isAccepted()).toBe(true)
         expect(parsing.value).toEqual({

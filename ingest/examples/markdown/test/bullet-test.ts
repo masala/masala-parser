@@ -5,7 +5,7 @@ import {
     assertTrue,
 } from '../../../assert.js'
 import { bullet, bulletBlock } from '../lib/bullet-parser.js'
-import { F, GenLex, Streams } from '@masala/parser'
+import { F, GenLex, Stream } from '@masala/parser'
 import { eol } from '../lib/token.js'
 
 export const bulletsTests = {
@@ -82,7 +82,7 @@ export const bulletsTests = {
         const text = `* This is a bullet`
         const line = text + '\n'
 
-        let response = bullet().parse(Streams.ofChars(line))
+        let response = bullet().parse(Stream.ofChars(line))
         assertTrue(response.isAccepted())
         assertEquals(response.offset, text.length)
     },
@@ -91,7 +91,7 @@ export const bulletsTests = {
         const block = `* This is first bullet
 * This is another bullet`
 
-        let response = bulletBlock().parse(Streams.ofChars(block))
+        let response = bulletBlock().parse(Stream.ofChars(block))
         assertTrue(response.isAccepted())
         assertTrue(response.isEos())
     },
@@ -103,14 +103,14 @@ export const bulletsTests = {
 
         const text = block + '\n'
 
-        let response = bulletBlock().parse(Streams.ofChars(text))
+        let response = bulletBlock().parse(Stream.ofChars(text))
         assertTrue(response.isAccepted())
         assertEquals(block.length, response.offset)
         assertFalse(response.isEos())
 
         let otherResponse = bulletBlock()
             .then(eol())
-            .parse(Streams.ofChars(text))
+            .parse(Stream.ofChars(text))
         assertTrue(otherResponse.isAccepted())
         assertTrue(otherResponse.isEos())
     },

@@ -1,86 +1,108 @@
 # Masala Parser: Javascript Parser Combinators
 
 [![npm version](https://badge.fury.io/js/%40masala%2Fparser.svg)](https://badge.fury.io/js/%40masala%2Fparser)
-[![Build Status](https://travis-ci.org/d-plaindoux/masala-parser.svg)](https://travis-ci.org/d-plaindoux/masala-parser)
 [![Coverage Status](https://coveralls.io/repos/d-plaindoux/masala-parser/badge.png?branch=master)](https://coveralls.io/r/d-plaindoux/masala-parser?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
-Masala Parser is inspired by the paper titled:
+Masala Parser is an Open source javascript library to create your own parsers.
+You won't need theoretical bases on languages for many usages.
+
+Masala Parser shines for **simplicity**, **variations** and **maintainability**
+of your parsers. Typescript support and token export for AI processing will also
+help you in the debug process.
+
+![absolute-demo.png](documentation/images/absolute-demo.png)
+
+Masala Parser started in 2016 as a Javascript implementation of the Haskell
+**Parsec** and is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf).
 
-Masala Parser is a Javascript implementation of the Haskell **Parsec**. It is
-plain Javascript that works in the browser, is tested with more than 450 unit
-tests, covering 100% of code lines.
+It is plain Javascript that works in the browser, is tested with more than 500
+unit tests, covering 100% of code lines.
 
 ### Use cases
 
+Here are the pros of Masala Parser:
+
 - It can create a **full parser from scratch**
-- It can extract data from a big text and **replace complex regexp**
-- It works in any **browser**
-- There is a good **typescript** type declaration
-- It can validate complete structure with **variations**
-- It's a great starting point for parser education. It's **way simpler than Lex
-  & Yacc**.
-- It's designed to be written in other languages (Python, Java, Rust) with the
-  same interface
-
-Masala Parser keywords are **simplicity**, **variations** and
-**maintainability**. You won't need theoretical bases on languages for
-extraction or validation use cases.
-
-Masala Parser has relatively good performances, however, Javascript is obviously
-not the fastest machine.
+- It can **replace complex regexp**
+- It works in any **browser** or NodeJS
+- There is an **incredible typescript** api
+- It has some **good performances** in speed and memory
+- There is zero dependency
+- Masala is actively supported by [Robusta Build](https://www.robusta.build)
 
 # Usage
+
+We made a **7 minutes** Youtube video to explain how to create a parser:
+
+[![Masala Parser Youtube Video](documentation/images/masala-yt.png)](https://www.youtube.com/watch?v=VNUrvWdtM2g)
+
+### Installation
 
 With Node Js or modern build
 
         npm install -S @masala/parser
+        yarn add @masala/parser
 
-Or in the browser
+Or in the browser, using Javascript ES Modules:
+
+        import {F, standard, Streams} from 'https://unpkg.com/@masala/parser@2.0.0
 
 - [download Release](https://github.com/d-plaindoux/masala-parser/releases)
 - `<script src="masala-parser.min.js"/>`
 
 Check the [Change Log](./changelog.md) if you can from a previous version.
 
-# Reference
-
-You will find an
-[Masala Parser online reference](http://www.robusta.io/masala-parser/ts/modules/_masala_parser_d_.html),
-generated from typescript interface.
-
 # Quick Examples
 
 ## Hello World
 
+Let's parse `Hello World`
+
 ```js
-const helloParser = C.string('hello')
+const helloParser = C.string('Hello')
 const white = C.char(' ')
-const worldParser = C.string('world')
+const worldParser = C.string('World')
 const combinator = helloParser.then(white.rep()).then(worldParser)
 ```
 
-## Floor notation
+## Parsing tokens
+
+You can parse a stream of tokens, not only characters. Let's parse a date from
+tokens.
 
 ```js
-// N: Number Bundle, C: Chars Bundle
-const { Streams, N, C } = require('@masala/parser')
+import { Stream, C, F, GenLex } from '@masala/parser'
 
-const stream = Stream.ofString('|4.6|')
-const floorCombinator = C.char('|')
-    .drop()
-    .then(N.number()) // we have ['|', 4.6], we drop '|'
-    .then(C.char('|').drop()) // we have [4.6, '|'], we keep [4.6]
-    .single() // we had [4.6], now just 4.6
-    .map((x) => Math.floor(x))
+const genlex = new GenLex()
 
-// The parser parses a stream of characters
-const parsing = floorCombinator.parse(stream)
-assertEquals(4, parsing.value, 'Floor parsing')
+const [slash] = genlex.keywords(['/'])
+// 1100 is the precedence of the token
+const number = genlex.tokenize(N.digits(), 'number', 1100)
+
+let dateParser = number
+    .then(slash.drop())
+    .then(number)
+    .then(slash.drop())
+    .then(number)
+    .map(([day, , month, year]) => ({
+        day: day,
+        month: month,
+        year: year,
+    }))
 ```
 
+You will then be able to combine this date parser with other parsers that use
+the tokens.
+
+Overall, using GenLex and tokens is more efficient than using characters for
+complex grammars.
+
 ## Explanations
+
+We create small simple parsers, with a set of utilities (`C`, `N`, `optrep()`,
+`map()`, ...), then we create a more complex parser that combine them.
 
 According to Wikipedia _"in functional programming, a parser combinator is a
 higher-order function that accepts several parsers as input and returns a new
@@ -90,21 +112,17 @@ parser as its output."_
 
 Let's say we have a document :
 
-> > > The James Bond series, by writer Ian Fleming, focuses on a fictional
-> > > British Secret Service agent created in 1953, who featured him in twelve
-> > > novels and two short-story collections. Since Fleming's death in 1964,
-> > > eight other authors have written authorised Bond novels or novelizations:
-> > > Kingsley Amis, Christopher Wood, John Gardner, Raymond Benson, Sebastian
-> > > Faulks, Jeffery Deaver, William Boyd and Anthony Horowitz.
+> The **James Bond** series, by writer **Ian Fleming**, focuses on a fictional
+> _British_ secret service agent created in 1953.
 
-The parser could fetch every name, ie two consecutive words starting with
-uppercase. The parser will read through the document and aggregate a Response,
-which contains a value and the current offset in the text.
+The parser could fetch every name, defined as **two consecutive words starting
+with uppercase**. The parser will read through the document and aggregate a
+Response, which contains a value and the current offset in the text.
 
 This value will evolve when the parser will meet new characters, but also with
 some function calls, such as the `map()` function.
 
-![](./documentation/parsec-monoid.png)
+![Parser monoid](./documentation/parser-monoid.png)
 
 ## The Response
 
@@ -116,14 +134,14 @@ that represents your problem. After parsing, there are two subtypes of
 - `Reject` if it could not.
 
 ```js
-let response = C.char('a').rep().parse(Streams.ofChar('aaaa'))
+let response = C.char('a').rep().parse(Stream.ofChars('aaaa'))
 assertEquals(response.value.join(''), 'aaaa')
 assertEquals(response.offset, 4)
 assertTrue(response.isAccepted())
 assertTrue(response.isConsumed())
 
-// Partially accepted
-response = C.char('a').rep().parse(Streams.ofChar('aabb'))
+// Partially accepted: 'aa' is read, then it stops at offset 2
+response = C.char('a').rep().parse(Stream.ofChars('aabb'))
 assertEquals(response.value.join(''), 'aa')
 assertEquals(response.offset, 2)
 assertTrue(response.isAccepted())
@@ -154,15 +172,15 @@ simplicity, we will use a stream of characters, which is a text :)
 The goal is to check that we have Hello 'someone', then to grab that name
 
 ```js
-// Plain old javascript
-const { Streams, C } = require('@masala/parser')
+import { Stream, C } from '@masala/parser'
 
 var helloParser = C.string('Hello')
     .then(C.char(' ').rep())
     .then(C.letters()) // succession of A-Za-z letters
     .last() // keeping previous letters
 
-var value = helloParser.val('Hello Gandhi') // val(x) is a shortcut for parse(Stream.ofString(x)).value;
+// val(x) is a shortcut for: parse(Stream.ofChars(x)).value
+var value = helloParser.val('Hello Gandhi')
 
 assertEquals('Gandhi', value)
 ```
@@ -174,7 +192,7 @@ And each new Parser is a combination of Parsers given by the standard bundles or
 previous functions.
 
 ```js
-import { Streams, N, C, F } from '@masala/parser'
+import { Stream, N, C, F } from '@masala/parser'
 
 const blanks = () => C.char(' ').optrep()
 
@@ -212,7 +230,7 @@ function combinator() {
 }
 
 function parseOperation(line) {
-    return combinator().parse(Streams.ofString(line))
+    return combinator().parse(Stream.ofChars(line))
 }
 
 assertEquals(4, parseOperation('2   +2').value, 'sum: ')
@@ -244,16 +262,16 @@ We will give priority to sum, then multiplication, then scalar. If we had put
 `+2` alone ? It's not a valid sum ! Moreover `+2` and `-2` are acceptable
 scalars.
 
-## try(x).or(y)
+## Backtracking with the parser: try(x).or(y)
 
-`or()` will often be used with `try()`, that makes
-[backtracking](https://en.wikipedia.org/wiki/Backtracking) : it saves the
-current offset, then tries an option. And as soon that it's not satisfied, it
-goes back to the original offset and use the parser inside the `.or(P)`
-expression.`.
+Take a look at 2+2 and 2*2. These two operations *start with the same\*
+character `2` ! The parser may try one operation and fail. Often, you will want
+to go back to the initial offset and try another operation : That mechanism is
+called [backtracking](https://en.wikipedia.org/wiki/Backtracking).
 
-Like Haskell's Parsec, Masala Parser can parse infinite look-ahead grammars but
-performs best on predictive (LL[1]) grammars.
+`try(x).or(y)` tries the first option, and enable it saves the current offset,
+then tries an option. And as soon that it's not satisfied, it goes back to the
+original offset and use the parser inside the `.or(P)` expression.`.
 
 Let see how with `try()`, we can look a bit ahead of next characters, then go
 back:
@@ -272,18 +290,29 @@ Suppose we do not `try()` but use `or()` directly:
                                                    Is it (multiplication())? No ;
                                                    or(scalar()) ? neither
 
+We have the same problem with pure text. Let's parse `monday` or `money`
+
+    const parser = C.string('monday').or('money')
+    const result = parser.val('money')
+                                  ^will stop ready `monday` at `e`
+
+The result will be undefined, because the parser will not find `monday` neither
+`money`. The good parser is:
+
+    const parser = F.try(C.string('monday')).or('money')
+
+When failing reading `monday`, the parser will come back to `m`
+
 # Recursion
 
 Masala-Parser (like Parsec) is a top-down parser and doesn't like
 [Left Recursion](https://cs.stackexchange.com/a/9971).
 
-However, it is a resolved problem for this kind of parsers, with a lot of
-documentation. You can read more on
+However, it is a resolved problem for this kind of parsers. You can read more on
 [recursion with Masala](./documentation/recursion.md), and checkout examples on
 our Github repository (
-[simple recursion](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/recursion/aaab-lazy-recursion.js),
-or
-[calculous expressions](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/operations/plus-minus.js)
+[simple recursion](integration-ts/examples/lazy/transmission.spec.ts), or
+[calculous expressions](integration-ts/examples/operations/plus-minus.spec.ts)
 ).
 
 # Simple documentation of Core bundles
@@ -403,3 +432,8 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program; see the file COPYING. If not, write to the Free Software
 Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+## Support
+
+Masala Parser is maintained by [Robusta Build](https://www.robusta.build).
+Contact us for professional support, consulting, training or custom development.

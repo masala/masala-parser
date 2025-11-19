@@ -1,4 +1,4 @@
-import { Streams, F, C } from '@masala/parser'
+import { Stream, F, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Flow Combinators (try, opt)', () => {
@@ -28,24 +28,26 @@ describe('Flow Combinators (try, opt)', () => {
 
         // Parses optional 'xyz'
         function optAlternative() {
-            return C.string('xyz').opt().debug('opt')
+            return C.string('xyz').opt()
         }
 
         function combinator() {
-            return day()
-                .debug('day') // Parses TUESDAY
-                .then(blank().rep()) // Parses spaces
+            return (
+                day()
+                    //.debug('day') // Parses TUESDAY
+                    .then(blank().rep()) // Parses spaces
 
-                .then(separator().debug('sep')) // Parses '---'
-                .then(optAlternative().map((x) => x.orElse('42')))
-                .debug('afterOPt') // Parses optional 'xyz', fails, returns '12'
-                .then(emptyTry().or(day()).debug('emptyTry')) // Tries 'xyz', fails, backtracks (consumes nothing)
+                    .then(separator()) // Parses '---'
+                    .then(optAlternative().map((x) => x.orElse('42')))
+                    //.debug('afterOPt') // Parses optional 'xyz', fails, returns '12'
+                    .then(emptyTry().or(day()))
+            ) // Tries 'xyz', fails, backtracks (consumes nothing)
         }
 
         const inputString = 'TUESDAY      ---FRIDAY' // Simplified input for clarity
         // Original: 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY'; causes issues with rep()
 
-        let stream = Streams.ofChars(inputString)
+        let stream = Stream.ofChars(inputString)
         let parsing = combinator().parse(stream)
 
         // Based on the original assertFalse(parsing.isAccepted());
@@ -64,7 +66,7 @@ describe('Flow Combinators (try, opt)', () => {
 
         // Let's test the original failure case logic - why did it fail?
         const originalString = 'TUESDAY      THURSDAY  TUESDAY  ---FRIDAY'
-        let originalStream = Streams.ofChars(originalString)
+        let originalStream = Stream.ofChars(originalString)
         let originalParsing = combinator().parse(originalStream)
         // Perhaps the blank().rep() was too greedy?
         expect(originalParsing.isAccepted()).toBe(false) // Confirming original behavior

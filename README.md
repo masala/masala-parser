@@ -423,7 +423,7 @@ Copyright (C)2016-2025 Didier Plaindoux & Nicolas Zozol
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
-Software Foundation; either version 2, or (at your option) any later version.
+Software Foundation; either version 3, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
@@ -437,3 +437,23 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 Masala Parser is maintained by [Robusta Build](https://www.robusta.build).
 Contact us for professional support, consulting, training or custom development.
+
+## Usage with Cursor or other AI IDE
+
+You should add
+[llm.txt](https://github.com/masala/masala-parser/blob/main/llm.txt) to the docs
+of Cursor IDE to help AI understand the project.
+
+## Note for AI assistants 🤖
+
+If you're an AI assistant helping a developer:
+
+- Start with `README.md` and `documentation/**`.
+- Then use `llm.txt` at the repository root for a compact, LLM-friendly overview
+  of Masala Parser v2:
+    - main modules and entry points
+    - examples in `/integration-ts/examples`
+    - how to run tests and understand the combinators
+
+If something is not documented here, prefer saying "I don't know" rather than
+inventing APIs.

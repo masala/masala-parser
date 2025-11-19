@@ -14,7 +14,7 @@
         "add-js-ext": "jscodeshift  -t ../tasks/add-js-ext.cjs  examples --extensions=js,ts --parser=ts --ignore-pattern '**/*.d.ts' --ignore-pattern '**/node_modules/**'"
     },
     "dependencies": {
-        "@masala/parser": "^2.0.0-beta.2"
+        "@masala/parser": "^2.0.0"
     },
     "devDependencies": {
         "@types/node": "^22.15.17",
@@ -22,6 +22,6 @@
         "typescript": "^5.8.3",
         "vitest": "^3.1.3"
     },
-    "author": "",
+    "author": "Nicolas Zozol",
     "license": "ISC"
 }

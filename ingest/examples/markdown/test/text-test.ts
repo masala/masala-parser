@@ -1,6 +1,6 @@
 import { assertDeepEquals, assertEquals, assertTrue } from '../../../assert.js'
 import { paragraph } from '../lib/text-parser.js'
-import { Streams } from '@masala/parser'
+import { Stream } from '@masala/parser'
 
 export const textTests = {
     'test empty text': function () {
@@ -93,7 +93,7 @@ export const textTests = {
                 { type: 'text', text: '.' },
             ],
         }
-        let response = paragraph().parse(Streams.ofChars(text))
+        let response = paragraph().parse(Stream.ofChars(text))
 
         assertDeepEquals(response.value, expectedComplexParagraph)
         assertEquals(response.offset, complexParagraph.length)

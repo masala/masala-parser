@@ -1,4 +1,4 @@
-import { Streams, F, C, SingleParser, Option, Tuple } from '@masala/parser'
+import { Stream, F, C, SingleParser, Option, Tuple } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 /*
@@ -112,7 +112,7 @@ function combinator() {
 describe('Expression Parser (+, *)', () => {
     // Helper function to run the parser and return the result value or throw error
     const parseExpr = (input: string): number => {
-        let stream = Streams.ofChars(input)
+        let stream = Stream.ofChars(input)
         let response = combinator().parse(stream)
         if (response.isAccepted() && response.isEos()) {
             return response.value
