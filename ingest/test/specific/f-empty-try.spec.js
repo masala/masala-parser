@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import Streams from '../../lib/stream/index'
+import Stream from '../../lib/stream/index'
 import { F, C } from '../../lib/core/index'
 
 describe('Failed Try', () => {
@@ -9,7 +9,7 @@ describe('Failed Try', () => {
         }
 
         const inputString = 'b' // Simplified input for clarity
-        let stream = Streams.ofChars(inputString)
+        let stream = Stream.ofChars(inputString)
         let parsing = emptyTry().parse(stream)
 
         expect(parsing.isAccepted()).toBe(false) // Should be accepted

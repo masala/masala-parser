@@ -1,0 +1,11 @@
+## Note for AI assistants 🤖
+
+If you're an AI assistant helping a developer:
+
+- Start with `README.md` and `documentation/**`.
+- Then use `llm.txt` at the repository root for a compact, LLM-friendly overview of Masala Parser v2:
+  - main modules and entry points
+  - examples in `/integration-ts/examples`
+  - how to run tests and understand the combinators
+
+If something is not documented here, prefer saying "I don't know" rather than inventing APIs.

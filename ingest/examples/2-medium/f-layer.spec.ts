@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { Streams, F, C, N } from '@masala/parser'
+import { Stream, F, C, N } from '@masala/parser'
 
 describe('F Layer Combinators', () => {
     it('should parse alternatives using try and or', () => {
@@ -7,7 +7,7 @@ describe('F Layer Combinators', () => {
             .or(C.string('hello'))
             .or(C.string('goodbye'))
 
-        let response = combinator.parse(Streams.ofChars('goodbye'))
+        let response = combinator.parse(Stream.ofChars('goodbye'))
         expect(response.isAccepted()).toBe(true)
         // Check the value based on the expected type if needed
         // expect(response.value).toBe('goodbye');
@@ -20,7 +20,7 @@ describe('F Layer Combinators', () => {
         const successInput = 'aa'
         const layer = F.layer(first).and(second)
 
-        let layerResponse = layer.parse(Streams.ofChars(successInput))
+        let layerResponse = layer.parse(Stream.ofChars(successInput))
         expect(layerResponse.isAccepted()).toBe(true)
         // Add expectation for the value if needed, depends on F.layer logic
         // e.g., expect(layerResponse.value)... depending on what F.layer returns

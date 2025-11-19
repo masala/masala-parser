@@ -2,7 +2,7 @@
  * Created by Simon on 16/12/2016.
  */
 
-import { Streams, F, Stream, GenLex, TupleParser } from '@masala/parser'
+import { F, GenLex, TupleParser } from '@masala/parser'
 
 import { paragraph } from './text-parser.js'
 import { title } from './title-parser.js'

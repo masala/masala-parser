@@ -1,11 +1,11 @@
-import { Streams, C } from '@masala/parser'
+import { Stream, C } from '@masala/parser'
 import { describe, it, expect } from 'vitest'
 
 describe('Character Combinators (charIn, charNotIn)', () => {
     it('charNotIn should parse characters not in the specified set', () => {
         let combinator = C.charNotIn('abc').rep()
         // will accept x, y, and z but will stop at 'b'
-        let response = combinator.parse(Streams.ofChars('xyzb'))
+        let response = combinator.parse(Stream.ofChars('xyzb'))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.offset).toBe(3)
@@ -14,7 +14,7 @@ describe('Character Combinators (charIn, charNotIn)', () => {
 
     it('charIn should parse characters within the specified set until EOS', () => {
         let combinator = C.charIn('abc').rep().thenEos()
-        let response = combinator.parse(Streams.ofChars('acbaba'))
+        let response = combinator.parse(Stream.ofChars('acbaba'))
 
         expect(response.isAccepted()).toBe(true)
         expect(response.value.join('')).toBe('acbaba')

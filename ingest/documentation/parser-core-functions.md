@@ -28,7 +28,6 @@ const newParser = new Parser(parseFunction)
 // But don't do that, except if you know what you are doing
 ```
 
-- difficulty : 3
 - construct a Parser object
 - `parseFunction` is a streaming function
     - reads characters at a given index
@@ -46,7 +45,7 @@ Here is an example of a home-made parser for going back after an Accept:
 - Construct a Tuple of values from previous accepted values
 
 ```js
-let stream = Streams.ofChar('abc')
+let stream = Stream.ofChars('abc')
 const charsParser = C.char('a')
     .then(C.char('b'))
     .then(C.char('c'))
@@ -57,11 +56,10 @@ assertEquals(parsing.value, 'abc')
 
 ### drop()
 
-- difficulty : 1
 - Uses `then()` and returns only the left or right value
 
 ```js
-const stream = Streams.ofChar('|4.6|')
+const stream = Stream.ofChars('|4.6|')
 const floorCombinator = C.char('|')
     .drop()
     .then(N.number()) // we have ['|',4.6], we keep 4.6
@@ -77,33 +75,31 @@ assertEquals(4, parsing.value, 'Floor parsing')
 
 ### map(f)
 
-- difficulty : 0
 - Change the value of the response
 
 ```js
-const stream = Streams.ofChar('5x8')
+const stream = Stream.ofChars('5x8')
 const combinator = N.integer()
     .then(C.charIn('x*').drop())
     .then(N.integer())
     // values are [5,8] : we map to its multiplication
     .map((values) => values[0] * values[1])
-assertEquals(combinator.parse(stream).value, 40)
+assertEquals(combinator.val(stream), 40)
 ```
 
 ### returns(value)
 
-- difficulty : 1
 - Forces the value at a given point
 - It's a simplification of map
 
 ```js
-const stream = Streams.ofChar('ab')
+const stream = Stream.ofChars('ab')
 // given 'ac', value should be ['X' , 'c']
-const combinator = C.char('a').thenReturns('X').then(C.char('b'))
-assertEquals(combinator.parse(stream).value, ['X', 'b'])
+const combinator = C.char('a').returns('X').then(C.char('b'))
+assertEquals(combinator.val(stream).array(), ['X', 'b'])
 ```
 
-It could be done using `map()`:
+It could be done using `map()`, but `returns()` is more direct:
 
 ```js
 const combinator = C.char('a')
@@ -111,22 +107,27 @@ const combinator = C.char('a')
     .then(C.char('c'))
 ```
 
-### eos()
+### thenEos()
 
-- difficulty : 1
 - Test if the stream reaches the end of the stream
+
+```js
+const combinator = C.char('a')
+C.char('a').thenEos()
+```
+
+It's important to note that the value will be moved in a Tuple, which is always
+the case in a `thenXYZ` function
+
+So if the parsing is accepted, the value will be `Tuple(['a'])`
 
 ### any()
 
-- difficulty : 0
 - next character will always work
 - consumes a character
 
-TODO : There is no explicit test for `any()`
-
 ### opt()
 
-- difficulty : 0
 - Allows optional use of a Parser
 - Internally used for `optrep()` function
 
@@ -138,11 +139,10 @@ C.char('a').opt(C.char('b')).char('c')
 
 ### rep()
 
-- difficulty : 0
 - Ensure a parser is repeated **at least** one time
 
 ```js
-const stream = Streams.ofChar('aaa')
+const stream = Stream.ofChars('aaa')
 const parsing = C.char('a').rep().parse(stream)
 test.ok(parsing.isAccepted())
 // We need to call list.array()
@@ -154,7 +154,6 @@ value by calling `list.array()`
 
 ### optrep
 
-- difficulty : 3
 - A Parser can be repeated zero or many times
 
 ```js
@@ -162,8 +161,8 @@ value by calling `list.array()`
 C.char('a').optrep(C.char('b')).char('c')
 ```
 
-There is a MAJOR issue with optrep: optrep().optrep() or optrep().rep() will
-cause an infinite loop.
+There is a known issue with optrep: optrep().optrep() or optrep().rep() will
+cause an infinite loop !
 
 # Useful but touchy
 
@@ -173,7 +172,6 @@ difficult, but it's harder to understand when it must work with `try()`
 ### or()
 
 - Essential
-- difficulty : 3
 
 `or()` is used to test a parser, and if it fails, it will try the next one
 
@@ -189,7 +187,7 @@ while testing or().
 const eater = C.char('a').then(C.char('a'))
 const parser = eater.or(C.char('b'))
 
-const stream = Streams.ofChar('ab')
+const stream = Stream.ofChars('ab')
 const parsing = parser.parse(stream)
 expect(parsing.isAccepted()).toBe(false)
 expect(parsing.offset).toBe(1) // ✨ this is the point ! one 'a' is consumed
@@ -202,7 +200,6 @@ Because Masala is a fast LL(1) parser, it will try to move forward by default.
 ### partial and full backtracking: F.try().or() and F.tryAll()
 
 - Essential !
-- difficulty : 3
 - Try a succession of parsers
 - If success, then continues
 - If not, jump after the succession, and continues with `or()`
@@ -214,37 +211,60 @@ const manyOr = F.tryAll([x, y, z]) // same as try(x).or(try(y)).or(try(z))
 
 ### flatMap (f )
 
-- difficulty : 3
+`flatMap` lets later parsing depend on earlier results. It runs a parser, then
+feeds its value into `f(result)` to build the next parser—ideal for
+context-sensitive checks and cross-references
+
+Use `flatMap()` when plain sequencing isn’t enough.
+
 - parameter f is a function
 - Used when reading a data depends on previous data
 
 Example of use case, where one author is given a rating
 
-```markdown
-authors: Nicolas, John Nicolas: 5/10
-
----
+```
+authors:Nicolas  # nameParser
+Nicolas:5     # ratingParser
 ```
 
-Suppose we have a general `lineParser`, then a ratingLineParser could be used
-like this:
+Here, `Nicolas` must be included in both lines to have a proper parsing.
+
+Suppose we have a general `nameParser`, then a `ratingParser` could be used like
+this:
 
 ```typescript
-const secondLineParser = (firstLine: FirstLine) => {
-    return lineParser.filter(
-        (val: FirstLine) => firstLine.value.includes(val.name), // ✨
-    )
-}
+const separator = C.char(':')
+const end = C.char('\n').opt()
 
-// the parser accepts if a firstLine value is included in the second
-const verifiedParser = lineParser.flatMap(secondLineParser)
+const nameParser: SingleParser<string> = C.string('authors')
+    .then(separator.drop())
+    .then(C.letters())
+    .then(end.drop())
+    .last()
+
+const ratingParser = (
+    name: string, // name is from previous parsing
+) =>
+    C.letters()
+        .filter((val: string) => val.includes(name)) // check name match
+        .then(separator.drop())
+        .then(
+            F.not(end)
+                .rep()
+                .map((chars) => chars.join('')),
+        )
+
+const parser = nameParser.flatMap(ratingParser)
+
+const string = `authors:Nicolas\nNicolas:5`
+const value = parser.val(string)
+expect(value.array()).toEqual(['alice', '5'])
 ```
 
 It can help you to read your document knowing what happen previously
 
 ### filter (predicate)
 
-- difficulty : 1
 - To be used once a value is defined
 - `predicate` is a function pVal -> boolean
 - Check if the stream satisfies the predicate
@@ -252,30 +272,24 @@ It can help you to read your document knowing what happen previously
 
         'expect (filter) to be accepted': function(test) {
         test.equal(parser.char("a").filter(a => a === 'a')
-        .parse(Streams.ofString("a")).isAccepted(), true, 'should be
-        accepted.'); }
+        .parse(Stream.ofChars("a")).isAccepted(), true, 'should be accepted.');
+        }
 
 ### match (matchValue)
 
-- difficulty : 0
 - Simplification of `filter()`
 - Check if the stream value is equal to the _matchValue_
 
-              //given 123
-              N.number().match(123)
+                                //given 123
+                                N.number().match(123)
 
 ### error()
 
-- difficulty : 0
 - Forces an error
 - The parser will be `rejected`
 
-TODO : Is it possible to have a value for this error ? It would give a live hint
-for the writer.
-
 ### satisfy(predicate)
 
-- difficulty : 2
 - Used internally by higher level functions
 - If predicate is true, consumes a element from the stream, and the value is set
   to the element
