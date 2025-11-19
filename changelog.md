@@ -1,106 +1,102 @@
-Changelog
-====
+# Changelog
 
-2.0.0
-----
+## 2.0.0
 
-* Full ESM support
-* Strong typescript support
-* moveUntil don't join values by default
-* parser.join(sep) is supported, only for TupleParser
-* thenLeft and thenRight are not supported in typescript, too many combinations
+- Full ESM support
+- Strong typescript support
+- moveUntil don't join values by default
+- parser.join(sep) is supported, only for TupleParser
+- thenLeft and thenRight are not supported in typescript, too many combinations
 
-0.8.1: better ts support
----
+Plus plenty of other things I dont have time to write now :/
+
+## 0.8.1: better ts support
 
 Minor change on ts and bug fix
 
-0.7 ->0.8: Using Tuples with then
----
+## 0.7 ->0.8: Using Tuples with then
 
-* Any then() and thenXYZ() function call will return a `Tuple` . This tuple has `single()` and `array()` methods to get value.
-`Parser.drop()`, `F.nop()` methods will produce a *Neutral element* for that Tuple : it will be ignored.
-* Therefore `thenReturns()` is renamed `returns()`.
-* `rep()` and `optrep()` will also produce a Tuple
+- Any then() and thenXYZ() function call will return a `Tuple` . This tuple has
+  `single()` and `array()` methods to get value. `Parser.drop()`, `F.nop()`
+  methods will produce a _Neutral element_ for that Tuple : it will be ignored.
+- Therefore `thenReturns()` is renamed `returns()`.
+- `rep()` and `optrep()` will also produce a Tuple
     - combination of `rep()` and `then()` will produce one unique Tuple
-    - you can *break apart* this tuple using `Parser.array()` at any point if needed
-* `GenLex` has been totally refactored and simplified for high level parsers on tokens.
-* Typescript interface is operational and `masala-parser.d.ts` documentation will generate Masala Parser reference.
-* `N.digit()` and `N.digits()` return a number, not a string
-* Markdown bundled is removed from the lib, and put as example in typescript integration
+    - you can _break apart_ this tuple using `Parser.array()` at any point if
+      needed
+- `GenLex` has been totally refactored and simplified for high level parsers on
+  tokens.
+- Typescript interface is operational and `masala-parser.d.ts` documentation
+  will generate Masala Parser reference.
+- `N.digit()` and `N.digits()` return a number, not a string
+- Markdown bundled is removed from the lib, and put as example in typescript
+  integration
 
 Less important :
 
-* `F.layer()` along with `Parser.and()` produces an array of results when all parsers are satisfied.
+- `F.layer()` along with `Parser.and()` produces an array of results when all
+  parsers are satisfied.
     - it makes backtracking like `F.try()` with `Parser.or()`
     - warning: it's still experimental for side cases
-* Bug correction on offset for high level parsers.
-    - Random Access in `ParserStream` will result in unpredicted value. Don't do it.
-* `response.isConsumed()` is replaced by `response.isEos()`
+- Bug correction on offset for high level parsers.
+    - Random Access in `ParserStream` will result in unpredicted value. Don't do
+      it.
+- `response.isConsumed()` is replaced by `response.isEos()`
 
+    0.6 -> 0.7: Typescript support
 
-0.6 -> 0.7: Typescript support
-----
+---
 
 This release has been focused on typescript support.
 
 ## Export
 
-* Export is a bit better handled; no more doublon
-* Exporting `Parser` instead of `parser`
-* `ExtractorBundle` and `TokenBundle` are pruned (#96) 
+- Export is a bit better handled; no more doublon
+- Exporting `Parser` instead of `parser`
+- `ExtractorBundle` and `TokenBundle` are pruned (#96)
 
 # Functions
 
-Every parser in CharBundle, FlowBundle and NumberBundle need to be called as a function
-    
+Every parser in CharBundle, FlowBundle and NumberBundle need to be called as a
+function
+
         //Previously
         const p = C.letter.then(N.integer).then(F.eos);
-        
+
         // Now:
         const p = C.letter().then(N.integer()).then(F.eos());
-        
-It's less funky, but it avoids construction of Parsers at import statement, before writing the first line code.        
+
+It's less funky, but it avoids construction of Parsers at import statement,
+before writing the first line code.
 
 ### FlowBundle
 
-* `F.startWith(value)`: Creates a Parser with a defined value
-* `F.sequence()` is pruned
-
+- `F.startWith(value)`: Creates a Parser with a defined value
+- `F.sequence()` is pruned
 
 ### Typescript and @types
 
-Automated types are enabled with a partial declaration file. Basically, all functions of Parser, CharBundle, 
-NumberBundle and FlowBundle are supported, but Genlex is not yet. 0.8 release will be focused on Genlex.
+Automated types are enabled with a partial declaration file. Basically, all
+functions of Parser, CharBundle, NumberBundle and FlowBundle are supported, but
+Genlex is not yet. 0.8 release will be focused on Genlex.
 
-
-
-0.5 -> 0.6
-----
+## 0.5 -> 0.6
 
 ## Response
 
-* Added `response.isCompleted()`
+- Added `response.isCompleted()`
 
 ## Parser
 
-* `flatmap()` renamed to `flatMap()`
+- `flatmap()` renamed to `flatMap()`
 
 ## Flow Bundle
 
-* `F.lazy(parser, params, self )` accepts a third `this` parameter
-* `F.sequence()` is deprecated
+- `F.lazy(parser, params, self )` accepts a third `this` parameter
+- `F.sequence()` is deprecated
 
+Added to the FlowBundle
 
-Added  to the FlowBundle
-
-* `F.startsWith(value)`
-* `F.moveUntil(string|stopParser)`
-* `F.dropTo(string|stopParser)`
-
-
-
-
-
-
-
+- `F.startsWith(value)`
+- `F.moveUntil(string|stopParser)`
+- `F.dropTo(string|stopParser)`
