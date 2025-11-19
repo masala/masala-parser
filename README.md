@@ -13,8 +13,8 @@ help you in the debug process.
 
 ![absolute-demo.png](documentation/images/absolute-demo.png)
 
-Masala Parser is a Javascript implementation of the Haskell **Parsec** and is
-inspired by the paper titled:
+Masala Parser started in 2016 as a Javascript implementation of the Haskell
+**Parsec** and is inspired by the paper titled:
 [Direct Style Monadic Parser Combinators For The Real World](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/parsec-paper-letter.pdf).
 
 It is plain Javascript that works in the browser, is tested with more than 500
@@ -25,11 +25,12 @@ unit tests, covering 100% of code lines.
 Here are the pros of Masala Parser:
 
 - It can create a **full parser from scratch**
-- It can extract data from a big text and **replace complex regexp**
-- It works in any **browser**
-- There is a **incredible typescript** api
+- It can **replace complex regexp**
+- It works in any **browser** or NodeJS
+- There is an **incredible typescript** api
 - It has some **good performances** in speed and memory
-- Masala is actively supported by [Robusta Build](https://robusta.build)
+- There is zero dependency
+- Masala is actively supported by [Robusta Build](https://www.robusta.build)
 
 # Usage
 
@@ -261,16 +262,16 @@ We will give priority to sum, then multiplication, then scalar. If we had put
 `+2` alone ? It's not a valid sum ! Moreover `+2` and `-2` are acceptable
 scalars.
 
-## try(x).or(y)
+## Backtracking with the parser: try(x).or(y)
 
-`or()` will often be used with `try()`, that makes
-[backtracking](https://en.wikipedia.org/wiki/Backtracking) : it saves the
-current offset, then tries an option. And as soon that it's not satisfied, it
-goes back to the original offset and use the parser inside the `.or(P)`
-expression.`.
+Take a look at 2+2 and 2*2. These two operations *start with the same\*
+character `2` ! The parser may try one operation and fail. Often, you will want
+to go back to the initial offset and try another operation : That mechanism is
+called [backtracking](https://en.wikipedia.org/wiki/Backtracking).
 
-Like Haskell's Parsec, Masala Parser can parse infinite look-ahead grammars but
-performs best on predictive LL(1) grammars.
+`try(x).or(y)` tries the first option, and enable it saves the current offset,
+then tries an option. And as soon that it's not satisfied, it goes back to the
+original offset and use the parser inside the `.or(P)` expression.`.
 
 Let see how with `try()`, we can look a bit ahead of next characters, then go
 back:
@@ -310,9 +311,8 @@ Masala-Parser (like Parsec) is a top-down parser and doesn't like
 However, it is a resolved problem for this kind of parsers. You can read more on
 [recursion with Masala](./documentation/recursion.md), and checkout examples on
 our Github repository (
-[simple recursion](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/recursion/aaab-lazy-recursion.js),
-or
-[calculous expressions](https://github.com/d-plaindoux/masala-parser/blob/master/integration-npm/examples/operations/plus-minus.js)
+[simple recursion](integration-ts/examples/lazy/transmission.spec.ts), or
+[calculous expressions](integration-ts/examples/operations/plus-minus.spec.ts)
 ).
 
 # Simple documentation of Core bundles
@@ -432,3 +432,8 @@ PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along
 with this program; see the file COPYING. If not, write to the Free Software
 Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+
+## Support
+
+Masala Parser is maintained by [Robusta Build](https://www.robusta.build).
+Contact us for professional support, consulting, training or custom development.
